@@ -15,7 +15,7 @@
         <payment>
             <subscribe_pro>
                 <model>SubscribeProAdapter</model>
-                <title>Credit or Debit Card (SubscribePro)</title>
+                <title>Credit or Debit Cards (SubscribePro)</title>
                 <active>1</active>
                 <is_gateway>1</is_gateway>
                 <can_use_checkout>1</can_use_checkout>
@@ -28,6 +28,7 @@
                 <can_cancel>1</can_cancel>
                 <can_void>1</can_void>
                 <cctypes>AE,VI,MC,DI,JCB,DN</cctypes>
+                <cctypes_mapper><![CDATA[{"american_express":"AE","visa":"VI","master":"MC","discover":"DI","jcb":"JCB","diners_club":"DN"}]]></cctypes_mapper>
                 <useccv>1</useccv>
                 <payment_action>authorize</payment_action>
                 <currency>USD</currency>
@@ -36,6 +37,11 @@
                 <paymentInfoKeys>cc_type,cc_number,transaction_id,transaction_type,gateway_type,avs_code,avs_message,cvv_code,cvv_message,response_message</paymentInfoKeys>
                 <privateInfoKeys>transaction_id,transaction_type,gateway_type,avs_code,avs_message,cvv_code,cvv_message,response_message</privateInfoKeys>
             </subscribe_pro>
+            <subscribe_pro_vault>
+                <model>SubscribeProVaultAdapter</model>
+                <title>Stored Cards (SubscribePro)</title>
+                <active>1</active>
+            </subscribe_pro_vault>
         </payment>
     </default>
 </config>

@@ -16,6 +16,10 @@ interface ProductInterface extends \SubscribePro\Service\Product\ProductInterfac
 
     const IMAGE_URL = 'image_url';
 
+    const FINAL_PRICE = 'final_price';
+
+    const APPLY_DISCOUNT_TO_CATALOG_PRICE = 'apply_discount_to_catalog_price';
+
     /**
      * @return string|null
      */
@@ -26,6 +30,28 @@ interface ProductInterface extends \SubscribePro\Service\Product\ProductInterfac
      * @return $this
      */
     public function setUrl($url);
+
+    /**
+     * @return float|null
+     */
+    public function getFinalPrice();
+
+    /**
+     * @param float $finalPrice
+     * @return $this
+     */
+    public function setFinalPrice($finalPrice);
+
+    /**
+     * @return bool|null
+     */
+    public function getApplyDiscountToCatalogPrice();
+
+    /**
+     * @param bool $applyDiscountToCatalogPrice
+     * @return $this
+     */
+    public function setApplyDiscountToCatalogPrice($applyDiscountToCatalogPrice);
 
     /**
      * @return string|null

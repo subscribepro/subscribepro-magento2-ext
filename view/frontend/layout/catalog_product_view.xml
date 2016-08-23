@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="product_options_wrapper_bottom">
+            <block class="Swarming\SubscribePro\Block\Product\Subscription" name="product.info.subscription" before="-" as="subscription-option" template="product/subscription.phtml">
+                <arguments>
+                    <argument name="jsLayout" xsi:type="array">
+                        <item name="components" xsi:type="array">
+                            <item name="subscription-container" xsi:type="array">
+                                <item name="component" xsi:type="string">Swarming_SubscribePro/js/view/product/subscription</item>
+                                <item name="config" xsi:type="array">
+                                    <item name="template" xsi:type="string">Swarming_SubscribePro/product/subscription</item>
+                                </item>
+                                <item name="children" xsi:type="array">
+                                    <item name="messages" xsi:type="array">
+                                        <item name="component" xsi:type="string">Magento_Ui/js/view/messages</item>
+                                        <item name="displayArea" xsi:type="string">messages</item>
+                                    </item>
+                                </item>
+                            </item>
+                        </item>
+                    </argument>
+                </arguments>
+            </block>
+        </referenceBlock>
+    </body>
+</page>

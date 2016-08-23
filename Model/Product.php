@@ -24,6 +24,40 @@ class Product extends \SubscribePro\Service\Product\Product implements ProductIn
     }
 
     /**
+     * @return float|null
+     */
+    public function getFinalPrice()
+    {
+        return $this->getData(self::FINAL_PRICE);
+    }
+
+    /**
+     * @param float $finalPrice
+     * @return $this
+     */
+    public function setFinalPrice($finalPrice)
+    {
+        return $this->setData(self::FINAL_PRICE, $finalPrice);
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function getApplyDiscountToCatalogPrice()
+    {
+        return $this->getData(self::APPLY_DISCOUNT_TO_CATALOG_PRICE);
+    }
+
+    /**
+     * @param bool $applyDiscountToCatalogPrice
+     * @return $this
+     */
+    public function setApplyDiscountToCatalogPrice($applyDiscountToCatalogPrice)
+    {
+        return $this->setData(self::APPLY_DISCOUNT_TO_CATALOG_PRICE, $applyDiscountToCatalogPrice);
+    }
+
+    /**
      * @return string|null
      */
     public function getImageUrl()

@@ -4,9 +4,12 @@ namespace Swarming\SubscribePro\Block\Customer;
 
 class Subscriptions extends \Magento\Framework\View\Element\Template
 {
-    protected function _construct()
-    {
-        parent::_construct();
+    public function __construct(
+        \Magento\Framework\View\Element\Template\Context $context,
+        \Magento\Framework\Locale\FormatInterface $localeFormat,
+        array $data
+    ) {
+        parent::__construct($context, $data);
 
         $data = [
             'components' => [
@@ -14,7 +17,8 @@ class Subscriptions extends \Magento\Framework\View\Element\Template
                     'children' => [
                         'subscriptions' => [
                             'config' => [
-                                'datepickerOptions' => $this->getDatepickerOptions()
+                                'datepickerOptions' => $this->getDatepickerOptions(),
+                                'priceFormat' => $localeFormat->getPriceFormat()
                             ]
                         ]
                     ]

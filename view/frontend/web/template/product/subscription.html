@@ -1,0 +1,43 @@
+<!-- ko foreach: getRegion('messages') -->
+    <!-- ko template: getTemplate() --><!-- /ko -->
+<!--/ko-->
+
+<!-- ko if: isProductLoaded() -->
+    <div style="margin-bottom: 10px">
+        <!-- ko if: product().isSubscriptionMode(subscriptionOnlyMode)  -->
+            <p>
+                <input type="hidden" name="delivery-option-value" data-bind="value: subscriptionOption">
+                <!-- ko i18n: product().priceWithDiscountText --><!-- /ko -->
+            </p>
+        <!-- /ko -->
+        <!-- ko if: product().isSubscriptionMode(subscriptionAndOneTimePurchaseMode) -->
+            <p>
+                <label>
+                    <input type="radio"
+                           name="delivery-option-value"
+                           class="radio"
+                           data-bind="checked: deliveryOptionValue, value: oneTimePurchaseOption" />
+                    <!-- ko i18n: 'One Time Delivery' --><!-- /ko -->
+                    <!-- ko text: ' - ' --><!-- /ko -->
+                    <!-- ko text: product().formattedPrice --><!-- /ko -->
+                </label>
+            </p>
+            <p>
+                <label>
+                    <input type="radio"
+                           name="delivery-option-value"
+                           class="radio"
+                           data-bind="checked: deliveryOptionValue, value: subscriptionOption" />
+                    <!-- ko i18n: 'Regular Delivery' --><!-- /ko -->
+                    <!-- ko text: ' - ' --><!-- /ko -->
+                    <!-- ko i18n: product().priceWithDiscountText --><!-- /ko -->
+                </label>
+            </p>
+        <!-- /ko -->
+        <label>
+            <!-- ko i18n: 'Delivery every' --><!-- /ko -->
+            <!-- ko text: ':' --><!-- /ko -->
+            <select name="subscription-interval" data-bind="options: product().intervals(), checked: intervalValue, value: intervalValue"></select>
+        </label>
+    </div>
+<!-- /ko -->

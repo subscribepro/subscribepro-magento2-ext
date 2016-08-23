@@ -3,11 +3,10 @@ define([
     'uiComponent', 
     'ko',
     'mageUtils',
-    'mage/translate',
     'uiLayout',
     'Swarming_SubscribePro/js/model/subscription/loader',
     'Swarming_SubscribePro/js/action/subscription/load-list'
-], function($, Component, ko, utils, $t, layout, subscriptionLoader, loadSubscriptions) {
+], function($, Component, ko, utils, layout, subscriptionLoader, loadSubscriptions) {
     'use strict';
 
     return Component.extend({
@@ -43,7 +42,7 @@ define([
                     parentName: this.name
                 }
             );
-            utils.extend(rendererComponent, {subscription: subscription});
+            utils.extend(rendererComponent, {subscription: subscription, priceFormat: this.priceFormat});
             return rendererComponent;
         }
     });

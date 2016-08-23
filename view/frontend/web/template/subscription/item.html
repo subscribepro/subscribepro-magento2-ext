@@ -20,40 +20,35 @@
         </h2>
         <!-- ko if: isStatus(['Failed', 'Retry', 'Active']) -->
             <p>
-                <select data-bind="options: qtyValues, value: selectedQty, event: {change: qtyChanged}"></select>
+                <select data-bind="options: product.getQtyValues(), value: selectedQty, event: {change: qtyChanged}"></select>
                 <!-- ko i18n: ' unit(s) every' --><!-- /ko -->
-                <select data-bind="options: product().intervals, value: selectedInterval, event: {change: intervalChanged}"></select>
+                <select data-bind="options: product.intervals(), value: selectedInterval, event: {change: intervalChanged}"></select>
             </p>
         <!-- /ko -->
     </td>
     <td class="col product-image">
-        <!-- ko if: product().url -->
-            <a class="product-item-photo" data-bind="attr: {href: product().url, title: product().name}">
-                <img width="75px" height="75px" data-bind="attr: {src: product().image_url, title: product().name}" />
+        <!-- ko if: product.url() -->
+            <a class="product-item-photo" data-bind="attr: {href: product.url(), title: product.name()}">
+                <img width="75px" height="75px" data-bind="attr: {src: product.imageUrl(), title: product.name()}" />
             </a>
         <!-- /ko -->
-        <!-- ko ifnot: product().url -->
-            <img width="75px" height="75px" data-bind="attr: {src: product().image_url, title: product().name}" />
+        <!-- ko ifnot: product.url() -->
+            <img width="75px" height="75px" data-bind="attr: {src: product.imageUrl(), title: product.name()}" />
         <!-- /ko -->
     </td>
     <td class="col product-info">
-        <!-- ko if: product().url -->
-            <h2 class="product-name"><a data-bind="attr: {href: product().url, title: product().name}, text: product().name"></a></h2>
+        <!-- ko if: product.url() -->
+            <h2 class="product-name"><a data-bind="attr: {href: product.url(), title: product.name()}, text: product.name()"></a></h2>
         <!-- /ko -->
         <p>
             <s>
                 <!-- ko i18n: 'One-Time Purchase Price' --><!-- /ko -->
                 <!-- ko text: ': ' --><!-- /ko -->
-                <!-- ko text: getFormattedPrice(product().price) --><!-- /ko -->
+                <!-- ko text: product.formattedPrice --><!-- /ko -->
             </s>
         </p>
         <p>
-            <!-- ko text: priceWithDiscount --><!-- /ko -->
-            <!-- ko text: ' ' --><!-- /ko -->
-            <!-- ko i18n: 'with' --><!-- /ko -->
-            <!-- ko text: ' ' --><!-- /ko -->
-            <!-- ko text: discountText --><!-- /ko -->
-            <!-- ko i18n: 'subscription discount' --><!-- /ko -->
+            <!-- ko i18n: product.priceWithDiscountText --><!-- /ko -->
         </p>
     </td>
     <td class="col actions">

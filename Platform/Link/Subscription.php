@@ -3,6 +3,8 @@
 namespace Swarming\SubscribePro\Platform\Link;
 
 use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\Catalog\Pricing\Price\FinalPrice;
+use Magento\Catalog\Pricing\Price\RegularPrice;
 use Swarming\SubscribePro\Api\Data\SubscriptionInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 
@@ -34,6 +36,11 @@ class Subscription
     protected $imageHelper;
 
     /**
+     * @var \Magento\Framework\App\Config\ScopeConfigInterface
+     */
+    protected $scopeConfig;
+
+    /**
      * @param \Swarming\SubscribePro\Platform\Helper\Product $platformProductHelper
      * @param \Magento\Catalog\Api\ProductRepositoryInterface $productRepository
      * @param \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder
@@ -45,13 +52,15 @@ class Subscription
         \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
         \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder,
         \Magento\Catalog\Model\Product\Url $productUrlModel,
-        \Magento\Catalog\Helper\Image $imageHelper
+        \Magento\Catalog\Helper\Image $imageHelper,
+        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
     ) {
         $this->platformProductHelper = $platformProductHelper;
         $this->productRepository = $productRepository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->productUrlModel = $productUrlModel;
         $this->imageHelper = $imageHelper;
+        $this->scopeConfig = $scopeConfig;
     }
     
     /**
@@ -62,6 +71,7 @@ class Subscription
     {
         $magentoProducts = $this->getMagentoProducts($subscriptions);
 
+        $applyDiscountToCatalogPrice = $this->isApplyDiscountToCatalogPrice();
         foreach ($subscriptions as $subscription) {
             try {
                 $platformProduct = $this->platformProductHelper->getProduct($subscription->getProductSku());
@@ -71,6 +81,9 @@ class Subscription
 
             $platformProduct->setImageUrl($this->getProductImageUrl($magentoProducts[$subscription->getProductSku()]));
             $platformProduct->setUrl($this->getProductUrl($magentoProducts[$subscription->getProductSku()]));
+            $platformProduct->setPrice($this->getProductPrice($magentoProducts[$subscription->getProductSku()]));
+            $platformProduct->setFinalPrice($this->getProductFinalPrice($magentoProducts[$subscription->getProductSku()]));
+            $platformProduct->setApplyDiscountToCatalogPrice($applyDiscountToCatalogPrice);
 
             $subscription->setProduct($platformProduct);
         }
@@ -125,5 +138,28 @@ class Subscription
         return $magentoProduct
             ? $this->imageHelper->init($magentoProduct, 'product_thumbnail_image')->getUrl()
             : $this->imageHelper->getDefaultPlaceholderUrl('thumbnail');
+    }
+    
+    /**
+     * @param \Magento\Catalog\Api\Data\ProductInterface|\Magento\Catalog\Model\Product|null $magentoProduct
+     * @return float
+     */
+    protected function getProductPrice($magentoProduct = null)
+    {
+        return $magentoProduct ? $magentoProduct->getPriceInfo()->getPrice(RegularPrice::PRICE_CODE)->getValue() : 0;
+    }
+    
+    /**
+     * @param \Magento\Catalog\Api\Data\ProductInterface|\Magento\Catalog\Model\Product|null $magentoProduct
+     * @return float
+     */
+    protected function getProductFinalPrice($magentoProduct = null)
+    {
+        return $magentoProduct ? $magentoProduct->getPriceInfo()->getPrice(FinalPrice::PRICE_CODE)->getValue() : 0;
+    }
+
+    protected function isApplyDiscountToCatalogPrice()
+    {
+        return $this->scopeConfig->getValue('swarming_subscribepro/subscription_discount/apply_discount_to_catalog_price', \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITE);
     }
 }

@@ -4,6 +4,7 @@ namespace Swarming\SubscribePro\Observer;
 
 use Magento\Framework\Event\Observer;
 use Magento\Quote\Api\Data\PaymentInterface;
+use Swarming\SubscribePro\Gateway\Request\PaymentDataBuilder;
 
 class DataAssignObserver extends \Magento\Payment\Observer\AbstractDataAssignObserver
 {
@@ -11,10 +12,7 @@ class DataAssignObserver extends \Magento\Payment\Observer\AbstractDataAssignObs
      * @var array
      */
     protected $additionalInformationList = [
-        'cc_number',
-        'cc_exp_month',
-        'cc_exp_year',
-        'cc_cid'
+        PaymentDataBuilder::PAYMENT_METHOD_TOKEN
     ];
 
     /**

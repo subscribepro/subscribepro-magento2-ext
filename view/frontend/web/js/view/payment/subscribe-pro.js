@@ -3,20 +3,20 @@
 define(
     [
         'uiComponent',
+        'Swarming_SubscribePro/js/model/payment/config',
         'Magento_Checkout/js/model/payment/renderer-list'
     ],
     function (
         Component,
+        config,
         rendererList
     ) {
         'use strict';
 
-        var config = window.checkoutConfig.payment;
-
-        if (config['subscribe_pro'].isActive) {
+        if (config.isActive()) {
             rendererList.push(
                 {
-                    type: 'subscribe_pro',
+                    type: config.getCode(),
                     component: 'Swarming_SubscribePro/js/view/payment/method-renderer/cc-form'
                 }
             );
