@@ -3,14 +3,14 @@
     <type name="Magento\Checkout\Model\CompositeConfigProvider">
         <arguments>
             <argument name="configProviders" xsi:type="array">
-                <item name="subscribe_pro_config_provider" xsi:type="object">Swarming\SubscribePro\Model\Ui\ConfigProvider</item>
+                <item name="subscribe_pro_config_provider" xsi:type="object">Swarming\SubscribePro\Ui\ConfigProvider\Checkout</item>
             </argument>
         </arguments>
     </type>
     <type name="Magento\Payment\Model\CcGenericConfigProvider">
         <arguments>
             <argument name="methodCodes" xsi:type="array">
-                <item name="subscribe_pro" xsi:type="const">Swarming\SubscribePro\Model\Ui\ConfigProvider::CODE</item>
+                <item name="subscribe_pro" xsi:type="const">Swarming\SubscribePro\Gateway\Config\ConfigProvider::CODE</item>
             </argument>
         </arguments>
     </type>
@@ -26,7 +26,7 @@
     <type name="Magento\Vault\Model\Ui\TokensConfigProvider">
         <arguments>
             <argument name="tokenUiComponentProviders" xsi:type="array">
-                <item name="subscribe_pro" xsi:type="object">Swarming\SubscribePro\Model\Ui\TokenUiComponentProvider</item>
+                <item name="subscribe_pro" xsi:type="object">Swarming\SubscribePro\Ui\ComponentProvider\VaultToken</item>
             </argument>
         </arguments>
     </type>

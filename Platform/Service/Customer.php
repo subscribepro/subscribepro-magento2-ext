@@ -1,18 +1,16 @@
 <?php
 
-namespace Swarming\SubscribePro\Platform\Helper;
+namespace Swarming\SubscribePro\Platform\Service;
 
 use SubscribePro\Service\Customer\CustomerInterface;
 use Magento\Customer\Api\Data\CustomerInterface as MagentoCustomer;
 use Magento\Framework\Exception\NoSuchEntityException;
 
-class Customer
+/**
+ * @method \SubscribePro\Service\Customer\CustomerService getService($websiteCode = null)
+ */
+class Customer extends AbstractService
 {
-    /**
-     * @var \SubscribePro\Service\Customer\CustomerService
-     */
-    protected $sdkCustomerService;
-
     /**
      * @var \Magento\Customer\Api\CustomerRepositoryInterface
      */
@@ -20,13 +18,16 @@ class Customer
 
     /**
      * @param \Swarming\SubscribePro\Platform\Platform $platform
+     * @param string $name
+     * @param \Magento\Customer\Api\CustomerRepositoryInterface $customerRepository
      */
     public function __construct(
         \Swarming\SubscribePro\Platform\Platform $platform,
+        $name,
         \Magento\Customer\Api\CustomerRepositoryInterface $customerRepository
     ) {
-        $this->sdkCustomerService = $platform->getSdk()->getCustomerService();
         $this->customerRepository = $customerRepository;
+        parent::__construct($platform, $name);
     }
 
     /**
@@ -38,7 +39,7 @@ class Customer
      */
     public function getCustomer($magentoCustomerId, $createIfNotExist = false)
     {
-        $subscribeProCustomers = $this->sdkCustomerService->loadCustomers(
+        $subscribeProCustomers = $this->getService()->loadCustomers(
             [CustomerInterface::MAGENTO_CUSTOMER_ID => $magentoCustomerId]
         );
 
@@ -61,7 +62,7 @@ class Customer
      */
     protected function createPlatformCustomer(MagentoCustomer $customer)
     {
-        $platformCustomer = $this->sdkCustomerService->createCustomer();
+        $platformCustomer = $this->getService()->createCustomer();
         $platformCustomer->setMagentoCustomerId($customer->getId());
         $platformCustomer->setEmail($customer->getEmail());
         $platformCustomer->setFirstName($customer->getFirstname());
@@ -70,7 +71,7 @@ class Customer
         $platformCustomer->setMagentoCustomerGroupId($customer->getGroupId());
         $platformCustomer->setMagentoWebsiteId($customer->getWebsiteId());
 
-        $this->sdkCustomerService->saveCustomer($platformCustomer);
+        $this->getService()->saveCustomer($platformCustomer);
         return $platformCustomer;
     }
 }

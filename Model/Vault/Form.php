@@ -3,28 +3,20 @@
 namespace Swarming\SubscribePro\Model\Vault;
 
 use Magento\Framework\Exception\LocalizedException;
+use SubscribePro\Service\PaymentProfile\PaymentProfileInterface;
+use Magento\Vault\Api\Data\PaymentTokenInterface;
 
 class Form
 {
-    /**
-     * @var \Magento\Customer\Model\Session
-     */
-    protected $session;
-
-    /**
-     * @var \Magento\Vault\Api\PaymentTokenManagementInterface
-     */
-    protected $paymentTokenManagement;
-
     /**
      * @var \Magento\Vault\Api\PaymentTokenRepositoryInterface
      */
     protected $paymentTokenRepository;
 
     /**
-     * @var \SubscribePro\Service\PaymentProfile\PaymentProfileService
+     * @var \Magento\Vault\Api\PaymentTokenManagementInterface
      */
-    protected $sdkPaymentProfileService;
+    protected $paymentTokenManagement;
 
     /**
      * @var \Magento\Vault\Model\PaymentTokenFactory
@@ -37,107 +29,113 @@ class Form
     protected $vaultManager;
 
     /**
-     * @var \Magento\Directory\Model\RegionFactory
+     * @var \SubscribePro\Service\PaymentProfile\PaymentProfileService
      */
-    protected $regionFactory;
+    protected $sdkPaymentProfileService;
 
     /**
-     * @var \Swarming\SubscribePro\Platform\Helper\Customer
+     * @var \Swarming\SubscribePro\Platform\Service\Customer
      */
-    protected $platformCustomerHelper;
+    protected $platformCustomerService;
 
     /**
-     * @param \Magento\Customer\Model\Session $session
+     * @var \Swarming\SubscribePro\Model\Vault\Validator
+     */
+    protected $validator;
+
+    /**
      * @param \Magento\Vault\Api\PaymentTokenRepositoryInterface $paymentTokenRepository
      * @param \Magento\Vault\Api\PaymentTokenManagementInterface $paymentTokenManagement
-     * @param \Swarming\SubscribePro\Platform\Platform $platform
      * @param \Magento\Vault\Model\PaymentTokenFactory $paymentTokenFactory
      * @param \Swarming\SubscribePro\Model\Vault\Manager $vaultManager
+     * @param \Swarming\SubscribePro\Platform\Platform $platform
      * @param \Magento\Directory\Model\RegionFactory $regionFactory
-     * @param \Swarming\SubscribePro\Platform\Helper\Customer $platformCustomerHelper
+     * @param \Swarming\SubscribePro\Platform\Service\Customer $platformCustomerService
+     * @param \Swarming\SubscribePro\Model\Vault\Validator $validator
      */
     public function __construct(
-        \Magento\Customer\Model\Session $session,
         \Magento\Vault\Api\PaymentTokenRepositoryInterface $paymentTokenRepository,
         \Magento\Vault\Api\PaymentTokenManagementInterface $paymentTokenManagement,
-        \Swarming\SubscribePro\Platform\Platform $platform,
         \Magento\Vault\Model\PaymentTokenFactory $paymentTokenFactory,
         \Swarming\SubscribePro\Model\Vault\Manager $vaultManager,
+        \Swarming\SubscribePro\Platform\Platform $platform,
         \Magento\Directory\Model\RegionFactory $regionFactory,
-        \Swarming\SubscribePro\Platform\Helper\Customer $platformCustomerHelper
+        \Swarming\SubscribePro\Platform\Service\Customer $platformCustomerService,
+        \Swarming\SubscribePro\Model\Vault\Validator $validator
     ) {
-        $this->session = $session;
         $this->paymentTokenRepository = $paymentTokenRepository;
         $this->paymentTokenManagement = $paymentTokenManagement;
-        $this->sdkPaymentProfileService = $platform->getSdk()->getPaymentProfileService();
         $this->paymentTokenFactory = $paymentTokenFactory;
         $this->vaultManager = $vaultManager;
-        $this->regionFactory = $regionFactory;
-        $this->platformCustomerHelper = $platformCustomerHelper;
+        $this->sdkPaymentProfileService = $platform->getSdk()->getPaymentProfileService();
+        $this->platformCustomerService = $platformCustomerService;
+        $this->validator = $validator;
     }
 
     /**
-     * @param array $data
+     * @param array $profileData
+     * @param int $customerId
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function createProfile(array $data)
+    public function createProfile(array $profileData, $customerId)
     {
-        if (empty($data['payment']['token'])) {
+        if (empty($profileData['token'])) {
             throw new LocalizedException(__('The credit card can be not saved.'));
         }
-        $paymentProfileToken = $data['payment']['token'];
+        $platformCustomer = $this->platformCustomerService->getCustomer($customerId, true);
 
-        $paymentProfileData = $data['payment'];
-        $paymentProfileData['billing_address'] = $this->updateBillingRegion($data['billing_address']);
-
-        $platformCustomer = $this->platformCustomerHelper->getCustomer($this->session->getCustomerId(), true);
+        if (!$this->validator->validate($profileData)) {
+            throw new LocalizedException(__('Not all fields are filled.'));
+        }
 
         $profile = $this->sdkPaymentProfileService->createProfile();
-        $profile->importData($paymentProfileData);
+        $profile->importData($profileData);
         $profile->setCustomerId($platformCustomer->getId());
         $profile->setMagentoCustomerId($platformCustomer->getMagentoCustomerId());
-        $this->sdkPaymentProfileService->saveToken($paymentProfileToken, $profile);
+        $this->sdkPaymentProfileService->saveToken($profileData['token'], $profile);
 
-        $paymentToken = $this->paymentTokenFactory->create();
-        $this->vaultManager->initVault($paymentToken, $profile);
-        $this->paymentTokenRepository->save($paymentToken);
+        $this->saveProfileToToken($profile);
     }
 
     /**
      * @param string $publicHash
      * @param array $profileData
+     * @param int $customerId
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function updateProfile($publicHash, array $profileData)
+    public function updateProfile($publicHash, array $profileData, $customerId)
     {
-        $paymentToken = $this->paymentTokenManagement->getByPublicHash($publicHash, $this->session->getCustomerId());
+        $paymentToken = $this->paymentTokenManagement->getByPublicHash($publicHash, $customerId);
         if (!$paymentToken) {
             throw new LocalizedException(__('The credit card is not found.'));
         }
 
-        $profileData['billing_address'] = $this->updateBillingRegion($profileData['billing_address']);
-        $profile = $this->sdkPaymentProfileService->createProfile($profileData);
+        if (!$this->validator->validate($profileData)) {
+            throw new LocalizedException(__('Not all fields are filled.'));
+        }
+
+        $profile = $this->sdkPaymentProfileService->createProfile();
+        $profile->importData($profileData);
         $profile->setId($paymentToken->getGatewayToken());
         $this->sdkPaymentProfileService->saveProfile($profile);
 
-        $this->vaultManager->updateVault($paymentToken, $profile);
-        $this->paymentTokenRepository->save($paymentToken);
+        $this->saveProfileToToken($profile, $paymentToken);
     }
 
     /**
-     * @param array $billingData
-     * @return array
+     * @param \SubscribePro\Service\PaymentProfile\PaymentProfileInterface $profile
+     * @param \Magento\Vault\Api\Data\PaymentTokenInterface|null $paymentToken
      */
-    protected function updateBillingRegion(array $billingData)
+    protected function saveProfileToToken(PaymentProfileInterface $profile, PaymentTokenInterface $paymentToken = null)
     {
-        if (empty($billingData['region_id']) || empty($billingData['country'])) {
-            return $billingData;
+        $paymentToken = $paymentToken ?: $this->paymentTokenFactory->create();
+
+        if ($paymentToken->isEmpty()) {
+            $this->vaultManager->initVault($paymentToken, $profile);
+        } else {
+            $this->vaultManager->updateVault($paymentToken, $profile);
         }
 
-        $region = $this->regionFactory->create()->load($billingData['region_id']);
-        if ($region->getCode() && $region->getCountryId() == $billingData['country']) {
-            $billingData['region'] = $region->getCode();
-        }
-        return $billingData;
+        $this->paymentTokenRepository->save($paymentToken);
     }
 }

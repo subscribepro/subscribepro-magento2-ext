@@ -30,7 +30,7 @@ class Subscriptions extends \Magento\Framework\View\Element\Template
     protected $addressConfig;
     
     /**
-     * @var \Swarming\SubscribePro\Model\Ui\AddressAttributes
+     * @var \Swarming\SubscribePro\Ui\ComponentProvider\AddressAttributes
      */
     protected $addressAttributes;
 
@@ -46,7 +46,7 @@ class Subscriptions extends \Magento\Framework\View\Element\Template
      * @param \Magento\Customer\Model\Session $customerSession
      * @param \Magento\Customer\Model\Address\Mapper $addressMapper
      * @param \Magento\Customer\Model\Address\Config $addressConfig
-     * @param \Swarming\SubscribePro\Model\Ui\AddressAttributes $addressAttributes
+     * @param \Swarming\SubscribePro\Ui\ComponentProvider\AddressAttributes $addressAttributes
      * @param \Magento\Checkout\Block\Checkout\AttributeMerger $attributeMerger
      * @param array $data
      */
@@ -57,7 +57,7 @@ class Subscriptions extends \Magento\Framework\View\Element\Template
         \Magento\Customer\Model\Session $customerSession,
         \Magento\Customer\Model\Address\Mapper $addressMapper,
         \Magento\Customer\Model\Address\Config $addressConfig,
-        \Swarming\SubscribePro\Model\Ui\AddressAttributes $addressAttributes,
+        \Swarming\SubscribePro\Ui\ComponentProvider\AddressAttributes $addressAttributes,
         \Magento\Checkout\Block\Checkout\AttributeMerger $attributeMerger,
         array $data = []
     ) {

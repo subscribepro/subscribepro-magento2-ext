@@ -2,28 +2,33 @@
 
 namespace Swarming\SubscribePro\Block\Vault\Edit;
 
-class EditCard extends \Swarming\SubscribePro\Block\Vault\CardRenderer
+class CardExpiration extends \Swarming\SubscribePro\Block\Vault\CardRenderer
 {
     /**
      * @return string
      */
     public function getJsLayout()
     {
-        $jsLayout = $this->updateJsLayout($this->jsLayout);
-        return json_encode($jsLayout);
+        $this->updateJsLayout();
+        return parent::getJsLayout();
     }
 
     /**
-     * @param array $jsLayout
      * @return array
      */
-    protected function updateJsLayout(array $jsLayout)
+    protected function updateJsLayout()
     {
-        $jsLayout['components']['subscribe-pro-vault-card-edit']['config'] = [
-            'creditCardExpMonth' => $this->getExpirationMonth(),
-            'creditCardExpYear' => $this->getExpirationYear()
+        $jsLayout = [
+            'components' => [
+                'subscribe-pro-vault-card-expiration' => [
+                    'config' => [
+                        'creditCardExpMonth' => $this->getExpirationMonth(),
+                        'creditCardExpYear' => $this->getExpirationYear()
+                    ]
+                ]
+            ]
         ];
-        return $jsLayout;
+        $this->jsLayout = array_merge_recursive($this->jsLayout, $jsLayout);
     }
 
     /**

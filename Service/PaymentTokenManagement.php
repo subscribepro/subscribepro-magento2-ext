@@ -7,7 +7,7 @@ use Magento\Vault\Api\Data;
 use Magento\Vault\Api\Data\PaymentTokenInterface;
 use Magento\Vault\Model\ResourceModel\PaymentToken as PaymentTokenResourceModel;
 use Swarming\SubscribePro\Api\PaymentTokenManagementInterface;
-use Swarming\SubscribePro\Model\Ui\ConfigProvider;
+use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
 use Magento\Vault\Api\PaymentTokenManagementInterface as VaultPaymentTokenManagementInterface;
 
 class PaymentTokenManagement implements PaymentTokenManagementInterface

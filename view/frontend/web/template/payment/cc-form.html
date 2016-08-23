@@ -1,150 +1,27 @@
 
-
 <div data-bind="attr: {class: 'payment-method payment-method-' + getCode()}, css: {'_active': isActive()}">
     <div class="payment-method-title field choice">
         <input type="radio"
                name="payment[method]"
                class="radio"
                data-bind="attr: {'id': getCode()}, value: getCode(), checked: isChecked, click: selectPaymentMethod, visible: isRadioButtonVisible()"/>
-        <label data-bind="attr: {'for': getCode()}" class="label"><span data-bind="text: getTitle()"></span></label>
+        <label data-bind="attr: {'for': getCode()}" class="label">
+            <span data-bind="text: getTitle()"></span>
+        </label>
     </div>
     <div class="payment-method-content">
         <!-- ko foreach: getRegion('messages') -->
-        <!-- ko template: getTemplate() --><!-- /ko -->
+            <!-- ko template: getTemplate() --><!-- /ko -->
         <!--/ko-->
         <div class="payment-method-billing-address">
             <!-- ko foreach: $parent.getRegion(getBillingAddressFormName()) -->
-            <!-- ko template: getTemplate() --><!-- /ko -->
+                <!-- ko template: getTemplate() --><!-- /ko -->
             <!--/ko-->
         </div>
 
         <form id="co-transparent-form-subscribepro" class="form" data-bind="" method="post" action="#" novalidate="novalidate">
-            <fieldset data-bind="attr: {class: 'fieldset payment items ccard ' + getCode(), id: 'payment_form_' + getCode()}">
-                <!-- ko if: (isShowLegend())-->
-                <legend class="legend">
-                    <span><!-- ko i18n: 'Credit Card Information'--><!-- /ko --></span>
-                </legend><br />
-                <!-- /ko -->
-                <div class="field type">
-                    <div class="control">
-                        <ul class="credit-card-types">
-                            <!-- ko foreach: {data: getCcAvailableTypesValues(), as: 'item'} -->
-                            <li class="item" data-bind="css: {
-                                                 _active: $parent.selectedCardType() == item.value,
-                                                 _inactive: $parent.selectedCardType() != null && $parent.selectedCardType() != item.value
-                                                 } ">
-                                <!--ko if: $parent.getIcons(item.value) -->
-                                <img data-bind="attr: {
-                        'src': $parent.getIcons(item.value).url,
-                        'alt': item.type,
-                        'width': $parent.getIcons(item.value).width,
-                        'height': $parent.getIcons(item.value).height
-                        }">
-                                <!--/ko-->
-                            </li>
-                            <!--/ko-->
-                        </ul>
-                        <input type="hidden"
-                               name="payment[cc_type]"
-                               class="input-text"
-                               value=""
-                               data-bind="attr: {id: getCode() + '_cc_type', 'data-container': getCode() + '-cc-type'},
-                   value: creditCardType
-                   ">
-                    </div>
-                </div>
-
-                <div class="field number required">
-                    <label data-bind="attr: {for: getCode() + '_cc_number'}" class="label">
-                        <span><!-- ko i18n: 'Credit Card Number'--><!-- /ko --></span>
-                    </label>
-                    <div class="control">
-                        <div data-bind="attr: {id: getCode() + '_cc_number'}" class="hosted-control"></div>
-                        <div class="hosted-error"><!-- ko i18n: 'Please, enter valid Credit Card Number'--><!-- /ko --></div>
-                    </div>
-                </div>
-
-                <div class="field date required" data-bind="attr: {id: getCode() + '_cc_type_exp_div'}">
-                    <label data-bind="attr: {for: getCode() + '_expiration'}" class="label">
-                        <span><!-- ko i18n: 'Expiration Date'--><!-- /ko --></span>
-                    </label>
-                    <div class="control">
-                        <div class="date-wrap">
-                            <div class="child-control month">
-                                <input type="text"
-                                       name="payment[cc_exp_month]"
-                                       data-bind="attr: {id: getCode() + '_expiration'}, value: creditCardExpMonth, hasFocus: creditCardExpMonthFocus"
-                                       size="3"
-                                       maxlength="2"
-                                       autocomplete="off"
-                                       placeholder="MM"
-                                >
-                            </div>
-                            <div class="child-control year">
-                                <input type="text"
-                                       name="payment[cc_exp_year]"
-                                       data-bind="attr: {id: getCode() + '_expiration_yr'}, value: creditCardExpYear, hasFocus: creditCardExpYearFocus"
-                                       size="5"
-                                       maxlength="4"
-                                       autocomplete="off"
-                                       placeholder="YYYY"
-                                >
-                            </div>
-                            <div class="error"><!-- ko i18n: 'Please, enter valid Expiration Date'--><!-- /ko --></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ko if: (hasVerification())-->
-                <div class="field cvv required" data-bind="attr: {id: getCode() + '_cc_type_cvv_div'}">
-                    <label data-bind="attr: {for: getCode() + '_cc_cid'}" class="label">
-                        <span><!-- ko i18n: 'Card Verification Number'--><!-- /ko --></span>
-                    </label>
-                    <div class="control _with-tooltip">
-                        <div data-bind="attr: {id: getCode() + '_cc_cid'}" class="hosted-control hosted-cid"></div>
-                        <div class="hosted-error"><!-- ko i18n: 'Please, enter valid Card Verification Number'--><!-- /ko --></div>
-
-                        <div class="field-tooltip toggle">
-                            <span class="field-tooltip-action action-cvv"
-                                  tabindex="0"
-                                  data-toggle="dropdown"
-                                  data-bind="attr: {title: $t('What is this?')}, mageInit: {'dropdown':{'activeClass': '_active'}}">
-                                <span><!-- ko i18n: 'What is this?'--><!-- /ko --></span>
-                            </span>
-                            <div class="field-tooltip-content"
-                                 data-target="dropdown"
-                                 data-bind="html: getCvvImageHtml()"></div>
-                        </div>
-                    </div>
-                </div>
-                <!-- /ko -->
-
-                <!-- ko if: (isVaultEnabled())-->
-                <div class="field choice">
-                    <input type="checkbox"
-                           name="vault[is_enabled]"
-                           class="checkbox"
-                           data-bind="attr: {'id': getCode() + '_vault_enabler'}, checked: vaultEnabler.isActivePaymentTokenEnabler"/>
-                    <label class="label" data-bind="attr: {'for': getCode() + '_vault_enabler'}">
-                        <span><!-- ko i18n: 'Save for later use.'--><!-- /ko --></span>
-                    </label>
-                    <div class="field-tooltip toggle">
-                            <span class="field-tooltip-action action-vault"
-                                  tabindex="0"
-                                  data-toggle="dropdown"
-                                  data-bind="attr: {title: $t('What is this?')}, mageInit: {'dropdown':{'activeClass': '_active'}}">
-                                <span translate="'What is this?'"></span>
-                            </span>
-                        <div class="field-tooltip-content"
-                             data-target="dropdown"
-                             translate="'We store you payment information securely via SSL.'"></div>
-                    </div>
-                </div>
-                <!-- /ko -->
-            </fieldset>
+            <!-- ko template: 'Swarming_SubscribePro/payment/cc-fieldset' --><!-- /ko -->
         </form>
-
-        <!-- ko if: (initSpreedly()) --><!-- /ko -->
 
         <div class="checkout-agreements-block">
             <!-- ko foreach: $parent.getRegion('before-place-order') -->

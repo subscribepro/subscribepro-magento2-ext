@@ -7,7 +7,7 @@ use Magento\Quote\Api\Data\PaymentInterface;
 use Magento\Vault\Api\Data\PaymentTokenInterface;
 use Magento\Vault\Model\Method\Vault;
 use Swarming\SubscribePro\Gateway\Request\VaultDataBuilder;
-use Swarming\SubscribePro\Model\Ui\ConfigProvider;
+use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
 use Magento\Quote\Model\Quote\Payment as QuotePayment;
 
 class PaymentTokenAssigner extends \Magento\Payment\Observer\AbstractDataAssignObserver

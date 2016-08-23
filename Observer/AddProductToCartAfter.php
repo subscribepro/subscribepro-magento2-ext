@@ -29,9 +29,9 @@ class AddProductToCartAfter implements ObserverInterface
     protected $quoteItemOptionsManager;
 
     /**
-     * @var \Swarming\SubscribePro\Platform\Helper\Product
+     * @var \Swarming\SubscribePro\Platform\Service\Product
      */
-    protected $platformProductHelper;
+    protected $platformProductService;
 
     /**
      * @var \Magento\Framework\Message\ManagerInterface
@@ -41,20 +41,20 @@ class AddProductToCartAfter implements ObserverInterface
     /**
      * @param \Swarming\SubscribePro\Model\Config\General $configGeneral
      * @param \Magento\Checkout\Model\Session $checkoutSession
-     * @param \Swarming\SubscribePro\Platform\Helper\Product $platformProductHelper
+     * @param \Swarming\SubscribePro\Platform\Service\Product $platformProductService
      * @param \Magento\Framework\Message\ManagerInterface $messageManager
      * @param \Swarming\SubscribePro\Model\Quote\ItemOptionsManager $quoteItemOptionManager
      */
     public function __construct(
         \Swarming\SubscribePro\Model\Config\General $configGeneral,
         \Magento\Checkout\Model\Session $checkoutSession,
-        \Swarming\SubscribePro\Platform\Helper\Product $platformProductHelper,
+        \Swarming\SubscribePro\Platform\Service\Product $platformProductService,
         \Magento\Framework\Message\ManagerInterface $messageManager,
         \Swarming\SubscribePro\Model\Quote\ItemOptionsManager $quoteItemOptionManager
     ) {
         $this->configGeneral = $configGeneral;
         $this->checkoutSession = $checkoutSession;
-        $this->platformProductHelper = $platformProductHelper;
+        $this->platformProductService = $platformProductService;
         $this->quoteItemOptionsManager = $quoteItemOptionManager;
         $this->messageManager = $messageManager;
     }
@@ -83,7 +83,7 @@ class AddProductToCartAfter implements ObserverInterface
         }
         
         try {
-            $platformProduct = $this->platformProductHelper->getProduct($product->getSku());
+            $platformProduct = $this->platformProductService->getProduct($product->getSku());
         } catch (NoSuchEntityException $e) {
             $this->checkoutSession->getQuote()->removeItem($quoteItem->getId());
             throw new NoSuchEntityException(__('Product "%1" is not found on Subscribe Pro platform.', $quoteItem->getProduct()->getName()));

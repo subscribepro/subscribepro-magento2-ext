@@ -12,24 +12,24 @@ use Swarming\SubscribePro\Api\SubscriptionManagementInterface;
 class SubscriptionManagement implements SubscriptionManagementInterface
 {
     /**
-     * @var \Swarming\SubscribePro\Platform\Helper\Product
+     * @var \Swarming\SubscribePro\Platform\Service\Product
      */
-    protected $platformProductHelper;
+    protected $platformProductService;
 
     /**
-     * @var \Swarming\SubscribePro\Platform\Helper\Customer
+     * @var \Swarming\SubscribePro\Platform\Service\Customer
      */
-    protected $platformCustomerHelper;
+    protected $platformCustomerService;
 
     /**
-     * @var \Swarming\SubscribePro\Platform\Helper\Subscription
+     * @var \Swarming\SubscribePro\Platform\Service\Subscription
      */
-    protected $platformSubscriptionHelper;
+    protected $platformSubscriptionService;
 
     /**
-     * @var \Swarming\SubscribePro\Platform\Helper\Address
+     * @var \Swarming\SubscribePro\Platform\Service\Address
      */
-    protected $platformAddressHelper;
+    protected $platformAddressService;
 
     /**
      * @var \Magento\Customer\Api\AddressRepositoryInterface
@@ -62,10 +62,10 @@ class SubscriptionManagement implements SubscriptionManagementInterface
     protected $logger;
 
     /**
-     * @param \Swarming\SubscribePro\Platform\Helper\Product $platformProductHelper
-     * @param \Swarming\SubscribePro\Platform\Helper\Customer $platformCustomerHelper
-     * @param \Swarming\SubscribePro\Platform\Helper\Subscription $platformSubscriptionHelper
-     * @param \Swarming\SubscribePro\Platform\Helper\Address $platformAddressHelper
+     * @param \Swarming\SubscribePro\Platform\Service\Product $platformProductService
+     * @param \Swarming\SubscribePro\Platform\Service\Customer $platformCustomerService
+     * @param \Swarming\SubscribePro\Platform\Service\Subscription $platformSubscriptionService
+     * @param \Swarming\SubscribePro\Platform\Service\Address $platformAddressService
      * @param \Swarming\SubscribePro\Platform\Link\Subscription $linkSubscription
      * @param \Magento\Customer\Api\AddressRepositoryInterface $addressRepository
      * @param \Magento\Customer\Model\Address\Mapper $addressMapper
@@ -74,10 +74,10 @@ class SubscriptionManagement implements SubscriptionManagementInterface
      * @param \Psr\Log\LoggerInterface $logger
      */
     public function __construct(
-        \Swarming\SubscribePro\Platform\Helper\Product $platformProductHelper,
-        \Swarming\SubscribePro\Platform\Helper\Customer $platformCustomerHelper,
-        \Swarming\SubscribePro\Platform\Helper\Subscription $platformSubscriptionHelper,
-        \Swarming\SubscribePro\Platform\Helper\Address $platformAddressHelper,
+        \Swarming\SubscribePro\Platform\Service\Product $platformProductService,
+        \Swarming\SubscribePro\Platform\Service\Customer $platformCustomerService,
+        \Swarming\SubscribePro\Platform\Service\Subscription $platformSubscriptionService,
+        \Swarming\SubscribePro\Platform\Service\Address $platformAddressService,
         \Swarming\SubscribePro\Platform\Link\Subscription $linkSubscription,
         \Magento\Customer\Api\AddressRepositoryInterface $addressRepository,
         \Magento\Customer\Model\Address\Mapper $addressMapper,
@@ -85,10 +85,10 @@ class SubscriptionManagement implements SubscriptionManagementInterface
         \Magento\Framework\View\DesignInterface $design,
         \Psr\Log\LoggerInterface $logger
     ) {
-        $this->platformProductHelper = $platformProductHelper;
-        $this->platformCustomerHelper = $platformCustomerHelper;
-        $this->platformSubscriptionHelper = $platformSubscriptionHelper;
-        $this->platformAddressHelper = $platformAddressHelper;
+        $this->platformProductService = $platformProductService;
+        $this->platformCustomerService = $platformCustomerService;
+        $this->platformSubscriptionService = $platformSubscriptionService;
+        $this->platformAddressService = $platformAddressService;
         $this->addressRepository = $addressRepository;
         $this->addressMapper = $addressMapper;
         $this->addressConfig = $addressConfig;
@@ -115,8 +115,8 @@ class SubscriptionManagement implements SubscriptionManagementInterface
         $this->enableFrontendDesignArea();
 
         try {
-            $platformCustomer = $this->platformCustomerHelper->getCustomer($customerId);
-            $subscriptions = $this->platformSubscriptionHelper->loadSubscriptionsByCustomer($platformCustomer->getId());
+            $platformCustomer = $this->platformCustomerService->getCustomer($customerId);
+            $subscriptions = $this->platformSubscriptionService->loadSubscriptionsByCustomer($platformCustomer->getId());
             if (empty($subscriptions)) {
                 throw new NoSuchEntityException();
             }
@@ -142,10 +142,10 @@ class SubscriptionManagement implements SubscriptionManagementInterface
     public function updateQty($customerId, $subscriptionId, $qty)
     {
         try {
-            $subscription = $this->platformSubscriptionHelper->loadSubscription($subscriptionId);
+            $subscription = $this->platformSubscriptionService->loadSubscription($subscriptionId);
             $this->checkSubscriptionOwner($subscription, $customerId);
 
-            $platformProduct = $this->platformProductHelper->getProduct($subscription->getProductSku());
+            $platformProduct = $this->platformProductService->getProduct($subscription->getProductSku());
             if ($platformProduct->getMinQty() > $qty || $platformProduct->getMaxQty() < $qty) {
                 throw new LocalizedException(__(
                     'Invalid quantity, it must be in range from %1 to %2.',
@@ -155,7 +155,7 @@ class SubscriptionManagement implements SubscriptionManagementInterface
             }
 
             $subscription->setQty($qty);
-            $this->platformSubscriptionHelper->saveSubscription($subscription);
+            $this->platformSubscriptionService->saveSubscription($subscription);
         } catch (NoSuchEntityException $e) {
             throw new LocalizedException(__('The subscription is not found.'));
         } catch (HttpException $e) {
@@ -176,11 +176,11 @@ class SubscriptionManagement implements SubscriptionManagementInterface
     public function updateInterval($customerId, $subscriptionId, $interval)
     {
         try {
-            $subscription = $this->platformSubscriptionHelper->loadSubscription($subscriptionId);
+            $subscription = $this->platformSubscriptionService->loadSubscription($subscriptionId);
             $this->checkSubscriptionOwner($subscription, $customerId);
 
             $subscription->setInterval($interval);
-            $this->platformSubscriptionHelper->saveSubscription($subscription);
+            $this->platformSubscriptionService->saveSubscription($subscription);
         } catch (NoSuchEntityException $e) {
             throw new LocalizedException(__('The subscription is not found.'));
         } catch (HttpException $e) {
@@ -205,11 +205,11 @@ class SubscriptionManagement implements SubscriptionManagementInterface
         }
 
         try {
-            $subscription = $this->platformSubscriptionHelper->loadSubscription($subscriptionId);
+            $subscription = $this->platformSubscriptionService->loadSubscription($subscriptionId);
             $this->checkSubscriptionOwner($subscription, $customerId);
 
             $subscription->setNextOrderDate($nextOrderDate);
-            $this->platformSubscriptionHelper->saveSubscription($subscription);
+            $this->platformSubscriptionService->saveSubscription($subscription);
         } catch (NoSuchEntityException $e) {
             throw new LocalizedException(__('The subscription is not found.'));
         } catch (HttpException $e) {
@@ -230,11 +230,11 @@ class SubscriptionManagement implements SubscriptionManagementInterface
     public function updatePaymentProfile($customerId, $subscriptionId, $paymentProfileId)
     {
         try {
-            $subscription = $this->platformSubscriptionHelper->loadSubscription($subscriptionId);
+            $subscription = $this->platformSubscriptionService->loadSubscription($subscriptionId);
             $this->checkSubscriptionOwner($subscription, $customerId);
 
             $subscription->setPaymentProfileId($paymentProfileId);
-            $subscription = $this->platformSubscriptionHelper->saveSubscription($subscription);
+            $subscription = $this->platformSubscriptionService->saveSubscription($subscription);
         } catch (NoSuchEntityException $e) {
             throw new LocalizedException(__('The subscription is not found.'));
         } catch (HttpException $e) {
@@ -256,16 +256,16 @@ class SubscriptionManagement implements SubscriptionManagementInterface
     public function updateShippingAddress($customerId, $subscriptionId, $address)
     {
         try {
-            $subscription = $this->platformSubscriptionHelper->loadSubscription($subscriptionId);
+            $subscription = $this->platformSubscriptionService->loadSubscription($subscriptionId);
             $saveInAddressBook = $address->getSaveInAddressBook();
             $address = $address->exportCustomerAddress();
             $address->setCustomerId($customerId);
-            $platformCustomer = $this->platformCustomerHelper->getCustomer($customerId);
+            $platformCustomer = $this->platformCustomerService->getCustomer($customerId);
             $this->checkSubscriptionOwner($subscription, $customerId);
 
-            $platformAddress = $this->platformAddressHelper->findOrSaveAddress($address, $platformCustomer);
+            $platformAddress = $this->platformAddressService->findOrSaveAddress($address, $platformCustomer);
             $subscription->setShippingAddressId($platformAddress->getId());
-            $this->platformSubscriptionHelper->saveSubscription($subscription);
+            $this->platformSubscriptionService->saveSubscription($subscription);
             if ($saveInAddressBook) {
                 $this->addressRepository->save($address);
             }
@@ -290,11 +290,11 @@ class SubscriptionManagement implements SubscriptionManagementInterface
     public function skip($customerId, $subscriptionId)
     {
         try {
-            $subscription = $this->platformSubscriptionHelper->loadSubscription($subscriptionId);
+            $subscription = $this->platformSubscriptionService->loadSubscription($subscriptionId);
             $this->checkSubscriptionOwner($subscription, $customerId);
 
-            $this->platformSubscriptionHelper->skip($subscriptionId);
-            $subscription = $this->platformSubscriptionHelper->loadSubscription($subscriptionId);
+            $this->platformSubscriptionService->skip($subscriptionId);
+            $subscription = $this->platformSubscriptionService->loadSubscription($subscriptionId);
         } catch (NoSuchEntityException $e) {
             throw new LocalizedException(__('The subscription is not found.'));
         } catch (HttpException $e) {
@@ -314,10 +314,10 @@ class SubscriptionManagement implements SubscriptionManagementInterface
     public function cancel($customerId, $subscriptionId)
     {
         try {
-            $subscription = $this->platformSubscriptionHelper->loadSubscription($subscriptionId);
+            $subscription = $this->platformSubscriptionService->loadSubscription($subscriptionId);
             $this->checkSubscriptionOwner($subscription, $customerId);
 
-            $this->platformSubscriptionHelper->cancel($subscriptionId);
+            $this->platformSubscriptionService->cancel($subscriptionId);
         } catch (NoSuchEntityException $e) {
             throw new LocalizedException(__('The subscription is not found.'));
         } catch (HttpException $e) {
@@ -337,10 +337,10 @@ class SubscriptionManagement implements SubscriptionManagementInterface
     public function pause($customerId, $subscriptionId)
     {
         try {
-            $subscription = $this->platformSubscriptionHelper->loadSubscription($subscriptionId);
+            $subscription = $this->platformSubscriptionService->loadSubscription($subscriptionId);
             $this->checkSubscriptionOwner($subscription, $customerId);
 
-            $this->platformSubscriptionHelper->pause($subscriptionId);
+            $this->platformSubscriptionService->pause($subscriptionId);
         } catch (NoSuchEntityException $e) {
             throw new LocalizedException(__('The subscription is not found.'));
         } catch (HttpException $e) {
@@ -360,15 +360,15 @@ class SubscriptionManagement implements SubscriptionManagementInterface
     public function restart($customerId, $subscriptionId)
     {
         try {
-            $subscription = $this->platformSubscriptionHelper->loadSubscription($subscriptionId);
+            $subscription = $this->platformSubscriptionService->loadSubscription($subscriptionId);
             $this->checkSubscriptionOwner($subscription, $customerId);
 
-            $this->platformSubscriptionHelper->restart($subscriptionId);
+            $this->platformSubscriptionService->restart($subscriptionId);
         } catch (NoSuchEntityException $e) {
             throw new LocalizedException(__('The subscription is not found.'));
         } catch (HttpException $e) {
             $this->logger->critical($e);
-            throw new LocalizedException(__('An error occurred while pausing subscription.'));
+            throw new LocalizedException(__('An error occurred while restarting subscription.'));
         }
         return true;
     }
@@ -380,7 +380,7 @@ class SubscriptionManagement implements SubscriptionManagementInterface
      */
     protected function checkSubscriptionOwner($subscription, $customerId)
     {
-        $platformCustomer = $this->platformCustomerHelper->getCustomer($customerId);
+        $platformCustomer = $this->platformCustomerService->getCustomer($customerId);
         if ($subscription->getCustomerId() != $platformCustomer->getId()) {
             throw new AuthorizationException(__('Forbidden action.'));
         }

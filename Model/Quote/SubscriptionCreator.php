@@ -20,9 +20,9 @@ class SubscriptionCreator
     protected $sdkSubscriptionService;
 
     /**
-     * @var \Swarming\SubscribePro\Platform\Helper\Customer
+     * @var \Swarming\SubscribePro\Platform\Service\Customer
      */
-    protected $platformCustomerHelper;
+    protected $platformCustomerService;
 
     /**
      * @var \Swarming\SubscribePro\Model\Config\SubscriptionOptions
@@ -52,7 +52,7 @@ class SubscriptionCreator
     /**
      * @param \Swarming\SubscribePro\Helper\QuoteItem $quoteItemHelper
      * @param \Swarming\SubscribePro\Platform\Platform $platform
-     * @param \Swarming\SubscribePro\Platform\Helper\Customer $platformCustomerHelper
+     * @param \Swarming\SubscribePro\Platform\Service\Customer $platformCustomerService
      * @param \Swarming\SubscribePro\Model\Config\SubscriptionOptions $subscriptionOptionsConfig
      * @param \Magento\Vault\Api\PaymentTokenManagementInterface $tokenManagement
      * @param \Magento\Checkout\Model\Session $checkoutSession
@@ -62,7 +62,7 @@ class SubscriptionCreator
     public function __construct(
         \Swarming\SubscribePro\Helper\QuoteItem $quoteItemHelper,
         \Swarming\SubscribePro\Platform\Platform $platform,
-        \Swarming\SubscribePro\Platform\Helper\Customer $platformCustomerHelper,
+        \Swarming\SubscribePro\Platform\Service\Customer $platformCustomerService,
         \Swarming\SubscribePro\Model\Config\SubscriptionOptions $subscriptionOptionsConfig,
         \Magento\Vault\Api\PaymentTokenManagementInterface $tokenManagement,
         \Magento\Checkout\Model\Session $checkoutSession,
@@ -71,7 +71,7 @@ class SubscriptionCreator
     ) {
         $this->quoteItemHelper = $quoteItemHelper;
         $this->sdkSubscriptionService = $platform->getSdk()->getSubscriptionService();
-        $this->platformCustomerHelper = $platformCustomerHelper;
+        $this->platformCustomerService = $platformCustomerService;
         $this->subscriptionOptionsConfig = $subscriptionOptionsConfig;
         $this->tokenManagement = $tokenManagement;
         $this->checkoutSession = $checkoutSession;
@@ -86,7 +86,7 @@ class SubscriptionCreator
     public function createSubscriptions($quote, $order)
     {
         $paymentProfileId = $this->getPaymentProfileId($order->getPayment());
-        $platformCustomer = $this->platformCustomerHelper->getCustomer($quote->getCustomerId());
+        $platformCustomer = $this->platformCustomerService->getCustomer($quote->getCustomerId());
 
         $subscriptionsSuccess = [];
         $subscriptionsFail = 0;

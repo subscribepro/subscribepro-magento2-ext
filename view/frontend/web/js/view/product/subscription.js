@@ -29,6 +29,7 @@ define(
                 if (this.priceBoxSelector) {
                     this.priceBoxElement = this.getPriceBoxElement();
                     this.priceBoxElement.on('reloadPrice', this.onPriceChange.bind(this));
+                    this.onPriceChange();
                 }
 
                 $(this.qtyFieldSelector).on('change', this.onQtyFieldChanged.bind(this));
@@ -73,15 +74,16 @@ define(
                 }
 
                 var prices = priceBox.cache.displayPrices;
+                var finalPrice, oldPrice;
                 if (prices.finalPrice) {
-                    this.product().finalPrice(prices.finalPrice.amount);
-                    this.product().price(prices.finalPrice.amount);
+                    finalPrice = oldPrice = prices.finalPrice.amount;
                 }
                 if (prices.oldPrice) {
-                    this.product().price(prices.oldPrice.amount);
+                    oldPrice = prices.oldPrice.amount;
                 }
+                this.product().setCalculatedPrices(oldPrice, finalPrice);
             },
-            
+
             getPriceBoxElement: function () {
                 var priceBoxElement = _.find($(this.priceBoxSelector), function(el) {
                     return el && $(el).data('mage-priceBox');

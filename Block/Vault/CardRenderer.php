@@ -2,7 +2,7 @@
 
 namespace Swarming\SubscribePro\Block\Vault;
 
-use Swarming\SubscribePro\Model\Ui\ConfigProvider;
+use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
 use Magento\Vault\Api\Data\PaymentTokenInterface;
 use Magento\Vault\Block\AbstractCardRenderer;
 

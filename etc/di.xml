@@ -19,6 +19,32 @@
         </arguments>
     </type>
 
+    <type name="Swarming\SubscribePro\Platform\Service\Product">
+        <arguments>
+            <argument name="name" xsi:type="const">SubscribePro\Service\Product\ProductService::NAME</argument>
+        </arguments>
+    </type>
+    <type name="Swarming\SubscribePro\Platform\Service\Address">
+        <arguments>
+            <argument name="name" xsi:type="const">SubscribePro\Service\Address\AddressService::NAME</argument>
+        </arguments>
+    </type>
+    <type name="Swarming\SubscribePro\Platform\Service\Customer">
+        <arguments>
+            <argument name="name" xsi:type="const">SubscribePro\Service\Customer\CustomerService::NAME</argument>
+        </arguments>
+    </type>
+    <type name="Swarming\SubscribePro\Platform\Service\Subscription">
+        <arguments>
+            <argument name="name" xsi:type="const">SubscribePro\Service\Subscription\SubscriptionService::NAME</argument>
+        </arguments>
+    </type>
+    <type name="Swarming\SubscribePro\Platform\Tool\Config">
+        <arguments>
+            <argument name="name" xsi:type="const">SubscribePro\Tools\Config::NAME</argument>
+        </arguments>
+    </type>
+
     <type name="Magento\SalesRule\Model\Validator">
         <plugin name="subscribepro_discount" type="Swarming\SubscribePro\Plugin\SalesRule\Validator" sortOrder="50" />
     </type>
@@ -26,7 +52,7 @@
     <!-- SubscribeProAdapter -->
     <virtualType name="SubscribeProAdapter" type="Magento\Payment\Model\Method\Adapter">
         <arguments>
-            <argument name="code" xsi:type="const">Swarming\SubscribePro\Model\Ui\ConfigProvider::CODE</argument>
+            <argument name="code" xsi:type="const">Swarming\SubscribePro\Gateway\Config\ConfigProvider::CODE</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form\Cc</argument>
             <argument name="infoBlockType" xsi:type="string">Swarming\SubscribePro\Block\Payment\Info</argument>
             <argument name="valueHandlerPool" xsi:type="object">SubscribeProValueHandlerPool</argument>
@@ -37,7 +63,7 @@
 
     <type name="Swarming\SubscribePro\Gateway\Config\Config">
         <arguments>
-            <argument name="methodCode" xsi:type="const">Swarming\SubscribePro\Model\Ui\ConfigProvider::CODE</argument>
+            <argument name="methodCode" xsi:type="const">Swarming\SubscribePro\Gateway\Config\ConfigProvider::CODE</argument>
         </arguments>
     </type>
 
@@ -206,7 +232,7 @@
     <!-- SubscribeProAdapter Vault -->
     <type name="Swarming\SubscribePro\Gateway\Config\VaultConfig">
         <arguments>
-            <argument name="methodCode" xsi:type="const">Swarming\SubscribePro\Model\Ui\ConfigProvider::VAULT_CODE</argument>
+            <argument name="methodCode" xsi:type="const">Swarming\SubscribePro\Gateway\Config\ConfigProvider::VAULT_CODE</argument>
         </arguments>
     </type>
     <virtualType name="SubscribeProVaultPaymentValueHandler" type="VaultPaymentDefaultValueHandler">
@@ -226,7 +252,7 @@
             <argument name="config" xsi:type="object">Swarming\SubscribePro\Gateway\Config\VaultConfig</argument>
             <argument name="valueHandlerPool" xsi:type="object">SubscribeProVaultPaymentValueHandlerPool</argument>
             <argument name="vaultProvider" xsi:type="object">SubscribeProAdapter</argument>
-            <argument name="code" xsi:type="const">Swarming\SubscribePro\Model\Ui\ConfigProvider::VAULT_CODE</argument>
+            <argument name="code" xsi:type="const">Swarming\SubscribePro\Gateway\Config\ConfigProvider::VAULT_CODE</argument>
         </arguments>
     </virtualType>
 </config>

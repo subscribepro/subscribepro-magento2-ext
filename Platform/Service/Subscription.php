@@ -1,23 +1,12 @@
 <?php
 
-namespace Swarming\SubscribePro\Platform\Helper;
+namespace Swarming\SubscribePro\Platform\Service;
 
-class Subscription
+/**
+ * @method \SubscribePro\Service\Subscription\SubscriptionService getService($websiteCode = null)
+ */
+class Subscription extends AbstractService
 {
-    /**
-     * @var \SubscribePro\Service\Subscription\SubscriptionService
-     */
-    protected $sdkSubscriptionService;
-
-    /**
-     * @param \Swarming\SubscribePro\Platform\Platform $platform
-     */
-    public function __construct(
-        \Swarming\SubscribePro\Platform\Platform $platform
-    ) {
-        $this->sdkSubscriptionService = $platform->getSdk()->getSubscriptionService();
-    }
-
     /**
      * @param int $customerId
      * @return \SubscribePro\Service\Subscription\SubscriptionInterface[]
@@ -25,7 +14,7 @@ class Subscription
      */
     public function loadSubscriptionsByCustomer($customerId)
     {
-        return $this->sdkSubscriptionService->loadSubscriptions($customerId);
+        return $this->getService()->loadSubscriptions($customerId);
     }
 
     /**
@@ -35,7 +24,7 @@ class Subscription
      */
     public function loadSubscription($subscriptionId)
     {
-        return $this->sdkSubscriptionService->loadSubscription($subscriptionId);
+        return $this->getService()->loadSubscription($subscriptionId);
     }
 
     /**
@@ -46,7 +35,7 @@ class Subscription
      */
     public function saveSubscription($subscription)
     {
-        return $this->sdkSubscriptionService->saveSubscription($subscription);
+        return $this->getService()->saveSubscription($subscription);
     }
 
     /**
@@ -56,7 +45,7 @@ class Subscription
      */
     public function skip($subscriptionId)
     {
-        $this->sdkSubscriptionService->skipSubscription($subscriptionId);
+        $this->getService()->skipSubscription($subscriptionId);
     }
 
     /**
@@ -66,7 +55,7 @@ class Subscription
      */
     public function cancel($subscriptionId)
     {
-        $this->sdkSubscriptionService->cancelSubscription($subscriptionId);
+        $this->getService()->cancelSubscription($subscriptionId);
     }
 
     /**
@@ -76,7 +65,7 @@ class Subscription
      */
     public function pause($subscriptionId)
     {
-        $this->sdkSubscriptionService->pauseSubscription($subscriptionId);
+        $this->getService()->pauseSubscription($subscriptionId);
     }
     
     /**
@@ -86,6 +75,6 @@ class Subscription
      */
     public function restart($subscriptionId)
     {
-        $this->sdkSubscriptionService->restartSubscription($subscriptionId);
+        $this->getService()->restartSubscription($subscriptionId);
     }
 }

@@ -27,9 +27,9 @@ class ProductSaveAfter implements ObserverInterface
     protected $productRepository;
 
     /**
-     * @var \Swarming\SubscribePro\Platform\Helper\ProductFactory
+     * @var \Swarming\SubscribePro\Platform\Service\Product
      */
-    protected $platformProductHelperFactory;
+    protected $platformProductService;
 
     /**
      * @var \Magento\ConfigurableProduct\Api\LinkManagementInterface
@@ -46,7 +46,7 @@ class ProductSaveAfter implements ObserverInterface
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      * @param \Magento\Catalog\Api\ProductRepositoryInterface $productRepository
      * @param \Magento\ConfigurableProduct\Api\LinkManagementInterface $linkManagement
-     * @param \Swarming\SubscribePro\Platform\Helper\ProductFactory $platformProductHelperFactory
+     * @param \Swarming\SubscribePro\Platform\Service\Product $platformProductService
      * @param \Psr\Log\LoggerInterface $logger
      */
     public function __construct(
@@ -54,13 +54,13 @@ class ProductSaveAfter implements ObserverInterface
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
         \Magento\ConfigurableProduct\Api\LinkManagementInterface $linkManagement,
-        \Swarming\SubscribePro\Platform\Helper\ProductFactory $platformProductHelperFactory,
+        \Swarming\SubscribePro\Platform\Service\Product $platformProductService,
         \Psr\Log\LoggerInterface $logger
     ) {
         $this->configGeneral = $configGeneral;
         $this->storeManager = $storeManager;
         $this->productRepository = $productRepository;
-        $this->platformProductHelperFactory = $platformProductHelperFactory;
+        $this->platformProductService = $platformProductService;
         $this->linkManagement = $linkManagement;
         $this->logger = $logger;
     }
@@ -115,9 +115,8 @@ class ProductSaveAfter implements ObserverInterface
      */
     protected function saveProduct($product, $website)
     {
-        $productHelper = $this->platformProductHelperFactory->create(['websiteCode' => $website->getCode()]);
         try {
-            $productHelper->saveProduct($product);
+            $this->platformProductService->saveProduct($product, $website->getId());
         } catch (HttpException $e) {
             $this->logger->critical($e);
             throw new LocalizedException(__('Fail to save product on Subscribe Pro platform for website "%1".', $website->getName()));

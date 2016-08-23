@@ -5,21 +5,21 @@
 ?>
 <style>
     /* TODO temporary solution, just for dev testing */
-    .form-card-edit .actions-toolbar > .secondary .action.back {
+    .form-vault-edit .actions-toolbar > .secondary .action.back {
         display: inline !important;
     }
 
 </style>
-<form class="form-address-edit form-card-edit"
+<form class="form-address-edit form-vault-edit"
       action="<?php /* @escapeNotVerified */ echo $block->getSaveUrl() ?>"
       method="post"
       id="vault-edit"
       enctype="multipart/form-data"
       data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>">
 
-    <?php echo $block->renderBillingSection() ?>
+    <?php echo $block->renderBillingAddress() ?>
 
-    <?php echo $block->renderCardSection() ?>
+    <?php echo $block->renderCard() ?>
 
     <div class="actions-toolbar">
         <div class="primary">

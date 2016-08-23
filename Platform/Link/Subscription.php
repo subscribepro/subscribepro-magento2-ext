@@ -7,13 +7,15 @@ use Magento\Catalog\Pricing\Price\FinalPrice;
 use Magento\Catalog\Pricing\Price\RegularPrice;
 use Swarming\SubscribePro\Api\Data\SubscriptionInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Tax\Model\Config as TaxConfig;
+use Swarming\SubscribePro\Block\Product\Subscription as SubscriptionBlock;
 
 class Subscription
 {
     /**
-     * @var \Swarming\SubscribePro\Platform\Helper\Product
+     * @var \Swarming\SubscribePro\Platform\Service\Product
      */
-    protected $platformProductHelper;
+    protected $platformProductService;
 
     /**
      * @var \Magento\Catalog\Api\ProductRepositoryInterface
@@ -41,27 +43,36 @@ class Subscription
     protected $subscriptionDiscountConfig;
 
     /**
-     * @param \Swarming\SubscribePro\Platform\Helper\Product $platformProductHelper
+     * @param \Swarming\SubscribePro\Platform\Service\Product $platformProductService
      * @param \Magento\Catalog\Api\ProductRepositoryInterface $productRepository
      * @param \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder
      * @param \Magento\Catalog\Model\Product\Url $productUrlModel
      * @param \Magento\Catalog\Helper\Image $imageHelper
      * @param \Swarming\SubscribePro\Model\Config\SubscriptionDiscount $subscriptionDiscountConfig
+     * @param \Magento\Tax\Api\TaxCalculationInterface $taxCalculation
+     * @param \Magento\Tax\Model\Config $taxConfig
+     * @param \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency
      */
     public function __construct(
-        \Swarming\SubscribePro\Platform\Helper\Product $platformProductHelper,
+        \Swarming\SubscribePro\Platform\Service\Product $platformProductService,
         \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
         \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder,
         \Magento\Catalog\Model\Product\Url $productUrlModel,
         \Magento\Catalog\Helper\Image $imageHelper,
-        \Swarming\SubscribePro\Model\Config\SubscriptionDiscount $subscriptionDiscountConfig
+        \Swarming\SubscribePro\Model\Config\SubscriptionDiscount $subscriptionDiscountConfig,
+        \Magento\Tax\Api\TaxCalculationInterface $taxCalculation,
+        \Magento\Tax\Model\Config $taxConfig,
+        \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency
     ) {
-        $this->platformProductHelper = $platformProductHelper;
+        $this->platformProductService = $platformProductService;
         $this->productRepository = $productRepository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->productUrlModel = $productUrlModel;
         $this->imageHelper = $imageHelper;
         $this->subscriptionDiscountConfig = $subscriptionDiscountConfig;
+        $this->taxConfig = $taxConfig;
+        $this->taxCalculation = $taxCalculation;
+        $this->priceCurrency = $priceCurrency;
     }
     
     /**
@@ -75,16 +86,27 @@ class Subscription
         $applyDiscountToCatalogPrice = $this->subscriptionDiscountConfig->doApplyDiscountToCatalogPrice();
         foreach ($subscriptions as $subscription) {
             try {
-                $platformProduct = $this->platformProductHelper->getProduct($subscription->getProductSku());
+                $platformProduct = $this->platformProductService->getProduct($subscription->getProductSku());
             } catch (NoSuchEntityException $e) {
                 continue;
             }
 
-            $platformProduct->setImageUrl($this->getProductImageUrl($magentoProducts[$subscription->getProductSku()]));
-            $platformProduct->setUrl($this->getProductUrl($magentoProducts[$subscription->getProductSku()]));
-            $platformProduct->setPrice($this->getProductPrice($magentoProducts[$subscription->getProductSku()]));
-            $platformProduct->setFinalPrice($this->getProductFinalPrice($magentoProducts[$subscription->getProductSku()]));
-            $platformProduct->setApplyDiscountToCatalogPrice($applyDiscountToCatalogPrice);
+            $displayPriceIncludingTax = $this->taxConfig->getPriceDisplayType() == TaxConfig::DISPLAY_TYPE_INCLUDING_TAX;
+            if (!$platformProduct->getIsDiscountPercentage()) {
+                $discount = $this->priceCurrency->convertAndRound($platformProduct->getDiscount(), true);
+                $platformProduct->setDiscount($discount);
+            }
+            $platformProduct->setTaxRate($this->getProductTaxRate($magentoProducts[$subscription->getProductSku()]))
+                ->setPriceIncludesTax($this->taxConfig->priceIncludesTax())
+                ->setDisplayPriceIncludingTax($displayPriceIncludingTax)
+                ->setNeedPriceConversion($this->taxConfig->needPriceConversion())
+                ->setApplyTaxAfterDiscount($this->taxConfig->applyTaxAfterDiscount())
+                ->setDiscountTax($this->taxConfig->discountTax())
+                ->setFinalPrice($this->getProductFinalPrice($magentoProducts[$subscription->getProductSku()]))
+                ->setPrice($this->getProductPrice($magentoProducts[$subscription->getProductSku()]))
+                ->setUrl($this->getProductUrl($magentoProducts[$subscription->getProductSku()]))
+                ->setImageUrl($this->getProductImageUrl($magentoProducts[$subscription->getProductSku()]))
+                ->setApplyDiscountToCatalogPrice($applyDiscountToCatalogPrice);
 
             $subscription->setProduct($platformProduct);
         }
@@ -157,5 +179,18 @@ class Subscription
     protected function getProductFinalPrice($magentoProduct = null)
     {
         return $magentoProduct ? $magentoProduct->getPriceInfo()->getPrice(FinalPrice::PRICE_CODE)->getValue() : 0;
+    }
+
+    /**
+     * @param \Magento\Catalog\Api\Data\ProductInterface|\Magento\Catalog\Model\Product|null $magentoProduct
+     * @return float
+     */
+    protected function getProductTaxRate($magentoProduct = null)
+    {
+        if (!$magentoProduct) {
+            return 0;
+        }
+
+        return $this->taxCalculation->getCalculatedRate($magentoProduct->getCustomAttribute(SubscriptionBlock::TAX_CLASS_ID)->getValue());
     }
 }

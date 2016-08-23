@@ -2,7 +2,8 @@
 
 namespace Swarming\SubscribePro\Model\Vault;
 
-use \Magento\Vault\Api\Data\PaymentTokenInterface;
+use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
+use Magento\Vault\Api\Data\PaymentTokenInterface;
 use SubscribePro\Service\PaymentProfile\PaymentProfileInterface;
 
 class Manager
@@ -36,13 +37,13 @@ class Manager
      */
     public function initVault(PaymentTokenInterface $token, PaymentProfileInterface $profile)
     {
-        $token->setPaymentMethodCode('subscribe_pro');
+        $token->setPaymentMethodCode(ConfigProvider::CODE);
         $token->setGatewayToken($profile->getId());
-        $token->setExpiresAt($this->getExpirationDate($profile->getCreditcardYear(), $profile->getCreditcardMonth()));
-        $token->setTokenDetails($this->getTokenDetails($profile));
-        $token->setCustomerId($profile->getMagentoCustomerId());
         $token->setIsActive(true);
         $token->setIsVisible(true);
+        $token->setCustomerId($profile->getMagentoCustomerId());
+        $token->setTokenDetails($this->getTokenDetails($profile));
+        $token->setExpiresAt($this->getExpirationDate($profile->getCreditcardYear(), $profile->getCreditcardMonth()));
         $token->setPublicHash($this->generatePublicHash($token));
         return $token;
     }
@@ -100,16 +101,7 @@ class Manager
      */
     protected function getExpirationDate($year, $month)
     {
-        $expDate = new \DateTime(
-            $year
-            . '-'
-            . $month
-            . '-'
-            . '01'
-            . ' '
-            . '00:00:00',
-            new \DateTimeZone('UTC')
-        );
+        $expDate = new \DateTime($year . '-' . $month . '-01 00:00:00', new \DateTimeZone('UTC'));
         $expDate->add(new \DateInterval('P1M'));
         return $expDate->format('Y-m-d 00:00:00');
     }

@@ -14,9 +14,9 @@ class ItemSubscriptionDiscount
     const DISCOUNT_DESCRIPTIONS_KEY = 'subscription';
 
     /**
-     * @var \Swarming\SubscribePro\Platform\Helper\Product
+     * @var \Swarming\SubscribePro\Platform\Service\Product
      */
-    protected $platformProductHelper;
+    protected $platformProductService;
 
     /**
      * @var \Swarming\SubscribePro\Helper\QuoteItem
@@ -39,20 +39,20 @@ class ItemSubscriptionDiscount
     protected $priceCurrency;
 
     /**
-     * @param \Swarming\SubscribePro\Platform\Helper\Product $platformProductHelper
+     * @param \Swarming\SubscribePro\Platform\Service\Product $platformProductService
      * @param \Swarming\SubscribePro\Helper\QuoteItem $quoteItemHelper
      * @param \Swarming\SubscribePro\Model\Config\SubscriptionDiscount $subscriptionDiscountConfig
      * @param \Magento\Tax\Helper\Data $taxData
      * @param \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency
      */
     public function __construct(
-        \Swarming\SubscribePro\Platform\Helper\Product $platformProductHelper,
+        \Swarming\SubscribePro\Platform\Service\Product $platformProductService,
         \Swarming\SubscribePro\Helper\QuoteItem $quoteItemHelper,
         \Swarming\SubscribePro\Model\Config\SubscriptionDiscount $subscriptionDiscountConfig,
         \Magento\Tax\Helper\Data $taxData,
         \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency
     ) {
-        $this->platformProductHelper = $platformProductHelper;
+        $this->platformProductService = $platformProductService;
         $this->quoteItemHelper = $quoteItemHelper;
         $this->subscriptionDiscountConfig = $subscriptionDiscountConfig;
         $this->taxData = $taxData;
@@ -140,7 +140,7 @@ class ItemSubscriptionDiscount
     protected function getPlatformProduct(QuoteItem $item)
     {
         $product = $this->quoteItemHelper->getProduct($item);
-        return $this->platformProductHelper->getProduct($product->getSku());
+        return $this->platformProductService->getProduct($product->getSku());
     }
 
     /**

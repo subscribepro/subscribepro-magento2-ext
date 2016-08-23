@@ -4,16 +4,14 @@
  */
 ?>
 
-<?php if($block->isSubscribeProEnabled() && $block->isProductSubscriptionEnabled()): ?>
-    <div id="subscription-container" data-bind="scope: 'subscription-container'">
-        <!-- ko template: getTemplate() --><!-- /ko -->
-    </div>
+<div id="subscription-container" data-bind="scope: 'subscription-container'">
+    <!-- ko template: getTemplate() --><!-- /ko -->
+</div>
 
-    <script type="text/x-magento-init">
-        {
-            "*": {
-                "Magento_Ui/js/core/app": <?php /* @escapeNotVerified */ echo $block->getJsLayout();?>
-            }
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "Magento_Ui/js/core/app": <?php /* @escapeNotVerified */ echo $block->getJsLayout();?>
         }
-    </script>
-<?php endif; ?>
+    }
+</script>

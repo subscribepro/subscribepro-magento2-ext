@@ -1,52 +1,44 @@
-/*browser:true*/
-/*global define*/
+
 define(
     [
         'jquery',
         'underscore',
-        'uiComponent',
         'Swarming_SubscribePro/js/model/payment/config',
         'Swarming_SubscribePro/js/model/payment/credit-card-validation/expiration-field-validator',
         'Swarming_SubscribePro/js/model/payment/credit-card-validation/hosted-field-validator',
         'Swarming_SubscribePro/js/model/payment/credit-card-validation/expiration-fields',
         'Swarming_SubscribePro/js/model/payment/credit-card-validation/hosted-fields',
-        'mage/translate',
-        'spreedly'
+        'Swarming_SubscribePro/js/model/payment/spreedly',
+        'mage/translate'
     ],
-    function (
+    function(
         $,
         _,
-        Component,
         config,
         expirationFieldValidator,
         hostedFieldValidator,
         expirationFields,
         hostedFields,
+        spreedly,
         $t
     ) {
         'use strict';
 
-        return Component.extend({
+        return {
             defaults: {
                 isValidHostedFields: false,
                 isValidExpDate: false,
-                creditCardType: null,
                 creditCardExpYear: '',
                 creditCardExpMonth: '',
                 creditCardExpMonthFocus: null,
                 creditCardExpYearFocus: null,
                 paymentMethodToken: null,
-                selectedCardType: null,
-                formSelector: "#vault-edit",
-                formSubmitSelector: "#vault-edit .save"
+                selectedCardType: null
             },
 
             initObservable: function () {
-                var self = this;
-
                 this._super()
                     .observe([
-                        'creditCardType',
                         'creditCardExpYear',
                         'creditCardExpMonth',
                         'creditCardExpMonthFocus',
@@ -54,13 +46,6 @@ define(
                         'paymentMethodToken',
                         'selectedCardType'
                     ]);
-
-                $(self.formSubmitSelector).click(function() {
-                    if ($(self.formSelector).valid()) {
-                        self.startPlaceOrder();
-                    }
-                    return false;
-                });
                 return this;
             },
 
@@ -71,40 +56,23 @@ define(
                 this.creditCardExpYearFocus.subscribe($.proxy(this.validationCreditCardExpYear, this));
             },
 
-            updatePlaceOrderActionAllowed: function () {
-                $(this.formSubmitSelector).prop('disabled', !(this.isValidExpDate && this.isValidHostedFields));
-            },
+            updateSaveActionAllowed: function () {},
 
             getCode: function () {
                 return config.getCode();
             },
 
-            getData: function () {
-                return {
-                    'method': this.getCode(),
-                    'additional_data': {
-                        'payment_method_token': this.paymentMethodToken
-                    }
-                };
+            isVaultEnabled: function () {
+                return false;
             },
 
             initSpreedly: function () {
-                Spreedly.init(config.getEnvironmentKey(), {
-                    'numberEl': this.getCode() + '_cc_number',
-                    'cvvEl': this.getCode() + '_cc_cid'
-                });
-                Spreedly.on('ready', this.styleIFrameFields);
-                Spreedly.on('fieldEvent', $.proxy(this.onFieldEvent, this));
-                Spreedly.on('paymentMethod', $.proxy(this.onPaymentMethod, this));
-                Spreedly.on('validation', $.proxy(this.validationPaymentData, this));
-                Spreedly.on('errors', $.proxy(this.onErrors, this));
-            },
-
-            styleIFrameFields: function () {
-                Spreedly.setFieldType('text');
-                Spreedly.setNumberFormat('prettyFormat');
-                Spreedly.setStyle('number','padding: .45em .35em; font-size: 91%;');
-                Spreedly.setStyle('cvv', 'padding: .45em .35em; font-size: 91%;');
+                spreedly.init(
+                    $.proxy(this.onFieldEvent, this),
+                    $.proxy(this.onPaymentMethod, this),
+                    $.proxy(this.validationPaymentData, this),
+                    $.proxy(this.onErrors, this)
+                );
             },
 
             onFieldEvent: function (name, event, activeElement, inputData) {
@@ -115,7 +83,7 @@ define(
                 if (hostedField.cardType !== undefined) {
                     this.selectedCardType(hostedField.cardType);
                 }
-                this.updatePlaceOrderActionAllowed();
+                this.updateSaveActionAllowed();
             },
 
             validationCreditCardExpMonth: function (isFocused) {
@@ -125,7 +93,7 @@ define(
                     this.creditCardExpMonth(),
                     this.creditCardExpYear()
                 );
-                this.updatePlaceOrderActionAllowed();
+                this.updateSaveActionAllowed();
             },
 
             validationCreditCardExpYear: function (isFocused) {
@@ -135,12 +103,12 @@ define(
                     this.creditCardExpMonth(),
                     this.creditCardExpYear()
                 );
-                this.updatePlaceOrderActionAllowed();
+                this.updateSaveActionAllowed();
             },
 
             startPlaceOrder: function () {
                 if (this.isValidHostedFields && this.isValidExpDate) {
-                    Spreedly.validate();
+                    spreedly.validate();
                 }
             },
 
@@ -159,31 +127,22 @@ define(
             },
 
             tokenizeCreditCard: function () {
-                var options = {
-                    'first_name': $("#first_name").val(),
-                    'last_name': $("#last_name").val(),
-                    'company': $("#company").val(),
-                    'phone_number': $("#phone").val(),
-                    'address1': $("#street1").val(),
-                    'address2': $("#street2").val(),
-                    'city': $("#city").val(),
-                    'state': $("#region_id option:selected").text(),
-                    'zip': $("#postcode").val(),
-                    'country': $("#country").val(),
-                    'year': this.creditCardExpYear(),
-                    'month': this.creditCardExpMonth()
-                };
+                spreedly.tokenizeCreditCard(this.getPaymentData());
+            },
 
-                Spreedly.tokenizeCreditCard(options);
+            getPaymentData: function () {
+                return {};
             },
 
             onPaymentMethod: function (token) {
                 this.paymentMethodToken(token);
-                $(this.formSelector).submit();
+                this.submitPayment();
             },
 
+            submitPayment: function () {},
+
             onErrors: function (errors) {
-                this.paymentToken = null;
+                this.paymentMethodToken(null);
 
                 for(var i = 0; i < errors.length; i++) {
                     if (errors[i]['attribute'] == 'number' || errors[i]['attribute'] == 'cvv') {
@@ -195,17 +154,10 @@ define(
                 }
             },
 
-            /**
-             * @param {String} type
-             * @returns {Boolean}
-             */
             getIcons: function (type) {
                 return config.getIcons().hasOwnProperty(type) ? config.getIcons()[type] : false;
             },
 
-            /**
-             * @returns {Object}
-             */
             getCcAvailableTypesValues: function () {
                 return _.map(config.getAvailableCardTypes(), function (value, key) {
                     return {
@@ -215,23 +167,16 @@ define(
                 });
             },
 
-            /**
-             * @returns {Boolean}
-             */
             hasVerification: function () {
                 return config.hasVerification();
             },
 
-            /**
-             * Get image for CVV
-             * @returns {String}
-             */
             getCvvImageHtml: function () {
                 return '<img src="' + config.getCvvImageUrl() +
                     '" alt="' + $t('Card Verification Number Visual Reference') +
                     '" title="' + $t('Card Verification Number Visual Reference') +
                     '" />';
             }
-        });
+        };
     }
 );

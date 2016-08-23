@@ -1,35 +1,23 @@
 <?php
 
-namespace Swarming\SubscribePro\Platform\Helper;
+namespace Swarming\SubscribePro\Platform\Service;
 
 use Magento\Framework\Exception\NoSuchEntityException;
 
-class Product
+/**
+ * @method \SubscribePro\Service\Product\ProductService getService($websiteCode = null)
+ */
+class Product extends AbstractService
 {
     /**
-     * @var \SubscribePro\Service\Product\ProductService
-     */
-    protected $sdkProductService;
-
-    /**
-     * @param \Swarming\SubscribePro\Platform\Platform $platform
-     * @param string|null $websiteCode
-     */
-    public function __construct(
-        \Swarming\SubscribePro\Platform\Platform $platform,
-        $websiteCode = null
-    ) {
-        $this->sdkProductService = $platform->getSdk($websiteCode)->getProductService();
-    }
-
-    /**
      * @param string $sku
+     * @param int|null $websiteId
      * @return \Swarming\SubscribePro\Api\Data\ProductInterface
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function getProduct($sku)
+    public function getProduct($sku, $websiteId = null)
     {
-        $products = $this->sdkProductService->loadProducts($sku);
+        $products = $this->getService($websiteId)->loadProducts($sku);
 
         if (empty($products)) {
             throw new NoSuchEntityException(__('Product is not found on Subscribe Pro platform.'));
@@ -37,25 +25,26 @@ class Product
 
         return $products[0];
     }
-    
+
     /**
      * @param \Magento\Catalog\Api\Data\ProductInterface $magentoProduct
+     * @param int|null $websiteId
      * @return \Swarming\SubscribePro\Api\Data\ProductInterface
      * @throws \SubscribePro\Exception\InvalidArgumentException
      * @throws \SubscribePro\Exception\HttpException
      */
-    public function saveProduct($magentoProduct)
+    public function saveProduct($magentoProduct, $websiteId = null)
     {
-        $products = $this->sdkProductService->loadProducts($magentoProduct->getSku());
+        $products = $this->getService($websiteId)->loadProducts($magentoProduct->getSku());
         if (!empty($products)) {
             $product = $products[0];
         } else {
-            $product = $this->sdkProductService->createProduct();
+            $product = $this->getService($websiteId)->createProduct();
         }
         $product->setSku($magentoProduct->getSku())
             ->setPrice($magentoProduct->getPrice())
             ->setName($magentoProduct->getName());
 
-        return $this->sdkProductService->saveProduct($product);
+        return $this->getService($websiteId)->saveProduct($product);
     }
 }

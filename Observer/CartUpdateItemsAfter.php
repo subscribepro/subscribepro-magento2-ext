@@ -31,9 +31,9 @@ class CartUpdateItemsAfter implements ObserverInterface
     protected $quoteItemOptionsManager;
     
     /**
-     * @var \Swarming\SubscribePro\Platform\Helper\Product
+     * @var \Swarming\SubscribePro\Platform\Service\Product
      */
-    protected $platformProductHelper;
+    protected $platformProductService;
 
     /**
      * @var \Magento\Catalog\Api\ProductRepositoryInterface
@@ -53,7 +53,7 @@ class CartUpdateItemsAfter implements ObserverInterface
     /**
      * @param \Swarming\SubscribePro\Model\Config\General $configGeneral
      * @param \Magento\Checkout\Model\Session $checkoutSession
-     * @param \Swarming\SubscribePro\Platform\Helper\Product $platformProductHelper
+     * @param \Swarming\SubscribePro\Platform\Service\Product $platformProductService
      * @param \Magento\Catalog\Api\ProductRepositoryInterface $productRepository
      * @param \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder
      * @param \Magento\Framework\Message\ManagerInterface $messageManager
@@ -62,7 +62,7 @@ class CartUpdateItemsAfter implements ObserverInterface
     public function __construct(
         \Swarming\SubscribePro\Model\Config\General $configGeneral,
         \Magento\Checkout\Model\Session $checkoutSession,
-        \Swarming\SubscribePro\Platform\Helper\Product $platformProductHelper,
+        \Swarming\SubscribePro\Platform\Service\Product $platformProductService,
         \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
         \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder,
         \Magento\Framework\Message\ManagerInterface $messageManager,
@@ -70,7 +70,7 @@ class CartUpdateItemsAfter implements ObserverInterface
     ) {
         $this->configGeneral = $configGeneral;
         $this->checkoutSession = $checkoutSession;
-        $this->platformProductHelper = $platformProductHelper;
+        $this->platformProductService = $platformProductService;
         $this->productRepository = $productRepository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->messageManager = $messageManager;
@@ -104,7 +104,7 @@ class CartUpdateItemsAfter implements ObserverInterface
             }
 
             try {
-                $platformProduct = $this->platformProductHelper->getProduct($product->getSku());
+                $platformProduct = $this->platformProductService->getProduct($product->getSku());
             } catch (NoSuchEntityException $e) {
                 throw new NoSuchEntityException(__('Product "%1" is not found on Subscribe Pro platform.', $quoteItem->getProduct()->getName()));
             }

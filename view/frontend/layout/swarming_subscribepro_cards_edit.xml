@@ -4,24 +4,24 @@
     <body>
         <referenceContainer name="content">
             <block class="Swarming\SubscribePro\Block\Vault\Edit" name="subscribepro.vault.edit" template="Swarming_SubscribePro::vault/edit.phtml" cacheable="false">
-                <block class="Swarming\SubscribePro\Block\Vault\Edit\Billing" name="subscribepro.vault.edit.billing" as="billing" template="Swarming_SubscribePro::vault/edit/billing.phtml"/>
-                <block class="Swarming\SubscribePro\Block\Vault\Edit\EditCard" name="subscribepro.vault.edit.edit_card" as="card_edit" template="Swarming_SubscribePro::vault/edit/card_edit.phtml">
+                <block class="Swarming\SubscribePro\Block\Vault\Edit\BillingAddress" name="subscribepro.vault.edit.billing" as="billing" template="Swarming_SubscribePro::vault/edit/billing_address.phtml"/>
+                <block class="Swarming\SubscribePro\Block\Vault\Edit\CardExpiration" name="subscribepro.vault.edit.card.expiration" as="card_expiration" template="Swarming_SubscribePro::vault/edit/card_expiration.phtml">
                     <arguments>
                         <argument name="jsLayout" xsi:type="array">
                             <item name="components" xsi:type="array">
-                                <item name="subscribe-pro-vault-card-edit" xsi:type="array">
-                                    <item name="component" xsi:type="string">Swarming_SubscribePro/js/view/vault/card-edit</item>
+                                <item name="subscribe-pro-vault-card-expiration" xsi:type="array">
+                                    <item name="component" xsi:type="string">Swarming_SubscribePro/js/view/vault/card-expiration</item>
                                 </item>
                             </item>
                         </argument>
                     </arguments>
                 </block>
-                <block class="Swarming\SubscribePro\Block\Vault\Edit\CreateCard" name="subscribepro.vault.edit.create_card" as="card_create" template="Swarming_SubscribePro::vault/edit/card_create.phtml">
+                <block class="Swarming\SubscribePro\Block\Vault\Edit\Card" name="subscribepro.vault.edit.card" as="card" template="Swarming_SubscribePro::vault/edit/card.phtml">
                     <arguments>
                         <argument name="jsLayout" xsi:type="array">
                             <item name="components" xsi:type="array">
-                                <item name="subscribe-pro-vault-card-create" xsi:type="array">
-                                    <item name="component" xsi:type="string">Swarming_SubscribePro/js/view/vault/card-create</item>
+                                <item name="subscribe-pro-vault-card" xsi:type="array">
+                                    <item name="component" xsi:type="string">Swarming_SubscribePro/js/view/vault/card</item>
                                 </item>
                             </item>
                         </argument>

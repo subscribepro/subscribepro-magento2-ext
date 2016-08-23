@@ -5,8 +5,10 @@ namespace Swarming\SubscribePro\Block\Vault\Edit;
 use Magento\Store\Model\ScopeInterface;
 use SubscribePro\Service\PaymentProfile\PaymentProfileInterface;
 
-class Billing extends \Magento\Directory\Block\Data
+class BillingAddress extends \Magento\Directory\Block\Data
 {
+    const XML_PATH_DISPLAY_ALL_STATES = 'general/region/display_all';
+
     /**
      * @var \Magento\Directory\Model\RegionFactory
      */
@@ -73,9 +75,25 @@ class Billing extends \Magento\Directory\Block\Data
     /**
      * @return string
      */
+    public function getMiddleName()
+    {
+        return $this->profile ? $this->profile->getBillingAddress()->getMiddleName() : '';
+    }
+
+    /**
+     * @return string
+     */
     public function getLastName()
     {
         return $this->profile ? $this->profile->getBillingAddress()->getLastName() : '';
+    }
+
+    /**
+     * @return string
+     */
+    public function getCompany()
+    {
+        return $this->profile ? $this->profile->getBillingAddress()->getCompany() : '';
     }
 
     /**
@@ -156,6 +174,6 @@ class Billing extends \Magento\Directory\Block\Data
      */
     public function getIsRegionDisplayAll()
     {
-        return $this->_scopeConfig->getValue('general/region/display_all', ScopeInterface::SCOPE_STORE);
+        return $this->_scopeConfig->getValue(self::XML_PATH_DISPLAY_ALL_STATES, ScopeInterface::SCOPE_STORE);
     }
 }

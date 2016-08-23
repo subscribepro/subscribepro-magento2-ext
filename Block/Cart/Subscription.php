@@ -8,9 +8,9 @@ use \Swarming\SubscribePro\Ui\DataProvider\Product\Modifier\Subscription as Subs
 class Subscription extends \Magento\Checkout\Block\Cart\Additional\Info
 {
     /**
-     * @var \Swarming\SubscribePro\Platform\Helper\Product
+     * @var \Swarming\SubscribePro\Platform\Service\Product
      */
-    protected $platformProductHelper;
+    protected $platformProductService;
 
     /**
      * @var \Magento\Catalog\Api\ProductRepositoryInterface
@@ -34,20 +34,21 @@ class Subscription extends \Magento\Checkout\Block\Cart\Additional\Info
 
     /**
      * @param \Magento\Catalog\Block\Product\Context $context
-     * @param \Swarming\SubscribePro\Platform\Helper\Product $platformProductHelper
+     * @param \Swarming\SubscribePro\Platform\Service\Product $platformProductService
      * @param \Magento\Catalog\Api\ProductRepositoryInterface $productRepository
+     * @param \Swarming\SubscribePro\Helper\QuoteItem $quoteItemHelper
      * @param \Swarming\SubscribePro\Model\Config\General $generalConfig
      * @param array $data
      */
     public function __construct(
         \Magento\Catalog\Block\Product\Context $context,
-        \Swarming\SubscribePro\Platform\Helper\Product $platformProductHelper,
+        \Swarming\SubscribePro\Platform\Service\Product $platformProductService,
         \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
         \Swarming\SubscribePro\Helper\QuoteItem $quoteItemHelper,
         \Swarming\SubscribePro\Model\Config\General $generalConfig,
         array $data = []
     ) {
-        $this->platformProductHelper = $platformProductHelper;
+        $this->platformProductService = $platformProductService;
         $this->productRepository = $productRepository;
         $this->quoteItemHelper = $quoteItemHelper;
         $this->generalConfig = $generalConfig;
@@ -90,7 +91,7 @@ class Subscription extends \Magento\Checkout\Block\Cart\Additional\Info
      */
     public function getSubscriptionProduct()
     {
-        $subscriptionProduct = $this->platformProductHelper->getProduct($this->product->getSku());
+        $subscriptionProduct = $this->platformProductService->getProduct($this->product->getSku());
         if ($intervalOption = $this->getItem()->getOptionByCode('subscription_interval')) {
             $subscriptionProduct->setDefaultInterval($intervalOption->getValue());
         }

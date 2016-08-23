@@ -68,10 +68,12 @@ class Save extends \Magento\Customer\Controller\AbstractAccount
 
         try {
             $data = (array)$this->getRequest()->getParams();
+            unset($data['form_key']);
             if ($publicHash) {
-                $this->vaultForm->updateProfile($publicHash, $data);
+                unset($data[PaymentTokenInterface::PUBLIC_HASH]);
+                $this->vaultForm->updateProfile($publicHash, $data, $this->customerSession->getCustomerId());
             } else {
-                $this->vaultForm->createProfile($data);
+                $this->vaultForm->createProfile($data, $this->customerSession->getCustomerId());
             }
             $this->messageManager->addSuccessMessage(__('The credit card is saved.'));
             $resultRedirect->setPath('vault/cards/listaction');

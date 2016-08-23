@@ -1,11 +1,12 @@
 <?php
 
-namespace Swarming\SubscribePro\Model\Ui;
+namespace Swarming\SubscribePro\Ui\ComponentProvider;
 
+use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
 use Magento\Vault\Api\Data\PaymentTokenInterface;
 use Magento\Vault\Model\Ui\TokenUiComponentProviderInterface;
 
-class TokenUiComponentProvider implements TokenUiComponentProviderInterface
+class VaultToken implements TokenUiComponentProviderInterface
 {
     /**
      * @var \Magento\Vault\Model\Ui\TokenUiComponentInterfaceFactory

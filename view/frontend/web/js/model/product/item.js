@@ -21,6 +21,12 @@ define(
                 product.isDiscountPercentage = ko.observable(productData.is_discount_percentage);
                 product.price = ko.observable(productData.price);
                 product.finalPrice = ko.observable(productData.final_price);
+                product.taxRate = ko.observable(productData.tax_rate);
+                product.discountTax = ko.observable(productData.discount_tax);
+                product.priceIncludesTax = ko.observable(productData.price_includes_tax);
+                product.displayPriceIncludingTax = ko.observable(productData.display_price_including_tax);
+                product.needPriceConversion = ko.observable(productData.need_price_conversion);
+                product.applyTaxAfterDiscount = ko.observable(productData.apply_tax_after_discount);
                 product.applyDiscountToCatalogPrice = ko.observable(productData.apply_discount_to_catalog_price);
                 product.minQty = ko.observable(productData.min_qty);
                 product.maxQty = ko.observable(productData.max_qty);
@@ -29,31 +35,67 @@ define(
                 product.subscriptionOptionMode = ko.observable(productData.subscription_option_mode);
 
                 product.priceWithDiscountText = ko.pureComputed(function() {
-                    if (!product.applyDiscountToCatalogPrice() && product.hasSpecialPrice()) {
-                        return getFormattedPrice(product.finalPrice());
+                    var discount = product.discountValue();
+                    var price = parseFloat(product.priceToDisplay()) - discount;
+                    if (product.taxRate() && product.applyTaxAfterDiscount() && product.displayPriceIncludingTax() && !product.priceIncludesTax()) {
+                        price = (1 + product.taxRate()/100)*(product.priceExclTax() - discount);
                     }
-                    if (product.finalPrice() < product.discountValue()) {
-                        return getFormattedPrice(product.finalPrice());
+                    var priceText = getFormattedPrice(price);
+                    if (!product.applyDiscountToCatalogPrice() && product.hasSpecialPrice()) {
+                        return getFormattedPrice(product.priceToDisplay());
+                    }
+                    if (price < discount) {
+                        return getFormattedPrice(product.priceToDisplay());
+                    }
+                    if (discount <= 0) {
+                        return priceText;
+                    }
+                    if (product.needPriceConversion() && !product.discountTax() && product.displayPriceIncludingTax()) {
+                        return priceText + ' (incl. tax).';
                     }
 
-                    return product.priceWithDiscount() + ' with ' + product.discountText() + ' subscription discount';
+                    return priceText + ' with ' + product.discountText() + ' subscription discount';
                 });
 
                 product.priceWithDiscount = ko.pureComputed(function() {
-                    return getFormattedPrice(parseFloat(product.finalPrice()) - product.discountValue());
+                    return getFormattedPrice(parseFloat(product.priceToDisplay()) - product.discountValue());
                 });
 
                 product.discountValue = ko.pureComputed(function() {
                     var discount = parseFloat(product.discount());
                     if (product.isDiscountPercentage()) {
-                        discount = parseFloat(product.finalPrice()) * discount;
+                        var price = product.discountTax() ? product.priceInclTax() : product.priceExclTax();
+                        discount = parseFloat(price) * discount;
                     }
                     
                     return discount;
                 });
 
                 product.formattedPrice = ko.pureComputed(function() {
-                    return getFormattedPrice(product.finalPrice())
+                    return getFormattedPrice(product.priceToDisplay());
+                });
+
+                product.priceToDisplay = ko.pureComputed(function() {
+                    return product.displayPriceIncludingTax() ? product.priceInclTax() : product.priceExclTax();
+                });
+
+                product.priceInclTax = ko.pureComputed(function() {
+                    var price = product.finalPrice();
+                    if (!product.taxRate() || product.priceIncludesTax()) {
+                        return price;
+                    }
+
+                    var tax = parseFloat(product.taxRate())/100 * price;
+                    return price + tax;
+                });
+
+                product.priceExclTax = ko.pureComputed(function() {
+                    var price = product.finalPrice();
+                    if (product.taxRate() && product.priceIncludesTax()) {
+                        price = parseFloat(price)/(1 + parseFloat(product.taxRate())/100);
+                    }
+
+                    return price.toFixed(2);
                 });
 
                 product.hasSpecialPrice = ko.pureComputed(function() {
@@ -62,7 +104,7 @@ define(
 
                 product.discountText = ko.pureComputed(function() {
                     return product.isDiscountPercentage()
-                        ? 100*parseFloat(product.discount()) + '%'
+                        ? parseFloat((100*parseFloat(product.discount())).toFixed(2)) + '%'
                         : getFormattedPrice(product.discount());
                 });
 
@@ -82,9 +124,29 @@ define(
 
                     return values;
                 };
-                
+
+                product.setCalculatedPrices = function(basePrice, finalPrice) {
+                    product.price(getBasePriceFromCalculatedPrice(basePrice));
+                    product.finalPrice(getBasePriceFromCalculatedPrice(finalPrice));
+                };
+
                 function getFormattedPrice(price) {
                     return priceUtils.formatPrice(price, priceFormat);
+                }
+
+                function getBasePriceFromCalculatedPrice(price) {
+                    if (!product.taxRate()) {
+                        return price;
+                    }
+
+                    if (product.displayPriceIncludingTax() && !product.priceIncludesTax()) {
+                        return price/(1 + product.taxRate()/100);
+                    }
+                    if (!product.displayPriceIncludingTax() && product.priceIncludesTax()) {
+                        return price*(1 + product.taxRate()/100);
+                    }
+
+                    return price;
                 }
 
                 return product;

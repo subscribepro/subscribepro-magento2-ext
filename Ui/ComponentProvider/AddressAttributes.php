@@ -1,6 +1,6 @@
 <?php
 
-namespace Swarming\SubscribePro\Model\Ui;
+namespace Swarming\SubscribePro\Ui\ComponentProvider;
 
 class AddressAttributes
 {

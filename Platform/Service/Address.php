@@ -1,23 +1,12 @@
 <?php
 
-namespace Swarming\SubscribePro\Platform\Helper;
+namespace Swarming\SubscribePro\Platform\Service;
 
-class Address
+/**
+ * @method \SubscribePro\Service\Address\AddressService getService($websiteCode = null)
+ */
+class Address extends AbstractService
 {
-    /**
-     * @var \SubscribePro\Service\Address\AddressService
-     */
-    protected $sdkAddressService;
-
-    /**
-     * @param \Swarming\SubscribePro\Platform\Platform $platform
-     */
-    public function __construct(
-        \Swarming\SubscribePro\Platform\Platform $platform
-    ) {
-        $this->sdkAddressService = $platform->getSdk()->getAddressService();
-    }
-
     /**
      * @param \Magento\Customer\Api\Data\AddressInterface $address
      * @param \SubscribePro\Service\Customer\CustomerInterface $platformCustomer
@@ -27,7 +16,7 @@ class Address
      */
     public function findOrSaveAddress($address, $platformCustomer)
     {
-        $platformAddress = $this->sdkAddressService->createAddress();
+        $platformAddress = $this->getService()->createAddress();
         $platformAddress->setCity($address->getCity())
             ->setCompany($address->getCompany())
             ->setCountry($address->getCountryId())
@@ -46,7 +35,7 @@ class Address
             $platformAddress->setStreet2($streets[1]);
         }
         
-        $address = $this->sdkAddressService->findOrSave($platformAddress);
+        $address = $this->getService()->findOrSave($platformAddress);
         return $address;
     }
 }

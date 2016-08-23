@@ -1,6 +1,6 @@
 <?php
 /**
- * @var $block \Swarming\SubscribePro\Block\Vault\Edit\Billing
+ * @var $block \Swarming\SubscribePro\Block\Vault\Edit\BillingAddress
  */
 ?>
 <fieldset class="fieldset">
@@ -14,6 +14,14 @@
                    title="<?php /* @escapeNotVerified */ echo __('First Name') ?>">
         </div>
     </div>
+    <div class="field field-name-middlename">
+        <label class="label"  for="middle_name"><span><?php /* @escapeNotVerified */ echo __('Middle Name') ?></span></label>
+        <div class="control">
+            <input type="text" id="middle_name" name="billing_address[middle_name]" class="input-text"
+                   value="<?php echo $block->escapeHtml($block->getMiddleName()) ?>"
+                   title="<?php /* @escapeNotVerified */ echo __('Middle Name') ?>">
+        </div>
+    </div>
     <div class="field field-name-lastname required">
         <label class="label"  for="last_name"><span><?php /* @escapeNotVerified */ echo __('Last Name') ?></span></label>
         <div class="control">
@@ -22,10 +30,18 @@
                    title="<?php /* @escapeNotVerified */ echo __('Last Name') ?>">
         </div>
     </div>
-    <div class="field telephone required">
-        <label class="label" for="phone"><span><?php /* @escapeNotVerified */ echo __('Phone Number') ?></span></label>
+    <div class="field field-name-company">
+        <label class="label"  for="company"><span><?php /* @escapeNotVerified */ echo __('Company') ?></span></label>
         <div class="control">
-            <input type="text" id="phone" name="billing_address[phone]" class="input-text required-entry" data-validate="{required:true}"
+            <input type="text" id="company" name="billing_address[company]" class="input-text"
+                   value="<?php echo $block->escapeHtml($block->getCompany()) ?>"
+                   title="<?php /* @escapeNotVerified */ echo __('Company') ?>">
+        </div>
+    </div>
+    <div class="field telephone required">
+        <label class="label" for="telephone"><span><?php /* @escapeNotVerified */ echo __('Phone Number') ?></span></label>
+        <div class="control">
+            <input type="text" id="telephone" name="billing_address[phone]" class="input-text required-entry" data-validate="{required:true}"
                    value="<?php echo $block->escapeHtml($block->getTelephone()) ?>"
                    title="<?php /* @escapeNotVerified */ echo __('Phone Number') ?>">
         </div>
@@ -56,7 +72,7 @@
     <div class="field city required">
         <label class="label" for="city"><span><?php /* @escapeNotVerified */ echo __('City') ?></span></label>
         <div class="control">
-            <input type="text" name="billing_address[city]" class="input-text" id="city"
+            <input type="text" name="billing_address[city]" class="input-text required-entry" id="city"
                    value="<?php echo $block->escapeHtml($block->getCity()) ?>"
                    title="<?php /* @escapeNotVerified */ echo __('City') ?>">
         </div>
@@ -98,7 +114,7 @@
                 "optionalRegionAllowed": <?php /* @escapeNotVerified */ echo($block->getIsRegionDisplayAll() ? 'true' : 'false'); ?>,
                 "regionListId": "#region_id",
                 "regionInputId": "#region",
-                "postcodeId": "#zip",
+                "postcodeId": "#postcode",
                 "form": "#vault-edit",
                 "regionJson": <?php /* @escapeNotVerified */ echo $this->helper('Magento\Directory\Helper\Data')->getRegionJson() ?>,
                 "defaultRegion": "<?php /* @escapeNotVerified */ echo $block->getRegionId() ?>",

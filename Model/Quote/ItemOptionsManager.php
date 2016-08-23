@@ -2,7 +2,6 @@
 
 namespace Swarming\SubscribePro\Model\Quote;
 
-use Magento\Catalog\Model\Product;
 use Magento\Quote\Model\Quote\Item as QuoteItem;
 use Magento\Framework\Exception\LocalizedException;
 use SubscribePro\Service\Product\ProductInterface as PlatformProductInterface;
@@ -16,24 +15,16 @@ class ItemOptionsManager
     const SUBSCRIPTION_INTERVAL = 'subscription_interval';
 
     /**
-     * @var \Swarming\SubscribePro\Platform\Helper\Product
-     */
-    protected $platformProductHelper;
-
-    /**
      * @var \Magento\Quote\Model\Quote\Item\OptionFactory
      */
     protected $itemOptionFactory;
 
     /**
-     * @param \Swarming\SubscribePro\Platform\Helper\Product $platformProductHelper
      * @param \Magento\Quote\Model\Quote\Item\OptionFactory $itemOptionFactory
      */
     public function __construct(
-        \Swarming\SubscribePro\Platform\Helper\Product $platformProductHelper,
         \Magento\Quote\Model\Quote\Item\OptionFactory $itemOptionFactory
     ) {
-        $this->platformProductHelper = $platformProductHelper;
         $this->itemOptionFactory = $itemOptionFactory;
     }
 

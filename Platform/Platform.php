@@ -30,6 +30,11 @@ class Platform
     protected $sdkByWebsiteCode = [];
 
     /**
+     * @var string
+     */
+    protected $currentWebsiteCode;
+
+    /**
      * @param \SubscribePro\SdkFactory $sdkFactory
      * @param \Swarming\SubscribePro\Model\Config\Platform $configPlatform
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
@@ -48,12 +53,12 @@ class Platform
     }
 
     /**
-     * @param string|null $websiteCode
+     * @param int|null $websiteId
      * @return \SubscribePro\Sdk
      */
-    public function getSdk($websiteCode = null)
+    public function getSdk($websiteId = null)
     {
-        $websiteCode = $this->storeManager->getWebsite($websiteCode)->getCode();
+        $websiteCode = $this->storeManager->getWebsite($websiteId)->getCode();
         if (empty($this->sdkByWebsiteCode[$websiteCode])) {
             $this->sdkByWebsiteCode[$websiteCode] = $this->createSdk($websiteCode);
         }
@@ -64,7 +69,7 @@ class Platform
      * @param string $websiteCode
      * @return \SubscribePro\Sdk
      */
-    protected function createSdk($websiteCode)
+    private function createSdk($websiteCode)
     {
         $platformConfig = [
             'client_id' => $this->configPlatform->getClientId($websiteCode),

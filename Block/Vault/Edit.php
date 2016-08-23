@@ -147,9 +147,9 @@ class Edit extends \Magento\Directory\Block\Data
     /**
      * @return string
      */
-    public function renderBillingSection()
+    public function renderBillingAddress()
     {
-        /** @var \Swarming\SubscribePro\Block\Vault\Edit\Billing $billingBlock */
+        /** @var \Swarming\SubscribePro\Block\Vault\Edit\BillingAddress $billingBlock */
         $billingBlock = $this->getChildBlock('billing');
         return $billingBlock ? $billingBlock->render($this->profile) : '';
     }
@@ -157,18 +157,18 @@ class Edit extends \Magento\Directory\Block\Data
     /**
      * @return string
      */
-    public function renderCardSection()
+    public function renderCard()
     {
         if ($this->token) {
-            /** @var \Swarming\SubscribePro\Block\Vault\Edit\EditCard $cardEditBlock */
-            $cardEditBlock = $this->getChildBlock('card_edit');
-            $cardSectionHtml = $cardEditBlock ? $cardEditBlock->render($this->token) : '';
+            /** @var \Swarming\SubscribePro\Block\Vault\Edit\CardExpiration $cardCardExpirationBlock */
+            $cardCardExpirationBlock = $this->getChildBlock('card_expiration');
+            $cardHtml = $cardCardExpirationBlock ? $cardCardExpirationBlock->render($this->token) : '';
         } else {
-            /** @var \Swarming\SubscribePro\Block\Vault\Edit\CreateCard $cardCreateBlock */
-            $cardCreateBlock = $this->getChildBlock('card_create');
-            $cardSectionHtml = $cardCreateBlock ? $cardCreateBlock->toHtml() : '';
+            /** @var \Swarming\SubscribePro\Block\Vault\Edit\Card $cardBlock */
+            $cardBlock = $this->getChildBlock('card');
+            $cardHtml = $cardBlock ? $cardBlock->toHtml() : '';
         }
-        return $cardSectionHtml;
+        return $cardHtml;
     }
 
     /**
