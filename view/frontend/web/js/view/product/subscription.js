@@ -42,7 +42,9 @@ define(
                 if (this.product().isSubscriptionMode(this.subscriptionOnlyMode)) {
                     this.deliveryOptionValue(this.subscriptionOption);
                 }
-                $(this.qtyFieldSelector).val(this.product().minQty()).trigger('change');
+                if (this.product().isSubscriptionOption(this.subscriptionOption) || this.product().isSubscriptionMode(this.subscriptionOnlyMode)) {
+                    $(this.qtyFieldSelector).val(this.product().minQty()).trigger('change');
+                }
             },
 
             onQtyFieldChanged: function onQtyFieldChanged(event) {

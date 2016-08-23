@@ -32,7 +32,7 @@ define(
                     if (!product.applyDiscountToCatalogPrice() && product.hasSpecialPrice()) {
                         return getFormattedPrice(product.finalPrice());
                     }
-                    if (product.finalPrice() <= product.discountValue()) {
+                    if (product.finalPrice() < product.discountValue()) {
                         return getFormattedPrice(product.finalPrice());
                     }
 
@@ -68,6 +68,10 @@ define(
 
                 product.isSubscriptionMode = function(optionMode) {
                     return product.subscriptionOptionMode() == optionMode;
+                };
+
+                product.isSubscriptionOption = function(optionValue) {
+                    return product.defaultSubscriptionOption() == optionValue;
                 };
 
                 product.getQtyValues = function() {

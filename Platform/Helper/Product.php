@@ -30,7 +30,7 @@ class Product
         $products = $this->sdkProductService->loadProducts($sku);
 
         if (empty($products)) {
-            throw new NoSuchEntityException(__('Platform product is not found.'));
+            throw new NoSuchEntityException(__('Product is not found on Subscribe Pro platform.'));
         }
 
         return $products[0];

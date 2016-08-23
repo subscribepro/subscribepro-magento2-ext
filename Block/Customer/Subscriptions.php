@@ -7,7 +7,7 @@ class Subscriptions extends \Magento\Framework\View\Element\Template
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
         \Magento\Framework\Locale\FormatInterface $localeFormat,
-        array $data
+        array $data = []
     ) {
         parent::__construct($context, $data);
 

@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
-        <referenceBlock name="product_options_wrapper_bottom">
-            <block class="Swarming\SubscribePro\Block\Product\Subscription" name="product.info.subscription" before="-" as="subscription-option" template="product/subscription.phtml">
+        <referenceContainer name="product.info.form.content">
+            <block class="Swarming\SubscribePro\Block\Product\Subscription" name="product.info.subscription" before="product.info.addtocart" as="subscription-option" template="product/subscription.phtml">
                 <arguments>
                     <argument name="jsLayout" xsi:type="array">
                         <item name="components" xsi:type="array">
@@ -22,6 +22,6 @@
                     </argument>
                 </arguments>
             </block>
-        </referenceBlock>
+        </referenceContainer>
     </body>
 </page>

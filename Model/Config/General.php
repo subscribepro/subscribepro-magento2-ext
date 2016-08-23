@@ -27,6 +27,6 @@ class General
      */
     public function isEnabled($websiteCode = null)
     {
-        return $this->scopeConfig->isSetFlag('swarming_kount/account/enabled', ScopeInterface::SCOPE_WEBSITE, $websiteCode);
+        return $this->scopeConfig->isSetFlag('swarming_subscribepro/general/enabled', ScopeInterface::SCOPE_WEBSITE, $websiteCode);
     }
 }

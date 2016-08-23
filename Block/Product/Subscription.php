@@ -15,7 +15,6 @@ class Subscription extends \Magento\Catalog\Block\Product\AbstractProduct
     protected $platformProductHelper;
 
     /**
-     * Subscription constructor.
      * @param \Magento\Catalog\Block\Product\Context $context
      * @param \Magento\Framework\Locale\FormatInterface $localeFormat
      * @param \Swarming\SubscribePro\Platform\Helper\Product $platformProductHelper
