@@ -4,21 +4,19 @@ namespace Swarming\SubscribePro\Observer;
 
 use Magento\Framework\Event\Observer;
 use Magento\Quote\Api\Data\PaymentInterface;
-use Magento\Vault\Api\Data\PaymentTokenInterface;
 use Swarming\SubscribePro\Gateway\Request\PaymentDataBuilder;
 
-class DataAssignObserver extends \Magento\Payment\Observer\AbstractDataAssignObserver
+class PaymentDataAssigner extends \Magento\Payment\Observer\AbstractDataAssignObserver
 {
     /**
      * @var array
      */
     protected $additionalInformationList = [
         PaymentDataBuilder::PAYMENT_METHOD_TOKEN,
-        PaymentTokenInterface::PUBLIC_HASH
     ];
 
     /**
-     * @param Observer $observer
+     * @param \Magento\Framework\Event\Observer $observer
      * @return void
      */
     public function execute(Observer $observer)

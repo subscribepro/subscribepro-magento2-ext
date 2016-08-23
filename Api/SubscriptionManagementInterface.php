@@ -59,6 +59,16 @@ interface SubscriptionManagementInterface
     /**
      * @param int $customerId
      * @param int $subscriptionId
+     * @param \Magento\Quote\Api\Data\AddressInterface $address
+     * @return \Swarming\SubscribePro\Api\Data\AddressInterface
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\AuthorizationException
+     */
+    public function updateShippingAddress($customerId, $subscriptionId, $address);
+
+    /**
+     * @param int $customerId
+     * @param int $subscriptionId
      * @return string next order date
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\AuthorizationException

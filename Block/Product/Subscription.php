@@ -15,22 +15,29 @@ class Subscription extends \Magento\Catalog\Block\Product\AbstractProduct
     protected $platformProductHelper;
 
     /**
+     * @var \Swarming\SubscribePro\Model\Config\SubscriptionDiscount
+     */
+    protected $subscriptionDiscountConfig;
+
+    /**
      * @param \Magento\Catalog\Block\Product\Context $context
      * @param \Magento\Framework\Locale\FormatInterface $localeFormat
+     * @param \Swarming\SubscribePro\Model\Config\SubscriptionDiscount $subscriptionDiscountConfig
      * @param \Swarming\SubscribePro\Platform\Helper\Product $platformProductHelper
      * @param array $data
      */
     public function __construct(
         \Magento\Catalog\Block\Product\Context $context,
         \Magento\Framework\Locale\FormatInterface $localeFormat,
+        \Swarming\SubscribePro\Model\Config\SubscriptionDiscount $subscriptionDiscountConfig,
         \Swarming\SubscribePro\Platform\Helper\Product $platformProductHelper,
         array $data = []
     ) {
         parent::__construct($context, $data);
-
         $this->platformProductHelper = $platformProductHelper;
-        
-        if (!$this->isSubscribeProEnabled() || !$this->isProductSubscriptionEnabled()) {
+        $this->subscriptionDiscountConfig = $subscriptionDiscountConfig;
+
+        if (!$this->subscriptionDiscountConfig->isEnabled() || !$this->isProductSubscriptionEnabled()) {
             return;
         }
 
@@ -64,7 +71,7 @@ class Subscription extends \Magento\Catalog\Block\Product\AbstractProduct
         
         $subscribeProProduct->setFinalPrice($finalPrice);
         $subscribeProProduct->setPrice($regularPrice);
-        $subscribeProProduct->setApplyDiscountToCatalogPrice($this->isApplyDiscountToCatalogPrice());
+        $subscribeProProduct->setApplyDiscountToCatalogPrice($this->subscriptionDiscountConfig->doApplyDiscountToCatalogPrice());
 
         return $subscribeProProduct;
     }
@@ -74,7 +81,7 @@ class Subscription extends \Magento\Catalog\Block\Product\AbstractProduct
      */
     public function isSubscribeProEnabled()
     {
-        return (bool) $this->_scopeConfig->getValue('swarming_subscribepro/general/enabled', \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITE);
+        return (bool) $this->subscriptionDiscountConfig->isEnabled();
     }
 
     /**
@@ -84,13 +91,5 @@ class Subscription extends \Magento\Catalog\Block\Product\AbstractProduct
     {
         $attribute = $this->getProduct()->getCustomAttribute(SubscriptionModifier::SUBSCRIPTION_ENABLED);
         return $attribute && $attribute->getValue();
-    }
-
-    /**
-     * @return bool
-     */
-    protected function isApplyDiscountToCatalogPrice()
-    {
-        return (bool) $this->_scopeConfig->getValue('swarming_subscribepro/subscription_discount/apply_discount_to_catalog_price', \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITE);
     }
 }

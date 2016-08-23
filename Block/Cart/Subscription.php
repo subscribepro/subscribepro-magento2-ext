@@ -23,21 +23,35 @@ class Subscription extends \Magento\Checkout\Block\Cart\Additional\Info
     protected $product;
 
     /**
+     * @var \Swarming\SubscribePro\Helper\QuoteItem
+     */
+    protected $quoteItemHelper;
+
+    /**
+     * @var \Swarming\SubscribePro\Model\Config\General
+     */
+    protected $generalConfig;
+
+    /**
      * @param \Magento\Catalog\Block\Product\Context $context
      * @param \Swarming\SubscribePro\Platform\Helper\Product $platformProductHelper
      * @param \Magento\Catalog\Api\ProductRepositoryInterface $productRepository
+     * @param \Swarming\SubscribePro\Model\Config\General $generalConfig
      * @param array $data
      */
     public function __construct(
         \Magento\Catalog\Block\Product\Context $context,
         \Swarming\SubscribePro\Platform\Helper\Product $platformProductHelper,
         \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
+        \Swarming\SubscribePro\Helper\QuoteItem $quoteItemHelper,
+        \Swarming\SubscribePro\Model\Config\General $generalConfig,
         array $data = []
     ) {
-        parent::__construct($context, $data);
-
         $this->platformProductHelper = $platformProductHelper;
         $this->productRepository = $productRepository;
+        $this->quoteItemHelper = $quoteItemHelper;
+        $this->generalConfig = $generalConfig;
+        parent::__construct($context, $data);
     }
 
     /**
@@ -80,8 +94,8 @@ class Subscription extends \Magento\Checkout\Block\Cart\Additional\Info
         if ($intervalOption = $this->getItem()->getOptionByCode('subscription_interval')) {
             $subscriptionProduct->setDefaultInterval($intervalOption->getValue());
         }
-        $createSubscriptionOption = $this->getItem()->getOptionByCode('create_subscription');
-        $subscriptionOption = $createSubscriptionOption && $createSubscriptionOption->getValue()
+
+        $subscriptionOption = $this->quoteItemHelper->isSubscriptionEnabled($this->getItem())
             ? ProductInterface::SO_SUBSCRIPTION
             : ProductInterface::SO_ONETIME_PURCHASE;
         $subscriptionProduct->setDefaultSubscriptionOption($subscriptionOption);
@@ -94,7 +108,7 @@ class Subscription extends \Magento\Checkout\Block\Cart\Additional\Info
      */
     public function isSubscribeProEnabled()
     {
-        return (bool) -$this->_scopeConfig->getValue('swarming_subscribepro/general/enabled', \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITE);
+        return $this->generalConfig->isEnabled();
     }
 
     /**

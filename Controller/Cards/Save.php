@@ -24,19 +24,28 @@ class Save extends \Magento\Customer\Controller\AbstractAccount
     protected $vaultForm;
 
     /**
+     * @var \Swarming\SubscribePro\Gateway\Config\VaultConfig
+     */
+    protected $spVaultConfig;
+
+    /**
+     * @param \Magento\Framework\App\Action\Context $context
      * @param \Magento\Framework\Data\Form\FormKey\Validator $formKeyValidator
      * @param \Magento\Customer\Model\Session $customerSession
      * @param \Swarming\SubscribePro\Model\Vault\Form $paymentProfileForm
+     * @param \Swarming\SubscribePro\Gateway\Config\VaultConfig $spVaultConfig
      */
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
         \Magento\Framework\Data\Form\FormKey\Validator $formKeyValidator,
         \Magento\Customer\Model\Session $customerSession,
-        \Swarming\SubscribePro\Model\Vault\Form $paymentProfileForm
+        \Swarming\SubscribePro\Model\Vault\Form $paymentProfileForm,
+        \Swarming\SubscribePro\Gateway\Config\VaultConfig $spVaultConfig
     ) {
         $this->formKeyValidator = $formKeyValidator;
         $this->customerSession = $customerSession;
         $this->vaultForm = $paymentProfileForm;
+        $this->spVaultConfig = $spVaultConfig;
         parent::__construct($context);
     }
 
@@ -48,8 +57,10 @@ class Save extends \Magento\Customer\Controller\AbstractAccount
         /** @var \Magento\Framework\Controller\Result\Redirect $resultRedirect */
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
 
-
-        if (!$this->formKeyValidator->validate($this->getRequest()) || !$this->getRequest()->isPost()) {
+        if (!$this->formKeyValidator->validate($this->getRequest())
+            || !$this->getRequest()->isPost()
+            || !$this->spVaultConfig->isActive()
+        ) {
             return $resultRedirect->setPath('vault/cards/listaction');
         }
 

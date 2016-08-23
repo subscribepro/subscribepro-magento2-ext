@@ -32,6 +32,11 @@ class ProductSaveAfter implements ObserverInterface
     protected $platformProductHelperFactory;
 
     /**
+     * @var \Magento\ConfigurableProduct\Api\LinkManagementInterface
+     */
+    protected $linkManagement;
+
+    /**
      * @var \Psr\Log\LoggerInterface
      */
     protected $logger;
@@ -40,6 +45,7 @@ class ProductSaveAfter implements ObserverInterface
      * @param \Swarming\SubscribePro\Model\Config\General $configGeneral
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      * @param \Magento\Catalog\Api\ProductRepositoryInterface $productRepository
+     * @param \Magento\ConfigurableProduct\Api\LinkManagementInterface $linkManagement
      * @param \Swarming\SubscribePro\Platform\Helper\ProductFactory $platformProductHelperFactory
      * @param \Psr\Log\LoggerInterface $logger
      */
@@ -47,6 +53,7 @@ class ProductSaveAfter implements ObserverInterface
         \Swarming\SubscribePro\Model\Config\General $configGeneral,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
+        \Magento\ConfigurableProduct\Api\LinkManagementInterface $linkManagement,
         \Swarming\SubscribePro\Platform\Helper\ProductFactory $platformProductHelperFactory,
         \Psr\Log\LoggerInterface $logger
     ) {
@@ -54,6 +61,7 @@ class ProductSaveAfter implements ObserverInterface
         $this->storeManager = $storeManager;
         $this->productRepository = $productRepository;
         $this->platformProductHelperFactory = $platformProductHelperFactory;
+        $this->linkManagement = $linkManagement;
         $this->logger = $logger;
     }
 
@@ -89,15 +97,31 @@ class ProductSaveAfter implements ObserverInterface
                 continue;
             }
 
-            $productHelper = $this->platformProductHelperFactory->create(['websiteCode' => $website->getCode()]);
-            try {
-                $productHelper->saveProduct($product);
-            } catch (HttpException $e) {
-                $this->logger->critical($e);
-                throw new LocalizedException(__('Fail to save product on Subscribe Pro platform for website "%1".', $website->getName()));
+            $this->saveProduct($product, $website);
+
+            if ($product->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE) {
+                foreach ($this->linkManagement->getChildren($product->getSku()) as $childProduct) {
+                    $this->saveProduct($childProduct, $website);
+                }
             }
         }
         
+    }
+
+    /**
+     * @param \Magento\Catalog\Api\Data\ProductInterface $product
+     * @param \Magento\Store\Api\Data\WebsiteInterface $website
+     * @throws LocalizedException
+     */
+    protected function saveProduct($product, $website)
+    {
+        $productHelper = $this->platformProductHelperFactory->create(['websiteCode' => $website->getCode()]);
+        try {
+            $productHelper->saveProduct($product);
+        } catch (HttpException $e) {
+            $this->logger->critical($e);
+            throw new LocalizedException(__('Fail to save product on Subscribe Pro platform for website "%1".', $website->getName()));
+        }
     }
 
     /**

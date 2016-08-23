@@ -1,0 +1,15 @@
+<?php
+/** @var \Swarming\SubscribePro\Block\Checkout\Onepage\Success\Subscriptions $block */
+?>
+<?php if ($block->hasFailedSubscriptions()): ?>
+    <p>
+        <?php echo __('Failed to create some of your product subscriptions! Please contact support for assistance.') ?>
+    </p>
+<?php endif; ?>
+
+<?php if ($block->getCountSubscriptions()): ?>
+    <p>
+        <?php echo __('You will receive a separate email confirmation for your product subscription(s).') ?>
+        <?php echo __('Click here to <a href="%1">manage your product subscriptions</a>.', $block->getUrl('swarming_subscribepro/customer/subscriptions')) ?>
+    </p>
+<?php endif; ?>

@@ -2,10 +2,10 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
         <referenceBlock name="customer_account_navigation">
-            <block class="Magento\Framework\View\Element\Html\Link\Current" name="customer-account-navigation-swarming-subscribepro-subscription-link">
+            <block ifconfig="swarming_subscribepro/general/enabled" class="Magento\Framework\View\Element\Html\Link\Current" name="customer-account-navigation-swarming-subscribepro-subscription-link">
                 <arguments>
                     <argument name="path" xsi:type="string">swarming_subscribepro/customer/subscriptions</argument>
-                    <argument name="label" xsi:type="string">My product subscriptions</argument>
+                    <argument name="label" translate="true" xsi:type="string">My product subscriptions</argument>
                 </arguments>
             </block>
         </referenceBlock>

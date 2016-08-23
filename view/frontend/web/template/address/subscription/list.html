@@ -1,0 +1,9 @@
+<div class="field field-select-billing">
+    <div class="control" data-bind="if: (addressOptions().length > 1)">
+        <select class="select" data-bind="
+        options: addressOptions,
+        optionsText: addressOptionsText,
+        value: selectedAddress;
+    "></select>
+    </div>
+</div>

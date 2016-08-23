@@ -7,6 +7,9 @@
                 <arguments>
                     <argument name="jsLayout" xsi:type="array">
                         <item name="components" xsi:type="array">
+                            <item name="spAddressProvider" xsi:type="array">
+                                <item name="component" xsi:type="string">uiComponent</item>
+                            </item>
                             <item name="subscriptions-container" xsi:type="array">
                                 <item name="component" xsi:type="string">uiComponent</item>
                                 <item name="config" xsi:type="array">
@@ -22,7 +25,7 @@
                                         <item name="displayArea" xsi:type="string">subscriptions</item>
                                         <item name="config" xsi:type="array">
                                             <item name="template" xsi:type="string">Swarming_SubscribePro/subscription/list</item>
-                                            <item name="paymentModalOptions" xsi:type="array">
+                                            <item name="paymentInfoOptions" xsi:type="array">
                                                 <item name="component" xsi:type="string">Swarming_SubscribePro/js/view/payment/subscription/payment-info</item>
                                                 <item name="displayArea" xsi:type="string">payment-info</item>
                                                 <item name="config" xsi:type="array">
@@ -35,6 +38,39 @@
                                                     </item>
                                                 </item>
                                                 <item name="children" xsi:type="array">
+                                                    <item name="messages" xsi:type="array">
+                                                        <item name="component" xsi:type="string">Magento_Ui/js/view/messages</item>
+                                                        <item name="displayArea" xsi:type="string">messages</item>
+                                                    </item>
+                                                </item>
+                                            </item>
+                                            <item name="shippingAddressOptions" xsi:type="array">
+                                                <item name="component" xsi:type="string">Swarming_SubscribePro/js/view/address/subscription/shipping-address-info</item>
+                                                <item name="displayArea" xsi:type="string">shipping-address-info</item>
+                                                <item name="provider" xsi:type="string">spAddressProvider</item>
+                                                <item name="sortOrder" xsi:type="string">1</item>
+                                                <item name="config" xsi:type="array">
+                                                    <item name="template" xsi:type="string">Swarming_SubscribePro/address/subscription/shipping-address-info</item>
+                                                    <item name="modalOptions" xsi:type="array">
+                                                        <item name="type" xsi:type="string">popup</item>
+                                                        <item name="title" xsi:type="string">Change shipping address</item>
+                                                        <item name="responsive" xsi:type="boolean">true</item>
+                                                        <item name="clickableOverlay" xsi:type="boolean">true</item>
+                                                    </item>
+                                                    <item name="deps" xsi:type="array">
+                                                        <item name="0" xsi:type="string">spAddressProvider</item>
+                                                    </item>
+                                                </item>
+                                                <item name="children" xsi:type="array">
+                                                    <item name="shipping-address-fieldset" xsi:type="array">
+                                                        <item name="component" xsi:type="string">uiComponent</item>
+                                                        <item name="config" xsi:type="array">
+                                                            <item name="deps" xsi:type="array">
+                                                                <item name="0" xsi:type="string">spAddressProvider</item>
+                                                            </item>
+                                                        </item>
+                                                        <item name="displayArea" xsi:type="string">additional-fieldsets</item>
+                                                    </item>
                                                     <item name="messages" xsi:type="array">
                                                         <item name="component" xsi:type="string">Magento_Ui/js/view/messages</item>
                                                         <item name="displayArea" xsi:type="string">messages</item>

@@ -86,24 +86,9 @@
 </tr>
 <tr data-bind="visible: showDetails()">
     <td>
-        <p>
-            <strong>
-                <!-- ko i18n: 'Delivery address:' --><!-- /ko -->
-            </strong>
-        </p>
-        <address>
-            <!-- ko text: shippingAddress().first_name + ' ' + shippingAddress().last_name --><!-- /ko -->
-            <!-- ko if: shippingAddress().company && shippingAddress().company.length > 0 -->
-                <div><!-- ko text: shippingAddress().company --><!-- /ko --></div>
-            <!-- /ko -->
-            <!-- ko if: shippingAddress().street1 && shippingAddress().street1.length > 0 -->
-                <div><!-- ko text: shippingAddress().street1 --><!-- /ko --></div>
-            <!-- /ko -->
-            <!-- ko if: shippingAddress().street2 && shippingAddress().street2.length > 0 -->
-                <div><!-- ko text: shippingAddress().street2 --><!-- /ko --></div>
-            <!-- /ko -->
-            <div><!-- ko text: cityRegionPostcodeText --><!-- /ko --></div>
-        </address>
+        <!-- ko foreach: getRegion('shipping-address-info') -->
+            <!-- ko template: getTemplate() --><!-- /ko -->
+        <!--/ko-->
     </td>
     <td colspan="2">
         <!-- ko foreach: getRegion('payment-info') -->

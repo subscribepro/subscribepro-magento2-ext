@@ -1,6 +1,6 @@
 <?php
 /**
- * @var $block \Magento\Framework\View\Element\Template
+ * @var $block \Swarming\SubscribePro\Block\Customer\Subscriptions
  */
 ?>
 
@@ -14,4 +14,8 @@
             "Magento_Ui/js/core/app": <?php /* @escapeNotVerified */ echo $block->getJsLayout();?>
         }
     }
+</script>
+
+<script>
+    window.customerData = <?php /* @escapeNotVerified */ echo \Zend_Json::encode($block->getCustomerData()); ?>;
 </script>

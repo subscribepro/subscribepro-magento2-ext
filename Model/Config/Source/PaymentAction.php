@@ -4,6 +4,9 @@ namespace Swarming\SubscribePro\Model\Config\Source;
 
 class PaymentAction implements \Magento\Framework\Option\ArrayInterface
 {
+    const AUTHORIZE = 'authorize';
+    const AUTHORIZE_CAPTURE = 'authorize_capture';
+
     /**
      * @return array
      */
@@ -11,11 +14,11 @@ class PaymentAction implements \Magento\Framework\Option\ArrayInterface
     {
         return [
             [
-                'value' => 'authorize',
+                'value' => self::AUTHORIZE,
                 'label' => __('Authorize'),
             ],
             [
-                'value' => 'authorize_capture',
+                'value' => self::AUTHORIZE_CAPTURE,
                 'label' => __('Purchase'),
             ]
         ];

@@ -11,6 +11,10 @@
                 <log_level>debug</log_level>
                 <log_filename>var/log/subscribepro/log.log</log_filename>
             </platform>
+            <subscription_discount>
+                <apply_discount_to_catalog_price>0</apply_discount_to_catalog_price>
+                <cartrule_combine_type>combine</cartrule_combine_type>
+            </subscription_discount>
         </swarming_subscribepro>
         <payment>
             <subscribe_pro>

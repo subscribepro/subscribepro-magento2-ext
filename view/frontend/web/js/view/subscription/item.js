@@ -30,7 +30,6 @@ define(
                 self.status = ko.observable(self.subscription.status);
                 self.product = productModel.create(self.subscription.product, self.priceFormat);
                 self.nextOrderDate = ko.observable(self.subscription.next_order_date);
-                self.shippingAddress = ko.observable(self.subscription.shipping_address);
                 self.showDetails = ko.observable(false);
                 self.qtyValues = ko.observableArray(self.product.getQtyValues());
                 self.selectedQty = ko.observable(self.qty());
@@ -43,13 +42,6 @@ define(
                     dateToCompare.setDate(dateToCompare.getDate() + 2);
 
                     return self.isStatus(['Active']) && nextOrderDate >= dateToCompare;
-                });
-
-                self.cityRegionPostcodeText = ko.pureComputed(function() {
-                    var address = self.shippingAddress();
-                    var cityRegionText = [address.city, address.region].filter(function (val) {return val;}).join(', ');
-
-                    return [cityRegionText, address.postcode].filter(function (val) {return val;}).join(' ');
                 });
             },
 

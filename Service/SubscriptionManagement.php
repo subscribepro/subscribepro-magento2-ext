@@ -27,6 +27,16 @@ class SubscriptionManagement implements SubscriptionManagementInterface
     protected $platformSubscriptionHelper;
 
     /**
+     * @var \Swarming\SubscribePro\Platform\Helper\Address
+     */
+    protected $platformAddressHelper;
+
+    /**
+     * @var \Magento\Customer\Api\AddressRepositoryInterface
+     */
+    protected $addressRepository;
+
+    /**
      * @var \Swarming\SubscribePro\Platform\Link\Subscription
      */
     protected $linkSubscription;
@@ -37,6 +47,16 @@ class SubscriptionManagement implements SubscriptionManagementInterface
     protected $design;
 
     /**
+     * @var \Magento\Customer\Model\Address\Config
+     */
+    protected $addressConfig;
+
+    /**
+     * @var \Magento\Customer\Model\Address\Mapper
+     */
+    protected $addressMapper;
+
+    /**
      * @var \Psr\Log\LoggerInterface
      */
     protected $logger;
@@ -45,7 +65,11 @@ class SubscriptionManagement implements SubscriptionManagementInterface
      * @param \Swarming\SubscribePro\Platform\Helper\Product $platformProductHelper
      * @param \Swarming\SubscribePro\Platform\Helper\Customer $platformCustomerHelper
      * @param \Swarming\SubscribePro\Platform\Helper\Subscription $platformSubscriptionHelper
+     * @param \Swarming\SubscribePro\Platform\Helper\Address $platformAddressHelper
      * @param \Swarming\SubscribePro\Platform\Link\Subscription $linkSubscription
+     * @param \Magento\Customer\Api\AddressRepositoryInterface $addressRepository
+     * @param \Magento\Customer\Model\Address\Mapper $addressMapper
+     * @param \Magento\Customer\Model\Address\Config $addressConfig
      * @param \Magento\Framework\View\DesignInterface $design
      * @param \Psr\Log\LoggerInterface $logger
      */
@@ -53,13 +77,21 @@ class SubscriptionManagement implements SubscriptionManagementInterface
         \Swarming\SubscribePro\Platform\Helper\Product $platformProductHelper,
         \Swarming\SubscribePro\Platform\Helper\Customer $platformCustomerHelper,
         \Swarming\SubscribePro\Platform\Helper\Subscription $platformSubscriptionHelper,
+        \Swarming\SubscribePro\Platform\Helper\Address $platformAddressHelper,
         \Swarming\SubscribePro\Platform\Link\Subscription $linkSubscription,
+        \Magento\Customer\Api\AddressRepositoryInterface $addressRepository,
+        \Magento\Customer\Model\Address\Mapper $addressMapper,
+        \Magento\Customer\Model\Address\Config $addressConfig,
         \Magento\Framework\View\DesignInterface $design,
         \Psr\Log\LoggerInterface $logger
     ) {
         $this->platformProductHelper = $platformProductHelper;
         $this->platformCustomerHelper = $platformCustomerHelper;
         $this->platformSubscriptionHelper = $platformSubscriptionHelper;
+        $this->platformAddressHelper = $platformAddressHelper;
+        $this->addressRepository = $addressRepository;
+        $this->addressMapper = $addressMapper;
+        $this->addressConfig = $addressConfig;
         $this->linkSubscription = $linkSubscription;
         $this->design = $design;
         $this->logger = $logger;
@@ -216,6 +248,41 @@ class SubscriptionManagement implements SubscriptionManagementInterface
     /**
      * @param int $customerId
      * @param int $subscriptionId
+     * @param \Magento\Quote\Model\Quote\Address $address
+     * @return \Swarming\SubscribePro\Api\Data\AddressInterface
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\AuthorizationException
+     */
+    public function updateShippingAddress($customerId, $subscriptionId, $address)
+    {
+        try {
+            $subscription = $this->platformSubscriptionHelper->loadSubscription($subscriptionId);
+            $saveInAddressBook = $address->getSaveInAddressBook();
+            $address = $address->exportCustomerAddress();
+            $address->setCustomerId($customerId);
+            $platformCustomer = $this->platformCustomerHelper->getCustomer($customerId);
+            $this->checkSubscriptionOwner($subscription, $customerId);
+
+            $platformAddress = $this->platformAddressHelper->findOrSaveAddress($address, $platformCustomer);
+            $subscription->setShippingAddressId($platformAddress->getId());
+            $this->platformSubscriptionHelper->saveSubscription($subscription);
+            if ($saveInAddressBook) {
+                $this->addressRepository->save($address);
+            }
+            $platformAddress->setAddressInline($this->getCustomerAddressInline($address));
+        } catch (NoSuchEntityException $e) {
+            throw new LocalizedException(__('The subscription is not found.'));
+        } catch (HttpException $e) {
+            $this->logger->critical($e);
+            throw new LocalizedException(__('An error occurred while updating subscription shipping address.'));
+        }
+
+        return $platformAddress;
+    }
+
+    /**
+     * @param int $customerId
+     * @param int $subscriptionId
      * @return string next order date
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\AuthorizationException
@@ -317,5 +384,18 @@ class SubscriptionManagement implements SubscriptionManagementInterface
         if ($subscription->getCustomerId() != $platformCustomer->getId()) {
             throw new AuthorizationException(__('Forbidden action.'));
         }
+    }
+
+    /**
+     * @param \Magento\Customer\Api\Data\AddressInterface $address
+     * @return string
+     */
+    protected function getCustomerAddressInline($address)
+    {
+        $builtOutputAddressData = $this->addressMapper->toFlatArray($address);
+        return $this->addressConfig
+            ->getFormatByCode(\Magento\Customer\Model\Address\Config::DEFAULT_ADDRESS_FORMAT)
+            ->getRenderer()
+            ->renderArray($builtOutputAddressData);
     }
 }

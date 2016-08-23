@@ -24,6 +24,9 @@
 
                 <field id="test_connection" translate="button_label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
                     <frontend_model>Swarming\SubscribePro\Block\Adminhtml\System\Config\TestConnection</frontend_model>
+                    <depends>
+                        <field id="swarming_subscribepro/general/enabled">1</field>
+                    </depends>
                 </field>
 
                 <field id="client_id" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
@@ -59,13 +62,38 @@
                 </field>
             </group>
 
-            <group id="subscription_discount" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+            <group id="subscription_options" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Subscription Mode</label>
+
+                <field id="allow_coupon" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Save Coupons With Subscriptions</label>
+                    <comment>Allow coupons to be added when a customer creates a new subscription using the New Subscription
+                        page and saved with subscriptions created during the checkout process.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="swarming_subscribepro/general/enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+            <group id="subscription_discount" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Subscription Discount</label>
 
                 <field id="apply_discount_to_catalog_price" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Apply Discount To Catalog Price</label>
                     <comment>Apply subscription discount when catalog price rule or special price discount is in effect.</comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="swarming_subscribepro/general/enabled">1</field>
+                    </depends>
+                </field>
+
+                <field id="cartrule_combine_type" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Cart Rule Combine Type</label>
+                    <comment>Specify how to combine the subscription discount with any shopping cart price rules or coupon code discounts.</comment>
+                    <source_model>Swarming\SubscribePro\Model\Config\Source\CartRuleCombine</source_model>
+                    <depends>
+                        <field id="swarming_subscribepro/general/enabled">1</field>
+                    </depends>
                 </field>
             </group>
         </section>
@@ -106,7 +134,7 @@
 
                 <field id="cctypes" translate="label" type="multiselect" sortOrder="150" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
                     <label>Credit Card Types</label>
-                    <source_model>Swarming\SubscribePro\Model\Config\Source\Cctype</source_model>
+                    <source_model>Swarming\SubscribePro\Model\Config\Source\CcType</source_model>
                 </field>
 
                 <field id="useccv" translate="label" type="select" sortOrder="160" showInDefault="1" showInWebsite="1" showInStore="0">

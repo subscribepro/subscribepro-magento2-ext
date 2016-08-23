@@ -5,25 +5,10 @@ namespace Swarming\SubscribePro\Gateway\Request;
 use Exception;
 use Magento\Payment\Gateway\Request\BuilderInterface;
 use Magento\Payment\Gateway\Helper\SubjectReader;
-use Magento\Vault\Api\Data\PaymentTokenInterface;
 
 class VaultDataBuilder implements BuilderInterface
 {
     const PAYMENT_PROFILE_ID = 'profile_id';
-
-    /**
-     * @var \Magento\Vault\Api\PaymentTokenManagementInterface
-     */
-    protected $tokenManagement;
-
-    /**
-     * @param \Magento\Vault\Api\PaymentTokenManagementInterface $tokenManagement
-     */
-    public function __construct(
-        \Magento\Vault\Api\PaymentTokenManagementInterface $tokenManagement
-    ) {
-        $this->tokenManagement = $tokenManagement;
-    }
 
     /**
      * @param array $buildSubject
@@ -34,18 +19,19 @@ class VaultDataBuilder implements BuilderInterface
     {
         $paymentDO = SubjectReader::readPayment($buildSubject);
 
+        /** @var \Magento\Sales\Api\Data\OrderPaymentInterface $payment */
         $payment = $paymentDO->getPayment();
-        $order = $paymentDO->getOrder();
 
-        $publicHash = $payment->getAdditionalInformation(PaymentTokenInterface::PUBLIC_HASH);
+        $extensionAttributes = $payment->getExtensionAttributes();
 
-        $vault = $this->tokenManagement->getByPublicHash($publicHash, $order->getCustomerId());
-        if (!$vault || !$vault->getIsActive()) {
+        if (!$extensionAttributes || !$extensionAttributes->getVaultPaymentToken()) {
             throw new Exception('The vault is not found.');
         }
 
+        $paymentToken = $extensionAttributes->getVaultPaymentToken();
+
         return [
-            self::PAYMENT_PROFILE_ID => $vault->getGatewayToken()
+            self::PAYMENT_PROFILE_ID => $paymentToken->getGatewayToken()
         ];
     }
 }

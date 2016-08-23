@@ -9,11 +9,18 @@
                 <item name="product" xsi:type="array">
                     <item name="instance_name" xsi:type="string">Swarming\SubscribePro\Model\Product</item>
                 </item>
+                <item name="address" xsi:type="array">
+                    <item name="instance_name" xsi:type="string">Swarming\SubscribePro\Model\Address</item>
+                </item>
                 <item name="subscription" xsi:type="array">
                     <item name="instance_name" xsi:type="string">Swarming\SubscribePro\Model\Subscription</item>
                 </item>
             </argument>
         </arguments>
+    </type>
+
+    <type name="Magento\SalesRule\Model\Validator">
+        <plugin name="subscribepro_discount" type="Swarming\SubscribePro\Plugin\SalesRule\Validator" sortOrder="50" />
     </type>
 
     <!-- SubscribeProAdapter -->
@@ -197,14 +204,14 @@
     <virtualType name="RefundDataBuilder" type="Swarming\SubscribePro\Gateway\Request\CaptureDataBuilder" />
 
     <!-- SubscribeProAdapter Vault -->
-    <virtualType name="SubscribeProVaultPaymentConfig" type="Magento\Payment\Gateway\Config\Config">
+    <type name="Swarming\SubscribePro\Gateway\Config\VaultConfig">
         <arguments>
             <argument name="methodCode" xsi:type="const">Swarming\SubscribePro\Model\Ui\ConfigProvider::VAULT_CODE</argument>
         </arguments>
-    </virtualType>
+    </type>
     <virtualType name="SubscribeProVaultPaymentValueHandler" type="VaultPaymentDefaultValueHandler">
         <arguments>
-            <argument name="configInterface" xsi:type="object">SubscribeProVaultPaymentConfig</argument>
+            <argument name="configInterface" xsi:type="object">Swarming\SubscribePro\Gateway\Config\VaultConfig</argument>
         </arguments>
     </virtualType>
     <virtualType name="SubscribeProVaultPaymentValueHandlerPool" type="VaultPaymentValueHandlerPool">
@@ -216,7 +223,7 @@
     </virtualType>
     <virtualType name="SubscribeProVaultAdapter" type="Magento\Vault\Model\Method\Vault">
         <arguments>
-            <argument name="config" xsi:type="object">SubscribeProVaultPaymentConfig</argument>
+            <argument name="config" xsi:type="object">Swarming\SubscribePro\Gateway\Config\VaultConfig</argument>
             <argument name="valueHandlerPool" xsi:type="object">SubscribeProVaultPaymentValueHandlerPool</argument>
             <argument name="vaultProvider" xsi:type="object">SubscribeProAdapter</argument>
             <argument name="code" xsi:type="const">Swarming\SubscribePro\Model\Ui\ConfigProvider::VAULT_CODE</argument>

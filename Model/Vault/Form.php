@@ -42,6 +42,11 @@ class Form
     protected $regionFactory;
 
     /**
+     * @var \Swarming\SubscribePro\Platform\Helper\Customer
+     */
+    protected $platformCustomerHelper;
+
+    /**
      * @param \Magento\Customer\Model\Session $session
      * @param \Magento\Vault\Api\PaymentTokenRepositoryInterface $paymentTokenRepository
      * @param \Magento\Vault\Api\PaymentTokenManagementInterface $paymentTokenManagement
@@ -49,6 +54,7 @@ class Form
      * @param \Magento\Vault\Model\PaymentTokenFactory $paymentTokenFactory
      * @param \Swarming\SubscribePro\Model\Vault\Manager $vaultManager
      * @param \Magento\Directory\Model\RegionFactory $regionFactory
+     * @param \Swarming\SubscribePro\Platform\Helper\Customer $platformCustomerHelper
      */
     public function __construct(
         \Magento\Customer\Model\Session $session,
@@ -57,7 +63,8 @@ class Form
         \Swarming\SubscribePro\Platform\Platform $platform,
         \Magento\Vault\Model\PaymentTokenFactory $paymentTokenFactory,
         \Swarming\SubscribePro\Model\Vault\Manager $vaultManager,
-        \Magento\Directory\Model\RegionFactory $regionFactory
+        \Magento\Directory\Model\RegionFactory $regionFactory,
+        \Swarming\SubscribePro\Platform\Helper\Customer $platformCustomerHelper
     ) {
         $this->session = $session;
         $this->paymentTokenRepository = $paymentTokenRepository;
@@ -66,6 +73,7 @@ class Form
         $this->paymentTokenFactory = $paymentTokenFactory;
         $this->vaultManager = $vaultManager;
         $this->regionFactory = $regionFactory;
+        $this->platformCustomerHelper = $platformCustomerHelper;
     }
 
     /**
@@ -82,9 +90,12 @@ class Form
         $paymentProfileData = $data['payment'];
         $paymentProfileData['billing_address'] = $this->updateBillingRegion($data['billing_address']);
 
+        $platformCustomer = $this->platformCustomerHelper->getCustomer($this->session->getCustomerId(), true);
+
         $profile = $this->sdkPaymentProfileService->createProfile();
         $profile->importData($paymentProfileData);
-        $profile->setMagentoCustomerId($this->session->getCustomerId());
+        $profile->setCustomerId($platformCustomer->getId());
+        $profile->setMagentoCustomerId($platformCustomer->getMagentoCustomerId());
         $this->sdkPaymentProfileService->saveToken($paymentProfileToken, $profile);
 
         $paymentToken = $this->paymentTokenFactory->create();
