@@ -69,6 +69,7 @@ class SubscriptionManagement implements SubscriptionManagementInterface
         \Swarming\SubscribePro\Platform\Manager\Address $platformAddressManager,
         \Swarming\SubscribePro\Helper\SubscriptionProducts $subscriptionProductsHelper,
         \Magento\Framework\View\DesignInterface $design,
+        \Magento\Framework\Intl\DateTimeFactory $dateTimeFactory,
         \Psr\Log\LoggerInterface $logger
     ) {
         $this->platformProductManager = $platformProductManager;
@@ -77,6 +78,7 @@ class SubscriptionManagement implements SubscriptionManagementInterface
         $this->platformAddressManager = $platformAddressManager;
         $this->subscriptionProductsHelper = $subscriptionProductsHelper;
         $this->design = $design;
+        $this->dateTimeFactory = $dateTimeFactory;
         $this->logger = $logger;
     }
 
