@@ -7,7 +7,7 @@ use Magento\Framework\Event\ObserverInterface;
 use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
 use Swarming\SubscribePro\Gateway\Config\Config;
 
-class PaymentAvailability implements ObserverInterface
+class Availability implements ObserverInterface
 {
     /**
      * @var \Magento\Checkout\Model\Session

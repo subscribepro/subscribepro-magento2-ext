@@ -97,7 +97,7 @@ class Subscription extends \Magento\Checkout\Block\Cart\Additional\Info
                 'subscriptionOption' => PlatformProductInterface::SO_SUBSCRIPTION,
                 'subscriptionOnlyMode' => PlatformProductInterface::SOM_SUBSCRIPTION_ONLY,
                 'subscriptionAndOneTimePurchaseMode' => PlatformProductInterface::SOM_SUBSCRIPTION_AND_ONETIME_PURCHASE,
-                'productData' => $this->getSubscriptionProduct()->toArray(),
+                'product' => $this->getSubscriptionProduct()->toArray(),
                 'quoteItemId' => $this->getItem()->getId(),
                 'qtyFieldSelector' => '#cart-' . $this->getItem()->getId() . '-qty'
             ]

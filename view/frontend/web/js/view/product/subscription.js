@@ -3,19 +3,22 @@ define(
         'jquery',
         'underscore',
         'Swarming_SubscribePro/js/view/cart/subscription',
+        'Swarming_SubscribePro/js/model/product/price',
         'priceBox'
     ],
-    function ($, _, Component) {
+    function ($, _, Component, productPriceModel) {
         'use strict';
 
         return Component.extend({
             defaults: {
                 template: 'Swarming_SubscribePro/product/subscription',
                 priceBoxSelector: '.price-box',
-                qtyFieldSelector: '#qty'
+                qtyFieldSelector: '#qty',
+                product: {},
+                priceConfig: {},
+                productPrice: {},
+                priceBoxElement: null
             },
-
-            priceBoxElement: null,
 
             initialize: function () {
                 this._super();
@@ -26,19 +29,26 @@ define(
             },
 
             initProductPrice: function () {
-                var priceBox = this.priceBoxElement.data('mage-priceBox');
-                var price = parseFloat(this.priceBoxElement.find('.price').parent().data('price-amount').toFixed(2));
-                var finalPrice = parseFloat(parseFloat(this.finalPrice).toFixed(2));
-                var basePrice = this.basePrice ? parseFloat(parseFloat(this.basePrice).toFixed(2)) : finalPrice;
+                var finalPrice = parseFloat(parseFloat(this.product.final_price).toFixed(2));
+                var basePrice = this.product.base_price ? parseFloat(parseFloat(this.product.base_price).toFixed(2)) : finalPrice;
                 var hasSpecialPrice = finalPrice != basePrice;
-                if (priceBox && priceBox.options && priceBox.options.priceConfig
-                    && priceBox.options.priceConfig.prices.finalPrice && priceBox.options.priceConfig.prices.oldPrice
+
+                var priceBox = this.priceBoxElement.data('mage-priceBox');
+                if (priceBox
+                    && priceBox.options
+                    && priceBox.options.priceConfig
+                    && priceBox.options.priceConfig.prices.finalPrice
+                    && priceBox.options.priceConfig.prices.oldPrice
                 ) {
                     hasSpecialPrice = priceBox.options.priceConfig.prices.finalPrice.amount != priceBox.options.priceConfig.prices.oldPrice.amount;
                 }
 
+                this.productPrice = productPriceModel.create(this.product, this.priceConfig);
+
+                var price = parseFloat(this.priceBoxElement.find('.price').parent().data('price-amount').toFixed(2));
                 this.syncProductPrice({oldPrice: {amount: basePrice}, finalPrice: {amount: price}});
-                this.product().hasSpecialPrice(hasSpecialPrice);
+
+                this.productPrice.hasSpecialPrice(hasSpecialPrice);
             },
 
             onPriceChange: function () {
@@ -58,15 +68,14 @@ define(
                 if (prices.oldPrice) {
                     oldPrice = prices.oldPrice.amount;
                 }
-                this.product().setCalculatedPrices(oldPrice, finalPrice);
-                this.product().hasSpecialPrice(oldPrice != finalPrice);
+                this.productPrice.setCalculatedPrices(oldPrice, finalPrice);
+                this.productPrice.hasSpecialPrice(oldPrice != finalPrice);
             },
 
             getPriceBoxElement: function () {
                 var priceBoxElement = _.find($(this.priceBoxSelector), function(el) {
                     return el && $(el).data('mage-priceBox');
                 });
-                
                 return $(priceBoxElement);
             }
         });

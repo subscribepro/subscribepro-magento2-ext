@@ -60,6 +60,7 @@ class SubscriptionManagement implements SubscriptionManagementInterface
      * @param \Swarming\SubscribePro\Platform\Manager\Address $platformAddressManager
      * @param \Swarming\SubscribePro\Helper\SubscriptionProducts $subscriptionProductsHelper
      * @param \Magento\Framework\View\DesignInterface $design
+     * @param \Magento\Framework\Intl\DateTimeFactory $dateTimeFactory
      * @param \Psr\Log\LoggerInterface $logger
      */
     public function __construct(

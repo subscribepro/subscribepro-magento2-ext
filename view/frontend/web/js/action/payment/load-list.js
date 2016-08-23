@@ -6,23 +6,22 @@ define(
     ],
     function ($, storage, errorProcessor) {
         "use strict";
-        return function (successCallback, itemsLoaded, isLoading, messageContainer) {
-            isLoading(true);
+        return function (messageContainer, deferred) {
+
+            deferred = deferred || $.Deferred();
             return storage.get(
                 '/rest/V1/swarming_subscribepro/me/payment-tokens',
                 false
             ).done(
                 function (response) {
-                    successCallback(response);
+                    deferred.resolve(response);
                 }
             ).error(
                 function (response) {
                     errorProcessor.process(response, messageContainer);
+                    deferred.reject(response);
                 }
-            ).always(function () {
-                isLoading(false);
-                itemsLoaded(true);
-            });
+            );
         };
     }
 );

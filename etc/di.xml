@@ -271,4 +271,15 @@
             <argument name="code" xsi:type="const">Swarming\SubscribePro\Gateway\Config\ConfigProvider::VAULT_CODE</argument>
         </arguments>
     </virtualType>
+
+    <type name="Swarming\SubscribePro\Platform\Storage\Product">
+        <arguments>
+            <argument name="cache" xsi:type="object">Swarming\SubscribePro\Platform\Cache\Type\Product</argument>
+        </arguments>
+    </type>
+    <type name="Swarming\SubscribePro\Platform\Storage\Config">
+        <arguments>
+            <argument name="cache" xsi:type="object">Swarming\SubscribePro\Platform\Cache\Type\Config</argument>
+        </arguments>
+    </type>
 </config>

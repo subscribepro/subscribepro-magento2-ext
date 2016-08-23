@@ -12,18 +12,37 @@ define(
         'use strict';
 
         return Component.extend({
+            defaults: {
+                isLoading: false,
+                paymentsLoaded: false,
+                paymentsLoadSuccess: false,
+                paymentProfile: null,
+                paymentProfileId: null,
+                selectedPaymentProfileId: null,
+                ccIcons: {},
+                ccTypesMapper: {},
+                payments: []
+            },
 
             modal: null,
-            
+
+            initObservable: function () {
+                this._super()
+                    .observe([
+                        'isLoading',
+                        'paymentsLoaded',
+                        'paymentsLoadSuccess',
+                        'paymentProfile',
+                        'paymentProfileId',
+                        'selectedPaymentProfileId',
+                        'payments'
+                    ]);
+                return this;
+            },
+
             initialize: function () {
-                this._super().observe('paymentProfileId');
-                
-                this.selectedPaymentProfileId = ko.observable(this.paymentProfileId());
-                this.isLoading = ko.observable(false);
-                this.payments = ko.observableArray([]);
-                this.paymentProfile = ko.observable(this.paymentProfile);
-                this.paymentsLoaded = ko.observable(false);
-                this.paymentsLoadSuccess = ko.observable(false);
+                this._super();
+                this.selectedPaymentProfileId(this.paymentProfileId());
             },
 
             initModal: function (element) {
@@ -34,57 +53,89 @@ define(
                     {
                         text: $t('Continue'),
                         class: 'action primary action-update-payment',
-                        click: $.proxy(this.changePayment, this)
+                        click: $.proxy(this.onChangePayment, this)
                     }
                 ];
-                options.opened = $.proxy(this.loadPayments, this);
+                options.opened = $.proxy(this.onOpen, this);
                 
                 this.modal = modal(options, $(element));
             },
 
-            loadPayments: function () {
-                if (!this.paymentsLoaded()) {
-                    loadPayments($.proxy(this.initPayments, this), this.paymentsLoaded, this.isLoading, this.messageContainer);
+            onOpen: function () {
+                if (this.paymentsLoaded()) {
+                    return;
                 }
+                this.isLoading(true);
+                var deferred = $.Deferred();
+                loadPayments(this.messageContainer, deferred);
+
+                var self = this;
+                $.when(deferred)
+                    .done(function (response) {
+                        self.initPayments(response);
+                    })
+                    .always(function () {
+                        self.isLoading(false);
+                        self.paymentsLoaded(true);
+                    });
             },
 
-            changePayment: function () {
+            onChangePayment: function () {
                 if (this.paymentProfileId() == this.selectedPaymentProfileId()) {
                     this.modal.closeModal();
                     return;
                 }
 
-                changePayment(
-                    this.subscriptionId, 
-                    this.selectedPaymentProfileId(), 
-                    this.isLoading, 
-                    this.messageContainer,
-                    $.proxy(this.updatePayment, this)
-                );
-            },
-            
-            updatePayment: function (response) {
-                this.paymentProfileId(this.selectedPaymentProfileId());
-                this.paymentProfile(response);
-                this.modal.closeModal();
+                this.isLoading(true);
+                var deferred = $.Deferred();
+                changePayment(this.subscriptionId, this.selectedPaymentProfileId(), this.messageContainer, deferred);
+
+                var self = this;
+                $.when(deferred)
+                    .done(function (response) {
+                        self.paymentProfile(response);
+                        self.paymentProfileId(self.selectedPaymentProfileId());
+                        self.modal.closeModal();
+                    })
+                    .always(function () {
+                        self.isLoading(false);
+                    });
             },
 
             initPayments: function (response) {
-                var selectedPaymentProfileId = null;
                 var self = this;
                 $.each(response, function() {
                     self.payments.push(this);
-                    if (!selectedPaymentProfileId || this.gateway_token == self.paymentProfileId()) {
-                        selectedPaymentProfileId = this.gateway_token;
-                    }
                 });
                 
-                this.selectedPaymentProfileId(selectedPaymentProfileId);
+                this.selectedPaymentProfileId(this.paymentProfileId());
                 this.paymentsLoadSuccess(true);
             },
 
             getMaskedCC: function (paymentToken) {
                 return JSON.parse(paymentToken.token_details).maskedCC;
+            },
+
+            getProfileIcon: function (paymentToken) {
+                var type = JSON.parse(paymentToken.token_details).type;
+                return this.getCcIcon(type);
+            },
+
+            getCcIcon: function (ccType) {
+                return this.ccIcons.hasOwnProperty(ccType) ? this.ccIcons[ccType] : false;
+            },
+
+            getPlatformCcIcon: function (platformCcType) {
+                return this.getCcIcon(
+                    this.getMageCardType(platformCcType)
+                );
+            },
+
+            getMageCardType: function (platformCcType) {
+                if (platformCcType && typeof this.ccTypesMapper[platformCcType] !== 'undefined') {
+                    return this.ccTypesMapper[platformCcType];
+                }
+                return null;
             }
         });
     }

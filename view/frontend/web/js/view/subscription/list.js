@@ -1,40 +1,60 @@
 define([
-    'jquery',
+    'underscore',
     'uiComponent', 
-    'ko',
     'uiLayout',
     'Swarming_SubscribePro/js/model/subscription/loader',
-    'Swarming_SubscribePro/js/action/subscription/load-list',
-    'Swarming_SubscribePro/js/action/subscription/create-subscription-component'
-], function($, Component, ko, layout, subscriptionLoader, loadSubscriptions, createSubscriptionComponent) {
+    'Swarming_SubscribePro/js/model/subscription/subscription-component-factory',
+    'Swarming_SubscribePro/js/action/subscription/load-list'
+], function(_, Component, layout, subscriptionLoader, subscriptionComponentFactory, loadSubscriptions) {
     'use strict';
 
     return Component.extend({
-        
-        isLoading: subscriptionLoader.isLoading,
-        noSubscriptions: ko.observable(false),
+        defaults: {
+            isLoading: subscriptionLoader.isLoading,
+            subscriptionCount: 0,
+            noSubscriptions: false
+        },
+
+        initObservable: function () {
+            this._super()
+                .observe([
+                    'noSubscriptions'
+                ]);
+
+            var self = this;
+            this.elems.subscribe(function (elems) {
+                if (self.subscriptionCount && self.subscriptionCount == elems.length) {
+                    self.isLoading(false);
+                }
+            });
+            return this;
+        },
 
         initialize: function () {
             this._super();
-            loadSubscriptions($.proxy(this.renderSubscriptions, this));
+            loadSubscriptions(this.onSubscriptionsLoaded.bind(this));
         },
 
-        renderSubscriptions: function (subscriptions) {
-            var self = this;
-            if ($.isArray(subscriptions) && subscriptions.length > 0) {
-                var config = {
-                    name: this.name,
-                    priceFormat: this.priceFormat,
-                    shippingAddressOptions: this.shippingAddressOptions,
-                    paymentInfoOptions: this.paymentInfoOptions
-                };
-                $.each(subscriptions, function() {
-                    self.elems().push(createSubscriptionComponent(this, config));
-                });
+        onSubscriptionsLoaded: function (subscriptions) {
+            if (_.isArray(subscriptions) && subscriptions.length > 0) {
+                this.subscriptionCount = subscriptions.length;
+                _.each(subscriptions, this.renderSubscription.bind(this));
                 layout(this.elems());
             } else {
                 this.noSubscriptions(true);
+                this.isLoading(false);
             }
-         }
+        },
+
+        renderSubscription: function (subscription) {
+            var config = {
+                name: this.name,
+                priceConfig: this.priceConfig,
+                paymentConfig: this.paymentConfig,
+                shippingAddressOptions: this.shippingAddressOptions,
+                paymentInfoOptions: this.paymentInfoOptions
+            };
+            this.elems().push(subscriptionComponentFactory.create(subscription, config));
+        }
     });
 });

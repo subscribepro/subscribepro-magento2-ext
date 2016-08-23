@@ -3,42 +3,47 @@
 <!--/ko-->
 
 <!-- ko if: isProductLoaded() -->
-    <div style="margin-bottom: 10px">
-        <!-- ko if: product().isSubscriptionMode(subscriptionOnlyMode)  -->
-            <p>
-                <input type="hidden" name="subscription_option[option]" data-bind="value: subscriptionOption">
-                <!-- ko i18n: product().priceWithDiscountText --><!-- /ko -->
-            </p>
+    <div class="fieldset">
+        <!-- ko if: isSubscriptionMode(subscriptionOnlyMode)  -->
+            <input type="hidden" name="subscription_option[option]" data-bind="value: subscriptionOption">
+            <!-- ko i18n: productPrice.priceWithDiscountText --><!-- /ko -->
         <!-- /ko -->
-        <!-- ko if: product().isSubscriptionMode(subscriptionAndOneTimePurchaseMode) -->
-            <p>
-                <label>
+        <!-- ko if: isSubscriptionMode(subscriptionAndOneTimePurchaseMode) -->
+            <div class="field choice">
                     <input type="radio"
                            name="subscription_option[option]"
+                           id="option_oneTimePurchase"
                            class="radio"
                            data-bind="checked: subscriptionOptionValue, value: oneTimePurchaseOption" />
+                <label class="label" for="option_oneTimePurchase">
                     <!-- ko i18n: 'One Time Delivery' --><!-- /ko -->
                     <!-- ko text: ' - ' --><!-- /ko -->
-                    <!-- ko text: product().formattedPrice --><!-- /ko -->
+                    <!-- ko text: productPrice.formattedPrice --><!-- /ko -->
                 </label>
-            </p>
-            <p>
-                <label>
+            </div>
+            <div class="field choice">
                     <input type="radio"
                            name="subscription_option[option]"
+                           id="option_subscription"
                            class="radio"
                            data-bind="checked: subscriptionOptionValue, value: subscriptionOption" />
+                <label class="label" for="option_subscription">
                     <!-- ko i18n: 'Regular Delivery' --><!-- /ko -->
                     <!-- ko text: ' - ' --><!-- /ko -->
-                    <!-- ko i18n: product().priceWithDiscountText --><!-- /ko -->
+                    <!-- ko i18n: productPrice.priceWithDiscountText --><!-- /ko -->
                 </label>
-            </p>
+            </div>
         <!-- /ko -->
-        <label>
+
+        <div class="field">
+            <label class="label">
             <!-- ko i18n: 'Delivery every' --><!-- /ko -->
             <!-- ko text: ':' --><!-- /ko -->
-            <select name="subscription_option[interval]"
-                    data-bind="options: product().intervals(), checked: intervalValue, value: intervalValue"></select>
-        </label>
+            </label>
+            <div class="control">
+                <select name="subscription_option[interval]"
+                    data-bind="options: product.intervals, checked: intervalValue, value: intervalValue"></select>
+            </div>
+        </div>
     </div>
 <!-- /ko -->

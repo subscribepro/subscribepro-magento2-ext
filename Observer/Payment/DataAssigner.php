@@ -6,7 +6,7 @@ use Magento\Framework\Event\Observer;
 use Magento\Quote\Api\Data\PaymentInterface;
 use Swarming\SubscribePro\Gateway\Request\PaymentDataBuilder;
 
-class PaymentDataAssigner extends \Magento\Payment\Observer\AbstractDataAssignObserver
+class DataAssigner extends \Magento\Payment\Observer\AbstractDataAssignObserver
 {
     /**
      * @var array

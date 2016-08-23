@@ -2,12 +2,10 @@
 
 namespace Swarming\SubscribePro\Observer\Catalog;
 
-use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Exception\LocalizedException;
 use SubscribePro\Exception\HttpException;
-use Swarming\SubscribePro\Ui\DataProvider\Product\Modifier\Subscription as SubscriptionModifier;
 
 class ProductSaveAfter implements ObserverInterface
 {
@@ -32,6 +30,11 @@ class ProductSaveAfter implements ObserverInterface
     protected $platformProductManager;
 
     /**
+     * @var \Swarming\SubscribePro\Helper\Product
+     */
+    protected $productHelper;
+
+    /**
      * @var \Psr\Log\LoggerInterface
      */
     protected $logger;
@@ -41,6 +44,7 @@ class ProductSaveAfter implements ObserverInterface
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      * @param \Magento\Catalog\Api\ProductRepositoryInterface $productRepository
      * @param \Swarming\SubscribePro\Platform\Manager\Product $platformProductManager
+     * @param \Swarming\SubscribePro\Helper\Product $productHelper
      * @param \Psr\Log\LoggerInterface $logger
      */
     public function __construct(
@@ -48,12 +52,14 @@ class ProductSaveAfter implements ObserverInterface
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
         \Swarming\SubscribePro\Platform\Manager\Product $platformProductManager,
+        \Swarming\SubscribePro\Helper\Product $productHelper,
         \Psr\Log\LoggerInterface $logger
     ) {
         $this->configGeneral = $configGeneral;
         $this->storeManager = $storeManager;
         $this->productRepository = $productRepository;
         $this->platformProductManager = $platformProductManager;
+        $this->productHelper = $productHelper;
         $this->logger = $logger;
     }
 
@@ -64,65 +70,56 @@ class ProductSaveAfter implements ObserverInterface
      */
     public function execute(Observer $observer)
     {
-        $event = $observer->getEvent();
         /** @var \Magento\Catalog\Api\Data\ProductInterface $product */
-        $product = $event->getData('product');
+        $product = $observer->getData('product');
 
         if ($product->getTypeId() == \Magento\GroupedProduct\Model\Product\Type\Grouped::TYPE_CODE) {
             return;
         }
 
         foreach ($this->getProductWebsites() as $website) {
-            if (!$this->configGeneral->isEnabled($website->getCode())) {
-                continue;
-            }
-
-            if (!($storeId = $this->getDefaultStoreId($website))) {
-                $this->logger->critical(__('Default store not found for website "%1"', $website->getName()));
-                continue;
-            }
-
-            $product = $this->productRepository->get($product->getSku(), false, $storeId);
-            if (!$product || !$this->isProductSubscriptionEnabled($product)) {
-                continue;
-            }
-
-            $this->saveProduct($product, $website);
+            $this->saveProduct($product->getSku(), $website);
         }
     }
 
     /**
-     * @param \Magento\Catalog\Api\Data\ProductInterface $product
+     * @param string $sku
      * @param \Magento\Store\Api\Data\WebsiteInterface $website
      * @throws LocalizedException
      */
-    protected function saveProduct($product, $website)
+    protected function saveProduct($sku, $website)
     {
+        if (!$this->configGeneral->isEnabled($website->getCode())) {
+            return;
+        }
+
+        if (!($storeId = $this->getDefaultStoreId($website->getDefaultGroupId()))) {
+            $this->logger->critical(__('Default store not found for website "%1"', $website->getName()));
+            return;
+        }
+
+        $product = $this->productRepository->get($sku, false, $storeId);
+        if (!$product || !$this->productHelper->isSubscriptionEnabled($product)) {
+            return;
+        }
+
         try {
-            $this->platformProductManager->saveMagentoProduct($product, $website->getId());
+            $this->platformProductManager->saveProduct($product, $website->getId());
         } catch (HttpException $e) {
             $this->logger->critical($e);
-            throw new LocalizedException(__('Fail to save product on Subscribe Pro platform for website "%1".', $website->getName()));
+            throw new LocalizedException(
+                __('Fail to save product on Subscribe Pro platform for website "%1".', $website->getName())
+            );
         }
     }
 
     /**
-     * @param \Magento\Catalog\Api\Data\ProductInterface $product
-     * @return bool
-     */
-    protected function isProductSubscriptionEnabled(ProductInterface $product)
-    {
-        $attribute = $product->getCustomAttribute(SubscriptionModifier::SUBSCRIPTION_ENABLED);
-        return $attribute && $attribute->getValue();
-    }
-
-    /**
-     * @param \Magento\Store\Api\Data\WebsiteInterface $website
+     * @param int $defaultGroupId
      * @return int|null
      */
-    protected function getDefaultStoreId($website)
+    protected function getDefaultStoreId($defaultGroupId)
     {
-        $group = $this->storeManager->getGroup($website->getDefaultGroupId());
+        $group = $this->storeManager->getGroup($defaultGroupId);
         return $group ? $group->getDefaultStoreId() : null;
     }
 

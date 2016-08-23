@@ -38,9 +38,14 @@ class SubscriptionProducts
     protected $imageHelper;
 
     /**
-     * @var \Swarming\SubscribePro\Model\Config\SubscriptionDiscount
+     * @var \Magento\Tax\Api\TaxCalculationInterface
      */
-    protected $subscriptionDiscountConfig;
+    protected $taxCalculation;
+
+    /**
+     * @var \Magento\Framework\Pricing\PriceCurrencyInterface
+     */
+    protected $priceCurrency;
 
     /**
      * @param \Swarming\SubscribePro\Platform\Manager\Product $platformProductManager
@@ -48,9 +53,7 @@ class SubscriptionProducts
      * @param \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder
      * @param \Magento\Catalog\Model\Product\Url $productUrlModel
      * @param \Magento\Catalog\Helper\Image $imageHelper
-     * @param \Swarming\SubscribePro\Model\Config\SubscriptionDiscount $subscriptionDiscountConfig
      * @param \Magento\Tax\Api\TaxCalculationInterface $taxCalculation
-     * @param \Magento\Tax\Model\Config $taxConfig
      * @param \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency
      */
     public function __construct(
@@ -59,9 +62,7 @@ class SubscriptionProducts
         \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder,
         \Magento\Catalog\Model\Product\Url $productUrlModel,
         \Magento\Catalog\Helper\Image $imageHelper,
-        \Swarming\SubscribePro\Model\Config\SubscriptionDiscount $subscriptionDiscountConfig,
         \Magento\Tax\Api\TaxCalculationInterface $taxCalculation,
-        \Magento\Tax\Model\Config $taxConfig,
         \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency
     ) {
         $this->platformProductManager = $platformProductManager;
@@ -69,8 +70,6 @@ class SubscriptionProducts
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->productUrlModel = $productUrlModel;
         $this->imageHelper = $imageHelper;
-        $this->subscriptionDiscountConfig = $subscriptionDiscountConfig;
-        $this->taxConfig = $taxConfig;
         $this->taxCalculation = $taxCalculation;
         $this->priceCurrency = $priceCurrency;
     }
@@ -83,7 +82,6 @@ class SubscriptionProducts
     {
         $magentoProducts = $this->getMagentoProducts($subscriptions);
 
-        $applyDiscountToCatalogPrice = $this->subscriptionDiscountConfig->isApplyDiscountToCatalogPrice();
         foreach ($subscriptions as $subscription) {
             try {
                 $platformProduct = $this->platformProductManager->getProduct($subscription->getProductSku());
@@ -91,22 +89,17 @@ class SubscriptionProducts
                 continue;
             }
 
-            $displayPriceIncludingTax = $this->taxConfig->getPriceDisplayType() == TaxConfig::DISPLAY_TYPE_INCLUDING_TAX;
             if (!$platformProduct->getIsDiscountPercentage()) {
                 $discount = $this->priceCurrency->convertAndRound($platformProduct->getDiscount(), true);
                 $platformProduct->setDiscount($discount);
             }
-            $platformProduct->setTaxRate($this->getProductTaxRate($magentoProducts[$subscription->getProductSku()]))
-                ->setPriceIncludesTax($this->taxConfig->priceIncludesTax())
-                ->setDisplayPriceIncludingTax($displayPriceIncludingTax)
-                ->setNeedPriceConversion($this->taxConfig->needPriceConversion())
-                ->setApplyTaxAfterDiscount($this->taxConfig->applyTaxAfterDiscount())
-                ->setDiscountTax($this->taxConfig->discountTax())
-                ->setFinalPrice($this->getProductFinalPrice($magentoProducts[$subscription->getProductSku()]))
-                ->setPrice($this->getProductPrice($magentoProducts[$subscription->getProductSku()]))
+
+            $platformProduct
                 ->setUrl($this->getProductUrl($magentoProducts[$subscription->getProductSku()]))
                 ->setImageUrl($this->getProductImageUrl($magentoProducts[$subscription->getProductSku()]))
-                ->setApplyDiscountToCatalogPrice($applyDiscountToCatalogPrice);
+                ->setPrice($this->getProductPrice($magentoProducts[$subscription->getProductSku()]))
+                ->setFinalPrice($this->getProductFinalPrice($magentoProducts[$subscription->getProductSku()]))
+                ->setTaxRate($this->getProductTaxRate($magentoProducts[$subscription->getProductSku()]));
 
             $subscription->setProduct($platformProduct);
         }

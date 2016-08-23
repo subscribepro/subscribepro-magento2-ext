@@ -7,6 +7,7 @@
                 <!-- ko text: nextOrderDate --><!-- /ko -->
                 <!-- ko if: canChangeNextOrderDate() -->
                 <input type="hidden"
+                       id="next-order-date"
                        data-bind="datepicker: {
                        storage: selectedNextOrderDate,
                        options: $parent.datepickerOptions
@@ -19,36 +20,36 @@
             <!-- /ko -->
         </h2>
         <!-- ko if: isStatus(['Failed', 'Retry', 'Active']) -->
-            <p>
-                <select data-bind="options: product.getQtyValues(), value: selectedQty, event: {change: qtyChanged}"></select>
-                <!-- ko i18n: ' unit(s) every' --><!-- /ko -->
-                <select data-bind="options: product.intervals(), value: selectedInterval, event: {change: intervalChanged}"></select>
-            </p>
+            <div class="options">
+                <select data-bind="options: getQtyValues(), value: selectedQty, event: {change: qtyChanged}"></select>
+                <!-- ko i18n: ' unit(s) ' --><!-- /ko -->
+                <select data-bind="options: getProductInterval(), value: selectedInterval, event: {change: intervalChanged}"></select>
+            </div>
         <!-- /ko -->
     </td>
     <td class="col product-image">
-        <!-- ko if: product.url() -->
-            <a class="product-item-photo" data-bind="attr: {href: product.url(), title: product.name()}">
-                <img width="75px" height="75px" data-bind="attr: {src: product.imageUrl(), title: product.name()}" />
+        <!-- ko if: getProductUrl() -->
+            <a class="product-item-photo" data-bind="attr: {href: getProductUrl(), title: getProductName()}">
+                <img width="75px" height="75px" data-bind="attr: {src: getProductImageUrl(), title: getProductName()}" />
             </a>
         <!-- /ko -->
-        <!-- ko ifnot: product.url() -->
-            <img width="75px" height="75px" data-bind="attr: {src: product.imageUrl(), title: product.name()}" />
+        <!-- ko ifnot: getProductUrl() -->
+            <img width="75px" height="75px" data-bind="attr: {src: getProductImageUrl(), title: getProductName()}" />
         <!-- /ko -->
     </td>
     <td class="col product-info">
-        <!-- ko if: product.url() -->
-            <h2 class="product-name"><a data-bind="attr: {href: product.url(), title: product.name()}, text: product.name()"></a></h2>
+        <!-- ko if: getProductUrl() -->
+            <h2 class="product-name"><a data-bind="attr: {href: getProductUrl(), title: getProductName()}, text: getProductName()"></a></h2>
         <!-- /ko -->
         <p>
             <s>
                 <!-- ko i18n: 'One-Time Purchase Price' --><!-- /ko -->
                 <!-- ko text: ': ' --><!-- /ko -->
-                <!-- ko text: product.formattedPrice --><!-- /ko -->
+                <!-- ko text: getProductPriceFormatted() --><!-- /ko -->
             </s>
         </p>
         <p>
-            <!-- ko i18n: product.priceWithDiscountText --><!-- /ko -->
+            <!-- ko text: getDiscountMessage(); --><!-- /ko -->
         </p>
     </td>
     <td class="col actions">

@@ -1,18 +1,12 @@
 define(
     [
-        'mage/translate',
         'mage/storage',
         'Magento_Ui/js/model/messageList',
         'Magento_Checkout/js/model/error-processor'
     ],
-    function ($t, storage, globalMessageContainer, errorProcessor) {
+    function (storage, globalMessageContainer, errorProcessor) {
         'use strict';
-        return function (address, addressData, isLoading, messageContainer, deferred) {
-            if (!address.saveInAddressBook) {
-                return deferred.resolve(addressData, address);
-            }
-
-            isLoading(true);
+        return function (address, messageContainer, deferred) {
 
             return storage.post(
                 '/rest/V1/swarming_subscribepro/me/address/save-in-address-book',
@@ -20,15 +14,12 @@ define(
                 false
             ).done(
                 function (response) {
-                    var successMessage = $t('The address has been successfully saved in the address book.');
-                    addressData.inline = response;
-                    deferred.resolve(addressData, address, successMessage);
+                    deferred.resolve(response);
                 }
             ).fail(
                 function (response) {
                     errorProcessor.process(response, messageContainer);
-                    isLoading(false);
-                    deferred.reject();
+                    deferred.reject(response);
                 }
             );
         };

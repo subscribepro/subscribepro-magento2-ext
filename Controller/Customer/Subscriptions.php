@@ -36,7 +36,7 @@ class Subscriptions extends \Magento\Customer\Controller\AbstractAccount
 
         /** @var \Magento\Framework\View\Result\Page $page */
         $page = $this->resultFactory->create(ResultFactory::TYPE_PAGE);
-        $page->getConfig()->getTitle()->set(__('My product subscriptions'));
+        $page->getConfig()->getTitle()->set(__('My Product Subscriptions'));
 
         return $page;
     }

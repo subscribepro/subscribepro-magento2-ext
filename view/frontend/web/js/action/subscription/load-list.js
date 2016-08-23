@@ -19,10 +19,9 @@ define(
             ).error(
                 function (response) {
                     errorProcessor.process(response);
+                    subscriptionLoader.isLoading(false);
                 }
-            ).always(function () {
-                subscriptionLoader.isLoading(false);
-            });
+            );
         };
     }
 );

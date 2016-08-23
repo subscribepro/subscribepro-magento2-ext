@@ -12,14 +12,22 @@ class Product
     protected $platformProductService;
 
     /**
+     * @var \Swarming\SubscribePro\Platform\Storage\Product
+     */
+    protected $platformProductStorage;
+
+    /**
      * @param \Swarming\SubscribePro\Platform\Service\Product $platformProductService
+     * @param \Swarming\SubscribePro\Platform\Storage\Product $productStorage
      */
     public function __construct(
-        \Swarming\SubscribePro\Platform\Service\Product $platformProductService
+        \Swarming\SubscribePro\Platform\Service\Product $platformProductService,
+        \Swarming\SubscribePro\Platform\Storage\Product $productStorage
     ) {
         $this->platformProductService = $platformProductService;
+        $this->platformProductStorage = $productStorage;
     }
-    
+
     /**
      * @param string $sku
      * @param int|null $websiteId
@@ -28,8 +36,23 @@ class Product
      */
     public function getProduct($sku, $websiteId = null)
     {
-        $products = $this->platformProductService->loadProducts($sku, $websiteId);
+        $product = $this->platformProductStorage->load($sku, $websiteId);
+        if (!$product) {
+            $product = $this->retrieveProduct($sku, $websiteId);
+            $this->platformProductStorage->save($product, $websiteId);
+        }
+        return $product;
+    }
 
+    /**
+     * @param string $sku
+     * @param int|null $websiteId
+     * @return \Swarming\SubscribePro\Api\Data\ProductInterface
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    protected function retrieveProduct($sku, $websiteId = null)
+    {
+        $products = $this->platformProductService->loadProducts($sku, $websiteId);
         if (empty($products)) {
             throw new NoSuchEntityException(__('Product is not found on Subscribe Pro platform.'));
         }
@@ -37,27 +60,40 @@ class Product
     }
 
     /**
-     * @param \Magento\Catalog\Api\Data\ProductInterface $magentoProduct
+     * @param \Magento\Catalog\Api\Data\ProductInterface $product
      * @param int|null $websiteId
      * @return \Swarming\SubscribePro\Api\Data\ProductInterface
      * @throws \SubscribePro\Exception\InvalidArgumentException
      * @throws \SubscribePro\Exception\HttpException
      */
-    public function saveMagentoProduct($magentoProduct, $websiteId = null)
+    public function saveProduct($product, $websiteId = null)
     {
-        $products = $this->platformProductService->loadProducts(
-            $magentoProduct->getSku(),
-            $websiteId
-        );
+        $platformProduct = $this->retrieveOrCreateNewProduct($product, $websiteId);
+        $platformProduct->setSku($product->getSku())
+            ->setPrice($product->getPrice())
+            ->setName($product->getName());
 
-        $product = !empty($products)
-            ? $products[0]
-            : $this->platformProductService->createProduct([], $websiteId);
+        $platformProduct = $this->platformProductService->saveProduct($platformProduct, $websiteId);
 
-        $product->setSku($magentoProduct->getSku())
-            ->setPrice($magentoProduct->getPrice())
-            ->setName($magentoProduct->getName());
+        $this->platformProductStorage->save($platformProduct, $websiteId);
 
-        return $this->platformProductService->saveProduct($product, $websiteId);
+        return $platformProduct;
+    }
+
+    /**
+     * @param \Magento\Catalog\Api\Data\ProductInterface $product
+     * @param null $websiteId
+     * @return \Swarming\SubscribePro\Api\Data\ProductInterface
+     */
+    protected function retrieveOrCreateNewProduct($product, $websiteId = null)
+    {
+        try {
+            $platformProduct = $this->platformProductStorage->load($product->getSku(), $websiteId)
+                ?: $this->retrieveProduct($product->getSku(), $websiteId);
+            $this->platformProductStorage->remove($product->getSku(), $websiteId);
+        } catch (NoSuchEntityException $e) {
+            $platformProduct = $this->platformProductService->createProduct([], $websiteId);
+        }
+        return $platformProduct;
     }
 }

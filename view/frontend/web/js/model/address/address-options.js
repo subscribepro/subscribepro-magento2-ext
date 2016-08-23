@@ -27,7 +27,7 @@ define(
                     addressOptions().splice(this.index - 1, 2, this.value, newAddressOption);
                 }
             });
-        }, null, "arrayChange");
+        }, null, 'arrayChange');
 
         return {
             getOptions: function () {

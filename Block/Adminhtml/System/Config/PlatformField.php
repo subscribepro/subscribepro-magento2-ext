@@ -14,11 +14,9 @@ class PlatformField extends \Magento\Config\Block\System\Config\Form\Field
     protected function isShownCredentials()
     {
         return ($this->_scopeConfig->getValue(Share::XML_PATH_CUSTOMER_ACCOUNT_SHARE, ScopeInterface::SCOPE_STORE) == Share::SHARE_GLOBAL
-                &&
-                $this->getRequest()->getParam('website') == ''
-            )
-            || $this->getRequest()->getParam('website')
-            || $this->_storeManager->isSingleStoreMode();
+                && $this->getRequest()->getParam('website') == '')
+                || $this->getRequest()->getParam('website')
+                || $this->_storeManager->isSingleStoreMode();
     }
 
     /**

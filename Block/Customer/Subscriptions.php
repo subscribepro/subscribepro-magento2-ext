@@ -15,9 +15,19 @@ class Subscriptions extends \Magento\Framework\View\Element\Template
     protected $customerSession;
 
     /**
-     * @var \Magento\Framework\Locale\FormatInterface
+     * @var \Swarming\SubscribePro\Ui\ConfigProvider\PriceConfig
      */
-    protected $localeFormat;
+    protected $priceConfigProvider;
+
+    /**
+     * @var \Magento\Payment\Model\CcConfigProvider
+     */
+    protected $ccConfigProvider;
+
+    /**
+     * @var \Swarming\SubscribePro\Gateway\Config\Config
+     */
+    protected $gatewayConfig;
 
     /**
      * @var \Magento\Customer\Model\Address\Mapper
@@ -37,13 +47,15 @@ class Subscriptions extends \Magento\Framework\View\Element\Template
     /**
      * @var \Magento\Checkout\Block\Checkout\AttributeMerger
      */
-    protected $merger;
+    protected $attributeMerger;
 
     /**
      * @param \Magento\Framework\View\Element\Template\Context $context
-     * @param \Magento\Framework\Locale\FormatInterface $localeFormat
      * @param \Magento\Customer\Api\CustomerRepositoryInterface $customerRepository
      * @param \Magento\Customer\Model\Session $customerSession
+     * @param \Swarming\SubscribePro\Ui\ConfigProvider\PriceConfig $priceConfigProvider
+     * @param \Magento\Payment\Model\CcConfigProvider $ccConfigProvider
+     * @param \Swarming\SubscribePro\Gateway\Config\Config $gatewayConfig
      * @param \Magento\Customer\Model\Address\Mapper $addressMapper
      * @param \Magento\Customer\Model\Address\Config $addressConfig
      * @param \Swarming\SubscribePro\Ui\ComponentProvider\AddressAttributes $addressAttributes
@@ -52,9 +64,11 @@ class Subscriptions extends \Magento\Framework\View\Element\Template
      */
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
-        \Magento\Framework\Locale\FormatInterface $localeFormat,
         \Magento\Customer\Api\CustomerRepositoryInterface $customerRepository,
         \Magento\Customer\Model\Session $customerSession,
+        \Swarming\SubscribePro\Ui\ConfigProvider\PriceConfig $priceConfigProvider,
+        \Magento\Payment\Model\CcConfigProvider $ccConfigProvider,
+        \Swarming\SubscribePro\Gateway\Config\Config $gatewayConfig,
         \Magento\Customer\Model\Address\Mapper $addressMapper,
         \Magento\Customer\Model\Address\Config $addressConfig,
         \Swarming\SubscribePro\Ui\ComponentProvider\AddressAttributes $addressAttributes,
@@ -62,13 +76,15 @@ class Subscriptions extends \Magento\Framework\View\Element\Template
         array $data = []
     ) {
         parent::__construct($context, $data);
-        $this->addressMapper = $addressMapper;
-        $this->addressConfig = $addressConfig;
         $this->customerRepository = $customerRepository;
         $this->customerSession = $customerSession;
+        $this->priceConfigProvider = $priceConfigProvider;
+        $this->ccConfigProvider = $ccConfigProvider;
+        $this->gatewayConfig = $gatewayConfig;
+        $this->addressMapper = $addressMapper;
+        $this->addressConfig = $addressConfig;
         $this->addressAttributes = $addressAttributes;
-        $this->merger = $attributeMerger;
-        $this->localeFormat = $localeFormat;
+        $this->attributeMerger = $attributeMerger;
     }
 
     /**
@@ -106,77 +122,80 @@ class Subscriptions extends \Magento\Framework\View\Element\Template
 
     protected function initJsLayout()
     {
-        $subscriptionsConfig = [
-            'datepickerOptions' => [
-                'minDate' => 2,
-                'showOn' => 'button',
-                'buttonImage' => $this->getViewFileUrl('Magento_Theme::calendar.png'),
-                'buttonText' => __('Click to change date'),
-                'buttonImageOnly' => true,
-                'dateFormat' => 'yyyy-mm-dd',
-            ],
-            'priceFormat' => $this->localeFormat->getPriceFormat(),
-            'shippingAddressOptions' => [
-                'dataScopePrefix' => 'shippingAddress',
-                'deps' => 'spAddressProvider',
-                'children' => [
-                    'shipping-address-fieldset' => [
-                        'children' => $this->merger->merge(
-                            $this->addressAttributes->getElements(),
-                            'spAddressProvider',
-                            'shippingAddress',
-                            [
-                                'region' => [
-                                    'visible' => false,
-                                ],
-                                'region_id' => [
-                                    'component' => 'Magento_Ui/js/form/element/region',
-                                    'config' => [
-                                        'template' => 'ui/form/field',
-                                        'elementTmpl' => 'ui/form/element/select',
-                                        'customEntry' => 'shippingAddress.region',
-                                    ],
-                                    'validation' => [
-                                        'required-entry' => true,
-                                    ],
-                                    'filterBy' => [
-                                        'target' => '${ $.provider }:${ $.parentScope }.country_id',
-                                        'field' => 'country_id',
-                                    ],
-                                ],
-                                'country_id' => [
-                                    'sortOrder' => 115,
-                                ],
-                                'postcode' => [
-                                    'component' => 'Magento_Ui/js/form/element/post-code',
-                                    'validation' => [
-                                        'required-entry' => true,
-                                    ],
-                                ],
-                                'company' => [
-                                    'validation' => [
-                                        'min_text_length' => 0,
-                                    ],
-                                ],
-                                'telephone' => [
-                                    'config' => [
-                                        'tooltip' => [
-                                            'description' => __('For delivery questions.'),
-                                        ],
-                                    ],
-                                ],
-                            ]
-                        )
-                    ]
-                ]
-            ]
-        ];
         $data = [
             'components' => [
                 'subscriptions-container' => [
                     'children' => [
                         'subscriptions' => [
-                            'config' => $subscriptionsConfig
+                            'config' => [
+                                'datepickerOptions' => [
+                                    'minDate' => 2,
+                                    'showOn' => 'button',
+                                    'buttonImage' => $this->getViewFileUrl('Magento_Theme::calendar.png'),
+                                    'buttonText' => __('Click to change date'),
+                                    'buttonImageOnly' => true,
+                                    'dateFormat' => 'yyyy-mm-dd',
+                                ],
+                                'priceConfig' => $this->priceConfigProvider->getConfig(),
+                                'paymentConfig' => [
+                                    'ccIcons' => $this->ccConfigProvider->getIcons(),
+                                    'ccTypesMapper' => $this->gatewayConfig->getCcTypesMapper()
+                                ],
+                                'shippingAddressOptions' => [
+                                    'dataScopePrefix' => 'shippingAddress',
+                                    'deps' => 'spAddressProvider',
+                                    'children' => [
+                                        'shipping-address-fieldset' => [
+                                            'children' => $this->attributeMerger->merge(
+                                                $this->addressAttributes->getElements(),
+                                                'spAddressProvider',
+                                                'shippingAddress',
+                                                [
+                                                    'region' => [
+                                                        'visible' => false,
+                                                    ],
+                                                    'region_id' => [
+                                                        'component' => 'Magento_Ui/js/form/element/region',
+                                                        'config' => [
+                                                            'template' => 'ui/form/field',
+                                                            'elementTmpl' => 'ui/form/element/select',
+                                                            'customEntry' => 'shippingAddress.region',
+                                                        ],
+                                                        'validation' => [
+                                                            'required-entry' => true,
+                                                        ],
+                                                        'filterBy' => [
+                                                            'target' => '${ $.provider }:${ $.parentScope }.country_id',
+                                                            'field' => 'country_id',
+                                                        ],
+                                                    ],
+                                                    'country_id' => [
+                                                        'sortOrder' => 115,
+                                                    ],
+                                                    'postcode' => [
+                                                        'component' => 'Magento_Ui/js/form/element/post-code',
+                                                        'validation' => [
+                                                            'required-entry' => true,
+                                                        ],
+                                                    ],
+                                                    'company' => [
+                                                        'validation' => [
+                                                            'min_text_length' => 0,
+                                                        ],
+                                                    ],
+                                                    'telephone' => [
+                                                        'config' => [
+                                                            'tooltip' => [
+                                                                'description' => __('For delivery questions.'),
+                                                            ],
+                                                        ],
+                                                    ],
+                                                ]
+                                            )
+                                        ]
+                                    ]
+                                ]
+                            ]
                         ]
                     ]
                 ]

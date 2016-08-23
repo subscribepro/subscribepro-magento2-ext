@@ -15,6 +15,9 @@
                 <apply_discount_to_catalog_price>0</apply_discount_to_catalog_price>
                 <cartrule_combine_type>combine</cartrule_combine_type>
             </subscription_discount>
+            <advanced>
+                <cache_lifetime>300</cache_lifetime>
+            </advanced>
         </swarming_subscribepro>
         <payment>
             <subscribe_pro>

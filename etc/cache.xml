@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Cache/etc/cache.xsd">
+    <type name="subscribe_pro_config" translate="label,description" instance="Swarming\SubscribePro\Platform\Cache\Type\Config">
+        <label>Subscribe Pro Configuration</label>
+        <description>API credentials and configuration settings from the Subscribe Pro platform.</description>
+    </type>
+    <type name="subscribe_pro_products" translate="label,description" instance="Swarming\SubscribePro\Platform\Cache\Type\Product">
+        <label>Subscribe Pro Product Data</label>
+        <description>Product subscription attributes from the Subscribe Pro platform. For example, intervals, subscription discount, etc.</description>
+    </type>
+</config>

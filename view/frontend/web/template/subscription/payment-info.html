@@ -4,8 +4,16 @@
     </strong>
 </p>
 <div>
-    <!-- ko i18n: 'Credit card ending in' --><!-- /ko -->
-    <!-- ko text: ' ' + paymentProfile().creditcard_last_digits --><!-- /ko -->
+    <!-- ko i18n: 'Credit card' --><!-- /ko -->
+    <!-- ko if: getPlatformCcIcon(paymentProfile().creditcard_type) -->
+    <img data-bind="attr: {
+                    'src': getPlatformCcIcon(paymentProfile().creditcard_type).url,
+                    'width': getPlatformCcIcon(paymentProfile().creditcard_type).width,
+                    'height': getPlatformCcIcon(paymentProfile().creditcard_type).height
+                    }"/>
+    <!--/ko-->
+    <!-- ko i18n: 'ending' --><!-- /ko -->
+    <!-- ko text: paymentProfile().creditcard_last_digits --><!-- /ko -->
     <a href="javascript:void(0);" data-bind="attr: {'data-trigger': 'change-payment-'+subscriptionId}">
         (<!-- ko i18n: 'Change' --><!-- /ko -->)
     </a>
@@ -21,8 +29,16 @@
                 <input type="radio"
                        class="radio"
                        data-bind="checked: $parent.selectedPaymentProfileId, value: paymentToken.gateway_token" />
-                <!-- ko i18n: 'Use my Saved Card Ending in ' --><!-- /ko -->
-                <!-- ko text: ' ' + $parent.getMaskedCC(paymentToken) --><!-- /ko -->
+                <!-- ko i18n: 'Use' --><!-- /ko -->
+                <!--ko if: $parent.getProfileIcon(paymentToken) -->
+                <img data-bind="attr: {
+                            'src': $parent.getProfileIcon(paymentToken).url,
+                            'width': $parent.getProfileIcon(paymentToken).width,
+                            'height': $parent.getProfileIcon(paymentToken).height
+                            }"/>
+                <!--/ko-->
+                <!-- ko i18n: 'ending' --><!-- /ko -->
+                <!-- ko text: $parent.getMaskedCC(paymentToken) --><!-- /ko -->
             </label>
         </p>
     <!-- /ko -->

@@ -5,7 +5,7 @@
             <block ifconfig="swarming_subscribepro/general/enabled" class="Magento\Framework\View\Element\Html\Link\Current" name="customer-account-navigation-swarming-subscribepro-subscription-link">
                 <arguments>
                     <argument name="path" xsi:type="string">swarming_subscribepro/customer/subscriptions</argument>
-                    <argument name="label" translate="true" xsi:type="string">My product subscriptions</argument>
+                    <argument name="label" translate="true" xsi:type="string">My Product Subscriptions</argument>
                 </arguments>
             </block>
         </referenceBlock>

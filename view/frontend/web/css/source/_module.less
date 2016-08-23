@@ -1,0 +1,40 @@
+.subscription-container {
+
+	// Field: choices
+	.fieldset > .field.choice {
+		margin-bottom: 10px;
+	}
+
+	// Shopping cart
+	.cart.table-wrapper & {
+		.product-item-name,
+		.item-options {
+			& + .subscription-container {
+				margin-top: 20px;
+			}
+		}
+	}
+
+	.bundle-options-container .block-bundle-summary & {
+		& ~ .box-tocart {
+			margin-top: 20px;
+		}
+	}
+
+}
+
+// My Account
+.swarming-subscribepro-customer-subscriptions {
+	#subscriptions-container {
+		.col.subscription {
+			.options {
+				> select {
+					width: auto;
+				}
+				> span {
+					margin: 0 5px;
+				}
+			}
+		}
+	}
+}
