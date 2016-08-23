@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+    <route url="/V1/swarming_subscribepro/me/subscriptions" method="GET">
+        <service class="Swarming\SubscribePro\Api\SubscriptionManagementInterface" method="getSubscriptions"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="customerId" force="true">%customer_id%</parameter>
+        </data>
+    </route>
+    <route url="/V1/swarming_subscribepro/me/subscriptions/update-qty" method="POST">
+        <service class="Swarming\SubscribePro\Api\SubscriptionManagementInterface" method="updateQty"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="customerId" force="true">%customer_id%</parameter>
+        </data>
+    </route>
+    <route url="/V1/swarming_subscribepro/me/subscriptions/update-interval" method="POST">
+        <service class="Swarming\SubscribePro\Api\SubscriptionManagementInterface" method="updateInterval"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="customerId" force="true">%customer_id%</parameter>
+        </data>
+    </route>
+    <route url="/V1/swarming_subscribepro/me/subscriptions/skip" method="POST">
+        <service class="Swarming\SubscribePro\Api\SubscriptionManagementInterface" method="skip"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="customerId" force="true">%customer_id%</parameter>
+        </data>
+    </route>
+    <route url="/V1/swarming_subscribepro/me/subscriptions/cancel" method="POST">
+        <service class="Swarming\SubscribePro\Api\SubscriptionManagementInterface" method="cancel"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="customerId" force="true">%customer_id%</parameter>
+        </data>
+    </route>
+    <route url="/V1/swarming_subscribepro/me/subscriptions/pause" method="POST">
+        <service class="Swarming\SubscribePro\Api\SubscriptionManagementInterface" method="pause"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="customerId" force="true">%customer_id%</parameter>
+        </data>
+    </route>
+    <route url="/V1/swarming_subscribepro/me/subscriptions/restart" method="POST">
+        <service class="Swarming\SubscribePro\Api\SubscriptionManagementInterface" method="restart"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="customerId" force="true">%customer_id%</parameter>
+        </data>
+    </route>
+    <route url="/V1/swarming_subscribepro/me/subscriptions/update-next-order-date" method="POST">
+        <service class="Swarming\SubscribePro\Api\SubscriptionManagementInterface" method="updateNextOrderDate"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="customerId" force="true">%customer_id%</parameter>
+        </data>
+    </route>
+</routes>

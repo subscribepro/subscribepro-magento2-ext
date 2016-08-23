@@ -1,0 +1,30 @@
+{
+  "name": "swarming/subscribepro",
+  "description": "Subscribe Pro",
+  "require": {
+    "magento/magento-composer-installer": "*",
+    "subscribepro/subscribepro-php": "~1.0"
+  },
+  "type": "magento2-module",
+  "version": "1.0.0",
+  "autoload": {
+    "files": [
+      "registration.php"
+    ],
+    "psr-4": {
+      "Swarming\\SubscribePro\\": ""
+    }
+  },
+  "authors": [
+    {
+      "name": "Swarming Team",
+      "homepage": "http://swarmingtech.com"
+    }
+  ],
+  "repositories": [
+    {
+      "type": "vcs",
+      "url":  "git@bitbucket.org:swarming/subscribepro-sdk.git"
+    }
+  ]
+}

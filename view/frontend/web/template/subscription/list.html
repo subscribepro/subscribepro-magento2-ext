@@ -1,0 +1,25 @@
+
+<div class="table-wrapper" data-bind="blockLoader: isLoading">
+    <table class="data table">
+        <caption class="table-caption" data-bind="i18n: 'Product Subscriptions'"></caption>
+        <thead>
+            <tr>
+                <th scope="col" class="col subscription" data-bind="i18n: 'Subscription'"></th>
+                <th scope="col" class="col product-image" data-bind="i18n: 'Thumbnail'"></th>
+                <th scope="col" class="col product-info" data-bind="i18n: 'Product Info'"></th>
+                <th scope="col" class="col actions" data-bind="i18n: 'Actions'"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- ko foreach: elems() -->
+                <!-- ko template: getTemplate() --><!-- /ko -->
+            <!-- /ko -->
+        </tbody>
+    </table>
+</div>
+
+<!-- ko if: noSubscriptions() -->
+<div class="message warning">
+    <span data-bind="i18n: 'You have no subscriptions yet.'"></span>
+</div>
+<!-- /ko -->

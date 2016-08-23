@@ -1,0 +1,47 @@
+<?php
+    /** @var $block \Swarming\SubscribePro\Block\Adminhtml\System\Config\TestConnection */
+?>
+<div class="actions actions-test-connection">
+    <button onclick="testConnection(); return false;" class="action-test-connection" type="button" id="<?php echo $block->getHtmlId() ?>">
+        <span><?php echo $block->escapeHtml($block->getButtonLabel()) ?></span>
+    </button>
+    &nbsp;
+    <span id="test-connection-result" class="message-test-connection"></span>
+</div>
+<script>
+    require(['jquery'], function ($) {
+        window.testConnection = function () {
+
+            $('body').trigger('processStart');
+
+            var resultMessageBox = $('#test-connection-result');
+
+            resultMessageBox
+                .removeClass('success')
+                .removeClass('fail')
+                .css('color', '')
+                .text('');
+
+            var clientId = $('#<?php echo $block->getClientIdSelectorId() ?>').val();
+            var clientSecret = $('#<?php echo $block->getClientSecretSelectorId() ?>').val();
+
+            $.getJSON('<?php echo $block->getAjaxUrl() ?>', {client_id: clientId, client_secret: clientSecret})
+                .done(function (result) {
+                    console.log(result);
+                    resultMessageBox
+                        .addClass(result.status)
+                        .css('color', (result.status == 'success' ? 'green' : 'red'))
+                        .text(result.message);
+                })
+                .fail(function () {
+                    resultMessageBox
+                        .addClass('fail')
+                        .css('color', 'red')
+                        .text($.mage.__('An error occurred while request.'));
+                })
+                .always(function () {
+                    $('body').trigger('processStop');
+                });
+        };
+    })
+</script>

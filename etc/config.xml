@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <swarming_subscribepro>
+            <general>
+                <enabled>1</enabled>
+            </general>
+            <platform>
+                <client_secret backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
+                <log_enabled>1</log_enabled>
+                <log_level>debug</log_level>
+                <log_filename>var/log/subscribepro/log.log</log_filename>
+            </platform>
+        </swarming_subscribepro>
+        <payment>
+            <subscribe_pro>
+                <model>SubscribeProAdapter</model>
+                <title>Credit or Debit Card (SubscribePro)</title>
+                <active>1</active>
+                <is_gateway>1</is_gateway>
+                <can_use_checkout>1</can_use_checkout>
+                <can_use_internal>1</can_use_internal>
+                <can_authorize>1</can_authorize>
+                <can_capture>1</can_capture>
+                <can_capture_partial>1</can_capture_partial>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
+                <can_cancel>1</can_cancel>
+                <can_void>1</can_void>
+                <cctypes>AE,VI,MC,DI,JCB,DN</cctypes>
+                <useccv>1</useccv>
+                <payment_action>authorize</payment_action>
+                <currency>USD</currency>
+                <order_status>processing</order_status>
+                <allowspecific>0</allowspecific>
+                <paymentInfoKeys>cc_type,cc_number,transaction_id,transaction_type,gateway_type,avs_code,avs_message,cvv_code,cvv_message,response_message</paymentInfoKeys>
+                <privateInfoKeys>transaction_id,transaction_type,gateway_type,avs_code,avs_message,cvv_code,cvv_message,response_message</privateInfoKeys>
+            </subscribe_pro>
+        </payment>
+    </default>
+</config>

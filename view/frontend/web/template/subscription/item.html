@@ -1,0 +1,127 @@
+
+<tr>
+    <td class="col subscription">
+        <h2>
+            <!-- ko i18n: 'Next Ship Date:' --><!-- /ko -->
+            <!-- ko if: isStatus(['Active']) -->
+                <!-- ko text: nextOrderDate --><!-- /ko -->
+                <!-- ko if: canChangeNextOrderDate() -->
+                <input type="hidden"
+                       data-bind="datepicker: {
+                       storage: selectedNextOrderDate,
+                       options: $parent.datepickerOptions
+                       },
+                       event: {change: nextOrderDateChanged}">
+                <!-- /ko -->
+            <!-- /ko -->
+            <!-- ko if: !isStatus(['Active']) -->
+                <!-- ko i18n: 'n/a' --><!-- /ko -->
+            <!-- /ko -->
+        </h2>
+        <!-- ko if: isStatus(['Failed', 'Retry', 'Active']) -->
+            <p>
+                <select data-bind="options: qtyValues, value: selectedQty, event: {change: qtyChanged}"></select>
+                <!-- ko i18n: ' unit(s) every' --><!-- /ko -->
+                <select data-bind="options: product().intervals, value: selectedInterval, event: {change: intervalChanged}"></select>
+            </p>
+        <!-- /ko -->
+    </td>
+    <td class="col product-image">
+        <!-- ko if: product().url -->
+            <a class="product-item-photo" data-bind="attr: {href: product().url, title: product().name}">
+                <img width="75px" height="75px" data-bind="attr: {src: product().image_url, title: product().name}" />
+            </a>
+        <!-- /ko -->
+        <!-- ko ifnot: product().url -->
+            <img width="75px" height="75px" data-bind="attr: {src: product().image_url, title: product().name}" />
+        <!-- /ko -->
+    </td>
+    <td class="col product-info">
+        <!-- ko if: product().url -->
+            <h2 class="product-name"><a data-bind="attr: {href: product().url, title: product().name}, text: product().name"></a></h2>
+        <!-- /ko -->
+        <p>
+            <s>
+                <!-- ko i18n: 'One-Time Purchase Price' --><!-- /ko -->
+                <!-- ko text: ': ' --><!-- /ko -->
+                <!-- ko text: getFormattedPrice(product().price) --><!-- /ko -->
+            </s>
+        </p>
+        <p>
+            <!-- ko text: priceWithDiscount --><!-- /ko -->
+            <!-- ko text: ' ' --><!-- /ko -->
+            <!-- ko i18n: 'with' --><!-- /ko -->
+            <!-- ko text: ' ' --><!-- /ko -->
+            <!-- ko text: discountText --><!-- /ko -->
+            <!-- ko i18n: 'subscription discount' --><!-- /ko -->
+        </p>
+    </td>
+    <td class="col actions">
+        <!-- ko if: isStatus(['Cancelled', 'Expired', 'Paused', 'Failed', 'Retry']) -->
+            <p data-bind="i18n: 'Status:'"></p>
+            <p>
+                <strong><!-- ko i18n: status() --><!-- /ko --></strong>
+            </p>
+        <!-- /ko -->
+        <!-- ko if: isStatus(['Active']) -->
+            <p>
+                <button type="button" class="action primary" data-bind="click: skip">
+                    <span data-bind="i18n: 'Skip next delivery'"></span>
+                </button>
+            </p>
+            <p>
+                <a class="action" href="javascript:void(0)" style="cursor:pointer;" data-bind="click: pause, i18n: 'Pause Subscription'"></a>
+            </p>
+            <p>
+                <a class="action" href="javascript:void(0)" style="cursor:pointer;" data-bind="click: cancel, i18n: 'Cancel Subscription'"></a>
+            </p>
+        <!-- /ko -->
+        <!-- ko if: isStatus(['Failed', 'Retry', 'Paused']) -->
+            <p>
+                <button type="button" class="action primary" data-bind="click: restart">
+                    <span data-bind="i18n: 'Retry'"></span>
+                </button>
+            </p>
+        <!-- /ko -->
+        <br>
+        <p>
+            <a class="action" href="javascript:void(0)" data-bind="i18n: 'More Details...', click: toggleShowDetails"></a>
+        </p>
+    </td>
+</tr>
+<tr data-bind="visible: showDetails()">
+    <td>
+        <p>
+            <strong>
+                <!-- ko i18n: 'Delivery address:' --><!-- /ko -->
+            </strong>
+        </p>
+        <address>
+            <!-- ko text: shippingAddress().first_name + ' ' + shippingAddress().last_name --><!-- /ko -->
+            <!-- ko if: shippingAddress().company && shippingAddress().company.length > 0 -->
+                <div><!-- ko text: shippingAddress().company --><!-- /ko --></div>
+            <!-- /ko -->
+            <!-- ko if: shippingAddress().street1 && shippingAddress().street1.length > 0 -->
+                <div><!-- ko text: shippingAddress().street1 --><!-- /ko --></div>
+            <!-- /ko -->
+            <!-- ko if: shippingAddress().street2 && shippingAddress().street2.length > 0 -->
+                <div><!-- ko text: shippingAddress().street2 --><!-- /ko --></div>
+            <!-- /ko -->
+            <div><!-- ko text: cityRegionPostcodeText --><!-- /ko --></div>
+        </address>
+    </td>
+    <td colspan="2">
+        <!-- ko if: isVisiblePaymentInfo() -->
+            <p>
+                <strong>
+                    <!-- ko i18n: 'Payment Information:' --><!-- /ko -->
+                </strong>
+            </p>
+            <div>
+                <!-- ko i18n: 'Credit card ending in' --><!-- /ko -->
+                <!-- ko text: ' ' + paymentProfile().creditcard_last_digits --><!-- /ko -->
+            </div>
+        <!-- /ko -->
+    </td>
+    <td></td>
+</tr>
