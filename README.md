@@ -16,7 +16,7 @@ Please visit our documentation website and start with our step by step integrati
 
 ## Installation via Composer
 
-You can install our PHP client via [Composer](http://getcomposer.org/). Please follow these simple steps:
+You can install our Magento 2 extension via [Composer](http://getcomposer.org/). Please follow these simple steps:
 
 1. Set up the correct path for Composer or keep Composer within Magento root.
 
