@@ -1,0 +1,50 @@
+<!-- ko if: isProductLoaded() -->
+    <div>
+        <!-- ko if: product().isSubscriptionMode(subscriptionOnlyMode)  -->
+            <p>
+                <input type="hidden"
+                       data-bind="
+                       value: subscriptionOption,
+                       attr: {name: 'cart['+quoteItemId+'][subscription-option]'}">
+            </p>
+        <!-- /ko -->
+        <!-- ko if: product().isSubscriptionMode(subscriptionAndOneTimePurchaseMode) -->
+            <p>
+                <!-- ko i18n: 'Would you like to receive regular shipments of this item?' --><!-- /ko -->
+            </p>
+            <p>
+                <label>
+                    <input type="radio"
+                           class="radio"
+                           data-bind="
+                           checked: subscriptionOptionValue,
+                           value: oneTimePurchaseOption,
+                           attr: {name: 'cart['+quoteItemId+'][subscription-option]'}" />
+                    <!-- ko i18n: 'One Time Delivery' --><!-- /ko -->
+                </label>
+            </p>
+            <p>
+                <label>
+                    <input type="radio"
+                           class="radio"
+                           data-bind="
+                           checked: subscriptionOptionValue,
+                           value: subscriptionOption,
+                           attr: {name: 'cart['+quoteItemId+'][subscription-option]'}" />
+                    <!-- ko i18n: 'Regular Delivery' --><!-- /ko -->
+                </label>
+            </p>
+        <!-- /ko -->
+        <label>
+            <!-- ko i18n: 'Delivery every' --><!-- /ko -->
+            <!-- ko text: ':' --><!-- /ko -->
+            <select
+                    data-bind="
+                    options: product().intervals(),
+                    checked: intervalValue,
+                    value: intervalValue,
+                    attr: {name: 'cart['+quoteItemId+'][subscription-interval]'}">
+            </select>
+        </label>
+    </div>
+<!-- /ko -->

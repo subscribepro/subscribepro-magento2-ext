@@ -1,0 +1,32 @@
+<p>
+    <strong>
+        <!-- ko i18n: 'Payment Information:' --><!-- /ko -->
+    </strong>
+</p>
+<div>
+    <!-- ko i18n: 'Credit card ending in' --><!-- /ko -->
+    <!-- ko text: ' ' + paymentProfile().creditcard_last_digits --><!-- /ko -->
+    <a href="javascript:void(0);" data-bind="attr: {'data-trigger': 'change-payment-'+subscriptionId}">
+        (<!-- ko i18n: 'Change' --><!-- /ko -->)
+    </a>
+</div>
+<div data-bind="afterRender: initModal, blockLoader: isLoading">
+    <!-- ko foreach: getRegion('messages') -->
+        <!-- ko template: getTemplate() --><!-- /ko -->
+    <!--/ko-->
+
+    <!-- ko foreach: {data: payments, as: 'paymentToken'} -->
+        <p>
+            <label>
+                <input type="radio"
+                       class="radio"
+                       data-bind="checked: $parent.selectedPaymentProfileId, value: paymentToken.gateway_token" />
+                <!-- ko i18n: 'Use my Saved Card Ending in ' --><!-- /ko -->
+                <!-- ko text: ' ' + $parent.getMaskedCC(paymentToken) --><!-- /ko -->
+            </label>
+        </p>
+    <!-- /ko -->
+    <!-- ko if: paymentsLoadSuccess() && !payments().length -->
+        <!-- ko i18n: 'You don\'t have saved subscribe pro credit cards' --><!-- /ko -->
+    <!-- /ko -->
+</div>

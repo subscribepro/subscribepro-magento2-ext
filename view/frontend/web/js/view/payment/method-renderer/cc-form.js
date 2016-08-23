@@ -13,7 +13,17 @@ define(
         'Magento_Vault/js/view/payment/vault-enabler',
         'spreedly'
     ],
-    function ($, Component, config, quote, expirationFieldValidator, hostedFieldValidator, expirationFields, hostedFields, VaultEnabler) {
+    function (
+        $,
+        Component,
+        config,
+        quote,
+        expirationFieldValidator,
+        hostedFieldValidator,
+        expirationFields,
+        hostedFields,
+        VaultEnabler
+    ) {
         'use strict';
 
         return Component.extend({
@@ -51,12 +61,6 @@ define(
 
             updatePlaceOrderActionAllowed: function () {
                 this.isPlaceOrderActionAllowed(quote.billingAddress() != null && this.isValidHostedFields && this.isValidExpDate)
-            },
-
-            initElement: function () {
-                this._super();
-                this.initSpreedly();
-                return this;
             },
 
             getCode: function () {
@@ -116,7 +120,6 @@ define(
 
             validationCreditCardExpMonth: function (isFocused) {
                 this.isValidExpDate = expirationFieldValidator(
-                    this.getCode(),
                     isFocused,
                     'month',
                     this.creditCardExpMonth(),
@@ -127,7 +130,6 @@ define(
 
             validationCreditCardExpYear: function (isFocused) {
                 this.isValidExpDate = expirationFieldValidator(
-                    this.getCode(),
                     isFocused,
                     'year',
                     this.creditCardExpMonth(),

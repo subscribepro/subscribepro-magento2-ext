@@ -190,6 +190,32 @@ class SubscriptionManagement implements SubscriptionManagementInterface
     /**
      * @param int $customerId
      * @param int $subscriptionId
+     * @param int $paymentProfileId
+     * @return \SubscribePro\Service\PaymentProfile\PaymentProfileInterface
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\AuthorizationException
+     */
+    public function updatePaymentProfile($customerId, $subscriptionId, $paymentProfileId)
+    {
+        try {
+            $subscription = $this->platformSubscriptionHelper->loadSubscription($subscriptionId);
+            $this->checkSubscriptionOwner($subscription, $customerId);
+
+            $subscription->setPaymentProfileId($paymentProfileId);
+            $subscription = $this->platformSubscriptionHelper->saveSubscription($subscription);
+        } catch (NoSuchEntityException $e) {
+            throw new LocalizedException(__('The subscription is not found.'));
+        } catch (HttpException $e) {
+            $this->logger->critical($e);
+            throw new LocalizedException(__('An error occurred while updating payment profile.'));
+        }
+
+        return $subscription->getPaymentProfile();
+    }
+
+    /**
+     * @param int $customerId
+     * @param int $subscriptionId
      * @return string next order date
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\AuthorizationException
@@ -283,8 +309,7 @@ class SubscriptionManagement implements SubscriptionManagementInterface
     /**
      * @param \SubscribePro\Service\Subscription\SubscriptionInterface $subscription
      * @param $customerId
-     * @throws AuthorizationException
-     * @throws NoSuchEntityException
+     * @throws \Magento\Framework\Exception\AuthorizationException
      */
     protected function checkSubscriptionOwner($subscription, $customerId)
     {

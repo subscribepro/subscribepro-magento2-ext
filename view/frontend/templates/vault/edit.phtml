@@ -1,0 +1,41 @@
+<?php
+/**
+ * @var $block \Swarming\SubscribePro\Block\Vault\Edit
+ */
+?>
+<style>
+    /* TODO temporary solution, just for dev testing */
+    .form-card-edit .actions-toolbar > .secondary .action.back {
+        display: inline !important;
+    }
+
+</style>
+<form class="form-address-edit form-card-edit"
+      action="<?php /* @escapeNotVerified */ echo $block->getSaveUrl() ?>"
+      method="post"
+      id="vault-edit"
+      enctype="multipart/form-data"
+      data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>">
+
+    <?php echo $block->renderBillingSection() ?>
+
+    <?php echo $block->renderCardSection() ?>
+
+    <div class="actions-toolbar">
+        <div class="primary">
+            <button type="submit" class="action save primary" data-action="save-vault" title="<?php /* @escapeNotVerified */ echo __('Save Card') ?>">
+                <span><?php /* @escapeNotVerified */ echo __('Save Card') ?></span>
+            </button>
+        </div>
+        <div class="secondary">
+            <a class="action back" href="<?php echo $block->escapeUrl($block->getBackUrl()) ?>"><span><?php /* @escapeNotVerified */ echo __('Go back') ?></span></a>
+        </div>
+    </div>
+</form>
+<script type="text/x-magento-init">
+    {
+        "#vault-edit": {
+            "validation": {}
+        }
+    }
+</script>

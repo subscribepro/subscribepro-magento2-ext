@@ -68,7 +68,7 @@ define(
             if (cardType && typeof mapper[cardType] !== 'undefined') {
                 storedCardType = mapper[cardType];
 
-                if (_.indexOf(config.getAvailableCardTypes(), storedCardType) !== -1) {
+                if (config.getAvailableCardTypes()[storedCardType]) {
                     return storedCardType;
                 }
             }

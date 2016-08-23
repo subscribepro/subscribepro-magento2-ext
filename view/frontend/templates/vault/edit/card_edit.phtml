@@ -1,0 +1,122 @@
+<?php
+/**
+ * @var $block \Swarming\SubscribePro\Block\Vault\Edit\EditCard
+ */
+?>
+<style>
+    /* TODO temporary solution, just for dev testing */
+
+    .card-number-type{
+        margin-bottom: 10px;
+    }
+
+    .card-number-type img {
+        vertical-align: middle;
+        margin-right: 5px;
+        padding-bottom: 4px;
+    }
+
+    .expiration-date .date-wrap .child-control{
+        float: left;
+        margin-right: 2rem;
+    }
+
+    .expiration-date .date-wrap input:focus{
+        outline: none;
+        -webkit-box-shadow: none;
+        box-shadow: none;
+    }
+
+    .expiration-date .date-wrap .month{
+        position: relative;
+    }
+    .expiration-date .date-wrap .month:after{
+        content: '/';
+        display: inline;
+        padding-bottom: inherit;
+        padding-top: inherit;
+        position: absolute;
+        right: -12px;
+        top: 5px;
+    }
+
+    .expiration-date .child-control.control-focused input {
+        border-color: #006bb4;
+    }
+
+    .expiration-date .child-control.control-valid input {
+        border-color: #006400;
+    }
+
+    .expiration-date .child-control.control-invalid:not(.control-focused) input {
+        border-color: #e02b27;
+    }
+
+    .expiration-date .error{
+        clear: both;
+        color: #e02b27;
+        font-size: 1.2rem;
+        height: 0;
+        margin-top: 7px;
+        opacity: 0;
+    }
+
+    .expiration-date .control-invalid:not(.control-focused) ~ .error {
+        opacity: 1;
+    }
+
+</style>
+
+<fieldset class="fieldset" data-bind="scope: 'subscribe-pro-vault-card-edit'">
+    <legend class="legend"><span><?php /* @escapeNotVerified */ echo __('Payment Information') ?></span></legend><br>
+
+    <div class="card-number-type">
+        <img src="<?php /* @noEscape */ echo $block->getIconUrl(); ?>"
+             width="<?php /* @noEscape */ echo $block->getIconWidth(); ?>"
+             height="<?php /* @noEscape */ echo $block->getIconHeight(); ?>">
+        <span><?php echo $block->escapeHtml(__('ending')); ?> <?php echo $block->escapeHtml($block->getNumberLast4Digits()) ?></span>
+    </div>
+
+    <div class="field date required expiration-date">
+        <label for="creditcard_month" class="label">
+            <span><?php /* @escapeNotVerified */ echo __('Expiration Date') ?></span>
+        </label>
+        <div class="control">
+            <div class="date-wrap">
+                <div class="child-control month">
+                    <input type="text"
+                           name="creditcard_month"
+                           data-bind="attr: {id: getCode() + '_expiration'}, value: creditCardExpMonth, hasFocus: creditCardExpMonthFocus"
+                           size="3"
+                           maxlength="2"
+                           placeholder="MM"
+                           class="input-text required-entry validate-expiration-date"
+                           autocomplete="off"
+                           value="<?php echo $block->escapeHtml($block->getExpirationMonth()) ?>"
+                    >
+                </div>
+                <div class="child-control year">
+                    <input type="text"
+                           name="creditcard_year"
+                           data-bind="attr: {id: getCode() + '_expiration_yr'}, value: creditCardExpYear, hasFocus: creditCardExpYearFocus"
+                           size="5"
+                           maxlength="4"
+                           placeholder="YYYY"
+                           class="input-text required-entry"
+                           autocomplete="off"
+                           value="<?php echo $block->escapeHtml($block->getExpirationYear()) ?>"
+                    >
+                </div>
+                <div class="error"><!-- ko i18n: 'Please, enter valid Expiration Date'--><!-- /ko --></div>
+            </div>
+        </div>
+    </div>
+</fieldset>
+
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "Magento_Ui/js/core/app": <?php /* @escapeNotVerified */ echo $block->getJsLayout();?>
+        }
+    }
+</script>

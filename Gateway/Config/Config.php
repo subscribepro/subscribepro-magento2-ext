@@ -7,6 +7,7 @@ class Config extends \Magento\Payment\Gateway\Config\Config
     const KEY_ACTIVE = 'active';
     const KEY_CC_TYPES = 'cctypes';
     const KEY_CC_TYPES_MAPPER = 'cctypes_mapper';
+    const KEY_CC_USE_CCV = 'useccv';
 
     /**
      * @return bool
@@ -14,6 +15,14 @@ class Config extends \Magento\Payment\Gateway\Config\Config
     public function isActive()
     {
         return (bool) $this->getValue(self::KEY_ACTIVE);
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasVerification()
+    {
+        return (bool) $this->getValue(self::KEY_CC_USE_CCV);
     }
 
     /**

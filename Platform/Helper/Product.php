@@ -13,11 +13,13 @@ class Product
 
     /**
      * @param \Swarming\SubscribePro\Platform\Platform $platform
+     * @param string|null $websiteCode
      */
     public function __construct(
-        \Swarming\SubscribePro\Platform\Platform $platform
+        \Swarming\SubscribePro\Platform\Platform $platform,
+        $websiteCode = null
     ) {
-        $this->sdkProductService = $platform->getSdk()->getProductService();
+        $this->sdkProductService = $platform->getSdk($websiteCode)->getProductService();
     }
 
     /**
@@ -34,5 +36,26 @@ class Product
         }
 
         return $products[0];
+    }
+    
+    /**
+     * @param \Magento\Catalog\Api\Data\ProductInterface $magentoProduct
+     * @return \Swarming\SubscribePro\Api\Data\ProductInterface
+     * @throws \SubscribePro\Exception\InvalidArgumentException
+     * @throws \SubscribePro\Exception\HttpException
+     */
+    public function saveProduct($magentoProduct)
+    {
+        $products = $this->sdkProductService->loadProducts($magentoProduct->getSku());
+        if (!empty($products)) {
+            $product = $products[0];
+        } else {
+            $product = $this->sdkProductService->createProduct();
+        }
+        $product->setSku($magentoProduct->getSku())
+            ->setPrice($magentoProduct->getPrice())
+            ->setName($magentoProduct->getName());
+
+        return $this->sdkProductService->saveProduct($product);
     }
 }

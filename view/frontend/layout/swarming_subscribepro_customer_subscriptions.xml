@@ -22,6 +22,25 @@
                                         <item name="displayArea" xsi:type="string">subscriptions</item>
                                         <item name="config" xsi:type="array">
                                             <item name="template" xsi:type="string">Swarming_SubscribePro/subscription/list</item>
+                                            <item name="paymentModalOptions" xsi:type="array">
+                                                <item name="component" xsi:type="string">Swarming_SubscribePro/js/view/payment/subscription/payment-info</item>
+                                                <item name="displayArea" xsi:type="string">payment-info</item>
+                                                <item name="config" xsi:type="array">
+                                                    <item name="template" xsi:type="string">Swarming_SubscribePro/payment/subscription/payment-info</item>
+                                                    <item name="modalOptions" xsi:type="array">
+                                                        <item name="type" xsi:type="string">popup</item>
+                                                        <item name="title" xsi:type="string">Change payment method</item>
+                                                        <item name="responsive" xsi:type="boolean">true</item>
+                                                        <item name="clickableOverlay" xsi:type="boolean">true</item>
+                                                    </item>
+                                                </item>
+                                                <item name="children" xsi:type="array">
+                                                    <item name="messages" xsi:type="array">
+                                                        <item name="component" xsi:type="string">Magento_Ui/js/view/messages</item>
+                                                        <item name="displayArea" xsi:type="string">messages</item>
+                                                    </item>
+                                                </item>
+                                            </item>
                                         </item>
                                     </item>
                                 </item>

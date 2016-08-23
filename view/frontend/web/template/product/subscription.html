@@ -6,7 +6,7 @@
     <div style="margin-bottom: 10px">
         <!-- ko if: product().isSubscriptionMode(subscriptionOnlyMode)  -->
             <p>
-                <input type="hidden" name="subscription-delivery-option" data-bind="value: subscriptionOption">
+                <input type="hidden" name="subscription-option" data-bind="value: subscriptionOption">
                 <!-- ko i18n: product().priceWithDiscountText --><!-- /ko -->
             </p>
         <!-- /ko -->
@@ -14,9 +14,9 @@
             <p>
                 <label>
                     <input type="radio"
-                           name="subscription-delivery-option"
+                           name="subscription-option"
                            class="radio"
-                           data-bind="checked: deliveryOptionValue, value: oneTimePurchaseOption" />
+                           data-bind="checked: subscriptionOptionValue, value: oneTimePurchaseOption" />
                     <!-- ko i18n: 'One Time Delivery' --><!-- /ko -->
                     <!-- ko text: ' - ' --><!-- /ko -->
                     <!-- ko text: product().formattedPrice --><!-- /ko -->
@@ -25,9 +25,9 @@
             <p>
                 <label>
                     <input type="radio"
-                           name="subscription-delivery-option"
+                           name="subscription-option"
                            class="radio"
-                           data-bind="checked: deliveryOptionValue, value: subscriptionOption" />
+                           data-bind="checked: subscriptionOptionValue, value: subscriptionOption" />
                     <!-- ko i18n: 'Regular Delivery' --><!-- /ko -->
                     <!-- ko text: ' - ' --><!-- /ko -->
                     <!-- ko i18n: product().priceWithDiscountText --><!-- /ko -->

@@ -49,6 +49,16 @@ interface SubscriptionManagementInterface
     /**
      * @param int $customerId
      * @param int $subscriptionId
+     * @param int $paymentProfileId
+     * @return \SubscribePro\Service\PaymentProfile\PaymentProfileInterface
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\AuthorizationException
+     */
+    public function updatePaymentProfile($customerId, $subscriptionId, $paymentProfileId);
+
+    /**
+     * @param int $customerId
+     * @param int $subscriptionId
      * @return string next order date
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\AuthorizationException

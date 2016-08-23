@@ -2,7 +2,7 @@
 
 namespace Swarming\SubscribePro\Model\Config\Source;
 
-class Cctype extends \Magento\Payment\Model\Source\Cctype
+class CcType extends \Magento\Payment\Model\Source\Cctype
 {
     /**
      * @return string[]

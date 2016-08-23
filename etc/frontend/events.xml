@@ -3,4 +3,7 @@
     <event name="checkout_cart_product_add_after">
         <observer name="subscribe_pro_cart_add_product_after" instance="Swarming\SubscribePro\Observer\AddProductToCartAfter" />
     </event>
+    <event name="checkout_cart_update_items_after">
+        <observer name="subscribe_pro_cart_update_items_after" instance="Swarming\SubscribePro\Observer\CartUpdateItemsAfter" />
+    </event>
 </config>

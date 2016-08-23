@@ -5,11 +5,6 @@ namespace Swarming\SubscribePro\Platform;
 class Platform
 {
     /**
-     * @var \SubscribePro\Sdk
-     */
-    protected $sdk;
-
-    /**
      * @var \SubscribePro\SdkFactory
      */
     protected $sdkFactory;
@@ -25,40 +20,59 @@ class Platform
     protected $config;
 
     /**
+     * @var \Magento\Store\Model\StoreManagerInterface
+     */
+    protected $storeManager;
+
+    /**
+     * @var \SubscribePro\Sdk[]
+     */
+    protected $sdkByWebsiteCode = [];
+
+    /**
      * @param \SubscribePro\SdkFactory $sdkFactory
      * @param \Swarming\SubscribePro\Model\Config\Platform $configPlatform
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      * @param array $config
      */
     public function __construct(
         \SubscribePro\SdkFactory $sdkFactory,
         \Swarming\SubscribePro\Model\Config\Platform $configPlatform,
+        \Magento\Store\Model\StoreManagerInterface $storeManager,
         array $config = []
     ) {
         $this->sdkFactory = $sdkFactory;
         $this->configPlatform = $configPlatform;
         $this->config = $config;
+        $this->storeManager = $storeManager;
     }
 
     /**
+     * @param string|null $websiteCode
      * @return \SubscribePro\Sdk
      */
-    public function getSdk()
+    public function getSdk($websiteCode = null)
     {
-        if (null === $this->sdk) {
-            $this->initSdk();
+        $websiteCode = $this->storeManager->getWebsite($websiteCode)->getCode();
+        if (empty($this->sdkByWebsiteCode[$websiteCode])) {
+            $this->sdkByWebsiteCode[$websiteCode] = $this->createSdk($websiteCode);
         }
-        return $this->sdk;
+        return $this->sdkByWebsiteCode[$websiteCode];
     }
 
-    protected function initSdk()
+    /**
+     * @param string $websiteCode
+     * @return \SubscribePro\Sdk
+     */
+    protected function createSdk($websiteCode)
     {
         $platformConfig = [
-            'client_id' => $this->configPlatform->getClientId(),
-            'client_secret' => $this->configPlatform->getClientSecret(),
-            'logging_enable' => $this->configPlatform->isLogEnabled(),
-            'logging_level' => $this->configPlatform->getLogLevel(),
-            'logging_file_name' => $this->configPlatform->getLogFilename()
+            'client_id' => $this->configPlatform->getClientId($websiteCode),
+            'client_secret' => $this->configPlatform->getClientSecret($websiteCode),
+            'logging_enable' => $this->configPlatform->isLogEnabled($websiteCode),
+            'logging_level' => $this->configPlatform->getLogLevel($websiteCode),
+            'logging_file_name' => $this->configPlatform->getLogFilename($websiteCode)
         ];
-        $this->sdk = $this->sdkFactory->create(['config' => array_merge($this->config, $platformConfig)]);
+        return $this->sdkFactory->create(['config' => array_merge($this->config, $platformConfig)]);
     }
 }

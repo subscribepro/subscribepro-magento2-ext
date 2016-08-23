@@ -1,0 +1,19 @@
+<?php
+/**
+ * @var $block \Swarming\SubscribePro\Block\Cart\Subscription
+ */
+?>
+
+<?php if($block->isSubscribeProEnabled() && $block->isProductSubscriptionEnabled()): ?>
+    <div data-bind="scope: 'subscription-container-<?php echo $block->getItem()->getId(); ?>'">
+        <!-- ko template: getTemplate() --><!-- /ko -->
+    </div>
+
+    <script type="text/x-magento-init">
+        {
+            "*": {
+                "Magento_Ui/js/core/app": <?php /* @escapeNotVerified */ echo $block->getJsLayout();?>
+            }
+        }
+    </script>
+<?php endif; ?>

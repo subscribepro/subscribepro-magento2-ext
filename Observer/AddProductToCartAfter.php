@@ -2,10 +2,14 @@
 
 namespace Swarming\SubscribePro\Observer;
 
+use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Swarming\SubscribePro\Api\Data\ProductInterface as SubscriptionProductInterface;
+use Swarming\SubscribePro\Model\Quote\ItemOptionsManager;
+use Swarming\SubscribePro\Ui\DataProvider\Product\Modifier\Subscription as SubscriptionModifier;
 
 class AddProductToCartAfter implements ObserverInterface
 {
@@ -25,18 +29,34 @@ class AddProductToCartAfter implements ObserverInterface
     protected $quoteItemOptionsManager;
 
     /**
+     * @var \Swarming\SubscribePro\Platform\Helper\Product
+     */
+    protected $platformProductHelper;
+
+    /**
+     * @var \Magento\Framework\Message\ManagerInterface
+     */
+    protected $messageManager;
+
+    /**
      * @param \Swarming\SubscribePro\Model\Config\General $configGeneral
      * @param \Magento\Checkout\Model\Session $checkoutSession
+     * @param \Swarming\SubscribePro\Platform\Helper\Product $platformProductHelper
+     * @param \Magento\Framework\Message\ManagerInterface $messageManager
      * @param \Swarming\SubscribePro\Model\Quote\ItemOptionsManager $quoteItemOptionManager
      */
     public function __construct(
         \Swarming\SubscribePro\Model\Config\General $configGeneral,
         \Magento\Checkout\Model\Session $checkoutSession,
+        \Swarming\SubscribePro\Platform\Helper\Product $platformProductHelper,
+        \Magento\Framework\Message\ManagerInterface $messageManager,
         \Swarming\SubscribePro\Model\Quote\ItemOptionsManager $quoteItemOptionManager
     ) {
         $this->configGeneral = $configGeneral;
         $this->checkoutSession = $checkoutSession;
+        $this->platformProductHelper = $platformProductHelper;
         $this->quoteItemOptionsManager = $quoteItemOptionManager;
+        $this->messageManager = $messageManager;
     }
 
     /**
@@ -53,17 +73,61 @@ class AddProductToCartAfter implements ObserverInterface
         $event = $observer->getEvent();
         /** @var \Magento\Quote\Model\Quote\Item $quoteItem */
         $quoteItem = $event->getData('quote_item');
-        /** @var \Magento\Catalog\Model\Product $product */
-        $product = $event->getData('product');
-
+        $productRequestParams = $this->getRequestParamsByProduct($quoteItem->getProduct());
+        $subscriptionDelivery = $this->getParamData($productRequestParams, ItemOptionsManager::OPTION_SUBSCRIPTION_OPTION);
+        $interval = $this->getParamData($productRequestParams, ItemOptionsManager::OPTION_SUBSCRIPTION_INTERVAL);
+        $product = $quoteItem->getProduct();
+        
+        if (!$this->isProductSubscriptionEnabled($product)) {
+            return;
+        }
+        
         try {
-            $this->quoteItemOptionsManager->saveProductOptions($quoteItem, $product);
+            $platformProduct = $this->platformProductHelper->getProduct($product->getSku());
         } catch (NoSuchEntityException $e) {
             $this->checkoutSession->getQuote()->removeItem($quoteItem->getId());
-            throw new NoSuchEntityException(__('Product "%1" is not found on Subscribe Pro platform.', $product->getName()));
-        } catch (LocalizedException $e) {
-            $this->checkoutSession->getQuote()->removeItem($quoteItem->getId());
-            throw new $e;
+            throw new NoSuchEntityException(__('Product "%1" is not found on Subscribe Pro platform.', $quoteItem->getProduct()->getName()));
         }
+        
+        try {
+            $this->quoteItemOptionsManager->saveQuoteItemOptions($quoteItem, $product, $platformProduct, $interval, $subscriptionDelivery);
+        } catch (LocalizedException $e) {
+            if ($platformProduct->getSubscriptionOptionMode() == SubscriptionProductInterface::SOM_SUBSCRIPTION_ONLY) {
+                $this->checkoutSession->getQuote()->removeItem($quoteItem->getId());
+                throw $e;
+            }
+            
+            $this->messageManager->addErrorMessage($e->getMessage());
+        }
+    }
+
+    /**
+     * @param array $params
+     * @param string $key
+     * @return string|null
+     */
+    protected function getParamData(array $params, $key)
+    {
+        return isset($params[$key]) ? $params[$key] : null;
+    }
+
+    /**
+     * @param \Magento\Catalog\Model\Product $product
+     * @return array
+     */
+    protected function getRequestParamsByProduct($product)
+    {
+        $buyRequest = $product->getCustomOption('info_buyRequest');
+        return $buyRequest ? unserialize($buyRequest->getValue()) : [];
+    }
+
+    /**
+     * @param \Magento\Catalog\Api\Data\ProductInterface $product
+     * @return bool
+     */
+    protected function isProductSubscriptionEnabled(ProductInterface $product)
+    {
+        $attribute = $product->getCustomAttribute(SubscriptionModifier::SUBSCRIPTION_ENABLED);
+        return $attribute && $attribute->getValue();
     }
 }

@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="customer_account"/>
+    <body>
+        <referenceContainer name="content">
+            <block class="Swarming\SubscribePro\Block\Vault\Edit" name="subscribepro.vault.edit" template="Swarming_SubscribePro::vault/edit.phtml" cacheable="false">
+                <block class="Swarming\SubscribePro\Block\Vault\Edit\Billing" name="subscribepro.vault.edit.billing" as="billing" template="Swarming_SubscribePro::vault/edit/billing.phtml"/>
+                <block class="Swarming\SubscribePro\Block\Vault\Edit\EditCard" name="subscribepro.vault.edit.edit_card" as="card_edit" template="Swarming_SubscribePro::vault/edit/card_edit.phtml">
+                    <arguments>
+                        <argument name="jsLayout" xsi:type="array">
+                            <item name="components" xsi:type="array">
+                                <item name="subscribe-pro-vault-card-edit" xsi:type="array">
+                                    <item name="component" xsi:type="string">Swarming_SubscribePro/js/view/vault/card-edit</item>
+                                </item>
+                            </item>
+                        </argument>
+                    </arguments>
+                </block>
+                <block class="Swarming\SubscribePro\Block\Vault\Edit\CreateCard" name="subscribepro.vault.edit.create_card" as="card_create" template="Swarming_SubscribePro::vault/edit/card_create.phtml">
+                    <arguments>
+                        <argument name="jsLayout" xsi:type="array">
+                            <item name="components" xsi:type="array">
+                                <item name="subscribe-pro-vault-card-create" xsi:type="array">
+                                    <item name="component" xsi:type="string">Swarming_SubscribePro/js/view/vault/card-create</item>
+                                </item>
+                            </item>
+                        </argument>
+                    </arguments>
+                </block>
+            </block>
+        </referenceContainer>
+    </body>
+</page>
+

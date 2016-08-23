@@ -1,6 +1,6 @@
 <?php
 
-namespace Swarming\SubscribePro\Block\Customer;
+namespace Swarming\SubscribePro\Block\Vault;
 
 use Swarming\SubscribePro\Model\Ui\ConfigProvider;
 use Magento\Vault\Api\Data\PaymentTokenInterface;

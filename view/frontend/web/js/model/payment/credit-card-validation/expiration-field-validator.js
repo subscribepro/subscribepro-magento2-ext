@@ -40,7 +40,7 @@ define(
             return expirationDate.isValid;
         }
 
-        return function(code, isFocused, field, month, year) {
+        return function(isFocused, field, month, year) {
             var isValid = false;
             if (isFocused) {
                 expirationFields.removeClass(field, 'invalid');

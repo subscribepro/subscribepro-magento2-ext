@@ -73,4 +73,22 @@
             <parameter name="customerId" force="true">%customer_id%</parameter>
         </data>
     </route>
+    <route url="/V1/swarming_subscribepro/me/subscriptions/update-payment-profile" method="POST">
+        <service class="Swarming\SubscribePro\Api\SubscriptionManagementInterface" method="updatePaymentProfile"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="customerId" force="true">%customer_id%</parameter>
+        </data>
+    </route>
+    <route url="/V1/swarming_subscribepro/me/payment-tokens" method="GET">
+        <service class="Swarming\SubscribePro\Api\PaymentTokenManagementInterface" method="getSubscribeProTokensByCustomerId"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="customerId" force="true">%customer_id%</parameter>
+        </data>
+    </route>
 </routes>

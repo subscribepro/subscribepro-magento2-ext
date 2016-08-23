@@ -31,7 +31,6 @@ define(
                 self.product = productModel.create(self.subscription.product, self.priceFormat);
                 self.nextOrderDate = ko.observable(self.subscription.next_order_date);
                 self.shippingAddress = ko.observable(self.subscription.shipping_address);
-                self.paymentProfile = ko.observable(self.subscription.payment_profile);
                 self.showDetails = ko.observable(false);
                 self.qtyValues = ko.observableArray(self.product.getQtyValues());
                 self.selectedQty = ko.observable(self.qty());
@@ -51,10 +50,6 @@ define(
                     var cityRegionText = [address.city, address.region].filter(function (val) {return val;}).join(', ');
 
                     return [cityRegionText, address.postcode].filter(function (val) {return val;}).join(' ');
-                });
-
-                self.isVisiblePaymentInfo = ko.pureComputed(function() {
-                    return self.paymentProfile().creditcard_last_digits && self.paymentProfile().creditcard_last_digits.length > 0;
                 });
             },
 

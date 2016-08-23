@@ -3,15 +3,13 @@
 namespace Swarming\SubscribePro\Model\Quote;
 
 use Magento\Catalog\Model\Product;
-use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Quote\Model\Quote\Item as QuoteItem;
 use Magento\Framework\Exception\LocalizedException;
 use SubscribePro\Service\Product\ProductInterface as PlatformProductInterface;
-use Swarming\SubscribePro\Ui\DataProvider\Product\Modifier\Subscription as SubscriptionModifier;
 
 class ItemOptionsManager
 {
-    const OPTION_SUBSCRIPTION_DELIVERY = 'subscription-delivery-option';
+    const OPTION_SUBSCRIPTION_OPTION = 'subscription-option';
     const OPTION_SUBSCRIPTION_INTERVAL = 'subscription-interval';
 
     const SUBSCRIPTION_CREATING = 'create_subscription';
@@ -40,38 +38,23 @@ class ItemOptionsManager
     }
 
     /**
-     * @param \Magento\Catalog\Api\Data\ProductInterface $product
-     * @return bool
-     */
-    protected function isProductSubscriptionEnabled(ProductInterface $product)
-    {
-        $attribute = $product->getCustomAttribute(SubscriptionModifier::SUBSCRIPTION_ENABLED);
-        return $attribute && $attribute->getValue();
-    }
-
-    /**
      * @param \Magento\Quote\Model\Quote\Item $quoteItem
-     * @param \Magento\Catalog\Model\Product $product
+     * @param \Magento\Catalog\Api\Data\ProductInterface $product
+     * @param \Swarming\SubscribePro\Api\Data\ProductInterface $platformProduct
+     * @param string $subscriptionInterval
+     * @param string $subscriptionOption
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function saveProductOptions(QuoteItem $quoteItem, Product $product)
+    public function saveQuoteItemOptions($quoteItem, $product, $platformProduct, $subscriptionInterval, $subscriptionOption)
     {
-        if (!$this->isProductSubscriptionEnabled($product)) {
+        if ($subscriptionOption != PlatformProductInterface::SO_SUBSCRIPTION) {
+            $this->addQuoteItemOption($quoteItem, self::SUBSCRIPTION_CREATING, false);
             return;
         }
 
-        $productRequestParams = $this->getRequestParamsByProduct($product);
-        $subscriptionDelivery = $this->getParamData($productRequestParams, self::OPTION_SUBSCRIPTION_DELIVERY);
-        if ($subscriptionDelivery != PlatformProductInterface::SO_SUBSCRIPTION) {
-            return;
-        }
-
-        $platformProduct = $this->platformProductHelper->getProduct($product->getSku());
-
-        $subscriptionInterval = $this->getSubscriptionInterval($productRequestParams, $platformProduct);
-
-        $this->checkQuantity($quoteItem, $platformProduct, $product);
+        $subscriptionInterval = $this->getSubscriptionInterval($subscriptionInterval, $platformProduct);
+        $this->checkQuantity($quoteItem->getQty(), $platformProduct, $product);
         $this->checkInterval($subscriptionInterval, $platformProduct);
 
         $this->addQuoteItemOption($quoteItem, self::SUBSCRIPTION_INTERVAL, $subscriptionInterval);
@@ -79,38 +62,30 @@ class ItemOptionsManager
     }
 
     /**
-     * @param \Magento\Catalog\Model\Product $product
-     * @return array
-     */
-    protected function getRequestParamsByProduct($product)
-    {
-        $buyRequest = $product->getCustomOption('info_buyRequest');
-        return $buyRequest ? unserialize($buyRequest->getValue()) : [];
-    }
-
-    /**
-     * @param array $params
+     * @param \Magento\Quote\Model\Quote\Item $quoteItem
      * @param string $key
-     * @return string|null
+     * @param string $value
      */
-    protected function getParamData(array $params, $key)
+    public function addQuoteItemOption($quoteItem, $key, $value)
     {
-        return isset($params[$key]) ? $params[$key] : null;
+        $quoteItemOption = $this->itemOptionFactory->create()
+            ->setProduct($quoteItem->getProduct())
+            ->setCode($key)
+            ->setValue($value);
+        $quoteItem->addOption($quoteItemOption);
     }
 
     /**
-     * @param array $productRequestParams
+     * @param string $subscriptionInterval
      * @param \Swarming\SubscribePro\Api\Data\ProductInterface $platformProduct
      * @return string|null
      */
-    protected function getSubscriptionInterval(array $productRequestParams, $platformProduct)
+    protected function getSubscriptionInterval($subscriptionInterval, $platformProduct)
     {
-        $subscriptionInterval = $this->getParamData($productRequestParams, self::OPTION_SUBSCRIPTION_INTERVAL);
-
         if (!$subscriptionInterval) {
             $subscriptionInterval = $platformProduct->getDefaultInterval();
         }
-        
+
         if (!$subscriptionInterval && $platformProduct->getIntervals()) {
             $subscriptionInterval = $platformProduct->getIntervals()[0];
         }
@@ -118,14 +93,14 @@ class ItemOptionsManager
     }
 
     /**
-     * @param \Magento\Quote\Model\Quote\Item $quoteItem
+     * @param int $qty
      * @param \Swarming\SubscribePro\Api\Data\ProductInterface $platformProduct
-     * @param \Magento\Catalog\Model\Product $product
+     * @param \Magento\Catalog\Api\Data\ProductInterface $product
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    protected function checkQuantity($quoteItem, $platformProduct, $product)
+    protected function checkQuantity($qty, $platformProduct, $product)
     {
-        if ($quoteItem->getQty() < $platformProduct->getMinQty()) {
+        if ($qty < $platformProduct->getMinQty()) {
             throw new LocalizedException(__(
                 'Product "%1" requires minimum quantity of %2 for subscription.',
                 $product->getName(),
@@ -133,7 +108,7 @@ class ItemOptionsManager
             ));
         }
 
-        if ($platformProduct->getMaxQty() && $quoteItem->getQty() > $platformProduct->getMaxQty()) {
+        if ($platformProduct->getMaxQty() && $qty > $platformProduct->getMaxQty()) {
             throw new LocalizedException(__(
                 'Product "%1" allows maximum quantity of %2 for subscription.',
                 $product->getName(),
@@ -152,19 +127,5 @@ class ItemOptionsManager
         if (!in_array($subscriptionInterval, $platformProduct->getIntervals())) {
             throw new LocalizedException( __('Subscription interval is not valid.'));
         }
-    }
-
-    /**
-     * @param \Magento\Quote\Model\Quote\Item $quoteItem
-     * @param string $key
-     * @param string $value
-     */
-    protected function addQuoteItemOption($quoteItem, $key, $value)
-    {
-        $quoteItemOption = $this->itemOptionFactory->create()
-            ->setProduct($quoteItem->getProduct())
-            ->setCode($key)
-            ->setValue($value);
-        $quoteItem->addOption($quoteItemOption);
     }
 }

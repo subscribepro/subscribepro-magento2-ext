@@ -74,7 +74,7 @@
         <!-- ko if: isStatus(['Failed', 'Retry', 'Paused']) -->
             <p>
                 <button type="button" class="action primary" data-bind="click: restart">
-                    <span data-bind="i18n: 'Retry'"></span>
+                    <span data-bind="i18n: 'Restart'"></span>
                 </button>
             </p>
         <!-- /ko -->
@@ -106,17 +106,9 @@
         </address>
     </td>
     <td colspan="2">
-        <!-- ko if: isVisiblePaymentInfo() -->
-            <p>
-                <strong>
-                    <!-- ko i18n: 'Payment Information:' --><!-- /ko -->
-                </strong>
-            </p>
-            <div>
-                <!-- ko i18n: 'Credit card ending in' --><!-- /ko -->
-                <!-- ko text: ' ' + paymentProfile().creditcard_last_digits --><!-- /ko -->
-            </div>
-        <!-- /ko -->
+        <!-- ko foreach: getRegion('payment-info') -->
+            <!-- ko template: getTemplate() --><!-- /ko -->
+        <!--/ko-->
     </td>
     <td></td>
 </tr>

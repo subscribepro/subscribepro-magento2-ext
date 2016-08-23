@@ -26,29 +26,34 @@ define(
                 this.isProductLoaded = ko.observable(false);
                 this.initProduct(this.productData);
                 
-                this.priceBoxElement = this.getPriceBoxElement();
-                this.priceBoxElement.on('reloadPrice', this.onPriceChange.bind(this));
+                if (this.priceBoxSelector) {
+                    this.priceBoxElement = this.getPriceBoxElement();
+                    this.priceBoxElement.on('reloadPrice', this.onPriceChange.bind(this));
+                }
 
                 $(this.qtyFieldSelector).on('change', this.onQtyFieldChanged.bind(this));
             },
 
             initProduct: function (product) {
                 this.product(productModel.create(product, this.priceFormat));
-                this.deliveryOptionValue = ko.observable(this.product().defaultSubscriptionOption());
+                this.subscriptionOptionValue = ko.observable(this.product().defaultSubscriptionOption());
                 this.intervalValue = ko.observable(this.product().defaultInterval());
                 this.isProductLoaded(true);
-                this.deliveryOptionValue.subscribe(this.onQtyFieldChanged.bind(this));
+                this.subscriptionOptionValue.subscribe(this.onQtyFieldChanged.bind(this));
                 
                 if (this.product().isSubscriptionMode(this.subscriptionOnlyMode)) {
-                    this.deliveryOptionValue(this.subscriptionOption);
+                    this.subscriptionOptionValue(this.subscriptionOption);
                 }
-                if (this.product().isSubscriptionOption(this.subscriptionOption) || this.product().isSubscriptionMode(this.subscriptionOnlyMode)) {
+                if ((this.product().isSubscriptionOption(this.subscriptionOption) 
+                    || this.product().isSubscriptionMode(this.subscriptionOnlyMode))
+                    && this.product().minQty() > $(this.qtyFieldSelector).val() 
+                ) {
                     $(this.qtyFieldSelector).val(this.product().minQty()).trigger('change');
                 }
             },
 
-            onQtyFieldChanged: function onQtyFieldChanged(event) {
-                if (this.deliveryOptionValue() == this.oneTimePurchaseOption) {
+            onQtyFieldChanged: function (event) {
+                if (this.subscriptionOptionValue() == this.oneTimePurchaseOption) {
                     return;
                 }
 
@@ -56,7 +61,7 @@ define(
                 if (field.val() < this.product().minQty()) {
                     field.val(this.product().minQty()).trigger('change');
                 }
-                if (field.val() > this.product().maxQty()) {
+                if (this.product().maxQty() && field.val() > this.product().maxQty()) {
                     field.val(this.product().maxQty()).trigger('change');
                 }
             },
