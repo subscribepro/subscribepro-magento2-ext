@@ -26,8 +26,6 @@ class VaultDetailsHandler implements HandlerInterface
     protected $config;
 
     /**
-     * Constructor
-     *
      * @param \Magento\Vault\Api\Data\PaymentTokenInterfaceFactory $paymentTokenFactory
      * @param \Magento\Sales\Api\Data\OrderPaymentExtensionInterfaceFactory $paymentExtensionFactory
      * @param \Swarming\SubscribePro\Gateway\Config\Config $config
@@ -66,7 +64,7 @@ class VaultDetailsHandler implements HandlerInterface
     protected function getVaultPaymentToken(TransactionInterface $transaction)
     {
         $paymentToken = $this->paymentTokenFactory->create();
-        $paymentToken->setGatewayToken($transaction->getToken());
+        $paymentToken->setGatewayToken($transaction->getRefPaymentProfileId());
         $paymentToken->setExpiresAt($this->getExpirationDate($transaction));
 
         $paymentToken->setTokenDetails($this->convertDetailsToJSON([
