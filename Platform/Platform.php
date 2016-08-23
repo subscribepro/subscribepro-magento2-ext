@@ -30,11 +30,6 @@ class Platform
     protected $sdkByWebsiteCode = [];
 
     /**
-     * @var string
-     */
-    protected $currentWebsiteCode;
-
-    /**
      * @param \SubscribePro\SdkFactory $sdkFactory
      * @param \Swarming\SubscribePro\Model\Config\Platform $configPlatform
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager

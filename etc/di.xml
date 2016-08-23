@@ -3,6 +3,7 @@
     <preference for="Swarming\SubscribePro\Api\SubscriptionManagementInterface" type="Swarming\SubscribePro\Service\SubscriptionManagement" />
     <preference for="Swarming\SubscribePro\Api\PaymentTokenManagementInterface" type="Swarming\SubscribePro\Service\PaymentTokenManagement" />
     <preference for="Swarming\SubscribePro\Api\AddressManagementInterface" type="Swarming\SubscribePro\Service\AddressManagement" />
+    <preference for="Swarming\SubscribePro\Api\Data\SubscriptionOptionInterface" type="Swarming\SubscribePro\Model\Quote\SubscriptionOption" />
 
     <type name="Swarming\SubscribePro\Platform\Platform">
         <arguments>
@@ -58,6 +59,10 @@
 
     <type name="Magento\SalesRule\Model\Validator">
         <plugin name="subscribepro_discount" type="Swarming\SubscribePro\Plugin\SalesRule\Validator" sortOrder="50" />
+    </type>
+
+    <type name="Magento\Quote\Model\Quote\Item\CartItemOptionsProcessor">
+        <plugin name="subscribepro_subscription_option" type="Swarming\SubscribePro\Plugin\Quote\CartItemOptionsProcessor" />
     </type>
 
     <!-- SubscribeProAdapter -->

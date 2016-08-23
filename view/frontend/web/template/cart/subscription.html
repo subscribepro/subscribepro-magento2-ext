@@ -5,7 +5,7 @@
                 <input type="hidden"
                        data-bind="
                        value: subscriptionOption,
-                       attr: {name: 'cart['+quoteItemId+'][subscription-option]'}">
+                       attr: {name: 'cart['+quoteItemId+'][subscription_option][option]'}">
             </p>
         <!-- /ko -->
         <!-- ko if: product().isSubscriptionMode(subscriptionAndOneTimePurchaseMode) -->
@@ -19,7 +19,7 @@
                            data-bind="
                            checked: subscriptionOptionValue,
                            value: oneTimePurchaseOption,
-                           attr: {name: 'cart['+quoteItemId+'][subscription-option]'}" />
+                           attr: {name: 'cart['+quoteItemId+'][subscription_option][option]'}" />
                     <!-- ko i18n: 'One Time Delivery' --><!-- /ko -->
                 </label>
             </p>
@@ -30,7 +30,7 @@
                            data-bind="
                            checked: subscriptionOptionValue,
                            value: subscriptionOption,
-                           attr: {name: 'cart['+quoteItemId+'][subscription-option]'}" />
+                           attr: {name: 'cart['+quoteItemId+'][subscription_option][option]'}" />
                     <!-- ko i18n: 'Regular Delivery' --><!-- /ko -->
                 </label>
             </p>
@@ -43,7 +43,7 @@
                     options: product().intervals(),
                     checked: intervalValue,
                     value: intervalValue,
-                    attr: {name: 'cart['+quoteItemId+'][subscription-interval]'}">
+                    attr: {name: 'cart['+quoteItemId+'][subscription_option][interval]'}">
             </select>
         </label>
     </div>

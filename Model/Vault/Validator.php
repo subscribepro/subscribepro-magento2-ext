@@ -33,7 +33,7 @@ class Validator
      * @param array $profileData
      * @return bool
      */
-    public function validate(array $profileData)
+    public function validate(array &$profileData)
     {
         $isValid = true;
         if (empty($profileData[PaymentProfileInterface::CREDITCARD_MONTH])
@@ -52,7 +52,7 @@ class Validator
      * @param array $addressData
      * @return bool
      */
-    protected function validateBillingAddress(array $addressData)
+    protected function validateBillingAddress(array &$addressData)
     {
         $this->updateRegion($addressData);
 

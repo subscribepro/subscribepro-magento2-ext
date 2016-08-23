@@ -1,0 +1,30 @@
+<p>
+    <strong>
+        <!-- ko i18n: 'Delivery address:' --><!-- /ko -->
+    </strong>
+    <a href="javascript:void(0);" data-bind="attr: {'data-trigger': 'change-shipping-address-'+subscriptionId}">
+        (<!-- ko i18n: 'Change' --><!-- /ko -->)
+    </a>
+</p>
+<address>
+    <!-- ko text: shippingAddress().first_name + ' ' + shippingAddress().last_name --><!-- /ko -->
+    <!-- ko if: shippingAddress().company && shippingAddress().company.length > 0 -->
+        <div><!-- ko text: shippingAddress().company --><!-- /ko --></div>
+    <!-- /ko -->
+    <!-- ko if: shippingAddress().street1 && shippingAddress().street1.length > 0 -->
+        <div><!-- ko text: shippingAddress().street1 --><!-- /ko --></div>
+    <!-- /ko -->
+    <!-- ko if: shippingAddress().street2 && shippingAddress().street2.length > 0 -->
+        <div><!-- ko text: shippingAddress().street2 --><!-- /ko --></div>
+    <!-- /ko -->
+    <div><!-- ko text: cityRegionPostcodeText --><!-- /ko --></div>
+</address>
+
+<div data-bind="afterRender: initModal, blockLoader: isLoading">
+    <!-- ko foreach: getRegion('messages') -->
+        <!-- ko template: getTemplate() --><!-- /ko -->
+    <!--/ko-->
+
+    <!-- ko template: 'Swarming_SubscribePro/subscription/shipping-list' --><!-- /ko -->
+    <!-- ko template: 'Magento_Checkout/billing-address/form' --><!-- /ko -->
+</div>

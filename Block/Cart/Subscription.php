@@ -2,10 +2,10 @@
 
 namespace Swarming\SubscribePro\Block\Cart;
 
-use Swarming\SubscribePro\Api\Data\ProductInterface;
-use Swarming\SubscribePro\Model\Quote\ItemOptionsManager;
-use Magento\Quote\Model\Quote\Item\AbstractItem as QuoteAbstractItem;
-use Magento\ConfigurableProduct\Model\Product\Type\Configurable as ConfigurableProduct;
+use Magento\Framework\App\State as AppState;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Catalog\Api\Data\ProductInterface;
+use Swarming\SubscribePro\Api\Data\ProductInterface as PlatformProductInterface;
 
 class Subscription extends \Magento\Checkout\Block\Cart\Additional\Info
 {
@@ -15,14 +15,9 @@ class Subscription extends \Magento\Checkout\Block\Cart\Additional\Info
     protected $generalConfig;
 
     /**
-     * @var \Swarming\SubscribePro\Platform\Service\Product
+     * @var \Swarming\SubscribePro\Platform\Manager\Product
      */
-    protected $platformProductService;
-
-    /**
-     * @var \Magento\Catalog\Api\ProductRepositoryInterface
-     */
-    protected $productRepository;
+    protected $platformProductManager;
 
     /**
      * @var \Swarming\SubscribePro\Helper\QuoteItem
@@ -35,15 +30,14 @@ class Subscription extends \Magento\Checkout\Block\Cart\Additional\Info
     protected $productHelper;
 
     /**
-     * @var \Magento\Catalog\Api\Data\ProductInterface
+     * @var \Swarming\SubscribePro\Api\Data\ProductInterface
      */
-    protected $product;
+    protected $platformProduct;
 
     /**
      * @param \Magento\Catalog\Block\Product\Context $context
      * @param \Swarming\SubscribePro\Model\Config\General $generalConfig
-     * @param \Swarming\SubscribePro\Platform\Service\Product $platformProductService
-     * @param \Magento\Catalog\Api\ProductRepositoryInterface $productRepository
+     * @param \Swarming\SubscribePro\Platform\Manager\Product $platformProductManager
      * @param \Swarming\SubscribePro\Helper\QuoteItem $quoteItemHelper
      * @param \Swarming\SubscribePro\Helper\Product $productHelper
      * @param array $data
@@ -51,35 +45,44 @@ class Subscription extends \Magento\Checkout\Block\Cart\Additional\Info
     public function __construct(
         \Magento\Catalog\Block\Product\Context $context,
         \Swarming\SubscribePro\Model\Config\General $generalConfig,
-        \Swarming\SubscribePro\Platform\Service\Product $platformProductService,
-        \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
+        \Swarming\SubscribePro\Platform\Manager\Product $platformProductManager,
         \Swarming\SubscribePro\Helper\QuoteItem $quoteItemHelper,
         \Swarming\SubscribePro\Helper\Product $productHelper,
         array $data = []
     ) {
         $this->generalConfig = $generalConfig;
-        $this->platformProductService = $platformProductService;
-        $this->productRepository = $productRepository;
+        $this->platformProductManager = $platformProductManager;
         $this->quoteItemHelper = $quoteItemHelper;
         $this->productHelper = $productHelper;
         parent::__construct($context, $data);
     }
 
+    /**
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     protected function _beforeToHtml()
     {
-        if (!$this->generalConfig->isEnabled() || !$this->productHelper->isSubscriptionEnabled($this->product)) {
+        if (!$this->generalConfig->isEnabled() || !$this->productHelper->isSubscriptionEnabled($this->getItem()->getProduct())) {
             $this->setTemplate('');
+        } else {
+            $this->initJsLayout();
         }
         return parent::_beforeToHtml();
     }
 
     /**
-     * @return string
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function getJsLayout()
+    protected function initJsLayout()
     {
-        $this->jsLayout = $this->generateJsLayout();
-        return parent::getJsLayout();
+        try {
+            $this->jsLayout = $this->generateJsLayout();
+        } catch (NoSuchEntityException $e) {
+            if ($this->_appState->getMode() === AppState::MODE_DEVELOPER) {
+                throw $e;
+            }
+            $this->setTemplate('');
+        }
     }
 
     /**
@@ -90,10 +93,10 @@ class Subscription extends \Magento\Checkout\Block\Cart\Additional\Info
         $subscriptionContainerId = 'subscription-container-' . $this->getItem()->getId();
         $subscriptionContainerComponent = [
             'config' => [
-                'oneTimePurchaseOption' => ProductInterface::SO_ONETIME_PURCHASE,
-                'subscriptionOption' => ProductInterface::SO_SUBSCRIPTION,
-                'subscriptionOnlyMode' => ProductInterface::SOM_SUBSCRIPTION_ONLY,
-                'subscriptionAndOneTimePurchaseMode' => ProductInterface::SOM_SUBSCRIPTION_AND_ONETIME_PURCHASE,
+                'oneTimePurchaseOption' => PlatformProductInterface::SO_ONETIME_PURCHASE,
+                'subscriptionOption' => PlatformProductInterface::SO_SUBSCRIPTION,
+                'subscriptionOnlyMode' => PlatformProductInterface::SOM_SUBSCRIPTION_ONLY,
+                'subscriptionAndOneTimePurchaseMode' => PlatformProductInterface::SOM_SUBSCRIPTION_AND_ONETIME_PURCHASE,
                 'productData' => $this->getSubscriptionProduct()->toArray(),
                 'quoteItemId' => $this->getItem()->getId(),
                 'qtyFieldSelector' => '#cart-' . $this->getItem()->getId() . '-qty'
@@ -113,47 +116,16 @@ class Subscription extends \Magento\Checkout\Block\Cart\Additional\Info
      */
     protected function getSubscriptionProduct()
     {
-        $subscriptionProduct = $this->platformProductService->getProduct($this->product->getSku());
+        $sku = $this->getItem()->getProduct()->getData(ProductInterface::SKU);
+        $subscriptionProduct = $this->platformProductManager->getProduct($sku);
 
-        if ($intervalOption = $this->getItem()->getOptionByCode(ItemOptionsManager::SUBSCRIPTION_INTERVAL)) {
-            $subscriptionProduct->setDefaultInterval($intervalOption->getValue());
+        if ($intervalOption = $this->quoteItemHelper->getSubscriptionInterval($this->getItem())) {
+            $subscriptionProduct->setDefaultInterval($intervalOption);
         }
 
-        $subscriptionOption = $this->quoteItemHelper->isSubscriptionEnabled($this->getItem())
-            ? ProductInterface::SO_SUBSCRIPTION
-            : ProductInterface::SO_ONETIME_PURCHASE;
+        $subscriptionOption = $this->quoteItemHelper->getSubscriptionOption($this->getItem());
         $subscriptionProduct->setDefaultSubscriptionOption($subscriptionOption);
 
         return $subscriptionProduct;
-    }
-
-    /**
-     * @param \Magento\Quote\Model\Quote\Item\AbstractItem $item
-     * @return $this
-     */
-    public function setItem(QuoteAbstractItem $item)
-    {
-        parent::setItem($item);
-        $this->setProduct($this->getOriginalProduct($item->getProduct()));
-        return $this;
-    }
-
-    /**
-     * @param \Magento\Catalog\Api\Data\ProductInterface $product
-     * @return $this
-     */
-    protected function setProduct($product)
-    {
-        $this->product = $product;
-        return $this;
-    }
-
-    /**
-     * @param \Magento\Catalog\Model\Product $product
-     * @return \Magento\Catalog\Api\Data\ProductInterface
-     */
-    protected function getOriginalProduct($product)
-    {
-        return $this->productRepository->getById($product->getId());
     }
 }

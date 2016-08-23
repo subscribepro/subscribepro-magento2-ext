@@ -2,7 +2,6 @@
 
 namespace Swarming\SubscribePro\Setup;
 
-use Magento\Eav\Setup\EavSetupFactory;
 use Magento\Catalog\Model\Product;
 use Magento\Framework\Setup\InstallDataInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
@@ -17,16 +16,16 @@ class InstallData implements InstallDataInterface
     private $eavSetupFactory;
 
     /**
-     * @param EavSetupFactory $eavSetupFactory
+     * @param \Magento\Eav\Setup\EavSetupFactory $eavSetupFactory
      */
-    public function __construct(EavSetupFactory $eavSetupFactory)
+    public function __construct(\Magento\Eav\Setup\EavSetupFactory $eavSetupFactory)
     {
         $this->eavSetupFactory = $eavSetupFactory;
     }
 
     /**
-     * @param ModuleDataSetupInterface $setup
-     * @param ModuleContextInterface $context
+     * @param \Magento\Framework\Setup\ModuleDataSetupInterface $setup
+     * @param \Magento\Framework\Setup\ModuleContextInterface $context
      */
     public function install(ModuleDataSetupInterface $setup, ModuleContextInterface $context)
     {

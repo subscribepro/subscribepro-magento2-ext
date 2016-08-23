@@ -4,22 +4,45 @@ namespace Swarming\SubscribePro\Service;
 
 use Magento\Vault\Api\Data\PaymentTokenInterface;
 use Swarming\SubscribePro\Api\PaymentTokenManagementInterface;
-use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
-use Magento\Vault\Api\PaymentTokenManagementInterface as VaultPaymentTokenManagementInterface;
 
 class PaymentTokenManagement implements PaymentTokenManagementInterface
 {
     /**
-     * @var \Magento\Vault\Api\PaymentTokenManagementInterface|PaymentTokenManagementInterface
+     * @var \Magento\Vault\Api\PaymentTokenRepositoryInterface
      */
-    protected $vaultPaymentTokenManagement;
+    protected $paymentTokenRepository;
 
     /**
-     * @param \Magento\Vault\Api\PaymentTokenManagementInterface $vaultPaymentTokenManagement
+     * @var \Magento\Framework\Api\FilterBuilder
      */
-    public function __construct(VaultPaymentTokenManagementInterface $vaultPaymentTokenManagement)
-    {
-        $this->vaultPaymentTokenManagement = $vaultPaymentTokenManagement;
+    protected $filterBuilder;
+
+    /**
+     * @var \Magento\Framework\Api\SearchCriteriaBuilder
+     */
+    protected $searchCriteriaBuilder;
+
+    /**
+     * @var \Magento\Framework\Intl\DateTimeFactory
+     */
+    private $dateTimeFactory;
+
+    /**
+     * @param \Magento\Vault\Api\PaymentTokenRepositoryInterface $paymentTokenRepository
+     * @param \Magento\Framework\Api\FilterBuilder $filterBuilder
+     * @param \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder
+     * @param \Magento\Framework\Intl\DateTimeFactory $dateTimeFactory
+     */
+    public function __construct(
+        \Magento\Vault\Api\PaymentTokenRepositoryInterface $paymentTokenRepository,
+        \Magento\Framework\Api\FilterBuilder $filterBuilder,
+        \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder,
+        \Magento\Framework\Intl\DateTimeFactory $dateTimeFactory
+    ) {
+        $this->paymentTokenRepository = $paymentTokenRepository;
+        $this->filterBuilder = $filterBuilder;
+        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
+        $this->dateTimeFactory = $dateTimeFactory;
     }
 
     /**
@@ -28,12 +51,27 @@ class PaymentTokenManagement implements PaymentTokenManagementInterface
      */
     public function getSubscribeProTokensByCustomerId($customerId)
     {
-        $entities = $this->vaultPaymentTokenManagement->getListByCustomerId($customerId);
+        $filters[] = $this->filterBuilder->setField(PaymentTokenInterface::CUSTOMER_ID)
+            ->setValue($customerId)
+            ->create();
+        $filters[] = $this->filterBuilder->setField(PaymentTokenInterface::IS_VISIBLE)
+            ->setValue(1)
+            ->create();
+        $filters[] = $this->filterBuilder->setField(PaymentTokenInterface::IS_ACTIVE)
+            ->setValue(1)
+            ->create();
+        $filters[] = $this->filterBuilder->setField(PaymentTokenInterface::EXPIRES_AT)
+            ->setConditionType('gt')
+            ->setValue(
+                $this->dateTimeFactory->create(
+                    'now',
+                    new \DateTimeZone('UTC')
+                )->format('Y-m-d 00:00:00')
+            )
+            ->create();
+        $searchCriteria = $this->searchCriteriaBuilder->addFilters($filters)
+            ->create();
 
-        return array_filter($entities, function (PaymentTokenInterface $paymentToken) {
-            return $paymentToken->getPaymentMethodCode() == ConfigProvider::CODE
-                   && $paymentToken->getIsActive()
-                   && $paymentToken->getIsVisible();
-        });
+        return $this->paymentTokenRepository->getList($searchCriteria)->getItems();
     }
 }

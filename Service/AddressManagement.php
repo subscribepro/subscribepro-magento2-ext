@@ -6,6 +6,7 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Model\Order\Payment;
 use Magento\Vault\Api\Data;
 use Swarming\SubscribePro\Api\AddressManagementInterface;
+use Magento\Customer\Model\Address\Config as AddressConfig;
 
 class AddressManagement implements AddressManagementInterface
 {
@@ -64,12 +65,9 @@ class AddressManagement implements AddressManagementInterface
      */
     protected function getAddressInline($address)
     {
-        $builtOutputAddressData = $this->addressMapper->toFlatArray($address);
-        $addressInline = $this->addressConfig
-            ->getFormatByCode(\Magento\Customer\Model\Address\Config::DEFAULT_ADDRESS_FORMAT)
-            ->getRenderer()
-            ->renderArray($builtOutputAddressData);
-        
-        return $addressInline;
+        return $this->addressConfig
+            ->getFormatByCode(AddressConfig::DEFAULT_ADDRESS_FORMAT)
+            ->getData('renderer')
+            ->renderArray($this->addressMapper->toFlatArray($address));
     }
 }

@@ -25,7 +25,7 @@
             var clientId = $('#<?php echo $block->getClientIdSelectorId() ?>').val();
             var clientSecret = $('#<?php echo $block->getClientSecretSelectorId() ?>').val();
 
-            $.getJSON('<?php echo $block->getAjaxUrl() ?>', {client_id: clientId, client_secret: clientSecret})
+            $.getJSON('<?php echo $block->getAjaxUrl() ?>', {client_id: clientId, client_secret: clientSecret, website: '<?php echo $block->getWebsiteCode() ?>'})
                 .done(function (result) {
                     console.log(result);
                     resultMessageBox

@@ -30,4 +30,8 @@
             </argument>
         </arguments>
     </type>
+
+    <type name="Magento\Catalog\Block\Product\View">
+        <plugin name="subscribepro_subscription" type="Swarming\SubscribePro\Plugin\Product\Subscription"/>
+    </type>
 </config>

@@ -2,6 +2,7 @@
 
 namespace Swarming\SubscribePro\Model\Config;
 
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Store\Model\ScopeInterface;
 
 class Platform extends General
@@ -16,12 +17,13 @@ class Platform extends General
     }
 
     /**
-     * @param string|null $websiteCode
+     * @param string|null|bool $websiteCode
      * @return string
      */
     public function getClientSecret($websiteCode = null)
     {
-        return $this->scopeConfig->getValue('swarming_subscribepro/platform/client_secret', ScopeInterface::SCOPE_WEBSITE, $websiteCode);
+        $scopeType = $websiteCode === false ? ScopeConfigInterface::SCOPE_TYPE_DEFAULT : ScopeInterface::SCOPE_WEBSITE;
+        return $this->scopeConfig->getValue('swarming_subscribepro/platform/client_secret', $scopeType, $websiteCode);
     }
 
     /**

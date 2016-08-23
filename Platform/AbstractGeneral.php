@@ -45,7 +45,7 @@ abstract class AbstractGeneral
      */
     protected function getSdk($websiteId = null)
     {
-        $websiteId = null !== $websiteId ?: $this->websiteId;
+        $websiteId = null !== $websiteId ? $websiteId : $this->websiteId;
         return $this->platform->getSdk($websiteId);
     }
 }

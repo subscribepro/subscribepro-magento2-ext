@@ -2,10 +2,10 @@
 
 namespace Swarming\SubscribePro\Block\Product;
 
-use Swarming\SubscribePro\Api\Data\ProductInterface;
 use Magento\Catalog\Pricing\Price\FinalPrice;
 use Magento\Catalog\Pricing\Price\RegularPrice;
 use Magento\Tax\Model\Config as TaxConfig;
+use Swarming\SubscribePro\Api\Data\ProductInterface;
 
 class Subscription extends \Magento\Catalog\Block\Product\AbstractProduct
 {
@@ -17,9 +17,9 @@ class Subscription extends \Magento\Catalog\Block\Product\AbstractProduct
     protected $subscriptionDiscountConfig;
 
     /**
-     * @var \Swarming\SubscribePro\Platform\Service\Product
+     * @var \Swarming\SubscribePro\Platform\Manager\Product
      */
-    protected $platformProductService;
+    protected $platformProductManager;
 
     /**
      * @var \Magento\Tax\Api\TaxCalculationInterface
@@ -49,7 +49,7 @@ class Subscription extends \Magento\Catalog\Block\Product\AbstractProduct
     /**
      * @param \Magento\Catalog\Block\Product\Context $context
      * @param \Swarming\SubscribePro\Model\Config\SubscriptionDiscount $subscriptionDiscountConfig
-     * @param \Swarming\SubscribePro\Platform\Service\Product $platformProductService
+     * @param \Swarming\SubscribePro\Platform\Manager\Product $platformProductManager
      * @param \Magento\Tax\Api\TaxCalculationInterface $taxCalculation
      * @param \Magento\Tax\Model\Config $taxConfig
      * @param \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency
@@ -60,7 +60,7 @@ class Subscription extends \Magento\Catalog\Block\Product\AbstractProduct
     public function __construct(
         \Magento\Catalog\Block\Product\Context $context,
         \Swarming\SubscribePro\Model\Config\SubscriptionDiscount $subscriptionDiscountConfig,
-        \Swarming\SubscribePro\Platform\Service\Product $platformProductService,
+        \Swarming\SubscribePro\Platform\Manager\Product $platformProductManager,
         \Magento\Tax\Api\TaxCalculationInterface $taxCalculation,
         \Magento\Tax\Model\Config $taxConfig,
         \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency,
@@ -69,7 +69,7 @@ class Subscription extends \Magento\Catalog\Block\Product\AbstractProduct
         array $data = []
     ) {
         $this->subscriptionDiscountConfig = $subscriptionDiscountConfig;
-        $this->platformProductService = $platformProductService;
+        $this->platformProductManager = $platformProductManager;
         $this->taxConfig = $taxConfig;
         $this->taxCalculation = $taxCalculation;
         $this->priceCurrency = $priceCurrency;
@@ -78,6 +78,10 @@ class Subscription extends \Magento\Catalog\Block\Product\AbstractProduct
         parent::__construct($context, $data);
     }
 
+    /**
+     * @return $this
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     protected function _beforeToHtml()
     {
         if ($this->subscriptionDiscountConfig->isEnabled() && $this->productHelper->isSubscriptionEnabled($this->getProduct())) {
@@ -88,8 +92,12 @@ class Subscription extends \Magento\Catalog\Block\Product\AbstractProduct
         return parent::_beforeToHtml();
     }
 
+    /**
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     protected function initJsLayout()
     {
+        $subscriptionProduct = $this->getSubscriptionProduct();
         $data = [
             'components' => [
                 'subscription-container' => [
@@ -99,7 +107,9 @@ class Subscription extends \Magento\Catalog\Block\Product\AbstractProduct
                         'subscriptionOnlyMode' => ProductInterface::SOM_SUBSCRIPTION_ONLY,
                         'subscriptionAndOneTimePurchaseMode' => ProductInterface::SOM_SUBSCRIPTION_AND_ONETIME_PURCHASE,
                         'priceFormat' => $this->localeFormat->getPriceFormat(),
-                        'productData' => $this->getSubscriptionProduct()->toArray(),
+                        'finalPrice' => $subscriptionProduct->getFinalPrice(),
+                        'basePrice' => $subscriptionProduct->getPrice(),
+                        'productData' => $subscriptionProduct->toArray(),
                     ]
                 ]
             ]
@@ -114,7 +124,7 @@ class Subscription extends \Magento\Catalog\Block\Product\AbstractProduct
      */
     protected function getSubscriptionProduct()
     {
-        $platformProduct = $this->platformProductService->getProduct($this->getProduct()->getSku());
+        $platformProduct = $this->platformProductManager->getProduct($this->getProduct()->getSku());
         $priceInfo = $this->getProduct()->getPriceInfo();
         $taxRate = $this->taxCalculation->getCalculatedRate($this->getProduct()->getCustomAttribute(self::TAX_CLASS_ID)->getValue());
 

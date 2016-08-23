@@ -9,9 +9,9 @@ use Swarming\SubscribePro\Gateway\Request\PaymentDataBuilder;
 abstract class AbstractProfileCreatorCommand extends AbstractCommand
 {
     /**
-     * @var \Swarming\SubscribePro\Platform\Service\Customer
+     * @var \Swarming\SubscribePro\Platform\Manager\Customer
      */
-    protected $platformCustomerService;
+    protected $platformCustomerManager;
 
     /**
      * @param \Magento\Payment\Gateway\Request\BuilderInterface $requestBuilder
@@ -20,7 +20,7 @@ abstract class AbstractProfileCreatorCommand extends AbstractCommand
      * @param \Swarming\SubscribePro\Platform\Service\PaymentProfile $platformPaymentProfileService
      * @param \Swarming\SubscribePro\Platform\Service\Transaction $platformTransactionService
      * @param \Psr\Log\LoggerInterface $logger
-     * @param \Swarming\SubscribePro\Platform\Service\Customer $platformCustomerService
+     * @param \Swarming\SubscribePro\Platform\Manager\Customer $platformCustomerManager
      */
     public function __construct(
         \Magento\Payment\Gateway\Request\BuilderInterface $requestBuilder,
@@ -29,9 +29,9 @@ abstract class AbstractProfileCreatorCommand extends AbstractCommand
         \Swarming\SubscribePro\Platform\Service\PaymentProfile $platformPaymentProfileService,
         \Swarming\SubscribePro\Platform\Service\Transaction $platformTransactionService,
         \Psr\Log\LoggerInterface $logger,
-        \Swarming\SubscribePro\Platform\Service\Customer $platformCustomerService
+        \Swarming\SubscribePro\Platform\Manager\Customer $platformCustomerManager
     ) {
-        $this->platformCustomerService = $platformCustomerService;
+        $this->platformCustomerManager = $platformCustomerManager;
         parent::__construct(
             $requestBuilder,
             $handler,
@@ -54,7 +54,7 @@ abstract class AbstractProfileCreatorCommand extends AbstractCommand
         if (empty($requestData[PaymentProfileInterface::MAGENTO_CUSTOMER_ID])) {
             throw new LocalizedException(__('Cannot create payment profile.'));
         }
-        $platformCustomer = $this->platformCustomerService->getCustomer(
+        $platformCustomer = $this->platformCustomerManager->getCustomerById(
             $requestData[PaymentProfileInterface::MAGENTO_CUSTOMER_ID],
             true
         );

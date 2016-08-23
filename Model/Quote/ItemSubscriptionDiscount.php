@@ -4,24 +4,11 @@ namespace Swarming\SubscribePro\Model\Quote;
 
 use Magento\Quote\Model\Quote\Item\AbstractItem as QuoteItem;
 use Swarming\SubscribePro\Model\Config\Source\CartRuleCombine;
+use Magento\Catalog\Api\Data\ProductInterface;
 
 class ItemSubscriptionDiscount
 {
-    const QUOTE_ITEM_RULES = 'quoteItemRules';
-    const QUOTE_RULES = 'quoteRules';
-    const ADDRESS_RULES = 'addressRules';
-
-    const DISCOUNT_DESCRIPTIONS_KEY = 'subscription';
-
-    /**
-     * @var \Swarming\SubscribePro\Platform\Service\Product
-     */
-    protected $platformProductService;
-
-    /**
-     * @var \Swarming\SubscribePro\Helper\QuoteItem
-     */
-    protected $quoteItemHelper;
+    const KEY_DISCOUNT_DESCRIPTION = 'subscription';
 
     /**
      * @var \Swarming\SubscribePro\Model\Config\SubscriptionDiscount
@@ -29,9 +16,14 @@ class ItemSubscriptionDiscount
     protected $subscriptionDiscountConfig;
 
     /**
-     * @var \Magento\Tax\Helper\Data
+     * @var \Swarming\SubscribePro\Platform\Manager\Product
      */
-    protected $taxData;
+    protected $platformProductManager;
+
+    /**
+     * @var \Swarming\SubscribePro\Helper\QuoteItem
+     */
+    protected $quoteItemHelper;
 
     /**
      * @var \Magento\Framework\Pricing\PriceCurrencyInterface
@@ -39,63 +31,45 @@ class ItemSubscriptionDiscount
     protected $priceCurrency;
 
     /**
-     * @param \Swarming\SubscribePro\Platform\Service\Product $platformProductService
-     * @param \Swarming\SubscribePro\Helper\QuoteItem $quoteItemHelper
      * @param \Swarming\SubscribePro\Model\Config\SubscriptionDiscount $subscriptionDiscountConfig
-     * @param \Magento\Tax\Helper\Data $taxData
+     * @param \Swarming\SubscribePro\Platform\Manager\Product $platformProductManager
+     * @param \Swarming\SubscribePro\Helper\QuoteItem $quoteItemHelper
      * @param \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency
      */
     public function __construct(
-        \Swarming\SubscribePro\Platform\Service\Product $platformProductService,
-        \Swarming\SubscribePro\Helper\QuoteItem $quoteItemHelper,
         \Swarming\SubscribePro\Model\Config\SubscriptionDiscount $subscriptionDiscountConfig,
-        \Magento\Tax\Helper\Data $taxData,
+        \Swarming\SubscribePro\Platform\Manager\Product $platformProductManager,
+        \Swarming\SubscribePro\Helper\QuoteItem $quoteItemHelper,
         \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency
     ) {
-        $this->platformProductService = $platformProductService;
-        $this->quoteItemHelper = $quoteItemHelper;
         $this->subscriptionDiscountConfig = $subscriptionDiscountConfig;
-        $this->taxData = $taxData;
+        $this->platformProductManager = $platformProductManager;
+        $this->quoteItemHelper = $quoteItemHelper;
         $this->priceCurrency = $priceCurrency;
     }
 
     /**
      * @param \Magento\Quote\Model\Quote\Item\AbstractItem $item
-     * @param array $appliedRuleIds
-     * @param array $discountDescriptions
+     * @param float $itemBasePrice
+     * @param callable $rollbackCallback
      */
-    public function processSubscriptionDiscount(QuoteItem $item, array $appliedRuleIds, array $discountDescriptions)
+    public function processSubscriptionDiscount(QuoteItem $item, $itemBasePrice, callable $rollbackCallback)
     {
-        $platformProduct = $this->getPlatformProduct($item);
-        $baseSubscriptionDiscount = $this->getBaseSubscriptionDiscount($item, $platformProduct);
+        $storeId = $item->getQuote()->getStoreId();
         $baseCartDiscount = $item->getBaseDiscountAmount();
 
-        $storeId = $item->getQuote()->getStore()->getStoreId();
+        $platformProduct = $this->getPlatformProduct($item);
+        $baseSubscriptionDiscount = $this->getBaseSubscriptionDiscount($platformProduct, $itemBasePrice, $item->getQty());
         $subscriptionDiscount = $this->priceCurrency->convertAndRound($baseSubscriptionDiscount, $storeId);
 
-        $storeCode = $item->getQuote()->getStore()->getCode();
-        if ($this->isOnlySubscriptionDiscount($storeCode, $baseSubscriptionDiscount, $baseCartDiscount)) {
-            $this->rollbackCartRulesAndDescriptions($item, $appliedRuleIds, $discountDescriptions);
+        if ($this->isOnlySubscriptionDiscount($baseSubscriptionDiscount, $baseCartDiscount, $storeId)) {
+            $rollbackCallback($item);
             $this->setSubscriptionDiscount($item, $subscriptionDiscount, $baseSubscriptionDiscount);
             $this->addDiscountDescription($item);
-        } else if ($this->isCombineDiscounts($storeCode)) {
+        } else if ($this->isCombineDiscounts($storeId)) {
             $this->addSubscriptionDiscount($item, $subscriptionDiscount, $baseSubscriptionDiscount);
             $this->addDiscountDescription($item);
         }
-    }
-
-    /**
-     * @param \Magento\Quote\Model\Quote\Item\AbstractItem $item
-     * @param array $appliedRuleIds
-     * @param array $discountDescriptions
-     */
-    protected function rollbackCartRulesAndDescriptions(QuoteItem $item, array $appliedRuleIds, array $discountDescriptions)
-    {
-        $item->setAppliedRuleIds($appliedRuleIds[self::QUOTE_ITEM_RULES]);
-        $item->getAddress()->setAppliedRuleIds($appliedRuleIds[self::ADDRESS_RULES]);
-        $item->getQuote()->setAppliedRuleIds($appliedRuleIds[self::QUOTE_RULES]);
-
-        $item->getAddress()->setDiscountDescriptionArray($discountDescriptions);
     }
 
     /**
@@ -129,7 +103,7 @@ class ItemSubscriptionDiscount
     protected function addDiscountDescription(QuoteItem $item)
     {
         $discountDescriptions = $item->getAddress()->getDiscountDescriptionArray();
-        $discountDescriptions[self::DISCOUNT_DESCRIPTIONS_KEY] = __('Subscription');
+        $discountDescriptions[self::KEY_DISCOUNT_DESCRIPTION] = __('Subscription');
         $item->getAddress()->setDiscountDescriptionArray($discountDescriptions);
     }
 
@@ -139,44 +113,37 @@ class ItemSubscriptionDiscount
      */
     protected function getPlatformProduct(QuoteItem $item)
     {
-        return $this->platformProductService->getProduct($item->getProduct()->getSku());
+        $sku = $item->getProduct()->getData(ProductInterface::SKU);
+        return $this->platformProductManager->getProduct($sku);
     }
 
     /**
-     * @param \Magento\Quote\Model\Quote\Item\AbstractItem $item
      * @param \Swarming\SubscribePro\Api\Data\ProductInterface $platformProduct
+     * @param float $itemBasePrice
+     * @param float $qty
      * @return float
      */
-    protected function getBaseSubscriptionDiscount(QuoteItem $item, $platformProduct)
+    protected function getBaseSubscriptionDiscount($platformProduct, $itemBasePrice, $qty)
     {
         if($platformProduct->getIsDiscountPercentage()) {
-            $subscriptionDiscount = $platformProduct->getDiscount() * $this->getItemDiscountablePrice($item) * $item->getQty();
+            $subscriptionDiscount = $platformProduct->getDiscount() * $itemBasePrice * $qty;
         } else {
-            $subscriptionDiscount = $platformProduct->getDiscount() * $item->getQty();
+            $subscriptionDiscount = $platformProduct->getDiscount() * $qty;
         }
+
         return $subscriptionDiscount;
     }
 
     /**
-     * @param \Magento\Quote\Model\Quote\Item\AbstractItem $item
-     * @return float
-     */
-    protected function getItemDiscountablePrice(QuoteItem $item)
-    {
-        $storeId = $item->getStore()->getStoreId();
-        return $this->taxData->discountTax($storeId) ? $item->getBasePriceInclTax() : $item->getBasePrice();
-    }
-
-    /**
-     * @param string $storeCode
+     * @param string $storeId
      * @param float $baseSubscriptionDiscount
      * @param float $baseCartDiscount
      * @return bool
      */
-    protected function isOnlySubscriptionDiscount($storeCode, $baseSubscriptionDiscount, $baseCartDiscount)
+    protected function isOnlySubscriptionDiscount($baseSubscriptionDiscount, $baseCartDiscount, $storeId)
     {
         $result = false;
-        switch($this->subscriptionDiscountConfig->getCartRuleCombineType($storeCode)) {
+        switch($this->subscriptionDiscountConfig->getCartRuleCombineType($storeId)) {
             case CartRuleCombine::TYPE_APPLY_GREATEST:
                 if($baseSubscriptionDiscount >= $baseCartDiscount) {
                     $result = true;
@@ -203,12 +170,12 @@ class ItemSubscriptionDiscount
     }
 
     /**
-     * @param string $storeCode
+     * @param string $storeId
      * @return bool
      */
-    protected function isCombineDiscounts($storeCode)
+    protected function isCombineDiscounts($storeId)
     {
-        return $this->subscriptionDiscountConfig->getCartRuleCombineType($storeCode)
+        return $this->subscriptionDiscountConfig->getCartRuleCombineType($storeId)
             == CartRuleCombine::TYPE_COMBINE_SUBSCRIPTION;
     }
 }

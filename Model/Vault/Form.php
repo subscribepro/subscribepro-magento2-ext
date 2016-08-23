@@ -34,9 +34,9 @@ class Form
     protected $platformPaymentProfileService;
 
     /**
-     * @var \Swarming\SubscribePro\Platform\Service\Customer
+     * @var \Swarming\SubscribePro\Platform\Manager\Customer
      */
-    protected $platformCustomerService;
+    protected $platformCustomerManager;
 
     /**
      * @var \Swarming\SubscribePro\Model\Vault\Validator
@@ -50,7 +50,7 @@ class Form
      * @param \Swarming\SubscribePro\Helper\Vault $vaultHelper
      * @param \Swarming\SubscribePro\Platform\Service\PaymentProfile $platformPaymentProfileService
      * @param \Magento\Directory\Model\RegionFactory $regionFactory
-     * @param \Swarming\SubscribePro\Platform\Service\Customer $platformCustomerService
+     * @param \Swarming\SubscribePro\Platform\Manager\Customer $platformCustomerManager
      * @param \Swarming\SubscribePro\Model\Vault\Validator $validator
      */
     public function __construct(
@@ -60,7 +60,7 @@ class Form
         \Swarming\SubscribePro\Helper\Vault $vaultHelper,
         \Swarming\SubscribePro\Platform\Service\PaymentProfile $platformPaymentProfileService,
         \Magento\Directory\Model\RegionFactory $regionFactory,
-        \Swarming\SubscribePro\Platform\Service\Customer $platformCustomerService,
+        \Swarming\SubscribePro\Platform\Manager\Customer $platformCustomerManager,
         \Swarming\SubscribePro\Model\Vault\Validator $validator
     ) {
         $this->paymentTokenRepository = $paymentTokenRepository;
@@ -68,7 +68,7 @@ class Form
         $this->paymentTokenFactory = $paymentTokenFactory;
         $this->vaultHelper = $vaultHelper;
         $this->platformPaymentProfileService = $platformPaymentProfileService;
-        $this->platformCustomerService = $platformCustomerService;
+        $this->platformCustomerManager = $platformCustomerManager;
         $this->validator = $validator;
     }
 
@@ -82,7 +82,7 @@ class Form
         if (empty($profileData['token'])) {
             throw new LocalizedException(__('The credit card can be not saved.'));
         }
-        $platformCustomer = $this->platformCustomerService->getCustomer($customerId, true);
+        $platformCustomer = $this->platformCustomerManager->getCustomerById($customerId, true);
 
         if (!$this->validator->validate($profileData)) {
             throw new LocalizedException(__('Not all fields are filled.'));

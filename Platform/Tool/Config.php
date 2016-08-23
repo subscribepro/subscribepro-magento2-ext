@@ -3,19 +3,19 @@
 namespace Swarming\SubscribePro\Platform\Tool;
 
 /**
- * @method \SubscribePro\Tools\Config getTool($websiteCode = null)
+ * @method \SubscribePro\Tools\Config getTool($websiteId = null)
  */
 class Config extends AbstractTool
 {
     /**
      * @param string|null $key
-     * @param string $websiteCode
+     * @param int $websiteId
      * @return array|string
      * @throws \SubscribePro\Exception\HttpException
      */
-    public function getConfig($key = null, $websiteCode = null)
+    public function getConfig($key = null, $websiteId = null)
     {
-        $config = $this->getTool($websiteCode)->load();
+        $config = $this->getTool($websiteId)->load();
         return null === $key
             ? $config
             : (isset($config[$key]) ? $config[$key] : null);

@@ -11,15 +11,17 @@ use Swarming\SubscribePro\Api\SubscriptionManagementInterface;
 
 class SubscriptionManagement implements SubscriptionManagementInterface
 {
-    /**
-     * @var \Swarming\SubscribePro\Platform\Service\Product
-     */
-    protected $platformProductService;
+    const MINIMUM_NEXT_ORDER_INTERVAL = '+2 days';
 
     /**
-     * @var \Swarming\SubscribePro\Platform\Service\Customer
+     * @var \Swarming\SubscribePro\Platform\Manager\Product
      */
-    protected $platformCustomerService;
+    protected $platformProductManager;
+
+    /**
+     * @var \Swarming\SubscribePro\Platform\Manager\Customer
+     */
+    protected $platformCustomerManager;
 
     /**
      * @var \Swarming\SubscribePro\Platform\Service\Subscription
@@ -27,14 +29,14 @@ class SubscriptionManagement implements SubscriptionManagementInterface
     protected $platformSubscriptionService;
 
     /**
-     * @var \Swarming\SubscribePro\Platform\Service\Address
+     * @var \Swarming\SubscribePro\Platform\Manager\Address
      */
-    protected $platformAddressService;
+    protected $platformAddressManager;
 
     /**
-     * @var \Swarming\SubscribePro\Platform\Link\Subscription
+     * @var \Swarming\SubscribePro\Helper\SubscriptionProducts
      */
-    protected $linkSubscription;
+    protected $subscriptionProductsHelper;
 
     /**
      * @var \Magento\Framework\View\DesignInterface
@@ -42,33 +44,38 @@ class SubscriptionManagement implements SubscriptionManagementInterface
     protected $design;
 
     /**
+     * @var \Magento\Framework\Intl\DateTimeFactory
+     */
+    protected $dateTimeFactory;
+
+    /**
      * @var \Psr\Log\LoggerInterface
      */
     protected $logger;
 
     /**
-     * @param \Swarming\SubscribePro\Platform\Service\Product $platformProductService
-     * @param \Swarming\SubscribePro\Platform\Service\Customer $platformCustomerService
+     * @param \Swarming\SubscribePro\Platform\Manager\Product $platformProductManager
+     * @param \Swarming\SubscribePro\Platform\Manager\Customer $platformCustomerManager
      * @param \Swarming\SubscribePro\Platform\Service\Subscription $platformSubscriptionService
-     * @param \Swarming\SubscribePro\Platform\Service\Address $platformAddressService
-     * @param \Swarming\SubscribePro\Platform\Link\Subscription $linkSubscription
+     * @param \Swarming\SubscribePro\Platform\Manager\Address $platformAddressManager
+     * @param \Swarming\SubscribePro\Helper\SubscriptionProducts $subscriptionProductsHelper
      * @param \Magento\Framework\View\DesignInterface $design
      * @param \Psr\Log\LoggerInterface $logger
      */
     public function __construct(
-        \Swarming\SubscribePro\Platform\Service\Product $platformProductService,
-        \Swarming\SubscribePro\Platform\Service\Customer $platformCustomerService,
+        \Swarming\SubscribePro\Platform\Manager\Product $platformProductManager,
+        \Swarming\SubscribePro\Platform\Manager\Customer $platformCustomerManager,
         \Swarming\SubscribePro\Platform\Service\Subscription $platformSubscriptionService,
-        \Swarming\SubscribePro\Platform\Service\Address $platformAddressService,
-        \Swarming\SubscribePro\Platform\Link\Subscription $linkSubscription,
+        \Swarming\SubscribePro\Platform\Manager\Address $platformAddressManager,
+        \Swarming\SubscribePro\Helper\SubscriptionProducts $subscriptionProductsHelper,
         \Magento\Framework\View\DesignInterface $design,
         \Psr\Log\LoggerInterface $logger
     ) {
-        $this->platformProductService = $platformProductService;
-        $this->platformCustomerService = $platformCustomerService;
+        $this->platformProductManager = $platformProductManager;
+        $this->platformCustomerManager = $platformCustomerManager;
         $this->platformSubscriptionService = $platformSubscriptionService;
-        $this->platformAddressService = $platformAddressService;
-        $this->linkSubscription = $linkSubscription;
+        $this->platformAddressManager = $platformAddressManager;
+        $this->subscriptionProductsHelper = $subscriptionProductsHelper;
         $this->design = $design;
         $this->logger = $logger;
     }
@@ -91,12 +98,11 @@ class SubscriptionManagement implements SubscriptionManagementInterface
         $this->enableFrontendDesignArea();
 
         try {
-            $platformCustomer = $this->platformCustomerService->getCustomer($customerId);
+            $platformCustomer = $this->platformCustomerManager->getCustomerById($customerId);
             $subscriptions = $this->platformSubscriptionService->loadSubscriptionsByCustomer($platformCustomer->getId());
-            if (empty($subscriptions)) {
-                throw new NoSuchEntityException();
+            if ($subscriptions) {
+                $this->subscriptionProductsHelper->linkProducts($subscriptions);
             }
-            $this->linkSubscription->linkSubscriptionsProduct($subscriptions);
         } catch (NoSuchEntityException $e) {
             $subscriptions = [];
         } catch (HttpException $e) {
@@ -121,8 +127,11 @@ class SubscriptionManagement implements SubscriptionManagementInterface
             $subscription = $this->platformSubscriptionService->loadSubscription($subscriptionId);
             $this->checkSubscriptionOwner($subscription, $customerId);
 
-            $platformProduct = $this->platformProductService->getProduct($subscription->getProductSku());
-            if ($platformProduct->getMinQty() > $qty || $platformProduct->getMaxQty() < $qty) {
+            $platformProduct = $this->platformProductManager->getProduct($subscription->getProductSku());
+            if (($platformProduct->getMinQty() && $platformProduct->getMinQty() > $qty)
+                ||
+                ($platformProduct->getMaxQty() && $platformProduct->getMaxQty() < $qty)
+            ) {
                 throw new LocalizedException(__(
                     'Invalid quantity, it must be in range from %1 to %2.',
                     $platformProduct->getMinQty(),
@@ -176,8 +185,11 @@ class SubscriptionManagement implements SubscriptionManagementInterface
      */
     public function updateNextOrderDate($customerId, $subscriptionId, $nextOrderDate)
     {
-        if ($nextOrderDate < date('Y-m-d', strtotime('+2 days'))) {
-            throw new LocalizedException(__('Invalid next order date, it must be not earlier than 2 days in the future'));
+        $minNextOrderDateInterval = $this->dateTimeFactory
+            ->create(self::MINIMUM_NEXT_ORDER_INTERVAL)
+            ->format('Y-m-d');
+        if ($nextOrderDate < $minNextOrderDateInterval) {
+            throw new LocalizedException(__('Invalid next order date, it must be not earlier than 2 days in the future.'));
         }
 
         try {
@@ -233,10 +245,10 @@ class SubscriptionManagement implements SubscriptionManagementInterface
     {
         try {
             $subscription = $this->platformSubscriptionService->loadSubscription($subscriptionId);
-            $platformCustomer = $this->platformCustomerService->getCustomer($customerId);
-            $this->checkSubscriptionOwner($subscription, $customerId);
+            $platformCustomer = $this->platformCustomerManager->getCustomerById($customerId);
+            $this->checkSubscriptionOwner($subscription, $customerId, $platformCustomer);
 
-            $platformAddress = $this->platformAddressService->findOrSaveAddress($address, $platformCustomer->getId());
+            $platformAddress = $this->platformAddressManager->findOrSaveAddress($address, $platformCustomer->getId());
             $subscription->setShippingAddressId($platformAddress->getId());
             $this->platformSubscriptionService->saveSubscription($subscription);
         } catch (NoSuchEntityException $e) {
@@ -345,11 +357,14 @@ class SubscriptionManagement implements SubscriptionManagementInterface
     /**
      * @param \SubscribePro\Service\Subscription\SubscriptionInterface $subscription
      * @param $customerId
+     * @param null|\SubscribePro\Service\Customer\CustomerInterface
      * @throws \Magento\Framework\Exception\AuthorizationException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws \SubscribePro\Exception\HttpException
      */
-    protected function checkSubscriptionOwner($subscription, $customerId)
+    protected function checkSubscriptionOwner($subscription, $customerId, $platformCustomer = null)
     {
-        $platformCustomer = $this->platformCustomerService->getCustomer($customerId);
+        $platformCustomer = $platformCustomer ? : $this->platformCustomerManager->getCustomerById($customerId);
         if ($subscription->getCustomerId() != $platformCustomer->getId()) {
             throw new AuthorizationException(__('Forbidden action.'));
         }

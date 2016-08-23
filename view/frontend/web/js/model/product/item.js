@@ -33,6 +33,10 @@ define(
                 product.defaultSubscriptionOption = ko.observable(productData.default_subscription_option);
                 product.defaultInterval = ko.observable(productData.default_interval);
                 product.subscriptionOptionMode = ko.observable(productData.subscription_option_mode);
+                product.hasSpecialPrice = ko.observable(productData.final_price != productData.price);
+                product.price.subscribe(function(price) {
+                    product.hasSpecialPrice(product.finalPrice() != price);
+                });
 
                 product.priceWithDiscountText = ko.pureComputed(function() {
                     var discount = product.discountValue();
@@ -96,10 +100,6 @@ define(
                     }
 
                     return price.toFixed(2);
-                });
-
-                product.hasSpecialPrice = ko.pureComputed(function() {
-                    return product.price() != product.finalPrice();
                 });
 
                 product.discountText = ko.pureComputed(function() {

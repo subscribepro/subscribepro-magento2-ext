@@ -4,7 +4,7 @@ namespace Swarming\SubscribePro\Block\Adminhtml\System\Config;
 
 use Magento\Framework\Data\Form\Element\AbstractElement;
 
-class TestConnection extends \Magento\Config\Block\System\Config\Form\Field
+class TestConnection extends PlatformField
 {
     /**
      * @var string
@@ -63,5 +63,13 @@ class TestConnection extends \Magento\Config\Block\System\Config\Form\Field
     public function getAjaxUrl()
     {
         return $this->_urlBuilder->getUrl('swarming_subscribepro/config/testConnection');
+    }
+
+    /**
+     * @return string
+     */
+    public function getWebsiteCode()
+    {
+        return $this->getRequest()->getParam('website', '');
     }
 }

@@ -1,39 +1,34 @@
 define(
     [
+        'jquery',
         'mage/translate',
         'mage/storage',
         'Magento_Ui/js/model/messageList',
         'Magento_Checkout/js/model/error-processor',
         'Swarming_SubscribePro/js/action/address/save-in-address-book'
     ],
-    function ($t, storage, globalMessageContainer, errorProcessor, saveInAddressBook) {
+    function ($, $t, storage, globalMessageContainer, errorProcessor, saveInAddressBook) {
         'use strict';
-        return function (subscriptionId, addressData, address, isLoading, messageContainer, saveToAddressBookCallback, successCallback) {
+        return function (subscriptionId, addressData, address, isLoading, messageContainer, saveToAddressBookCallback, updateAddressDeferred) {
             isLoading(true);
-            if (address.saveInAddressBook) {
-                saveInAddressBook(
+
+            var deferred = $.Deferred();
+            $.when(deferred).done(function (addressData, address, successMessage) {
+                address = saveToAddressBookCallback(addressData, address);
+                changeShippingAddress(
+                    subscriptionId,
                     address,
-                    addressData,
                     isLoading,
                     messageContainer,
-                    function (addressData, address, successMessage) {
-                        saveToAddressBookCallback(addressData, address);
-                        return changeShippingAddress(
-                            subscriptionId,
-                            address,
-                            isLoading,
-                            messageContainer,
-                            successCallback,
-                            successMessage
-                        )
-                    }
+                    updateAddressDeferred,
+                    successMessage
                 )
-            } else {
-                changeShippingAddress(subscriptionId, address, isLoading, messageContainer, successCallback);
-            }
+            });
+
+            saveInAddressBook(address, addressData, isLoading, messageContainer, deferred);
         };
 
-        function changeShippingAddress(subscriptionId, address, isLoading, messageContainer, successCallback, saveAddressMessage) {
+        function changeShippingAddress(subscriptionId, address, isLoading, messageContainer, updateAddressDeferred, saveAddressMessage) {
             return storage.post(
                 '/rest/V1/swarming_subscribepro/me/subscriptions/update-shipping-address',
                 JSON.stringify({subscriptionId: subscriptionId, address: address}),
@@ -44,7 +39,7 @@ define(
                         globalMessageContainer.addSuccessMessage({'message': saveAddressMessage});
                     }
                     globalMessageContainer.addSuccessMessage({'message': $t('Subscription shipping address has been updated.')});
-                    successCallback(response);
+                    updateAddressDeferred.resolve(response);
                 }
             ).fail(
                 function (response) {
@@ -52,6 +47,7 @@ define(
                     if (saveAddressMessage) {
                         messageContainer.getSuccessMessages().push(saveAddressMessage);
                     }
+                    updateAddressDeferred.reject();
                 }
             ).always(
                 function () {

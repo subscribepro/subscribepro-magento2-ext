@@ -26,10 +26,10 @@
                                         <item name="config" xsi:type="array">
                                             <item name="template" xsi:type="string">Swarming_SubscribePro/subscription/list</item>
                                             <item name="paymentInfoOptions" xsi:type="array">
-                                                <item name="component" xsi:type="string">Swarming_SubscribePro/js/view/payment/subscription/payment-info</item>
+                                                <item name="component" xsi:type="string">Swarming_SubscribePro/js/view/subscription/payment-info</item>
                                                 <item name="displayArea" xsi:type="string">payment-info</item>
                                                 <item name="config" xsi:type="array">
-                                                    <item name="template" xsi:type="string">Swarming_SubscribePro/payment/subscription/payment-info</item>
+                                                    <item name="template" xsi:type="string">Swarming_SubscribePro/subscription/payment-info</item>
                                                     <item name="modalOptions" xsi:type="array">
                                                         <item name="type" xsi:type="string">popup</item>
                                                         <item name="title" xsi:type="string">Change payment method</item>
@@ -45,12 +45,12 @@
                                                 </item>
                                             </item>
                                             <item name="shippingAddressOptions" xsi:type="array">
-                                                <item name="component" xsi:type="string">Swarming_SubscribePro/js/view/address/subscription/shipping-address-info</item>
-                                                <item name="displayArea" xsi:type="string">shipping-address-info</item>
+                                                <item name="component" xsi:type="string">Swarming_SubscribePro/js/view/subscription/shipping-info</item>
+                                                <item name="displayArea" xsi:type="string">shipping-info</item>
                                                 <item name="provider" xsi:type="string">spAddressProvider</item>
                                                 <item name="sortOrder" xsi:type="string">1</item>
                                                 <item name="config" xsi:type="array">
-                                                    <item name="template" xsi:type="string">Swarming_SubscribePro/address/subscription/shipping-address-info</item>
+                                                    <item name="template" xsi:type="string">Swarming_SubscribePro/subscription/shipping-info</item>
                                                     <item name="modalOptions" xsi:type="array">
                                                         <item name="type" xsi:type="string">popup</item>
                                                         <item name="title" xsi:type="string">Change shipping address</item>

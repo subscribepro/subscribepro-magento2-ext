@@ -22,6 +22,13 @@
             <group id="platform" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
                 <label>Platform API Configuration</label>
 
+                <field id="message" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <frontend_model>Swarming\SubscribePro\Block\Adminhtml\System\Config\PlatformMessage</frontend_model>
+                    <depends>
+                        <field id="swarming_subscribepro/general/enabled">1</field>
+                    </depends>
+                </field>
+
                 <field id="test_connection" translate="button_label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
                     <frontend_model>Swarming\SubscribePro\Block\Adminhtml\System\Config\TestConnection</frontend_model>
                     <depends>
@@ -31,6 +38,7 @@
 
                 <field id="client_id" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Client Id</label>
+                    <frontend_model>Swarming\SubscribePro\Block\Adminhtml\System\Config\PlatformField</frontend_model>
                     <depends>
                         <field id="swarming_subscribepro/general/enabled">1</field>
                     </depends>
@@ -38,6 +46,7 @@
 
                 <field id="client_secret" translate="label comment" type="obscure" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Client Secret</label>
+                    <frontend_model>Swarming\SubscribePro\Block\Adminhtml\System\Config\PlatformField</frontend_model>
                     <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
                     <depends>
                         <field id="swarming_subscribepro/general/enabled">1</field>
@@ -46,6 +55,7 @@
 
                 <field id="log_enabled" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Enable Logging</label>
+                    <frontend_model>Swarming\SubscribePro\Block\Adminhtml\System\Config\PlatformField</frontend_model>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <depends>
                         <field id="swarming_subscribepro/general/enabled">1</field>
@@ -54,6 +64,7 @@
 
                 <field id="log_level" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Log Level</label>
+                    <frontend_model>Swarming\SubscribePro\Block\Adminhtml\System\Config\PlatformField</frontend_model>
                     <source_model>Swarming\SubscribePro\Model\Config\Source\LogLevels</source_model>
                     <depends>
                         <field id="swarming_subscribepro/general/enabled">1</field>

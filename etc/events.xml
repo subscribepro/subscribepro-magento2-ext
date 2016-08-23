@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
     <event name="payment_method_is_active">
-        <observer name="subscribe_pro_subscription_payment" instance="Swarming\SubscribePro\Observer\PaymentAvailability" />
+        <observer name="subscribe_pro_subscription_payment" instance="Swarming\SubscribePro\Observer\Payment\PaymentAvailability" />
     </event>
     <event name="payment_method_assign_data_subscribe_pro">
-        <observer name="subscribe_pro_gateway_data_assign" instance="Swarming\SubscribePro\Observer\PaymentDataAssigner" />
+        <observer name="subscribe_pro_gateway_data_assign" instance="Swarming\SubscribePro\Observer\Payment\PaymentDataAssigner" />
     </event>
     <event name="payment_method_assign_data_vault_subscribe_pro">
-        <observer name="subscribe_pro_gateway_data_assign" instance="Swarming\SubscribePro\Observer\PaymentTokenAssigner" />
+        <observer name="subscribe_pro_gateway_data_assign" instance="Swarming\SubscribePro\Observer\Payment\PaymentTokenAssigner" />
     </event>
     <event name="checkout_submit_all_after">
-        <observer name="subscribe_pro" instance="Swarming\SubscribePro\Observer\CheckoutAllSubmitAfter"/>
+        <observer name="subscribe_pro" instance="Swarming\SubscribePro\Observer\Checkout\AllSubmitAfter"/>
     </event>
 </config>

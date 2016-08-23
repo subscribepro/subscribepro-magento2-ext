@@ -7,7 +7,11 @@ define(
     ],
     function ($t, storage, globalMessageContainer, errorProcessor) {
         'use strict';
-        return function (address, addressData, isLoading, messageContainer, successCallback) {
+        return function (address, addressData, isLoading, messageContainer, deferred) {
+            if (!address.saveInAddressBook) {
+                return deferred.resolve(addressData, address);
+            }
+
             isLoading(true);
 
             return storage.post(
@@ -18,12 +22,13 @@ define(
                 function (response) {
                     var successMessage = $t('The address has been successfully saved in the address book.');
                     addressData.inline = response;
-                    successCallback(addressData, address, successMessage);
+                    deferred.resolve(addressData, address, successMessage);
                 }
             ).fail(
                 function (response) {
                     errorProcessor.process(response, messageContainer);
                     isLoading(false);
+                    deferred.reject();
                 }
             );
         };

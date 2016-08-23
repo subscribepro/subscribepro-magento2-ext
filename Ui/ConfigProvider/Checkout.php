@@ -2,8 +2,8 @@
 
 namespace Swarming\SubscribePro\Ui\ConfigProvider;
 
-use Swarming\SubscribePro\Gateway\Config\ConfigProvider as GatewayConfigProvider;
 use Magento\Checkout\Model\ConfigProviderInterface;
+use Swarming\SubscribePro\Gateway\Config\ConfigProvider as GatewayConfigProvider;
 
 final class Checkout implements ConfigProviderInterface
 {

@@ -20,20 +20,25 @@ define(
             initialize: function () {
                 this._super();
                 
-                if (this.priceBoxSelector) {
-                    this.priceBoxElement = this.getPriceBoxElement();
-                    this.priceBoxElement.on('reloadPrice', this.onPriceChange.bind(this));
-                    this.initProductPrice();
-                }
+                this.priceBoxElement = this.getPriceBoxElement();
+                this.priceBoxElement.on('reloadPrice', this.onPriceChange.bind(this));
+                this.initProductPrice();
             },
 
             initProductPrice: function () {
                 var priceBox = this.priceBoxElement.data('mage-priceBox');
-                if (!priceBox || !priceBox.options || !priceBox.options.prices) {
-                    return;
+                var price = parseFloat(this.priceBoxElement.find('.price').parent().data('price-amount').toFixed(2));
+                var finalPrice = parseFloat(parseFloat(this.finalPrice).toFixed(2));
+                var basePrice = this.basePrice ? parseFloat(parseFloat(this.basePrice).toFixed(2)) : finalPrice;
+                var hasSpecialPrice = finalPrice != basePrice;
+                if (priceBox && priceBox.options && priceBox.options.priceConfig
+                    && priceBox.options.priceConfig.prices.finalPrice && priceBox.options.priceConfig.prices.oldPrice
+                ) {
+                    hasSpecialPrice = priceBox.options.priceConfig.prices.finalPrice.amount != priceBox.options.priceConfig.prices.oldPrice.amount;
                 }
 
-                this.syncProductPrice(priceBox.options.prices);
+                this.syncProductPrice({oldPrice: {amount: basePrice}, finalPrice: {amount: price}});
+                this.product().hasSpecialPrice(hasSpecialPrice);
             },
 
             onPriceChange: function () {
@@ -54,6 +59,7 @@ define(
                     oldPrice = prices.oldPrice.amount;
                 }
                 this.product().setCalculatedPrices(oldPrice, finalPrice);
+                this.product().hasSpecialPrice(oldPrice != finalPrice);
             },
 
             getPriceBoxElement: function () {

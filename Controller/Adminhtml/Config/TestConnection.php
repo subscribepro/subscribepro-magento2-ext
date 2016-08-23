@@ -44,9 +44,10 @@ class TestConnection extends Action
 
         $clientId = $this->getRequest()->getParam('client_id');
         $clientSecret = $this->getRequest()->getParam('client_secret');
+        $website = $this->getRequest()->getParam('website');
 
         if (!empty($clientId) && !empty($clientSecret)) {
-            $sdk = $this->createSdk($clientId, $clientSecret);
+            $sdk = $this->createSdk($clientId, $clientSecret, $website);
 
             if ($sdk->getWebhookService()->ping()) {
                 $response = [
@@ -67,24 +68,26 @@ class TestConnection extends Action
     /**
      * @param string $clientId
      * @param string $clientSecret
+     * @param string $website
      * @return \SubscribePro\Sdk
      */
-    protected function createSdk($clientId, $clientSecret)
+    protected function createSdk($clientId, $clientSecret, $website)
     {
         $sdk = $this->sdkFactory->create(['config' => [
             'client_id' => $clientId,
-            'client_secret' => $this->updateEncryptedClientSecret($clientSecret)
+            'client_secret' => $this->updateEncryptedClientSecret($clientSecret, $website)
         ]]);
         return $sdk;
     }
 
     /**
      * @param string $clientSecret
+     * @param string $website
      * @return string
      */
-    protected function updateEncryptedClientSecret($clientSecret)
+    protected function updateEncryptedClientSecret($clientSecret, $website)
     {
-        /* TODO Website ID */
-        return $clientSecret == '******' ? $this->configPlatform->getClientSecret() : $clientSecret ;
+        $website = empty($website) ? false : $website;
+        return $clientSecret == '******' ? $this->configPlatform->getClientSecret($website) : $clientSecret ;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Swarming\SubscribePro\Model\Quote;
 
+use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Quote\Model\Quote\Item\AbstractItem;
 
 class SubscriptionCreator
@@ -10,9 +11,9 @@ class SubscriptionCreator
     const FAILED_SUBSCRIPTION_COUNT = 'failed_subscription_count';
 
     /**
-     * @var \Swarming\SubscribePro\Helper\QuoteItem
+     * @var \Swarming\SubscribePro\Model\Config\SubscriptionOptions
      */
-    protected  $quoteItemHelper;
+    protected $subscriptionOptionsConfig;
 
     /**
      * @var \Swarming\SubscribePro\Platform\Service\Subscription
@@ -20,14 +21,9 @@ class SubscriptionCreator
     protected $platformSubscriptionService;
 
     /**
-     * @var \Swarming\SubscribePro\Platform\Service\Customer
+     * @var \Swarming\SubscribePro\Platform\Manager\Customer
      */
-    protected $platformCustomerService;
-
-    /**
-     * @var \Swarming\SubscribePro\Model\Config\SubscriptionOptions
-     */
-    protected $subscriptionOptionsConfig;
+    protected $platformCustomerManager;
 
     /**
      * @var \Magento\Vault\Api\PaymentTokenManagementInterface
@@ -35,9 +31,14 @@ class SubscriptionCreator
     protected $tokenManagement;
 
     /**
-     * @var \Magento\Checkout\Model\Session
+     * @var \Swarming\SubscribePro\Helper\QuoteItem
      */
-    protected $checkoutSession;
+    protected $quoteItemHelper;
+
+    /**
+     * @var \Swarming\SubscribePro\Helper\QuoteItem\ProductOption
+     */
+    protected $quoteItemProductOption;
 
     /**
      * @var \Magento\Framework\Event\ManagerInterface
@@ -50,49 +51,53 @@ class SubscriptionCreator
     protected $logger;
 
     /**
-     * @param \Swarming\SubscribePro\Helper\QuoteItem $quoteItemHelper
-     * @param \Swarming\SubscribePro\Platform\Service\Subscription $platformSubscriptionService
-     * @param \Swarming\SubscribePro\Platform\Service\Customer $platformCustomerService
      * @param \Swarming\SubscribePro\Model\Config\SubscriptionOptions $subscriptionOptionsConfig
+     * @param \Swarming\SubscribePro\Platform\Service\Subscription $platformSubscriptionService
+     * @param \Swarming\SubscribePro\Platform\Manager\Customer $platformCustomerManager
      * @param \Magento\Vault\Api\PaymentTokenManagementInterface $tokenManagement
-     * @param \Magento\Checkout\Model\Session $checkoutSession
+     * @param \Swarming\SubscribePro\Helper\QuoteItem $quoteItemHelper
+     * @param \Swarming\SubscribePro\Helper\QuoteItem\ProductOption $quoteItemProductOption
      * @param \Magento\Framework\Event\ManagerInterface $eventManager
      * @param \Psr\Log\LoggerInterface $logger
      */
     public function __construct(
-        \Swarming\SubscribePro\Helper\QuoteItem $quoteItemHelper,
-        \Swarming\SubscribePro\Platform\Service\Subscription $platformSubscriptionService,
-        \Swarming\SubscribePro\Platform\Service\Customer $platformCustomerService,
         \Swarming\SubscribePro\Model\Config\SubscriptionOptions $subscriptionOptionsConfig,
+        \Swarming\SubscribePro\Platform\Service\Subscription $platformSubscriptionService,
+        \Swarming\SubscribePro\Platform\Manager\Customer $platformCustomerManager,
         \Magento\Vault\Api\PaymentTokenManagementInterface $tokenManagement,
-        \Magento\Checkout\Model\Session $checkoutSession,
+        \Swarming\SubscribePro\Helper\QuoteItem $quoteItemHelper,
+        \Swarming\SubscribePro\Helper\QuoteItem\ProductOption $quoteItemProductOption,
         \Magento\Framework\Event\ManagerInterface $eventManager,
         \Psr\Log\LoggerInterface $logger
     ) {
-        $this->quoteItemHelper = $quoteItemHelper;
-        $this->platformSubscriptionService = $platformSubscriptionService;
-        $this->platformCustomerService = $platformCustomerService;
         $this->subscriptionOptionsConfig = $subscriptionOptionsConfig;
+        $this->platformSubscriptionService = $platformSubscriptionService;
+        $this->platformCustomerManager = $platformCustomerManager;
         $this->tokenManagement = $tokenManagement;
-        $this->checkoutSession = $checkoutSession;
+        $this->quoteItemHelper = $quoteItemHelper;
+        $this->quoteItemProductOption = $quoteItemProductOption;
         $this->eventManager = $eventManager;
         $this->logger = $logger;
     }
 
     /**
      * @param \Magento\Quote\Model\Quote $quote
+     * @param \Magento\Sales\Api\Data\OrderInterface $order
+     * @return array
      */
-    public function createSubscriptions($quote)
+    public function createSubscriptions($quote, $order)
     {
-        $paymentProfileId = $this->getPaymentProfileId($quote->getPayment());
-        $platformCustomer = $this->platformCustomerService->getCustomer($quote->getCustomerId());
+        $paymentProfileId = $this->getPaymentProfileId($order->getPayment());
+        $platformCustomer = $this->platformCustomerManager->getCustomerById($quote->getCustomerId());
 
         $subscriptionsSuccess = [];
         $subscriptionsFail = 0;
         /** @var \Magento\Quote\Model\Quote\Address $address */
         foreach ($quote->getAllShippingAddresses() as $address) {
             foreach ($address->getAllItems() as $quoteItem) {
-                if (!$this->quoteItemHelper->isSubscriptionEnabled($quoteItem)) {
+                if (!$this->quoteItemHelper->isSubscriptionEnabled($quoteItem)
+                    || $this->quoteItemHelper->isFulfilsSubscription($quoteItem)
+                ) {
                     continue;
                 }
                 $subscriptionId = $this->createSubscription($quoteItem, $address, $platformCustomer->getId(), $paymentProfileId);
@@ -107,7 +112,10 @@ class SubscriptionCreator
         $address = $quote->getBillingAddress();
         /** @var \Magento\Quote\Model\Quote\Item $quoteItem */
         foreach ($quote->getAllItems() as $quoteItem) {
-            if (!$quoteItem->getIsVirtual() || !$this->quoteItemHelper->isSubscriptionEnabled($quoteItem)) {
+            if (!$quoteItem->getIsVirtual()
+                || !$this->quoteItemHelper->isSubscriptionEnabled($quoteItem)
+                || $this->quoteItemHelper->isFulfilsSubscription($quoteItem)
+            ) {
                 continue;
             }
             $subscriptionId = $this->createSubscription($quoteItem, $address, $platformCustomer->getId(), $paymentProfileId);
@@ -118,8 +126,10 @@ class SubscriptionCreator
             }
         }
 
-        $this->checkoutSession->setData(self::CREATED_SUBSCRIPTION_IDS, $subscriptionsSuccess);
-        $this->checkoutSession->setData(self::FAILED_SUBSCRIPTION_COUNT, $subscriptionsFail);
+        return [
+            self::CREATED_SUBSCRIPTION_IDS => $subscriptionsSuccess,
+            self::FAILED_SUBSCRIPTION_COUNT => $subscriptionsFail
+        ];
     }
 
     /**
@@ -133,11 +143,12 @@ class SubscriptionCreator
     {
         $quote = $quoteItem->getQuote();
         $store = $quote->getStore();
+        $productSku = $quoteItem->getProduct()->getData(ProductInterface::SKU);
         try {
             $subscription = $this->platformSubscriptionService->createSubscription();
             $subscription->setCustomerId($platformCustomerId);
             $subscription->setPaymentProfileId($paymentProfileId);
-            $subscription->setProductSku($quoteItem->getProduct()->getSku());
+            $subscription->setProductSku($productSku);
             $subscription->setQty($quoteItem->getQty());
             $subscription->setUseFixedPrice(false);
             $subscription->setInterval($this->quoteItemHelper->getSubscriptionInterval($quoteItem));
@@ -152,6 +163,7 @@ class SubscriptionCreator
             }
 
             /* TODO Add product options to subscription */
+            $productOptions = $this->quoteItemProductOption->getProductOptions($quoteItem);
 
             $this->eventManager->dispatch(
                 'subscribe_pro_before_create_subscription_from_quote_item',
@@ -189,13 +201,13 @@ class SubscriptionCreator
     }
 
     /**
-     * @param \Magento\Quote\Model\Quote\Payment $payment
+     * @param \Magento\Sales\Api\Data\OrderPaymentInterface $payment
      * @return string
      * @throws \Exception
      */
     protected function getPaymentProfileId($payment)
     {
-        $vault = $this->tokenManagement->getByPaymentId($payment->getId());
+        $vault = $this->tokenManagement->getByPaymentId($payment->getEntityId());
         if (!$vault || !$vault->getIsActive()) {
             throw new \Exception('The vault is not found.');
         }
