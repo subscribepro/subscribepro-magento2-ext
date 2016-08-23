@@ -32,11 +32,6 @@ class SubscriptionManagement implements SubscriptionManagementInterface
     protected $platformAddressService;
 
     /**
-     * @var \Magento\Customer\Api\AddressRepositoryInterface
-     */
-    protected $addressRepository;
-
-    /**
      * @var \Swarming\SubscribePro\Platform\Link\Subscription
      */
     protected $linkSubscription;
@@ -45,16 +40,6 @@ class SubscriptionManagement implements SubscriptionManagementInterface
      * @var \Magento\Framework\View\DesignInterface
      */
     protected $design;
-
-    /**
-     * @var \Magento\Customer\Model\Address\Config
-     */
-    protected $addressConfig;
-
-    /**
-     * @var \Magento\Customer\Model\Address\Mapper
-     */
-    protected $addressMapper;
 
     /**
      * @var \Psr\Log\LoggerInterface
@@ -67,9 +52,6 @@ class SubscriptionManagement implements SubscriptionManagementInterface
      * @param \Swarming\SubscribePro\Platform\Service\Subscription $platformSubscriptionService
      * @param \Swarming\SubscribePro\Platform\Service\Address $platformAddressService
      * @param \Swarming\SubscribePro\Platform\Link\Subscription $linkSubscription
-     * @param \Magento\Customer\Api\AddressRepositoryInterface $addressRepository
-     * @param \Magento\Customer\Model\Address\Mapper $addressMapper
-     * @param \Magento\Customer\Model\Address\Config $addressConfig
      * @param \Magento\Framework\View\DesignInterface $design
      * @param \Psr\Log\LoggerInterface $logger
      */
@@ -79,9 +61,6 @@ class SubscriptionManagement implements SubscriptionManagementInterface
         \Swarming\SubscribePro\Platform\Service\Subscription $platformSubscriptionService,
         \Swarming\SubscribePro\Platform\Service\Address $platformAddressService,
         \Swarming\SubscribePro\Platform\Link\Subscription $linkSubscription,
-        \Magento\Customer\Api\AddressRepositoryInterface $addressRepository,
-        \Magento\Customer\Model\Address\Mapper $addressMapper,
-        \Magento\Customer\Model\Address\Config $addressConfig,
         \Magento\Framework\View\DesignInterface $design,
         \Psr\Log\LoggerInterface $logger
     ) {
@@ -89,9 +68,6 @@ class SubscriptionManagement implements SubscriptionManagementInterface
         $this->platformCustomerService = $platformCustomerService;
         $this->platformSubscriptionService = $platformSubscriptionService;
         $this->platformAddressService = $platformAddressService;
-        $this->addressRepository = $addressRepository;
-        $this->addressMapper = $addressMapper;
-        $this->addressConfig = $addressConfig;
         $this->linkSubscription = $linkSubscription;
         $this->design = $design;
         $this->logger = $logger;
@@ -257,19 +233,12 @@ class SubscriptionManagement implements SubscriptionManagementInterface
     {
         try {
             $subscription = $this->platformSubscriptionService->loadSubscription($subscriptionId);
-            $saveInAddressBook = $address->getSaveInAddressBook();
-            $address = $address->exportCustomerAddress();
-            $address->setCustomerId($customerId);
             $platformCustomer = $this->platformCustomerService->getCustomer($customerId);
             $this->checkSubscriptionOwner($subscription, $customerId);
 
-            $platformAddress = $this->platformAddressService->findOrSaveAddress($address, $platformCustomer);
+            $platformAddress = $this->platformAddressService->findOrSaveAddress($address, $platformCustomer->getId());
             $subscription->setShippingAddressId($platformAddress->getId());
             $this->platformSubscriptionService->saveSubscription($subscription);
-            if ($saveInAddressBook) {
-                $this->addressRepository->save($address);
-            }
-            $platformAddress->setAddressInline($this->getCustomerAddressInline($address));
         } catch (NoSuchEntityException $e) {
             throw new LocalizedException(__('The subscription is not found.'));
         } catch (HttpException $e) {
@@ -293,7 +262,7 @@ class SubscriptionManagement implements SubscriptionManagementInterface
             $subscription = $this->platformSubscriptionService->loadSubscription($subscriptionId);
             $this->checkSubscriptionOwner($subscription, $customerId);
 
-            $this->platformSubscriptionService->skip($subscriptionId);
+            $this->platformSubscriptionService->skipSubscription($subscriptionId);
             $subscription = $this->platformSubscriptionService->loadSubscription($subscriptionId);
         } catch (NoSuchEntityException $e) {
             throw new LocalizedException(__('The subscription is not found.'));
@@ -317,7 +286,7 @@ class SubscriptionManagement implements SubscriptionManagementInterface
             $subscription = $this->platformSubscriptionService->loadSubscription($subscriptionId);
             $this->checkSubscriptionOwner($subscription, $customerId);
 
-            $this->platformSubscriptionService->cancel($subscriptionId);
+            $this->platformSubscriptionService->cancelSubscription($subscriptionId);
         } catch (NoSuchEntityException $e) {
             throw new LocalizedException(__('The subscription is not found.'));
         } catch (HttpException $e) {
@@ -340,7 +309,7 @@ class SubscriptionManagement implements SubscriptionManagementInterface
             $subscription = $this->platformSubscriptionService->loadSubscription($subscriptionId);
             $this->checkSubscriptionOwner($subscription, $customerId);
 
-            $this->platformSubscriptionService->pause($subscriptionId);
+            $this->platformSubscriptionService->pauseSubscription($subscriptionId);
         } catch (NoSuchEntityException $e) {
             throw new LocalizedException(__('The subscription is not found.'));
         } catch (HttpException $e) {
@@ -363,7 +332,7 @@ class SubscriptionManagement implements SubscriptionManagementInterface
             $subscription = $this->platformSubscriptionService->loadSubscription($subscriptionId);
             $this->checkSubscriptionOwner($subscription, $customerId);
 
-            $this->platformSubscriptionService->restart($subscriptionId);
+            $this->platformSubscriptionService->restartSubscription($subscriptionId);
         } catch (NoSuchEntityException $e) {
             throw new LocalizedException(__('The subscription is not found.'));
         } catch (HttpException $e) {
@@ -384,18 +353,5 @@ class SubscriptionManagement implements SubscriptionManagementInterface
         if ($subscription->getCustomerId() != $platformCustomer->getId()) {
             throw new AuthorizationException(__('Forbidden action.'));
         }
-    }
-
-    /**
-     * @param \Magento\Customer\Api\Data\AddressInterface $address
-     * @return string
-     */
-    protected function getCustomerAddressInline($address)
-    {
-        $builtOutputAddressData = $this->addressMapper->toFlatArray($address);
-        return $this->addressConfig
-            ->getFormatByCode(\Magento\Customer\Model\Address\Config::DEFAULT_ADDRESS_FORMAT)
-            ->getRenderer()
-            ->renderArray($builtOutputAddressData);
     }
 }

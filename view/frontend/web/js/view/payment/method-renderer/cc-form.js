@@ -6,10 +6,9 @@ define(
         'Magento_Payment/js/view/payment/cc-form',
         'Swarming_SubscribePro/js/model/payment/cc-form',
         'Swarming_SubscribePro/js/model/payment/config',
-        'Magento_Checkout/js/model/quote',
-        'Magento_Vault/js/view/payment/vault-enabler'
+        'Magento_Checkout/js/model/quote'
     ],
-    function ($, Component, CcForm, config, quote, VaultEnabler) {
+    function ($, Component, CcForm, config, quote) {
         'use strict';
 
         return Component.extend(CcForm).extend({
@@ -19,9 +18,6 @@ define(
 
             initialize: function () {
                 this._super();
-
-                this.vaultEnabler = new VaultEnabler();
-                this.vaultEnabler.setPaymentCode(config.getVaultCode());
 
                 quote.billingAddress.subscribe(function (address) {
                     this.isPlaceOrderActionAllowed(address !== null && this.isValidHostedFields && this.isValidExpDate);
@@ -36,21 +32,14 @@ define(
                 return this.getCode() == this.isChecked();
             },
 
-            isVaultEnabled: function () {
-                return this.vaultEnabler.isVaultEnabled();
-            },
-
             getData: function () {
-                var data = {
+                return {
                     'method': this.getCode(),
                     'additional_data': {
+                        'is_active_payment_token_enabler': 1,
                         'payment_method_token': this.paymentMethodToken()
                     }
                 };
-
-                this.vaultEnabler.visitAdditionalData(data);
-
-                return data;
             },
 
             getPaymentData: function () {

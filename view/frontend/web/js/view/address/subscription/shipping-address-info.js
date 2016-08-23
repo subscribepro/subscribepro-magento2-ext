@@ -73,7 +73,7 @@ define(
 
             /**
              * @param {Object} address
-             * @return {*}
+             * @return {String}
              */
             addressOptionsText: function (address) {
                 return address.getAddressInline();
@@ -81,30 +81,47 @@ define(
 
             changeAddress: function () {
                 if (this.selectedAddress() && !addressOptions.isNewAddressOption(this.selectedAddress())) {
-                    changeAddress(this.subscriptionId, {}, this.selectedAddress(), this.isLoading, this.messageContainer, $.proxy(this.updateAddress, this));
-                } else {
-                    this.source.set('params.invalid', false);
-                    this.source.trigger(this.dataScopePrefix + '.data.validate');
-                    if (this.source.get(this.dataScopePrefix + '.custom_attributes')) {
-                        this.source.trigger(this.dataScopePrefix + '.custom_attributes.data.validate');
-                    }
+                    changeAddress(
+                        this.subscriptionId,
+                        {},
+                        this.selectedAddress(),
+                        this.isLoading,
+                        this.messageContainer,
+                        $.proxy(this.changeAddressOption, this),
+                        $.proxy(this.updateAddress, this)
+                    );
+                    return;
+                }
 
-                    if (!this.source.get('params.invalid')) {
-                        var addressData = this.source.get(this.dataScopePrefix);
+                this.source.set('params.invalid', false);
+                this.source.trigger(this.dataScopePrefix + '.data.validate');
+                if (this.source.get(this.dataScopePrefix + '.custom_attributes')) {
+                    this.source.trigger(this.dataScopePrefix + '.custom_attributes.data.validate');
+                }
 
-                        if (!this.customerHasAddresses()) {
-                            this.saveInAddressBook(1);
-                        }
-                        addressData.save_in_address_book = this.saveInAddressBook() ? 1 : 0;
-                        if (!addressData.region) {
-                            addressData.region = {};
-                        }
-                        changeAddress(this.subscriptionId, addressData, new Address(addressData), this.isLoading, this.messageContainer, $.proxy(this.updateAddress, this));
+                if (!this.source.get('params.invalid')) {
+                    var addressData = this.source.get(this.dataScopePrefix);
+
+                    if (!this.customerHasAddresses()) {
+                        this.saveInAddressBook(1);
                     }
+                    addressData.save_in_address_book = this.saveInAddressBook() ? 1 : 0;
+                    if (!addressData.region) {
+                        addressData.region = {};
+                    }
+                    changeAddress(
+                        this.subscriptionId,
+                        addressData,
+                        new Address(addressData),
+                        this.isLoading,
+                        this.messageContainer,
+                        $.proxy(this.changeAddressOption, this),
+                        $.proxy(this.updateAddress, this)
+                    );
                 }
             },
 
-            updateAddress: function (response, addressData, address) {
+            changeAddressOption: function (addressData, address) {
                 if (!address.getAddressInline()) {
                     address = new Address(addressData);
                 }
@@ -118,8 +135,14 @@ define(
                     this.isAddressFormVisible(false);
                     newAddress.saveInAddressBook = 0;
                 }
+            },
+
+            updateAddress: function (response) {
                 this.shippingAddress(response);
                 this.modal.closeModal();
+                if (addressOptions.isNewAddressOption(this.selectedAddress())) {
+                    this.reset();
+                }
             }
         });
     }

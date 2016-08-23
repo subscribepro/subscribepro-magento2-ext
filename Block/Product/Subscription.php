@@ -2,30 +2,24 @@
 
 namespace Swarming\SubscribePro\Block\Product;
 
+use Swarming\SubscribePro\Api\Data\ProductInterface;
 use Magento\Catalog\Pricing\Price\FinalPrice;
 use Magento\Catalog\Pricing\Price\RegularPrice;
-use Swarming\SubscribePro\Api\Data\ProductInterface;
-use Swarming\SubscribePro\Ui\DataProvider\Product\Modifier\Subscription as SubscriptionModifier;
 use Magento\Tax\Model\Config as TaxConfig;
 
 class Subscription extends \Magento\Catalog\Block\Product\AbstractProduct
 {
     const TAX_CLASS_ID = 'tax_class_id';
-    
-    /**
-     * @var \Magento\Framework\Locale\FormatInterface
-     */
-    protected $localeFormat;
-
-    /**
-     * @var \Swarming\SubscribePro\Platform\Service\Product
-     */
-    protected $platformProductService;
 
     /**
      * @var \Swarming\SubscribePro\Model\Config\SubscriptionDiscount
      */
     protected $subscriptionDiscountConfig;
+
+    /**
+     * @var \Swarming\SubscribePro\Platform\Service\Product
+     */
+    protected $platformProductService;
 
     /**
      * @var \Magento\Tax\Api\TaxCalculationInterface
@@ -43,37 +37,50 @@ class Subscription extends \Magento\Catalog\Block\Product\AbstractProduct
     protected $priceCurrency;
 
     /**
+     * @var \Magento\Framework\Locale\FormatInterface
+     */
+    protected $localeFormat;
+
+    /**
+     * @var \Swarming\SubscribePro\Helper\Product
+     */
+    protected $productHelper;
+
+    /**
      * @param \Magento\Catalog\Block\Product\Context $context
-     * @param \Magento\Framework\Locale\FormatInterface $localeFormat
      * @param \Swarming\SubscribePro\Model\Config\SubscriptionDiscount $subscriptionDiscountConfig
      * @param \Swarming\SubscribePro\Platform\Service\Product $platformProductService
      * @param \Magento\Tax\Api\TaxCalculationInterface $taxCalculation
      * @param \Magento\Tax\Model\Config $taxConfig
      * @param \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency
+     * @param \Magento\Framework\Locale\FormatInterface $localeFormat
+     * @param \Swarming\SubscribePro\Helper\Product $productHelper
      * @param array $data
      */
     public function __construct(
         \Magento\Catalog\Block\Product\Context $context,
-        \Magento\Framework\Locale\FormatInterface $localeFormat,
         \Swarming\SubscribePro\Model\Config\SubscriptionDiscount $subscriptionDiscountConfig,
         \Swarming\SubscribePro\Platform\Service\Product $platformProductService,
         \Magento\Tax\Api\TaxCalculationInterface $taxCalculation,
         \Magento\Tax\Model\Config $taxConfig,
         \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency,
+        \Magento\Framework\Locale\FormatInterface $localeFormat,
+        \Swarming\SubscribePro\Helper\Product $productHelper,
         array $data = []
     ) {
-        $this->localeFormat = $localeFormat;
-        $this->platformProductService = $platformProductService;
         $this->subscriptionDiscountConfig = $subscriptionDiscountConfig;
+        $this->platformProductService = $platformProductService;
         $this->taxConfig = $taxConfig;
         $this->taxCalculation = $taxCalculation;
         $this->priceCurrency = $priceCurrency;
+        $this->localeFormat = $localeFormat;
+        $this->productHelper = $productHelper;
         parent::__construct($context, $data);
     }
 
     protected function _beforeToHtml()
     {
-        if ($this->subscriptionDiscountConfig->isEnabled() && $this->isProductSubscriptionEnabled()) {
+        if ($this->subscriptionDiscountConfig->isEnabled() && $this->productHelper->isSubscriptionEnabled($this->getProduct())) {
             $this->initJsLayout();
         } else {
             $this->setTemplate('');
@@ -105,36 +112,27 @@ class Subscription extends \Magento\Catalog\Block\Product\AbstractProduct
      * @return \Swarming\SubscribePro\Api\Data\ProductInterface
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function getSubscriptionProduct()
+    protected function getSubscriptionProduct()
     {
-        $subscribeProProduct = $this->platformProductService->getProduct($this->getProduct()->getSku());
-        $finalPrice = $this->getProduct()->getPriceInfo()->getPrice(FinalPrice::PRICE_CODE)->getValue();
-        $regularPrice = $this->getProduct()->getPriceInfo()->getPrice(RegularPrice::PRICE_CODE)->getValue();
+        $platformProduct = $this->platformProductService->getProduct($this->getProduct()->getSku());
+        $priceInfo = $this->getProduct()->getPriceInfo();
         $taxRate = $this->taxCalculation->getCalculatedRate($this->getProduct()->getCustomAttribute(self::TAX_CLASS_ID)->getValue());
-        $displayPriceIncludingTax = $this->taxConfig->getPriceDisplayType() == TaxConfig::DISPLAY_TYPE_INCLUDING_TAX;
-        if (!$subscribeProProduct->getIsDiscountPercentage()) {
-            $discount = $this->priceCurrency->convertAndRound($subscribeProProduct->getDiscount(), true);
-            $subscribeProProduct->setDiscount($discount);
+
+        if (!$platformProduct->getIsDiscountPercentage()) {
+            $discount = $this->priceCurrency->convertAndRound($platformProduct->getDiscount(), true);
+            $platformProduct->setDiscount($discount);
         }
-        $subscribeProProduct->setTaxRate($taxRate)
+
+        $platformProduct->setTaxRate($taxRate)
             ->setPriceIncludesTax($this->taxConfig->priceIncludesTax())
-            ->setDisplayPriceIncludingTax($displayPriceIncludingTax)
+            ->setDisplayPriceIncludingTax($this->taxConfig->getPriceDisplayType() == TaxConfig::DISPLAY_TYPE_INCLUDING_TAX)
             ->setNeedPriceConversion($this->taxConfig->needPriceConversion())
             ->setApplyTaxAfterDiscount($this->taxConfig->applyTaxAfterDiscount())
             ->setDiscountTax($this->taxConfig->discountTax())
-            ->setFinalPrice($finalPrice)
-            ->setPrice($regularPrice)
-            ->setApplyDiscountToCatalogPrice($this->subscriptionDiscountConfig->doApplyDiscountToCatalogPrice());
+            ->setFinalPrice($priceInfo->getPrice(FinalPrice::PRICE_CODE)->getValue())
+            ->setPrice($priceInfo->getPrice(RegularPrice::PRICE_CODE)->getValue())
+            ->setApplyDiscountToCatalogPrice($this->subscriptionDiscountConfig->isApplyDiscountToCatalogPrice());
 
-        return $subscribeProProduct;
-    }
-
-    /**
-     * @return bool
-     */
-    protected function isProductSubscriptionEnabled()
-    {
-        $attribute = $this->getProduct()->getCustomAttribute(SubscriptionModifier::SUBSCRIPTION_ENABLED);
-        return $attribute && $attribute->getValue();
+        return $platformProduct;
     }
 }

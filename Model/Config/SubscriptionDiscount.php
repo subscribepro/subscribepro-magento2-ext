@@ -7,28 +7,28 @@ use Magento\Store\Model\ScopeInterface;
 class SubscriptionDiscount extends General
 {
     /**
-     * @param string|null $websiteCode
+     * @param string|null $store
      * @return bool
      */
-    public function doApplyDiscountToCatalogPrice($websiteCode = null)
+    public function isApplyDiscountToCatalogPrice($store = null)
     {
         return $this->scopeConfig->isSetFlag(
             'swarming_subscribepro/subscription_discount/apply_discount_to_catalog_price',
-            ScopeInterface::SCOPE_WEBSITE,
-            $websiteCode
+            ScopeInterface::SCOPE_STORE,
+            $store
         );
     }
 
     /**
-     * @param string|null $websiteCode
+     * @param string|null $store
      * @return bool
      */
-    public function getCartRuleCombineType($websiteCode = null)
+    public function getCartRuleCombineType($store = null)
     {
         return $this->scopeConfig->getValue(
             'swarming_subscribepro/subscription_discount/cartrule_combine_type',
-            ScopeInterface::SCOPE_WEBSITE,
-            $websiteCode
+            ScopeInterface::SCOPE_STORE,
+            $store
         );
     }
 }

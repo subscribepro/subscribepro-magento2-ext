@@ -3,7 +3,6 @@
 namespace Swarming\SubscribePro\Gateway\Response;
 
 use SubscribePro\Service\Transaction\TransactionInterface;
-use Swarming\SubscribePro\Gateway\Helper\SubjectReader;
 use Magento\Payment\Gateway\Response\HandlerInterface;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Vault\Model\Ui\VaultConfigProvider;
@@ -21,23 +20,39 @@ class VaultDetailsHandler implements HandlerInterface
     protected $paymentExtensionFactory;
 
     /**
+     * @var \Swarming\SubscribePro\Helper\Vault
+     */
+    protected $vaultHelper;
+
+    /**
      * @var \Swarming\SubscribePro\Gateway\Config\Config
      */
     protected $config;
 
     /**
+     * @var \Swarming\SubscribePro\Gateway\Helper\SubjectReader
+     */
+    protected $subjectReader;
+
+    /**
      * @param \Magento\Vault\Api\Data\PaymentTokenInterfaceFactory $paymentTokenFactory
      * @param \Magento\Sales\Api\Data\OrderPaymentExtensionInterfaceFactory $paymentExtensionFactory
+     * @param \Swarming\SubscribePro\Helper\Vault $vaultHelper
      * @param \Swarming\SubscribePro\Gateway\Config\Config $config
+     * @param \Swarming\SubscribePro\Gateway\Helper\SubjectReader $subjectReader
      */
     public function __construct(
         \Magento\Vault\Api\Data\PaymentTokenInterfaceFactory $paymentTokenFactory,
         \Magento\Sales\Api\Data\OrderPaymentExtensionInterfaceFactory $paymentExtensionFactory,
-        \Swarming\SubscribePro\Gateway\Config\Config $config
+        \Swarming\SubscribePro\Helper\Vault $vaultHelper,
+        \Swarming\SubscribePro\Gateway\Config\Config $config,
+        \Swarming\SubscribePro\Gateway\Helper\SubjectReader $subjectReader
     ) {
         $this->paymentTokenFactory = $paymentTokenFactory;
         $this->paymentExtensionFactory = $paymentExtensionFactory;
+        $this->vaultHelper = $vaultHelper;
         $this->config = $config;
+        $this->subjectReader = $subjectReader;
     }
 
     /**
@@ -46,8 +61,8 @@ class VaultDetailsHandler implements HandlerInterface
      */
     public function handle(array $handlingSubject, array $response)
     {
-        $paymentDO = SubjectReader::readPayment($handlingSubject);
-        $transaction = SubjectReader::readTransaction($response);
+        $paymentDO = $this->subjectReader->readPayment($handlingSubject);
+        $transaction = $this->subjectReader->readTransaction($response);
         $payment = $paymentDO->getPayment();
 
         if ($payment->getAdditionalInformation(VaultConfigProvider::IS_ACTIVE_CODE)) {
@@ -59,51 +74,26 @@ class VaultDetailsHandler implements HandlerInterface
 
     /**
      * @param \SubscribePro\Service\Transaction\TransactionInterface $transaction
-     * @return \Magento\Vault\Api\Data\PaymentTokenInterface|null
+     * @return \Magento\Vault\Api\Data\PaymentTokenInterface
      */
     protected function getVaultPaymentToken(TransactionInterface $transaction)
     {
         $paymentToken = $this->paymentTokenFactory->create();
         $paymentToken->setGatewayToken($transaction->getRefPaymentProfileId());
-        $paymentToken->setExpiresAt($this->getExpirationDate($transaction));
 
-        $paymentToken->setTokenDetails($this->convertDetailsToJSON([
-            'type' => $this->config->getMappedCcType($transaction->getCreditcardType()),
-            'maskedCC' => $transaction->getCreditcardLastDigits(),
-            'expirationDate' => $transaction->getCreditcardMonth() . '/' . $transaction->getCreditcardYear()
-        ]));
+        $paymentToken->setExpiresAt($this->vaultHelper->getExpirationDate(
+            $transaction->getCreditcardYear(),
+            $transaction->getCreditcardMonth()
+        ));
+
+        $paymentToken->setTokenDetails($this->vaultHelper->getTokenDetails(
+            $transaction->getCreditcardType(),
+            $transaction->getCreditcardLastDigits(),
+            $transaction->getCreditcardMonth(),
+            $transaction->getCreditcardYear()
+        ));
 
         return $paymentToken;
-    }
-
-    /**
-     * @param \SubscribePro\Service\Transaction\TransactionInterface $transaction
-     * @return string
-     */
-    protected function getExpirationDate(TransactionInterface $transaction)
-    {
-        $expDate = new \DateTime(
-            $transaction->getCreditcardYear()
-            . '-'
-            . $transaction->getCreditcardMonth()
-            . '-'
-            . '01'
-            . ' '
-            . '00:00:00',
-            new \DateTimeZone('UTC')
-        );
-        $expDate->add(new \DateInterval('P1M'));
-        return $expDate->format('Y-m-d 00:00:00');
-    }
-
-    /**
-     * @param array $details
-     * @return string
-     */
-    protected function convertDetailsToJSON($details)
-    {
-        $json = \Zend_Json::encode($details);
-        return $json ? $json : '{}';
     }
 
     /**

@@ -72,13 +72,6 @@ class ConfigProvider
     {
         $types = $this->ccConfig->getCcAvailableTypes();
         $availableTypes = $this->config->getAvailableCardTypes();
-        if ($availableTypes) {
-            foreach (array_keys($types) as $code) {
-                if (!in_array($code, $availableTypes)) {
-                    unset($types[$code]);
-                }
-            }
-        }
-        return $types;
+        return $availableTypes ? array_intersect_key($types, array_flip($availableTypes)) : $types;
     }
 }

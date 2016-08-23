@@ -2,14 +2,12 @@
 
 namespace Swarming\SubscribePro\Observer;
 
-use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Swarming\SubscribePro\Api\Data\ProductInterface as SubscriptionProductInterface;
 use Swarming\SubscribePro\Model\Quote\ItemOptionsManager;
-use Swarming\SubscribePro\Ui\DataProvider\Product\Modifier\Subscription as SubscriptionModifier;
+use SubscribePro\Service\Product\ProductInterface as PlatformProductInterface;
 
 class AddProductToCartAfter implements ObserverInterface
 {
@@ -29,11 +27,6 @@ class AddProductToCartAfter implements ObserverInterface
     protected $quoteItemOptionsManager;
 
     /**
-     * @var \Swarming\SubscribePro\Platform\Service\Product
-     */
-    protected $platformProductService;
-
-    /**
      * @var \Magento\Framework\Message\ManagerInterface
      */
     protected $messageManager;
@@ -41,20 +34,17 @@ class AddProductToCartAfter implements ObserverInterface
     /**
      * @param \Swarming\SubscribePro\Model\Config\General $configGeneral
      * @param \Magento\Checkout\Model\Session $checkoutSession
-     * @param \Swarming\SubscribePro\Platform\Service\Product $platformProductService
      * @param \Magento\Framework\Message\ManagerInterface $messageManager
      * @param \Swarming\SubscribePro\Model\Quote\ItemOptionsManager $quoteItemOptionManager
      */
     public function __construct(
         \Swarming\SubscribePro\Model\Config\General $configGeneral,
         \Magento\Checkout\Model\Session $checkoutSession,
-        \Swarming\SubscribePro\Platform\Service\Product $platformProductService,
         \Magento\Framework\Message\ManagerInterface $messageManager,
         \Swarming\SubscribePro\Model\Quote\ItemOptionsManager $quoteItemOptionManager
     ) {
         $this->configGeneral = $configGeneral;
         $this->checkoutSession = $checkoutSession;
-        $this->platformProductService = $platformProductService;
         $this->quoteItemOptionsManager = $quoteItemOptionManager;
         $this->messageManager = $messageManager;
     }
@@ -70,35 +60,44 @@ class AddProductToCartAfter implements ObserverInterface
             return;
         }
 
-        $event = $observer->getEvent();
         /** @var \Magento\Quote\Model\Quote\Item $quoteItem */
-        $quoteItem = $event->getData('quote_item');
-        $productRequestParams = $this->getRequestParamsByProduct($quoteItem->getProduct());
-        $subscriptionDelivery = $this->getParamData($productRequestParams, ItemOptionsManager::OPTION_SUBSCRIPTION_OPTION);
-        $interval = $this->getParamData($productRequestParams, ItemOptionsManager::OPTION_SUBSCRIPTION_INTERVAL);
-        $product = $quoteItem->getProduct();
-        
-        if (!$this->isProductSubscriptionEnabled($product)) {
-            return;
-        }
-        
+        $quoteItem = $observer->getData('quote_item');
+
+        $buyRequestParams = $this->getBuyRequestParams($quoteItem);
         try {
-            $platformProduct = $this->platformProductService->getProduct($product->getSku());
+            $this->quoteItemOptionsManager->addQuoteItemOptions(
+                $quoteItem,
+                $quoteItem->getProduct(),
+                $this->getParamData($buyRequestParams, ItemOptionsManager::OPTION_SUBSCRIPTION_INTERVAL),
+                $this->getParamData($buyRequestParams, ItemOptionsManager::OPTION_SUBSCRIPTION_OPTION),
+                $this->getCatchCallback($quoteItem)
+            );
         } catch (NoSuchEntityException $e) {
-            $this->checkoutSession->getQuote()->removeItem($quoteItem->getId());
-            throw new NoSuchEntityException(__('Product "%1" is not found on Subscribe Pro platform.', $quoteItem->getProduct()->getName()));
+            $quote = $this->checkoutSession->getQuote();
+            $quote->removeItem($quoteItem->getId());
+            throw $e;
         }
-        
-        try {
-            $this->quoteItemOptionsManager->saveQuoteItemOptions($quoteItem, $product, $platformProduct, $interval, $subscriptionDelivery);
-        } catch (LocalizedException $e) {
-            if ($platformProduct->getSubscriptionOptionMode() == SubscriptionProductInterface::SOM_SUBSCRIPTION_ONLY) {
+    }
+
+    /**
+     * @param \Magento\Quote\Model\Quote\Item $quoteItem
+     * @return callable
+     */
+    protected function getCatchCallback($quoteItem)
+    {
+        return function (LocalizedException $e, PlatformProductInterface $platformProduct) use ($quoteItem) {
+            if ($platformProduct->getSubscriptionOptionMode() == PlatformProductInterface::SOM_SUBSCRIPTION_ONLY) {
                 $this->checkoutSession->getQuote()->removeItem($quoteItem->getId());
                 throw $e;
             }
-            
+
+            $this->quoteItemOptionsManager->addQuoteItemOption(
+                $quoteItem,
+                ItemOptionsManager::SUBSCRIPTION_CREATING,
+                false
+            );
             $this->messageManager->addErrorMessage($e->getMessage());
-        }
+        };
     }
 
     /**
@@ -112,22 +111,12 @@ class AddProductToCartAfter implements ObserverInterface
     }
 
     /**
-     * @param \Magento\Catalog\Model\Product $product
+     * @param \Magento\Quote\Model\Quote\Item $quoteItem
      * @return array
      */
-    protected function getRequestParamsByProduct($product)
+    protected function getBuyRequestParams($quoteItem)
     {
-        $buyRequest = $product->getCustomOption('info_buyRequest');
+        $buyRequest = $quoteItem->getOptionByCode('info_buyRequest');
         return $buyRequest ? unserialize($buyRequest->getValue()) : [];
-    }
-
-    /**
-     * @param \Magento\Catalog\Api\Data\ProductInterface $product
-     * @return bool
-     */
-    protected function isProductSubscriptionEnabled(ProductInterface $product)
-    {
-        $attribute = $product->getCustomAttribute(SubscriptionModifier::SUBSCRIPTION_ENABLED);
-        return $attribute && $attribute->getValue();
     }
 }

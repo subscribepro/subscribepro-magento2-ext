@@ -86,13 +86,12 @@ class ProductSaveAfter implements ObserverInterface
                 continue;
             }
 
-            $group = $this->storeManager->getGroup($website->getDefaultGroupId());
-            if (!$group || $group->getDefaultStoreId() === null) {
+            if (!($storeId = $this->getDefaultStoreId($website))) {
                 $this->logger->critical(__('Default store not found for website "%1"', $website->getName()));
                 continue;
             }
 
-            $product = $this->productRepository->get($product->getSku(), false, $group->getDefaultStoreId());
+            $product = $this->productRepository->get($product->getSku(), false, $storeId);
             if (!$product || !$this->isProductSubscriptionEnabled($product)) {
                 continue;
             }
@@ -116,7 +115,7 @@ class ProductSaveAfter implements ObserverInterface
     protected function saveProduct($product, $website)
     {
         try {
-            $this->platformProductService->saveProduct($product, $website->getId());
+            $this->platformProductService->saveMagentoProduct($product, $website->getId());
         } catch (HttpException $e) {
             $this->logger->critical($e);
             throw new LocalizedException(__('Fail to save product on Subscribe Pro platform for website "%1".', $website->getName()));
@@ -131,5 +130,15 @@ class ProductSaveAfter implements ObserverInterface
     {
         $attribute = $product->getCustomAttribute(SubscriptionModifier::SUBSCRIPTION_ENABLED);
         return $attribute && $attribute->getValue();
+    }
+
+    /**
+     * @param \Magento\Store\Api\Data\WebsiteInterface $website
+     * @return int|null
+     */
+    protected function getDefaultStoreId($website)
+    {
+        $group = $this->storeManager->getGroup($website->getDefaultGroupId());
+        return $group ? $group->getDefaultStoreId() : null;
     }
 }

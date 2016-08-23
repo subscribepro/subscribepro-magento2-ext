@@ -83,7 +83,7 @@ class Subscription
     {
         $magentoProducts = $this->getMagentoProducts($subscriptions);
 
-        $applyDiscountToCatalogPrice = $this->subscriptionDiscountConfig->doApplyDiscountToCatalogPrice();
+        $applyDiscountToCatalogPrice = $this->subscriptionDiscountConfig->isApplyDiscountToCatalogPrice();
         foreach ($subscriptions as $subscription) {
             try {
                 $platformProduct = $this->platformProductService->getProduct($subscription->getProductSku());

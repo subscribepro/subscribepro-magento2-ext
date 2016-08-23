@@ -3,10 +3,17 @@
 namespace Swarming\SubscribePro\Block\Cart;
 
 use Swarming\SubscribePro\Api\Data\ProductInterface;
-use \Swarming\SubscribePro\Ui\DataProvider\Product\Modifier\Subscription as SubscriptionModifier;
+use Swarming\SubscribePro\Model\Quote\ItemOptionsManager;
+use Magento\Quote\Model\Quote\Item\AbstractItem as QuoteAbstractItem;
+use Magento\ConfigurableProduct\Model\Product\Type\Configurable as ConfigurableProduct;
 
 class Subscription extends \Magento\Checkout\Block\Cart\Additional\Info
 {
+    /**
+     * @var \Swarming\SubscribePro\Model\Config\General
+     */
+    protected $generalConfig;
+
     /**
      * @var \Swarming\SubscribePro\Platform\Service\Product
      */
@@ -18,41 +25,52 @@ class Subscription extends \Magento\Checkout\Block\Cart\Additional\Info
     protected $productRepository;
 
     /**
-     * @var \Magento\Catalog\Api\Data\ProductInterface
-     */
-    protected $product;
-
-    /**
      * @var \Swarming\SubscribePro\Helper\QuoteItem
      */
     protected $quoteItemHelper;
 
     /**
-     * @var \Swarming\SubscribePro\Model\Config\General
+     * @var \Swarming\SubscribePro\Helper\Product
      */
-    protected $generalConfig;
+    protected $productHelper;
+
+    /**
+     * @var \Magento\Catalog\Api\Data\ProductInterface
+     */
+    protected $product;
 
     /**
      * @param \Magento\Catalog\Block\Product\Context $context
+     * @param \Swarming\SubscribePro\Model\Config\General $generalConfig
      * @param \Swarming\SubscribePro\Platform\Service\Product $platformProductService
      * @param \Magento\Catalog\Api\ProductRepositoryInterface $productRepository
      * @param \Swarming\SubscribePro\Helper\QuoteItem $quoteItemHelper
-     * @param \Swarming\SubscribePro\Model\Config\General $generalConfig
+     * @param \Swarming\SubscribePro\Helper\Product $productHelper
      * @param array $data
      */
     public function __construct(
         \Magento\Catalog\Block\Product\Context $context,
+        \Swarming\SubscribePro\Model\Config\General $generalConfig,
         \Swarming\SubscribePro\Platform\Service\Product $platformProductService,
         \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
         \Swarming\SubscribePro\Helper\QuoteItem $quoteItemHelper,
-        \Swarming\SubscribePro\Model\Config\General $generalConfig,
+        \Swarming\SubscribePro\Helper\Product $productHelper,
         array $data = []
     ) {
+        $this->generalConfig = $generalConfig;
         $this->platformProductService = $platformProductService;
         $this->productRepository = $productRepository;
         $this->quoteItemHelper = $quoteItemHelper;
-        $this->generalConfig = $generalConfig;
+        $this->productHelper = $productHelper;
         parent::__construct($context, $data);
+    }
+
+    protected function _beforeToHtml()
+    {
+        if (!$this->generalConfig->isEnabled() || !$this->productHelper->isSubscriptionEnabled($this->product)) {
+            $this->setTemplate('');
+        }
+        return parent::_beforeToHtml();
     }
 
     /**
@@ -60,28 +78,32 @@ class Subscription extends \Magento\Checkout\Block\Cart\Additional\Info
      */
     public function getJsLayout()
     {
-        $jsLayoutData = $this->jsLayout;
-        $data = [
-            'components' => [
-                'subscription-container' => [
-                    'config' => [
-                        'oneTimePurchaseOption' => ProductInterface::SO_ONETIME_PURCHASE,
-                        'subscriptionOption' => ProductInterface::SO_SUBSCRIPTION,
-                        'subscriptionOnlyMode' => ProductInterface::SOM_SUBSCRIPTION_ONLY,
-                        'subscriptionAndOneTimePurchaseMode' => ProductInterface::SOM_SUBSCRIPTION_AND_ONETIME_PURCHASE,
-                        'productData' => $this->getSubscriptionProduct()->toArray(),
-                        'quoteItemId' => $this->getItem()->getId(),
-                        'qtyFieldSelector' => '#cart-'.$this->getItem()->getId().'-qty'
-                    ]
-                ]
+        $this->jsLayout = $this->generateJsLayout();
+        return parent::getJsLayout();
+    }
+
+    /**
+     * @return array
+     */
+    protected function generateJsLayout()
+    {
+        $subscriptionContainerId = 'subscription-container-' . $this->getItem()->getId();
+        $subscriptionContainerComponent = [
+            'config' => [
+                'oneTimePurchaseOption' => ProductInterface::SO_ONETIME_PURCHASE,
+                'subscriptionOption' => ProductInterface::SO_SUBSCRIPTION,
+                'subscriptionOnlyMode' => ProductInterface::SOM_SUBSCRIPTION_ONLY,
+                'subscriptionAndOneTimePurchaseMode' => ProductInterface::SOM_SUBSCRIPTION_AND_ONETIME_PURCHASE,
+                'productData' => $this->getSubscriptionProduct()->toArray(),
+                'quoteItemId' => $this->getItem()->getId(),
+                'qtyFieldSelector' => '#cart-' . $this->getItem()->getId() . '-qty'
             ]
         ];
-        $this->jsLayout = array_merge_recursive($jsLayoutData, $data);
-        $this->jsLayout['components']['subscription-container-'.$this->getItem()->getId()] = $this->jsLayout['components']['subscription-container'];
-        unset($this->jsLayout['components']['subscription-container']);
-        $jsLayout = parent::getJsLayout();
-        $this->jsLayout = $jsLayoutData;
+        $subscriptionContainerComponent = array_merge_recursive($subscriptionContainerComponent, (array)$this->getData('subscription-container-component'));
 
+        $jsLayout = [
+            'components' => [$subscriptionContainerId => $subscriptionContainerComponent]
+        ];
         return $jsLayout;
     }
 
@@ -89,10 +111,11 @@ class Subscription extends \Magento\Checkout\Block\Cart\Additional\Info
      * @return \Swarming\SubscribePro\Api\Data\ProductInterface
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function getSubscriptionProduct()
+    protected function getSubscriptionProduct()
     {
         $subscriptionProduct = $this->platformProductService->getProduct($this->product->getSku());
-        if ($intervalOption = $this->getItem()->getOptionByCode('subscription_interval')) {
+
+        if ($intervalOption = $this->getItem()->getOptionByCode(ItemOptionsManager::SUBSCRIPTION_INTERVAL)) {
             $subscriptionProduct->setDefaultInterval($intervalOption->getValue());
         }
 
@@ -105,38 +128,32 @@ class Subscription extends \Magento\Checkout\Block\Cart\Additional\Info
     }
 
     /**
-     * @return bool
-     */
-    public function isSubscribeProEnabled()
-    {
-        return $this->generalConfig->isEnabled();
-    }
-
-    /**
-     * @return bool
-     */
-    public function isProductSubscriptionEnabled()
-    {
-        $attribute = $this->product->getCustomAttribute(SubscriptionModifier::SUBSCRIPTION_ENABLED);
-        return $attribute && $attribute->getValue();
-    }
-
-    /**
      * @param \Magento\Quote\Model\Quote\Item\AbstractItem $item
      * @return $this
      */
-    public function setItem(\Magento\Quote\Model\Quote\Item\AbstractItem $item)
+    public function setItem(QuoteAbstractItem $item)
     {
         parent::setItem($item);
-        $productId = $item->getProduct()->getId();
-        if ($item->getProduct()->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE) {
-            $parentIds = $item->getProduct()->getTypeInstance()->getParentIdsByChild($productId);
-            if (!empty($parentIds)) {
-                $productId = array_shift($parentIds);
-            }
-        }
-        $this->product = $this->productRepository->getById($productId);
-        
+        $this->setProduct($this->getOriginalProduct($item->getProduct()));
         return $this;
+    }
+
+    /**
+     * @param \Magento\Catalog\Api\Data\ProductInterface $product
+     * @return $this
+     */
+    protected function setProduct($product)
+    {
+        $this->product = $product;
+        return $this;
+    }
+
+    /**
+     * @param \Magento\Catalog\Model\Product $product
+     * @return \Magento\Catalog\Api\Data\ProductInterface
+     */
+    protected function getOriginalProduct($product)
+    {
+        return $this->productRepository->getById($product->getId());
     }
 }

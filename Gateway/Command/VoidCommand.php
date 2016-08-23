@@ -10,10 +10,17 @@ class VoidCommand extends AbstractCommand implements CommandInterface
     /**
      * @param array $requestData
      * @return \SubscribePro\Service\Transaction\TransactionInterface
+     * @throws \SubscribePro\Exception\EntityInvalidDataException
+     * @throws \SubscribePro\Exception\HttpException
+     * @throws \Exception
      */
     protected function processTransaction(array $requestData)
     {
-        $transaction = $this->sdkTransactionService->void($requestData[TransactionInterface::REF_TRANSACTION_ID]);
+        if (empty($requestData[TransactionInterface::REF_TRANSACTION_ID])) {
+            throw new \Exception('Referenced transaction id is not passed');
+        }
+
+        $transaction = $this->platformTransactionService->void($requestData[TransactionInterface::REF_TRANSACTION_ID]);
 
         return $transaction;
     }

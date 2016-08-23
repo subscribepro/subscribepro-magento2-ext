@@ -2,40 +2,94 @@
 
 namespace Swarming\SubscribePro\Platform\Service;
 
+use Swarming\SubscribePro\Api\Data\AddressInterface;
+
 /**
- * @method \SubscribePro\Service\Address\AddressService getService($websiteCode = null)
+ * @method \SubscribePro\Service\Address\AddressService getService($websiteId = null)
  */
 class Address extends AbstractService
 {
     /**
-     * @param \Magento\Customer\Api\Data\AddressInterface $address
-     * @param \SubscribePro\Service\Customer\CustomerInterface $platformCustomer
+     * @param \Magento\Customer\Model\Address\AbstractAddress $address
+     * @param int $platformCustomerId
+     * @param int|null $websiteId
      * @return \Swarming\SubscribePro\Api\Data\AddressInterface
      * @throws \SubscribePro\Exception\HttpException
      * @throws \SubscribePro\Exception\InvalidArgumentException
      */
-    public function findOrSaveAddress($address, $platformCustomer)
+    public function findOrSaveAddress($address, $platformCustomerId, $websiteId = null)
     {
-        $platformAddress = $this->getService()->createAddress();
+        $platformAddress = $this->createAddress([], $websiteId);
         $platformAddress->setCity($address->getCity())
             ->setCompany($address->getCompany())
             ->setCountry($address->getCountryId())
-            ->setRegion($address->getRegion()->getRegion())
+            ->setRegion($address->getRegionCode())
+            ->setStreet1($address->getStreetLine(1))
+            ->setStreet2($address->getStreetLine(2))
             ->setPostcode($address->getPostcode())
             ->setPhone($address->getTelephone())
-            ->setCustomerId($platformCustomer->getId())
+            ->setCustomerId($platformCustomerId)
             ->setFirstName($address->getFirstname())
             ->setLastName($address->getLastname())
             ->setMiddleName($address->getMiddlename());
-        $streets = $address->getStreet() ? : [];
-        if (isset($streets[0])) {
-            $platformAddress->setStreet1($streets[0]);
-        }
-        if (isset($streets[1])) {
-            $platformAddress->setStreet2($streets[1]);
-        }
-        
-        $address = $this->getService()->findOrSave($platformAddress);
-        return $address;
+
+        $this->findOrSave($platformAddress, $websiteId);
+        return $platformAddress;
+    }
+
+    /**
+     * @param array $addressData
+     * @param int|null $websiteId
+     * @return \Swarming\SubscribePro\Api\Data\AddressInterface
+     */
+    public function createAddress(array $addressData = [], $websiteId = null)
+    {
+        return $this->getService($websiteId)->createAddress($addressData);
+    }
+
+    /**
+     * @param int $addressId
+     * @param int|null $websiteId
+     * @return \Swarming\SubscribePro\Api\Data\AddressInterface
+     * @throws \SubscribePro\Exception\HttpException
+     */
+    public function loadAddress($addressId, $websiteId = null)
+    {
+        return $this->getService($websiteId)->loadAddress($addressId);
+    }
+
+    /**
+     * @param \Swarming\SubscribePro\Api\Data\AddressInterface $address
+     * @param int|null $websiteId
+     * @return \Swarming\SubscribePro\Api\Data\AddressInterface
+     * @throws \SubscribePro\Exception\EntityInvalidDataException
+     * @throws \SubscribePro\Exception\HttpException
+     */
+    public function saveAddress(AddressInterface $address, $websiteId = null)
+    {
+        return $this->getService($websiteId)->saveAddress($address);
+    }
+
+    /**
+     * @param \Swarming\SubscribePro\Api\Data\AddressInterface $address
+     * @param int|null $websiteId
+     * @return \Swarming\SubscribePro\Api\Data\AddressInterface
+     * @throws \SubscribePro\Exception\EntityInvalidDataException
+     * @throws \SubscribePro\Exception\HttpException
+     */
+    public function findOrSave(AddressInterface $address, $websiteId = null)
+    {
+        return $this->getService($websiteId)->findOrSave($address);
+    }
+
+    /**
+     * @param int|null $customerId
+     * @param int|null $websiteId
+     * @return \Swarming\SubscribePro\Api\Data\AddressInterface[]
+     * @throws \SubscribePro\Exception\HttpException
+     */
+    public function loadAddresses($customerId = null, $websiteId = null)
+    {
+        return $this->getService($websiteId)->loadAddresses($customerId);
     }
 }

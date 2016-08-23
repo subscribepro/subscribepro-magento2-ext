@@ -24,14 +24,14 @@ class Form
     protected $paymentTokenFactory;
 
     /**
-     * @var \Swarming\SubscribePro\Model\Vault\Manager
+     * @var \Swarming\SubscribePro\Helper\Vault
      */
-    protected $vaultManager;
+    protected $vaultHelper;
 
     /**
-     * @var \SubscribePro\Service\PaymentProfile\PaymentProfileService
+     * @var \Swarming\SubscribePro\Platform\Service\PaymentProfile
      */
-    protected $sdkPaymentProfileService;
+    protected $platformPaymentProfileService;
 
     /**
      * @var \Swarming\SubscribePro\Platform\Service\Customer
@@ -47,8 +47,8 @@ class Form
      * @param \Magento\Vault\Api\PaymentTokenRepositoryInterface $paymentTokenRepository
      * @param \Magento\Vault\Api\PaymentTokenManagementInterface $paymentTokenManagement
      * @param \Magento\Vault\Model\PaymentTokenFactory $paymentTokenFactory
-     * @param \Swarming\SubscribePro\Model\Vault\Manager $vaultManager
-     * @param \Swarming\SubscribePro\Platform\Platform $platform
+     * @param \Swarming\SubscribePro\Helper\Vault $vaultHelper
+     * @param \Swarming\SubscribePro\Platform\Service\PaymentProfile $platformPaymentProfileService
      * @param \Magento\Directory\Model\RegionFactory $regionFactory
      * @param \Swarming\SubscribePro\Platform\Service\Customer $platformCustomerService
      * @param \Swarming\SubscribePro\Model\Vault\Validator $validator
@@ -57,8 +57,8 @@ class Form
         \Magento\Vault\Api\PaymentTokenRepositoryInterface $paymentTokenRepository,
         \Magento\Vault\Api\PaymentTokenManagementInterface $paymentTokenManagement,
         \Magento\Vault\Model\PaymentTokenFactory $paymentTokenFactory,
-        \Swarming\SubscribePro\Model\Vault\Manager $vaultManager,
-        \Swarming\SubscribePro\Platform\Platform $platform,
+        \Swarming\SubscribePro\Helper\Vault $vaultHelper,
+        \Swarming\SubscribePro\Platform\Service\PaymentProfile $platformPaymentProfileService,
         \Magento\Directory\Model\RegionFactory $regionFactory,
         \Swarming\SubscribePro\Platform\Service\Customer $platformCustomerService,
         \Swarming\SubscribePro\Model\Vault\Validator $validator
@@ -66,8 +66,8 @@ class Form
         $this->paymentTokenRepository = $paymentTokenRepository;
         $this->paymentTokenManagement = $paymentTokenManagement;
         $this->paymentTokenFactory = $paymentTokenFactory;
-        $this->vaultManager = $vaultManager;
-        $this->sdkPaymentProfileService = $platform->getSdk()->getPaymentProfileService();
+        $this->vaultHelper = $vaultHelper;
+        $this->platformPaymentProfileService = $platformPaymentProfileService;
         $this->platformCustomerService = $platformCustomerService;
         $this->validator = $validator;
     }
@@ -88,11 +88,11 @@ class Form
             throw new LocalizedException(__('Not all fields are filled.'));
         }
 
-        $profile = $this->sdkPaymentProfileService->createProfile();
+        $profile = $this->platformPaymentProfileService->createProfile();
         $profile->importData($profileData);
         $profile->setCustomerId($platformCustomer->getId());
         $profile->setMagentoCustomerId($platformCustomer->getMagentoCustomerId());
-        $this->sdkPaymentProfileService->saveToken($profileData['token'], $profile);
+        $this->platformPaymentProfileService->saveToken($profileData['token'], $profile);
 
         $this->saveProfileToToken($profile);
     }
@@ -114,10 +114,10 @@ class Form
             throw new LocalizedException(__('Not all fields are filled.'));
         }
 
-        $profile = $this->sdkPaymentProfileService->createProfile();
+        $profile = $this->platformPaymentProfileService->createProfile();
         $profile->importData($profileData);
         $profile->setId($paymentToken->getGatewayToken());
-        $this->sdkPaymentProfileService->saveProfile($profile);
+        $this->platformPaymentProfileService->saveProfile($profile);
 
         $this->saveProfileToToken($profile, $paymentToken);
     }
@@ -131,9 +131,9 @@ class Form
         $paymentToken = $paymentToken ?: $this->paymentTokenFactory->create();
 
         if ($paymentToken->isEmpty()) {
-            $this->vaultManager->initVault($paymentToken, $profile);
+            $this->vaultHelper->initVault($paymentToken, $profile);
         } else {
-            $this->vaultManager->updateVault($paymentToken, $profile);
+            $this->vaultHelper->updateVault($paymentToken, $profile);
         }
 
         $this->paymentTokenRepository->save($paymentToken);

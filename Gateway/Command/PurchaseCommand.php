@@ -13,6 +13,8 @@ class PurchaseCommand extends AbstractProfileCreatorCommand implements CommandIn
      * @param array $requestData
      * @return \SubscribePro\Service\Transaction\TransactionInterface
      * @throws Exception
+     * @throws \SubscribePro\Exception\EntityInvalidDataException
+     * @throws \SubscribePro\Exception\HttpException
      */
     protected function processTransaction(array $requestData)
     {
@@ -22,11 +24,11 @@ class PurchaseCommand extends AbstractProfileCreatorCommand implements CommandIn
 
         if (!empty($requestData[VaultConfigProvider::IS_ACTIVE_CODE]) && $requestData[VaultConfigProvider::IS_ACTIVE_CODE]) {
             $profile = $this->createProfile($requestData);
-            $transaction = $this->sdkTransactionService->createTransaction($requestData);
-            $this->sdkTransactionService->purchaseByProfile($profile->getId(), $transaction);
+            $transaction = $this->platformTransactionService->createTransaction($requestData);
+            $this->platformTransactionService->purchaseByProfile($profile->getId(), $transaction);
         } else {
-            $transaction = $this->sdkTransactionService->createTransaction($requestData);
-            $this->sdkTransactionService->purchaseByToken($requestData[PaymentDataBuilder::PAYMENT_METHOD_TOKEN], $transaction);
+            $transaction = $this->platformTransactionService->createTransaction($requestData);
+            $this->platformTransactionService->purchaseByToken($requestData[PaymentDataBuilder::PAYMENT_METHOD_TOKEN], $transaction);
         }
 
         return $transaction;

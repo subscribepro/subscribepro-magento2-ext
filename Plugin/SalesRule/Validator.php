@@ -65,11 +65,12 @@ class Validator
         $result = $proceed($item);
 
         $websiteId = $item->getQuote()->getStore()->getWebsiteId();
+        $storeCode = $item->getQuote()->getStore()->getCode();
         if ($this->subscriptionDiscountConfig->isEnabled($websiteId)
             &&
-            $this->quoteItemHelper->isSubscriptionEnabled($item)
+            ($this->quoteItemHelper->isSubscriptionEnabled($item) || $this->quoteItemHelper->isFulfilsSubscription($item))
             &&
-            (!$isCatalogDiscountApplied || $this->subscriptionDiscountConfig->doApplyDiscountToCatalogPrice($websiteId))
+            (!$isCatalogDiscountApplied || $this->subscriptionDiscountConfig->isApplyDiscountToCatalogPrice($storeCode))
         ) {
             $this->itemSubscriptionDiscount->processSubscriptionDiscount($item, $appliedRuleIds, $discountDescriptions);
         }

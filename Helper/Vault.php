@@ -1,12 +1,12 @@
 <?php
 
-namespace Swarming\SubscribePro\Model\Vault;
+namespace Swarming\SubscribePro\Helper;
 
 use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
 use Magento\Vault\Api\Data\PaymentTokenInterface;
 use SubscribePro\Service\PaymentProfile\PaymentProfileInterface;
 
-class Manager
+class Vault
 {
     /**
      * @var \Swarming\SubscribePro\Gateway\Config\Config
@@ -42,7 +42,12 @@ class Manager
         $token->setIsActive(true);
         $token->setIsVisible(true);
         $token->setCustomerId($profile->getMagentoCustomerId());
-        $token->setTokenDetails($this->getTokenDetails($profile));
+        $token->setTokenDetails($this->getTokenDetails(
+            $profile->getCreditcardType(),
+            $profile->getCreditcardLastDigits(),
+            $profile->getCreditcardMonth(),
+            $profile->getCreditcardYear()
+        ));
         $token->setExpiresAt($this->getExpirationDate($profile->getCreditcardYear(), $profile->getCreditcardMonth()));
         $token->setPublicHash($this->generatePublicHash($token));
         return $token;
@@ -63,15 +68,18 @@ class Manager
     }
 
     /**
-     * @param \SubscribePro\Service\PaymentProfile\PaymentProfileInterface $profile
+     * @param string $cardType
+     * @param string $lastDigits
+     * @param string $year
+     * @param string $month
      * @return string
      */
-    protected function getTokenDetails(PaymentProfileInterface $profile)
+    public function getTokenDetails($cardType, $lastDigits, $year, $month)
     {
         $tokenDetails = [
-            'type' => $this->config->getMappedCcType($profile->getCreditcardType()),
-            'maskedCC' => $profile->getCreditcardLastDigits(),
-            'expirationDate' => $profile->getCreditcardMonth() . '/' . $profile->getCreditcardYear()
+            'type' => $this->config->getMappedCcType($cardType),
+            'maskedCC' => $lastDigits,
+            'expirationDate' => $year . '/' . $month
         ];
         return $this->encodeDetails($tokenDetails);
     }
@@ -99,7 +107,7 @@ class Manager
      * @param string $month
      * @return string
      */
-    protected function getExpirationDate($year, $month)
+    public function getExpirationDate($year, $month)
     {
         $expDate = new \DateTime($year . '-' . $month . '-01 00:00:00', new \DateTimeZone('UTC'));
         $expDate->add(new \DateInterval('P1M'));

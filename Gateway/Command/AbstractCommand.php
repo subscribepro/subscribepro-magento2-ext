@@ -13,14 +13,14 @@ abstract class AbstractCommand implements CommandInterface
     protected $requestBuilder;
 
     /**
-     * @var \SubscribePro\Service\PaymentProfile\PaymentProfileService
+     * @var \Swarming\SubscribePro\Platform\Service\PaymentProfile
      */
-    protected $sdkPaymentProfileService;
+    protected $platformPaymentProfileService;
 
     /**
-     * @var \SubscribePro\Service\Transaction\TransactionService
+     * @var \Swarming\SubscribePro\Platform\Service\Transaction
      */
-    protected $sdkTransactionService;
+    protected $platformTransactionService;
 
     /**
      * @var \Magento\Payment\Gateway\Response\HandlerInterface
@@ -39,23 +39,25 @@ abstract class AbstractCommand implements CommandInterface
 
     /**
      * @param \Magento\Payment\Gateway\Request\BuilderInterface $requestBuilder
-     * @param \Swarming\SubscribePro\Platform\Platform $platform
      * @param \Magento\Payment\Gateway\Response\HandlerInterface $handler
      * @param \Magento\Payment\Gateway\Validator\ValidatorInterface $validator
+     * @param \Swarming\SubscribePro\Platform\Service\PaymentProfile $platformPaymentProfileService
+     * @param \Swarming\SubscribePro\Platform\Service\Transaction $platformTransactionService
      * @param \Psr\Log\LoggerInterface $logger
      */
     public function __construct(
         \Magento\Payment\Gateway\Request\BuilderInterface $requestBuilder,
-        \Swarming\SubscribePro\Platform\Platform $platform,
         \Magento\Payment\Gateway\Response\HandlerInterface $handler,
         \Magento\Payment\Gateway\Validator\ValidatorInterface $validator,
+        \Swarming\SubscribePro\Platform\Service\PaymentProfile $platformPaymentProfileService,
+        \Swarming\SubscribePro\Platform\Service\Transaction $platformTransactionService,
         \Psr\Log\LoggerInterface $logger
     ) {
         $this->requestBuilder = $requestBuilder;
-        $this->sdkPaymentProfileService = $platform->getSdk()->getPaymentProfileService();
-        $this->sdkTransactionService = $platform->getSdk()->getTransactionService();
         $this->handler = $handler;
         $this->validator = $validator;
+        $this->platformPaymentProfileService = $platformPaymentProfileService;
+        $this->platformTransactionService = $platformTransactionService;
         $this->logger = $logger;
     }
 
@@ -72,18 +74,14 @@ abstract class AbstractCommand implements CommandInterface
             $transaction = $this->processTransaction($requestData);
         } catch (\Exception $e) {
             $this->logger->critical($e);
-            throw new CommandException(
-                __('Transaction has been declined. Please try again later.')
-            );
+            throw new CommandException(__('Transaction has been declined. Please try again later.'));
         }
 
         $response = ['transaction' => $transaction];
 
         $result = $this->validator->validate(array_merge($commandSubject, $response));
         if (!$result->isValid()) {
-            throw new CommandException(
-                __('Transaction has been declined. Please try again later.')
-            );
+            throw new CommandException(__('Transaction has been declined. Please try again later.'));
         }
 
         $this->handler->handle($commandSubject, $response);

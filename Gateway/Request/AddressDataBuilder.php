@@ -3,19 +3,33 @@
 namespace Swarming\SubscribePro\Gateway\Request;
 
 use Magento\Payment\Gateway\Request\BuilderInterface;
-use Magento\Payment\Gateway\Helper\SubjectReader;
 use SubscribePro\Service\PaymentProfile\PaymentProfileInterface;
 use SubscribePro\Service\Address\AddressInterface;
 
 class AddressDataBuilder implements BuilderInterface
 {
     /**
+     * @var \Swarming\SubscribePro\Gateway\Helper\SubjectReader
+     */
+    protected $subjectReader;
+
+    /**
+     * @param \Swarming\SubscribePro\Gateway\Helper\SubjectReader $subjectReader
+     */
+    public function __construct(
+        \Swarming\SubscribePro\Gateway\Helper\SubjectReader $subjectReader
+    ) {
+        $this->subjectReader = $subjectReader;
+    }
+    
+    /**
      * @param array $buildSubject
      * @return array
+     * @throws \InvalidArgumentException
      */
     public function build(array $buildSubject)
     {
-        $paymentDO = SubjectReader::readPayment($buildSubject);
+        $paymentDO = $this->subjectReader->readPayment($buildSubject);
 
         $order = $paymentDO->getOrder();
         $result = [];

@@ -3,14 +3,36 @@
 namespace Swarming\SubscribePro\Gateway\Helper;
 
 use SubscribePro\Service\Transaction\TransactionInterface;
+use Magento\Payment\Gateway\Helper\SubjectReader as SubjectReaderHelper;
 
-class SubjectReader extends \Magento\Payment\Gateway\Helper\SubjectReader
+class SubjectReader
 {
     /**
      * @param array $subject
-     * @return \SubscribePro\Service\Transaction\TransactionInterface
+     * @return \Magento\Payment\Gateway\Data\PaymentDataObjectInterface
+     * @throws \InvalidArgumentException
      */
-    public static function readTransaction(array $subject)
+    public function readPayment(array $subject)
+    {
+        return SubjectReaderHelper::readPayment($subject);
+    }
+    
+    /**
+     * @param array $subject
+     * @return mixed
+     * @throws \InvalidArgumentException
+     */
+    public function readAmount(array $subject)
+    {
+        return SubjectReaderHelper::readAmount($subject);
+    }
+    
+    /**
+     * @param array $subject
+     * @return \SubscribePro\Service\Transaction\TransactionInterface
+     * @throws \InvalidArgumentException
+     */
+    public function readTransaction(array $subject)
     {
         if (!isset($subject['transaction']) || !is_object($subject['transaction'])) {
             throw new \InvalidArgumentException('Response object does not exist');

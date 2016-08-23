@@ -3,7 +3,6 @@
 namespace Swarming\SubscribePro\Gateway\Request;
 
 use Magento\Payment\Gateway\Request\BuilderInterface;
-use Magento\Payment\Gateway\Helper\SubjectReader;
 use Magento\Vault\Model\Ui\VaultConfigProvider;
 
 class PaymentDataBuilder implements BuilderInterface
@@ -11,12 +10,27 @@ class PaymentDataBuilder implements BuilderInterface
     const PAYMENT_METHOD_TOKEN = 'payment_method_token';
 
     /**
+     * @var \Swarming\SubscribePro\Gateway\Helper\SubjectReader
+     */
+    protected $subjectReader;
+
+    /**
+     * @param \Swarming\SubscribePro\Gateway\Helper\SubjectReader $subjectReader
+     */
+    public function __construct(
+        \Swarming\SubscribePro\Gateway\Helper\SubjectReader $subjectReader
+    ) {
+        $this->subjectReader = $subjectReader;
+    }
+
+    /**
      * @param array $buildSubject
      * @return array
+     * @throws \InvalidArgumentException
      */
     public function build(array $buildSubject)
     {
-        $paymentDO = SubjectReader::readPayment($buildSubject);
+        $paymentDO = $this->subjectReader->readPayment($buildSubject);
 
         $payment = $paymentDO->getPayment();
 

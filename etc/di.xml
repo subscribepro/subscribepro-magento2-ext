@@ -2,6 +2,7 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="Swarming\SubscribePro\Api\SubscriptionManagementInterface" type="Swarming\SubscribePro\Service\SubscriptionManagement" />
     <preference for="Swarming\SubscribePro\Api\PaymentTokenManagementInterface" type="Swarming\SubscribePro\Service\PaymentTokenManagement" />
+    <preference for="Swarming\SubscribePro\Api\AddressManagementInterface" type="Swarming\SubscribePro\Service\AddressManagement" />
 
     <type name="Swarming\SubscribePro\Platform\Platform">
         <arguments>
@@ -37,6 +38,16 @@
     <type name="Swarming\SubscribePro\Platform\Service\Subscription">
         <arguments>
             <argument name="name" xsi:type="const">SubscribePro\Service\Subscription\SubscriptionService::NAME</argument>
+        </arguments>
+    </type>
+    <type name="Swarming\SubscribePro\Platform\Service\PaymentProfile">
+        <arguments>
+            <argument name="name" xsi:type="const">SubscribePro\Service\PaymentProfile\PaymentProfileService::NAME</argument>
+        </arguments>
+    </type>
+    <type name="Swarming\SubscribePro\Platform\Service\Transaction">
+        <arguments>
+            <argument name="name" xsi:type="const">SubscribePro\Service\Transaction\TransactionService::NAME</argument>
         </arguments>
     </type>
     <type name="Swarming\SubscribePro\Platform\Tool\Config">

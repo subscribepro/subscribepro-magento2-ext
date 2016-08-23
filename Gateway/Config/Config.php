@@ -5,6 +5,7 @@ namespace Swarming\SubscribePro\Gateway\Config;
 class Config extends \Magento\Payment\Gateway\Config\Config
 {
     const KEY_ACTIVE = 'active';
+    const KEY_ACTIVE_NON_SUBSCRIPTION = 'active_non_subscription';
     const KEY_CC_TYPES = 'cctypes';
     const KEY_CC_TYPES_MAPPER = 'cctypes_mapper';
     const KEY_CC_USE_CCV = 'useccv';

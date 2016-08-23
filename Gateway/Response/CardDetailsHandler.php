@@ -4,7 +4,6 @@ namespace Swarming\SubscribePro\Gateway\Response;
 
 use Magento\Payment\Gateway\Response\HandlerInterface;
 use Magento\Payment\Gateway\Helper\ContextHelper;
-use Swarming\SubscribePro\Gateway\Helper\SubjectReader;
 
 class CardDetailsHandler implements HandlerInterface
 {
@@ -17,27 +16,34 @@ class CardDetailsHandler implements HandlerInterface
     protected $config;
 
     /**
+     * @var \Swarming\SubscribePro\Gateway\Helper\SubjectReader
+     */
+    protected $subjectReader;
+
+    /**
      * @param \Swarming\SubscribePro\Gateway\Config\Config $config
+     * @param \Swarming\SubscribePro\Gateway\Helper\SubjectReader $subjectReader
      */
     public function __construct(
-        \Swarming\SubscribePro\Gateway\Config\Config $config
+        \Swarming\SubscribePro\Gateway\Config\Config $config,
+        \Swarming\SubscribePro\Gateway\Helper\SubjectReader $subjectReader
     ) {
         $this->config = $config;
+        $this->subjectReader = $subjectReader;
     }
 
     /**
      * @param array $handlingSubject
      * @param array $response
      * @return void
+     * @throws \InvalidArgumentException
+     * @throws \LogicException
      */
     public function handle(array $handlingSubject, array $response)
     {
-        $paymentDO = SubjectReader::readPayment($handlingSubject);
-        $transaction = SubjectReader::readTransaction($response);
+        $paymentDO = $this->subjectReader->readPayment($handlingSubject);
+        $transaction = $this->subjectReader->readTransaction($response);
 
-        /**
-         * @TODO after changes in sales module should be refactored for new interfaces
-         */
         /** @var \Magento\Sales\Api\Data\OrderPaymentInterface $payment */
         $payment = $paymentDO->getPayment();
         ContextHelper::assertOrderPayment($payment);

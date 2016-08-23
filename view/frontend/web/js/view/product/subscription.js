@@ -2,69 +2,38 @@ define(
     [
         'jquery',
         'underscore',
-        'uiComponent',
-        'ko',
-        'Swarming_SubscribePro/js/model/product/item',
+        'Swarming_SubscribePro/js/view/cart/subscription',
         'priceBox'
     ],
-    function ($, _, Component, ko, productModel) {
+    function ($, _, Component) {
         'use strict';
 
         return Component.extend({
             defaults: {
                 template: 'Swarming_SubscribePro/product/subscription',
                 priceBoxSelector: '.price-box',
-                qtyFieldSelector: '#qty',
-                product: {}
+                qtyFieldSelector: '#qty'
             },
 
             priceBoxElement: null,
 
             initialize: function () {
-                this._super().observe('product');
-                
-                this.isProductLoaded = ko.observable(false);
-                this.initProduct(this.productData);
+                this._super();
                 
                 if (this.priceBoxSelector) {
                     this.priceBoxElement = this.getPriceBoxElement();
                     this.priceBoxElement.on('reloadPrice', this.onPriceChange.bind(this));
-                    this.onPriceChange();
-                }
-
-                $(this.qtyFieldSelector).on('change', this.onQtyFieldChanged.bind(this));
-            },
-
-            initProduct: function (product) {
-                this.product(productModel.create(product, this.priceFormat));
-                this.subscriptionOptionValue = ko.observable(this.product().defaultSubscriptionOption());
-                this.intervalValue = ko.observable(this.product().defaultInterval());
-                this.isProductLoaded(true);
-                this.subscriptionOptionValue.subscribe(this.onQtyFieldChanged.bind(this));
-                
-                if (this.product().isSubscriptionMode(this.subscriptionOnlyMode)) {
-                    this.subscriptionOptionValue(this.subscriptionOption);
-                }
-                if ((this.product().isSubscriptionOption(this.subscriptionOption) 
-                    || this.product().isSubscriptionMode(this.subscriptionOnlyMode))
-                    && this.product().minQty() > $(this.qtyFieldSelector).val() 
-                ) {
-                    $(this.qtyFieldSelector).val(this.product().minQty()).trigger('change');
+                    this.initProductPrice();
                 }
             },
 
-            onQtyFieldChanged: function (event) {
-                if (this.subscriptionOptionValue() == this.oneTimePurchaseOption) {
+            initProductPrice: function () {
+                var priceBox = this.priceBoxElement.data('mage-priceBox');
+                if (!priceBox || !priceBox.options || !priceBox.options.prices) {
                     return;
                 }
 
-                var field = $(this.qtyFieldSelector);
-                if (field.val() < this.product().minQty()) {
-                    field.val(this.product().minQty()).trigger('change');
-                }
-                if (this.product().maxQty() && field.val() > this.product().maxQty()) {
-                    field.val(this.product().maxQty()).trigger('change');
-                }
+                this.syncProductPrice(priceBox.options.prices);
             },
 
             onPriceChange: function () {
@@ -73,7 +42,10 @@ define(
                     return;
                 }
 
-                var prices = priceBox.cache.displayPrices;
+                this.syncProductPrice(priceBox.cache.displayPrices);
+            },
+
+            syncProductPrice: function (prices) {
                 var finalPrice, oldPrice;
                 if (prices.finalPrice) {
                     finalPrice = oldPrice = prices.finalPrice.amount;

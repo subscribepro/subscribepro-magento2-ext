@@ -18,14 +18,14 @@ class Edit extends \Magento\Directory\Block\Data
     protected $messageManager;
 
     /**
-     * @var \Magento\Vault\Api\PaymentTokenManagementInterface
+     * @var \Swarming\SubscribePro\Platform\Service\PaymentProfile
      */
     protected $paymentTokenManagement;
 
     /**
-     * @var \SubscribePro\Service\PaymentProfile\PaymentProfileService
+     * @var \Swarming\SubscribePro\Platform\Service\Subscription
      */
-    protected $sdkPaymentProfileService;
+    protected $platformPaymentProfileService;
 
     /**
      * @var \Magento\Vault\Api\Data\PaymentTokenInterface
@@ -47,7 +47,7 @@ class Edit extends \Magento\Directory\Block\Data
      * @param \Magento\Customer\Model\Session $session
      * @param \Magento\Framework\Message\ManagerInterface $messageManager
      * @param \Magento\Vault\Api\PaymentTokenManagementInterface $paymentTokenManagement
-     * @param \Swarming\SubscribePro\Platform\Platform $platform
+     * @param \Swarming\SubscribePro\Platform\Service\PaymentProfile $platformPaymentProfileService
      * @param array $data
      */
     public function __construct(
@@ -60,13 +60,13 @@ class Edit extends \Magento\Directory\Block\Data
         \Magento\Customer\Model\Session $session,
         \Magento\Framework\Message\ManagerInterface $messageManager,
         \Magento\Vault\Api\PaymentTokenManagementInterface $paymentTokenManagement,
-        \Swarming\SubscribePro\Platform\Platform $platform,
+        \Swarming\SubscribePro\Platform\Service\PaymentProfile $platformPaymentProfileService,
         array $data = []
     ) {
         $this->session = $session;
         $this->messageManager = $messageManager;
         $this->paymentTokenManagement = $paymentTokenManagement;
-        $this->sdkPaymentProfileService = $platform->getSdk()->getPaymentProfileService();
+        $this->platformPaymentProfileService = $platformPaymentProfileService;
         parent::__construct(
             $context,
             $directoryHelper,
@@ -118,7 +118,7 @@ class Edit extends \Magento\Directory\Block\Data
 
     protected function loadProfile()
     {
-        $profile = $this->sdkPaymentProfileService->loadProfile($this->token->getGatewayToken());
+        $profile = $this->platformPaymentProfileService->loadProfile($this->token->getGatewayToken());
         if (!$profile) {
             throw new LocalizedException(__('The saved credit is not found.'));
         }

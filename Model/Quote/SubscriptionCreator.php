@@ -15,9 +15,9 @@ class SubscriptionCreator
     protected  $quoteItemHelper;
 
     /**
-     * @var \SubscribePro\Service\Subscription\SubscriptionService
+     * @var \Swarming\SubscribePro\Platform\Service\Subscription
      */
-    protected $sdkSubscriptionService;
+    protected $platformSubscriptionService;
 
     /**
      * @var \Swarming\SubscribePro\Platform\Service\Customer
@@ -51,7 +51,7 @@ class SubscriptionCreator
 
     /**
      * @param \Swarming\SubscribePro\Helper\QuoteItem $quoteItemHelper
-     * @param \Swarming\SubscribePro\Platform\Platform $platform
+     * @param \Swarming\SubscribePro\Platform\Service\Subscription $platformSubscriptionService
      * @param \Swarming\SubscribePro\Platform\Service\Customer $platformCustomerService
      * @param \Swarming\SubscribePro\Model\Config\SubscriptionOptions $subscriptionOptionsConfig
      * @param \Magento\Vault\Api\PaymentTokenManagementInterface $tokenManagement
@@ -61,7 +61,7 @@ class SubscriptionCreator
      */
     public function __construct(
         \Swarming\SubscribePro\Helper\QuoteItem $quoteItemHelper,
-        \Swarming\SubscribePro\Platform\Platform $platform,
+        \Swarming\SubscribePro\Platform\Service\Subscription $platformSubscriptionService,
         \Swarming\SubscribePro\Platform\Service\Customer $platformCustomerService,
         \Swarming\SubscribePro\Model\Config\SubscriptionOptions $subscriptionOptionsConfig,
         \Magento\Vault\Api\PaymentTokenManagementInterface $tokenManagement,
@@ -70,7 +70,7 @@ class SubscriptionCreator
         \Psr\Log\LoggerInterface $logger
     ) {
         $this->quoteItemHelper = $quoteItemHelper;
-        $this->sdkSubscriptionService = $platform->getSdk()->getSubscriptionService();
+        $this->platformSubscriptionService = $platformSubscriptionService;
         $this->platformCustomerService = $platformCustomerService;
         $this->subscriptionOptionsConfig = $subscriptionOptionsConfig;
         $this->tokenManagement = $tokenManagement;
@@ -81,11 +81,10 @@ class SubscriptionCreator
 
     /**
      * @param \Magento\Quote\Model\Quote $quote
-     * @param \Magento\Sales\Api\Data\OrderInterface $order
      */
-    public function createSubscriptions($quote, $order)
+    public function createSubscriptions($quote)
     {
-        $paymentProfileId = $this->getPaymentProfileId($order->getPayment());
+        $paymentProfileId = $this->getPaymentProfileId($quote->getPayment());
         $platformCustomer = $this->platformCustomerService->getCustomer($quote->getCustomerId());
 
         $subscriptionsSuccess = [];
@@ -135,13 +134,10 @@ class SubscriptionCreator
         $quote = $quoteItem->getQuote();
         $store = $quote->getStore();
         try {
-
-            $product = $this->quoteItemHelper->getProduct($quoteItem);
-
-            $subscription = $this->sdkSubscriptionService->createSubscription();
+            $subscription = $this->platformSubscriptionService->createSubscription();
             $subscription->setCustomerId($platformCustomerId);
             $subscription->setPaymentProfileId($paymentProfileId);
-            $subscription->setProductSku($product->getSku());
+            $subscription->setProductSku($quoteItem->getProduct()->getSku());
             $subscription->setQty($quoteItem->getQty());
             $subscription->setUseFixedPrice(false);
             $subscription->setInterval($this->quoteItemHelper->getSubscriptionInterval($quoteItem));
@@ -155,12 +151,14 @@ class SubscriptionCreator
                 $subscription->setCouponCode($quote->getCouponCode());
             }
 
+            /* TODO Add product options to subscription */
+
             $this->eventManager->dispatch(
                 'subscribe_pro_before_create_subscription_from_quote_item',
                 ['subscription' => $subscription, 'quote_item' => $quoteItem]
             );
 
-            $this->sdkSubscriptionService->saveSubscription($subscription);
+            $this->platformSubscriptionService->saveSubscription($subscription);
 
             $this->eventManager->dispatch(
                 'subscribe_pro_after_create_subscription_from_quote_item',
@@ -191,13 +189,13 @@ class SubscriptionCreator
     }
 
     /**
-     * @param \Magento\Sales\Api\Data\OrderPaymentInterface $payment
+     * @param \Magento\Quote\Model\Quote\Payment $payment
      * @return string
      * @throws \Exception
      */
     protected function getPaymentProfileId($payment)
     {
-        $vault = $this->tokenManagement->getByPaymentId($payment->getEntityId());
+        $vault = $this->tokenManagement->getByPaymentId($payment->getId());
         if (!$vault || !$vault->getIsActive()) {
             throw new \Exception('The vault is not found.');
         }

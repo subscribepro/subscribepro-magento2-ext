@@ -84,6 +84,7 @@ class TestConnection extends Action
      */
     protected function updateEncryptedClientSecret($clientSecret)
     {
+        /* TODO Website ID */
         return $clientSecret == '******' ? $this->configPlatform->getClientSecret() : $clientSecret ;
     }
 }

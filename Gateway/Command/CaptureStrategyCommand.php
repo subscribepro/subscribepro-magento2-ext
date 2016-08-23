@@ -4,7 +4,6 @@ namespace Swarming\SubscribePro\Gateway\Command;
 
 use Magento\Payment\Gateway\CommandInterface;
 use Magento\Payment\Gateway\Helper\ContextHelper;
-use Magento\Payment\Gateway\Helper\SubjectReader;
 use Magento\Sales\Model\Order\Payment;
 
 class CaptureStrategyCommand implements CommandInterface
@@ -18,12 +17,20 @@ class CaptureStrategyCommand implements CommandInterface
     protected $commandPool;
 
     /**
+     * @var \Swarming\SubscribePro\Gateway\Helper\SubjectReader
+     */
+    protected $subjectReader;
+
+    /**
      * @param \Magento\Payment\Gateway\Command\CommandPoolInterface $commandPool
+     * @param \Swarming\SubscribePro\Gateway\Helper\SubjectReader $subjectReader
      */
     public function __construct(
-        \Magento\Payment\Gateway\Command\CommandPoolInterface $commandPool
+        \Magento\Payment\Gateway\Command\CommandPoolInterface $commandPool,
+        \Swarming\SubscribePro\Gateway\Helper\SubjectReader $subjectReader
     ) {
         $this->commandPool = $commandPool;
+        $this->subjectReader = $subjectReader;
     }
 
     /**
@@ -32,7 +39,7 @@ class CaptureStrategyCommand implements CommandInterface
     public function execute(array $commandSubject)
     {
         /** @var \Magento\Payment\Gateway\Data\PaymentDataObjectInterface $paymentDO */
-        $paymentDO = SubjectReader::readPayment($commandSubject);
+        $paymentDO = $this->subjectReader->readPayment($commandSubject);
 
         /** @var \Magento\Sales\Model\Order\Payment $paymentInfo */
         $paymentInfo = $paymentDO->getPayment();
@@ -48,10 +55,6 @@ class CaptureStrategyCommand implements CommandInterface
      */
     protected function getCommand(Payment $payment)
     {
-        if ($payment->getParentTransactionId()) {
-            return self::SETTLEMENT;
-        }
-
-        return self::PURCHASE;
+        return $payment->getParentTransactionId() ? self::SETTLEMENT : self::PURCHASE;
     }
 }

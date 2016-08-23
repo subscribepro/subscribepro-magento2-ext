@@ -4,7 +4,6 @@ namespace Swarming\SubscribePro\Gateway\Request;
 
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Payment\Gateway\Request\BuilderInterface;
-use Magento\Payment\Gateway\Helper\SubjectReader;
 use Magento\Payment\Helper\Formatter;
 use SubscribePro\Service\Transaction\TransactionInterface;
 
@@ -13,13 +12,28 @@ class CaptureDataBuilder implements BuilderInterface
     use Formatter;
 
     /**
+     * @var \Swarming\SubscribePro\Gateway\Helper\SubjectReader
+     */
+    protected $subjectReader;
+
+    /**
+     * @param \Swarming\SubscribePro\Gateway\Helper\SubjectReader $subjectReader
+     */
+    public function __construct(
+        \Swarming\SubscribePro\Gateway\Helper\SubjectReader $subjectReader
+    ) {
+        $this->subjectReader = $subjectReader;
+    }
+
+    /**
      * @param array $buildSubject
      * @return array
      * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \InvalidArgumentException
      */
     public function build(array $buildSubject)
     {
-        $paymentDO = SubjectReader::readPayment($buildSubject);
+        $paymentDO = $this->subjectReader->readPayment($buildSubject);
 
         /** @var \Magento\Sales\Model\Order\Payment $payment */
         $payment = $paymentDO->getPayment();
@@ -32,7 +46,7 @@ class CaptureDataBuilder implements BuilderInterface
 
         $amount = $currency = null;
         try {
-            $amount = $this->formatPrice(SubjectReader::readAmount($buildSubject))*100;
+            $amount = $this->formatPrice($this->subjectReader->readAmount($buildSubject))*100;
             $currency = $order->getCurrencyCode();
         } catch (\InvalidArgumentException $e) {
             // pass

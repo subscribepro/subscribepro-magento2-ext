@@ -7,7 +7,7 @@ use Magento\Store\Model\ScopeInterface;
 class SubscriptionOptions extends General
 {
     /**
-     * @param string $store
+     * @param string|null $store
      * @return bool
      */
     public function isAllowedCoupon($store = null)

@@ -12,6 +12,8 @@ class VaultPurchaseCommand extends AbstractCommand implements CommandInterface
      * @param array $requestData
      * @return \SubscribePro\Service\Transaction\TransactionInterface
      * @throws Exception
+     * @throws \SubscribePro\Exception\EntityInvalidDataException
+     * @throws \SubscribePro\Exception\HttpException
      */
     protected function processTransaction(array $requestData)
     {
@@ -19,8 +21,8 @@ class VaultPurchaseCommand extends AbstractCommand implements CommandInterface
             throw new Exception('Payment profile is not passed');
         }
 
-        $transaction = $this->sdkTransactionService->createTransaction($requestData);
-        $this->sdkTransactionService->purchaseByProfile($requestData[VaultDataBuilder::PAYMENT_PROFILE_ID], $transaction);
+        $transaction = $this->platformTransactionService->createTransaction($requestData);
+        $this->platformTransactionService->purchaseByProfile($requestData[VaultDataBuilder::PAYMENT_PROFILE_ID], $transaction);
 
         return $transaction;
     }

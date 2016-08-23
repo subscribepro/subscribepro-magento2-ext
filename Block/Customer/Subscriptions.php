@@ -85,13 +85,10 @@ class Subscriptions extends \Magento\Framework\View\Element\Template
         return $customerData;
     }
 
-    /**
-     * @return string
-     */
-    public function getJsLayout()
+    protected function _beforeToHtml()
     {
-        $jsLayout = $this->buildJsLayout();
-        return json_encode($jsLayout);
+        $this->initJsLayout();
+        return parent::_beforeToHtml();
     }
 
     /**
@@ -107,92 +104,85 @@ class Subscriptions extends \Magento\Framework\View\Element\Template
             ->renderArray($builtOutputAddressData);
     }
 
-    /**
-     * @return array
-     */
-    protected function getDatepickerOptions()
+    protected function initJsLayout()
     {
-        return [
-            'minDate' => 2,
-            'showOn' => 'button',
-            'buttonImage' => $this->getViewFileUrl('Magento_Theme::calendar.png'),
-            'buttonText' => __('Click to change date'),
-            'buttonImageOnly' => true,
-            'dateFormat' => 'yyyy-mm-dd',
+        $subscriptionsConfig = [
+            'datepickerOptions' => [
+                'minDate' => 2,
+                'showOn' => 'button',
+                'buttonImage' => $this->getViewFileUrl('Magento_Theme::calendar.png'),
+                'buttonText' => __('Click to change date'),
+                'buttonImageOnly' => true,
+                'dateFormat' => 'yyyy-mm-dd',
+            ],
+            'priceFormat' => $this->localeFormat->getPriceFormat(),
+            'shippingAddressOptions' => [
+                'dataScopePrefix' => 'shippingAddress',
+                'deps' => 'spAddressProvider',
+                'children' => [
+                    'shipping-address-fieldset' => [
+                        'children' => $this->merger->merge(
+                            $this->addressAttributes->getElements(),
+                            'spAddressProvider',
+                            'shippingAddress',
+                            [
+                                'region' => [
+                                    'visible' => false,
+                                ],
+                                'region_id' => [
+                                    'component' => 'Magento_Ui/js/form/element/region',
+                                    'config' => [
+                                        'template' => 'ui/form/field',
+                                        'elementTmpl' => 'ui/form/element/select',
+                                        'customEntry' => 'shippingAddress.region',
+                                    ],
+                                    'validation' => [
+                                        'required-entry' => true,
+                                    ],
+                                    'filterBy' => [
+                                        'target' => '${ $.provider }:${ $.parentScope }.country_id',
+                                        'field' => 'country_id',
+                                    ],
+                                ],
+                                'country_id' => [
+                                    'sortOrder' => 115,
+                                ],
+                                'postcode' => [
+                                    'component' => 'Magento_Ui/js/form/element/post-code',
+                                    'validation' => [
+                                        'required-entry' => true,
+                                    ],
+                                ],
+                                'company' => [
+                                    'validation' => [
+                                        'min_text_length' => 0,
+                                    ],
+                                ],
+                                'telephone' => [
+                                    'config' => [
+                                        'tooltip' => [
+                                            'description' => __('For delivery questions.'),
+                                        ],
+                                    ],
+                                ],
+                            ]
+                        )
+                    ]
+                ]
+            ]
         ];
-    }
-
-    protected function buildJsLayout()
-    {
-        $jsLayout = [
+        $data = [
             'components' => [
                 'subscriptions-container' => [
                     'children' => [
                         'subscriptions' => [
-                            'config' => [
-                                'datepickerOptions' => $this->getDatepickerOptions(),
-                                'priceFormat' => $this->localeFormat->getPriceFormat(),
-                                'shippingAddressOptions' => [
-                                    'dataScopePrefix' => 'shippingAddress',
-                                    'deps' => 'spAddressProvider',
-                                    'children' => [
-                                        'shipping-address-fieldset' => [
-                                            'children' => $this->merger->merge(
-                                                $this->addressAttributes->getElements(),
-                                                'spAddressProvider',
-                                                'shippingAddress',
-                                                [
-                                                    'region' => [
-                                                        'visible' => false,
-                                                    ],
-                                                    'region_id' => [
-                                                        'component' => 'Magento_Ui/js/form/element/region',
-                                                        'config' => [
-                                                            'template' => 'ui/form/field',
-                                                            'elementTmpl' => 'ui/form/element/select',
-                                                            'customEntry' => 'shippingAddress.region',
-                                                        ],
-                                                        'validation' => [
-                                                            'required-entry' => true,
-                                                        ],
-                                                        'filterBy' => [
-                                                            'target' => '${ $.provider }:${ $.parentScope }.country_id',
-                                                            'field' => 'country_id',
-                                                        ],
-                                                    ],
-                                                    'country_id' => [
-                                                        'sortOrder' => 115,
-                                                    ],
-                                                    'postcode' => [
-                                                        'component' => 'Magento_Ui/js/form/element/post-code',
-                                                        'validation' => [
-                                                            'required-entry' => true,
-                                                        ],
-                                                    ],
-                                                    'company' => [
-                                                        'validation' => [
-                                                            'min_text_length' => 0,
-                                                        ],
-                                                    ],
-                                                    'telephone' => [
-                                                        'config' => [
-                                                            'tooltip' => [
-                                                                'description' => __('For delivery questions.'),
-                                                            ],
-                                                        ],
-                                                    ],
-                                                ]
-                                            )
-                                        ]
-                                    ]
-                                ]
-                            ]
+                            'config' => $subscriptionsConfig
                         ]
                     ]
                 ]
             ]
         ];
-
-        return array_merge_recursive($this->jsLayout, $jsLayout);
+        
+        $this->jsLayout = array_merge_recursive($this->jsLayout, $data);
     }
 }

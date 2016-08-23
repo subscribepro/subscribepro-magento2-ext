@@ -16,7 +16,7 @@ define(
                 false
             ).done(
                 function (response) {
-                    globalMessageContainer.addSuccessMessage({'message': $t('Subscription payment profile updated.')});
+                    globalMessageContainer.addSuccessMessage({'message': $t('Subscription payment profile has been updated.')});
                     successCallback(response);
                 }
             ).fail(

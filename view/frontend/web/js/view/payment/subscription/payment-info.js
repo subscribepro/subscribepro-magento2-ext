@@ -71,15 +71,10 @@ define(
 
             initPayments: function (response) {
                 var selectedPaymentProfileId = null;
-                var isFirst = true;
                 var self = this;
                 $.each(response, function() {
                     self.payments.push(this);
-                    if (isFirst) {
-                        selectedPaymentProfileId = this.gateway_token;
-                        isFirst = false;
-                    }
-                    if (this.gateway_token == self.paymentProfileId()) {
+                    if (!selectedPaymentProfileId || this.gateway_token == self.paymentProfileId()) {
                         selectedPaymentProfileId = this.gateway_token;
                     }
                 });

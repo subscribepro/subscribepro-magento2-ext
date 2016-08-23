@@ -3,7 +3,7 @@
   "description": "Subscribe Pro",
   "require": {
     "magento/magento-composer-installer": "*",
-    "subscribepro/subscribepro-php": "~0.9.1"
+    "subscribepro/subscribepro-php": "~0.9.3@dev"
   },
   "type": "magento2-module",
   "autoload": {

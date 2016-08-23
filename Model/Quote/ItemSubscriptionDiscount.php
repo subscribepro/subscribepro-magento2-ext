@@ -73,12 +73,12 @@ class ItemSubscriptionDiscount
         $storeId = $item->getQuote()->getStore()->getStoreId();
         $subscriptionDiscount = $this->priceCurrency->convertAndRound($baseSubscriptionDiscount, $storeId);
 
-        $websiteId = $item->getQuote()->getStore()->getWebsiteId();
-        if ($this->isOnlySubscriptionDiscount($websiteId, $baseSubscriptionDiscount, $baseCartDiscount)) {
+        $storeCode = $item->getQuote()->getStore()->getCode();
+        if ($this->isOnlySubscriptionDiscount($storeCode, $baseSubscriptionDiscount, $baseCartDiscount)) {
             $this->rollbackCartRulesAndDescriptions($item, $appliedRuleIds, $discountDescriptions);
             $this->setSubscriptionDiscount($item, $subscriptionDiscount, $baseSubscriptionDiscount);
             $this->addDiscountDescription($item);
-        } else if ($this->isCombineDiscounts($websiteId)) {
+        } else if ($this->isCombineDiscounts($storeCode)) {
             $this->addSubscriptionDiscount($item, $subscriptionDiscount, $baseSubscriptionDiscount);
             $this->addDiscountDescription($item);
         }
@@ -139,8 +139,7 @@ class ItemSubscriptionDiscount
      */
     protected function getPlatformProduct(QuoteItem $item)
     {
-        $product = $this->quoteItemHelper->getProduct($item);
-        return $this->platformProductService->getProduct($product->getSku());
+        return $this->platformProductService->getProduct($item->getProduct()->getSku());
     }
 
     /**
@@ -169,15 +168,15 @@ class ItemSubscriptionDiscount
     }
 
     /**
-     * @param int $websiteId
+     * @param string $storeCode
      * @param float $baseSubscriptionDiscount
      * @param float $baseCartDiscount
      * @return bool
      */
-    protected function isOnlySubscriptionDiscount($websiteId, $baseSubscriptionDiscount, $baseCartDiscount)
+    protected function isOnlySubscriptionDiscount($storeCode, $baseSubscriptionDiscount, $baseCartDiscount)
     {
         $result = false;
-        switch($this->subscriptionDiscountConfig->getCartRuleCombineType($websiteId)) {
+        switch($this->subscriptionDiscountConfig->getCartRuleCombineType($storeCode)) {
             case CartRuleCombine::TYPE_APPLY_GREATEST:
                 if($baseSubscriptionDiscount >= $baseCartDiscount) {
                     $result = true;
@@ -204,12 +203,12 @@ class ItemSubscriptionDiscount
     }
 
     /**
-     * @param int $websiteId
+     * @param string $storeCode
      * @return bool
      */
-    protected function isCombineDiscounts($websiteId)
+    protected function isCombineDiscounts($storeCode)
     {
-        return $this->subscriptionDiscountConfig->getCartRuleCombineType($websiteId)
+        return $this->subscriptionDiscountConfig->getCartRuleCombineType($storeCode)
             == CartRuleCombine::TYPE_COMBINE_SUBSCRIPTION;
     }
 }

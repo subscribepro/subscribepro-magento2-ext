@@ -62,10 +62,6 @@ define(
                 return config.getCode();
             },
 
-            isVaultEnabled: function () {
-                return false;
-            },
-
             initSpreedly: function () {
                 spreedly.init(
                     $.proxy(this.onFieldEvent, this),

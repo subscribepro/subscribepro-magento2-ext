@@ -2,79 +2,94 @@
 
 namespace Swarming\SubscribePro\Platform\Service;
 
+use Swarming\SubscribePro\Api\Data\SubscriptionInterface;
+
 /**
- * @method \SubscribePro\Service\Subscription\SubscriptionService getService($websiteCode = null)
+ * @method \SubscribePro\Service\Subscription\SubscriptionService getService($websiteId = null)
  */
 class Subscription extends AbstractService
 {
     /**
+     * @param array $subscriptionData
+     * @param int|null $websiteId
+     * @return \Swarming\SubscribePro\Api\Data\SubscriptionInterface
+     */
+    public function createSubscription(array $subscriptionData = [], $websiteId = null)
+    {
+        return $this->getService($websiteId)->createSubscription($subscriptionData);
+    }
+
+    /**
+     * @param \Swarming\SubscribePro\Api\Data\SubscriptionInterface $subscription
+     * @param int|null $websiteId
+     * @return \Swarming\SubscribePro\Api\Data\SubscriptionInterface
+     * @throws \SubscribePro\Exception\EntityInvalidDataException
+     * @throws \SubscribePro\Exception\HttpException
+     */
+    public function saveSubscription(SubscriptionInterface $subscription, $websiteId = null)
+    {
+        return $this->getService($websiteId)->saveSubscription($subscription);
+    }
+
+    /**
+     * @param int $subscriptionId
+     * @param int|null $websiteId
+     * @return \Swarming\SubscribePro\Api\Data\SubscriptionInterface
+     * @throws \SubscribePro\Exception\HttpException
+     */
+    public function loadSubscription($subscriptionId, $websiteId = null)
+    {
+        return $this->getService($websiteId)->loadSubscription($subscriptionId);
+    }
+
+    /**
      * @param int $customerId
-     * @return \SubscribePro\Service\Subscription\SubscriptionInterface[]
+     * @param int|null $websiteId
+     * @return \Swarming\SubscribePro\Api\Data\SubscriptionInterface[]
      * @throws \SubscribePro\Exception\HttpException
      */
-    public function loadSubscriptionsByCustomer($customerId)
+    public function loadSubscriptionsByCustomer($customerId, $websiteId = null)
     {
-        return $this->getService()->loadSubscriptions($customerId);
+        return $this->getService($websiteId)->loadSubscriptions($customerId);
     }
 
     /**
      * @param int $subscriptionId
-     * @return \SubscribePro\Service\Subscription\SubscriptionInterface
+     * @param int|null $websiteId
      * @throws \SubscribePro\Exception\HttpException
      */
-    public function loadSubscription($subscriptionId)
+    public function cancelSubscription($subscriptionId, $websiteId = null)
     {
-        return $this->getService()->loadSubscription($subscriptionId);
-    }
-
-    /**
-     * @param \SubscribePro\Service\Subscription\SubscriptionInterface $subscription
-     * @return \SubscribePro\Service\Subscription\SubscriptionInterface
-     * @throws \SubscribePro\Exception\InvalidArgumentException
-     * @throws \SubscribePro\Exception\HttpException
-     */
-    public function saveSubscription($subscription)
-    {
-        return $this->getService()->saveSubscription($subscription);
+        $this->getService($websiteId)->cancelSubscription($subscriptionId);
     }
 
     /**
      * @param int $subscriptionId
-     * @throws \SubscribePro\Exception\InvalidArgumentException
+     * @param int|null $websiteId
      * @throws \SubscribePro\Exception\HttpException
      */
-    public function skip($subscriptionId)
+    public function pauseSubscription($subscriptionId, $websiteId = null)
     {
-        $this->getService()->skipSubscription($subscriptionId);
+        $this->getService($websiteId)->pauseSubscription($subscriptionId);
     }
 
     /**
      * @param int $subscriptionId
-     * @throws \SubscribePro\Exception\InvalidArgumentException
+     * @param int|null $websiteId
      * @throws \SubscribePro\Exception\HttpException
      */
-    public function cancel($subscriptionId)
+    public function restartSubscription($subscriptionId, $websiteId = null)
     {
-        $this->getService()->cancelSubscription($subscriptionId);
+        $this->getService($websiteId)->restartSubscription($subscriptionId);
     }
 
     /**
      * @param int $subscriptionId
-     * @throws \SubscribePro\Exception\InvalidArgumentException
+     * @param int|null $websiteId
      * @throws \SubscribePro\Exception\HttpException
      */
-    public function pause($subscriptionId)
+    public function skipSubscription($subscriptionId, $websiteId = null)
     {
-        $this->getService()->pauseSubscription($subscriptionId);
-    }
-    
-    /**
-     * @param int $subscriptionId
-     * @throws \SubscribePro\Exception\InvalidArgumentException
-     * @throws \SubscribePro\Exception\HttpException
-     */
-    public function restart($subscriptionId)
-    {
-        $this->getService()->restartSubscription($subscriptionId);
+        $this->getService($websiteId)->skipSubscription($subscriptionId);
     }
 }
