@@ -24,6 +24,7 @@ define(
                 );
                 var configOptions = {
                     subscription: subscription,
+                    subscriptionConfig: config.subscriptionConfig,
                     priceConfig: config.priceConfig
                 };
                 utils.extend(rendererComponent, configOptions);

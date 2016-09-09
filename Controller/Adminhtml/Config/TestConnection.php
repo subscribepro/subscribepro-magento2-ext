@@ -15,19 +15,19 @@ class TestConnection extends Action
     /**
      * @var \Swarming\SubscribePro\Model\Config\Platform
      */
-    protected $configPlatform;
+    protected $platformConfig;
 
     /**
      * @param \Magento\Backend\App\Action\Context $context
-     * @param \Swarming\SubscribePro\Model\Config\Platform $configPlatform
+     * @param \Swarming\SubscribePro\Model\Config\Platform $platformConfig
      * @param \SubscribePro\SdkFactory $sdkFactory
      */
     public function __construct(
         \Magento\Backend\App\Action\Context $context,
-        \Swarming\SubscribePro\Model\Config\Platform $configPlatform,
+        \Swarming\SubscribePro\Model\Config\Platform $platformConfig,
         \SubscribePro\SdkFactory $sdkFactory
     ) {
-        $this->configPlatform = $configPlatform;
+        $this->platformConfig = $platformConfig;
         $this->sdkFactory = $sdkFactory;
         parent::__construct($context);
     }
@@ -42,12 +42,13 @@ class TestConnection extends Action
             'message' => __('Invalid values.')
         ];
 
+        $baseUrl = $this->getRequest()->getParam('base_url');
         $clientId = $this->getRequest()->getParam('client_id');
         $clientSecret = $this->getRequest()->getParam('client_secret');
         $website = $this->getRequest()->getParam('website');
 
         if (!empty($clientId) && !empty($clientSecret)) {
-            $sdk = $this->createSdk($clientId, $clientSecret, $website);
+            $sdk = $this->createSdk($baseUrl, $clientId, $clientSecret, $website);
 
             if ($sdk->getWebhookService()->ping()) {
                 $response = [
@@ -66,14 +67,16 @@ class TestConnection extends Action
     }
 
     /**
+     * @param string $baseUrl
      * @param string $clientId
      * @param string $clientSecret
      * @param string $website
      * @return \SubscribePro\Sdk
      */
-    protected function createSdk($clientId, $clientSecret, $website)
+    protected function createSdk($baseUrl, $clientId, $clientSecret, $website)
     {
         $sdk = $this->sdkFactory->create(['config' => [
+            'base_url' => $baseUrl,
             'client_id' => $clientId,
             'client_secret' => $this->updateEncryptedClientSecret($clientSecret, $website)
         ]]);
@@ -88,6 +91,6 @@ class TestConnection extends Action
     protected function updateEncryptedClientSecret($clientSecret, $website)
     {
         $website = empty($website) ? false : $website;
-        return $clientSecret == '******' ? $this->configPlatform->getClientSecret($website) : $clientSecret ;
+        return $clientSecret == '******' ? $this->platformConfig->getClientSecret($website) : $clientSecret ;
     }
 }

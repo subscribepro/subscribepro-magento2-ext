@@ -1,9 +1,12 @@
 define(
     [
         'jquery',
-        'uiComponent'
+        'mage/translate',
+        'uiComponent',
+        'uiLayout',
+        'Magento_Ui/js/model/messages'
     ],
-    function ($, Component) {
+    function ($, $t, Component, layout, Messages) {
         'use strict';
 
         return Component.extend({
@@ -23,7 +26,7 @@ define(
 
             initialize: function () {
                 this._super();
-                this.initProduct();
+                this.initMessageComponent();
                 this.isProductLoaded(true);
             },
 
@@ -33,11 +36,31 @@ define(
                         'subscriptionOptionValue',
                         'isProductLoaded',
                         'intervalValue'
-                    ]);
+                    ])
+                    .initProduct();
 
                 $(this.qtyFieldSelector).on('change', this.onQtyFieldChanged.bind(this));
 
                 this.subscriptionOptionValue.subscribe(this.onQtyFieldChanged.bind(this));
+
+                return this;
+            },
+
+            initMessageComponent: function () {
+                this.messageContainer = new Messages();
+                this.createMessagesComponent();
+
+                return this;
+            },
+
+            createMessagesComponent: function () {
+                var messagesComponent = {
+                    parent: this.name,
+                    name: this.name + '.messages',
+                    config: {messageContainer: this.messageContainer}
+                };
+
+                layout([$.extend(true, this.messages, messagesComponent)]);
 
                 return this;
             },
@@ -67,21 +90,28 @@ define(
                 if (this.subscriptionOptionValue() == this.oneTimePurchaseOption) {
                     return;
                 }
-                this.validateQty();
+                this.validateQty(true);
             },
             
-            validateQty: function () {
-                var $qtyField = $(this.qtyFieldSelector);
-                var qty = $qtyField.val();
+            validateQty: function (showMessages) {
+                var qtyField = $(this.qtyFieldSelector);
+                var qty = qtyField.val();
+                var errorMessage;
 
                 var productMinQty = this.product.min_qty;
                 if (productMinQty && qty < productMinQty) {
-                    $qtyField.val(productMinQty).trigger('change');
+                    qtyField.val(productMinQty).trigger('change');
+                    errorMessage = $t('Product requires minimum quantity of %qty for subscription.').replace('%qty', productMinQty);
                 }
 
                 var productMaxQty  = this.product.max_qty;
                 if (productMaxQty && qty > productMaxQty) {
-                    $qtyField.val(productMaxQty).trigger('change');
+                    qtyField.val(productMaxQty).trigger('change');
+                    errorMessage = $t('Product requires maximum quantity of %qty for subscription.').replace('%qty', productMaxQty);
+                }
+
+                if (showMessages && errorMessage) {
+                    this.messageContainer.addErrorMessage({message: errorMessage});
                 }
             }
         });

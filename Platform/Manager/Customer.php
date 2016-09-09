@@ -2,8 +2,8 @@
 
 namespace Swarming\SubscribePro\Platform\Manager;
 
-use SubscribePro\Service\Customer\CustomerInterface;
-use Magento\Customer\Api\Data\CustomerInterface as MagentoCustomer;
+use SubscribePro\Service\Customer\CustomerInterface as PlatformCustomerInterface;
+use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 
 
@@ -32,16 +32,16 @@ class Customer
     }
 
     /**
-     * @param int $magentoCustomerId
+     * @param int $customerId
      * @param bool $createIfNotExist
      * @param int|null $websiteId
      * @return \SubscribePro\Service\Customer\CustomerInterface
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @throws \SubscribePro\Exception\HttpException
      */
-    public function getCustomerById($magentoCustomerId, $createIfNotExist = false, $websiteId = null)
+    public function getCustomerById($customerId, $createIfNotExist = false, $websiteId = null)
     {
-        $customer = $this->customerRepository->getById($magentoCustomerId);
+        $customer = $this->customerRepository->getById($customerId);
         return $this->getCustomer($customer->getEmail(), $createIfNotExist, $websiteId);
     }
 
@@ -55,13 +55,13 @@ class Customer
      */
     public function getCustomer($customerEmail, $createIfNotExist = false, $websiteId = null)
     {
-        $platformProCustomers = $this->platformCustomerService->loadCustomers(
-            [CustomerInterface::EMAIL => $customerEmail],
+        $platformCustomers = $this->platformCustomerService->loadCustomers(
+            [PlatformCustomerInterface::EMAIL => $customerEmail],
             $websiteId
         );
 
-        if (!empty($platformProCustomers)) {
-            $platformCustomer = $platformProCustomers[0];
+        if (!empty($platformCustomers)) {
+            $platformCustomer = $platformCustomers[0];
         } else if ($createIfNotExist) {
             $customer = $this->customerRepository->get($customerEmail, $websiteId);
             $platformCustomer = $this->createPlatformCustomer($customer, $websiteId);
@@ -78,7 +78,7 @@ class Customer
      * @return \SubscribePro\Service\Customer\CustomerInterface
      * @throws \SubscribePro\Exception\HttpException
      */
-    protected function createPlatformCustomer(MagentoCustomer $customer, $websiteId = null)
+    protected function createPlatformCustomer(CustomerInterface $customer, $websiteId = null)
     {
         $platformCustomer = $this->platformCustomerService->createCustomer([], $websiteId);
         $platformCustomer->setMagentoCustomerId($customer->getId());

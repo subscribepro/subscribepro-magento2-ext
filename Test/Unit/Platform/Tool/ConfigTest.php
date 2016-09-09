@@ -17,7 +17,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject|\SubscribePro\Tools\Config
      */
-    protected $configPlatformToolMock;
+    protected $platformConfigToolMock;
     
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject|\Swarming\SubscribePro\Platform\Storage\Config
@@ -38,7 +38,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $this->platformMock = $this->getMockBuilder(Platform::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $this->configPlatformToolMock = $this->getMockBuilder(ConfigTool::class)
+        $this->platformConfigToolMock = $this->getMockBuilder(ConfigTool::class)
             ->disableOriginalConstructor()
             ->getMock();
         $this->configStorageMock = $this->getMockBuilder(ConfigStorage::class)
@@ -46,8 +46,8 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
             ->getMock();
         $this->configTool = new Config(
             $this->platformMock,
-            $this->configStorageMock,
-            $this->name
+            $this->name,
+            $this->configStorageMock
         );
         $this->configTool->setWebsite($this->defaultWebsiteId);
     }
@@ -67,7 +67,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
             ->willReturn($config);
 
         $this->platformMock->expects($this->never())->method('getSdk');
-        $this->configPlatformToolMock->expects($this->never())->method('load');
+        $this->platformConfigToolMock->expects($this->never())->method('load');
         
         $this->assertEquals($result, $this->configTool->getConfig($key, $websiteId));
     }
@@ -115,7 +115,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $sdkMock->expects($this->once())
             ->method('getTool')
             ->with($this->name)
-            ->willReturn($this->configPlatformToolMock);
+            ->willReturn($this->platformConfigToolMock);
 
         $this->configStorageMock->expects($this->once())
             ->method('load')
@@ -127,7 +127,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
             ->with($expectedWebsiteId)
             ->willReturn($sdkMock);
 
-        $this->configPlatformToolMock->expects($this->once())
+        $this->platformConfigToolMock->expects($this->once())
             ->method('load')
             ->willReturn($config);
 

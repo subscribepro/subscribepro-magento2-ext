@@ -3,8 +3,8 @@
 namespace Swarming\SubscribePro\Test\Unit\Platform\Manager;
 
 use Magento\Customer\Api\CustomerRepositoryInterface;
-use SubscribePro\Service\Customer\CustomerInterface;
-use Magento\Customer\Api\Data\CustomerInterface as MagentoCustomerInterface;
+use SubscribePro\Service\Customer\CustomerInterface as PlatformCustomerInterface;
+use Magento\Customer\Api\Data\CustomerInterface;
 use Swarming\SubscribePro\Platform\Manager\Customer;
 use Swarming\SubscribePro\Platform\Service\Customer as CustomerService;
 
@@ -48,7 +48,7 @@ class CustomerTest extends \PHPUnit_Framework_TestCase
 
         $this->platformCustomerServiceMock->expects($this->once())
             ->method('loadCustomers')
-            ->with([CustomerInterface::EMAIL => $email], $websiteId)
+            ->with([PlatformCustomerInterface::EMAIL => $email], $websiteId)
             ->willReturn([]);
 
         $this->customerManager->getCustomer($email, false, $websiteId);
@@ -59,7 +59,7 @@ class CustomerTest extends \PHPUnit_Framework_TestCase
         $email = 'email';
         $websiteId = 12;
         
-        $customerMock = $this->getMockBuilder(MagentoCustomerInterface::class)->getMock();
+        $customerMock = $this->getMockBuilder(CustomerInterface::class)->getMock();
         $customerMock->expects($this->once())->method('getId')->willReturn(11);
         $customerMock->expects($this->once())->method('getEmail')->willReturn($email);
         $customerMock->expects($this->once())->method('getFirstname')->willReturn('first');
@@ -79,7 +79,7 @@ class CustomerTest extends \PHPUnit_Framework_TestCase
 
         $this->platformCustomerServiceMock->expects($this->once())
             ->method('loadCustomers')
-            ->with([CustomerInterface::EMAIL => $email], $websiteId)
+            ->with([PlatformCustomerInterface::EMAIL => $email], $websiteId)
             ->willReturn([]);
         $this->platformCustomerServiceMock->expects($this->once())
             ->method('createCustomer')
@@ -108,7 +108,7 @@ class CustomerTest extends \PHPUnit_Framework_TestCase
 
         $this->platformCustomerServiceMock->expects($this->once())
             ->method('loadCustomers')
-            ->with([CustomerInterface::EMAIL => $email], $websiteId)
+            ->with([PlatformCustomerInterface::EMAIL => $email], $websiteId)
             ->willReturn([$platformCustomerMock]);
         $this->platformCustomerServiceMock->expects($this->never())->method('createCustomer');
         $this->platformCustomerServiceMock->expects($this->never())->method('saveCustomer');
@@ -128,7 +128,7 @@ class CustomerTest extends \PHPUnit_Framework_TestCase
         $magentoCustomerId = 112;
         $platformCustomerMock = $this->createPlatformCustomerMock();
 
-        $customerMock = $this->getMockBuilder(MagentoCustomerInterface::class)->getMock();
+        $customerMock = $this->getMockBuilder(CustomerInterface::class)->getMock();
         $customerMock->expects($this->once())->method('getEmail')->willReturn($email);
 
         $this->customerRepositoryMock->expects($this->once())
@@ -138,7 +138,7 @@ class CustomerTest extends \PHPUnit_Framework_TestCase
 
         $this->platformCustomerServiceMock->expects($this->once())
             ->method('loadCustomers')
-            ->with([CustomerInterface::EMAIL => $email], $websiteId)
+            ->with([PlatformCustomerInterface::EMAIL => $email], $websiteId)
             ->willReturn([$platformCustomerMock]);
         $this->platformCustomerServiceMock->expects($this->never())->method('createCustomer');
         $this->platformCustomerServiceMock->expects($this->never())->method('saveCustomer');
@@ -156,6 +156,6 @@ class CustomerTest extends \PHPUnit_Framework_TestCase
      */
     private function createPlatformCustomerMock()
     {
-        return $this->getMockBuilder(CustomerInterface::class)->getMock();
+        return $this->getMockBuilder(PlatformCustomerInterface::class)->getMock();
     }
 }

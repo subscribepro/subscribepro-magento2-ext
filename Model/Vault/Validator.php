@@ -2,6 +2,7 @@
 
 namespace Swarming\SubscribePro\Model\Vault;
 
+use Magento\Framework\Exception\LocalizedException;
 use SubscribePro\Service\Address\AddressInterface;
 use SubscribePro\Service\PaymentProfile\PaymentProfileInterface;
 
@@ -31,31 +32,35 @@ class Validator
 
     /**
      * @param array $profileData
-     * @return bool
+     * @return array
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function validate(array &$profileData)
+    public function validate(array $profileData)
     {
-        $isValid = true;
         if (empty($profileData[PaymentProfileInterface::CREDITCARD_MONTH])
             || empty($profileData[PaymentProfileInterface::CREDITCARD_YEAR])
             || empty($profileData[PaymentProfileInterface::BILLING_ADDRESS])
             || !is_array($profileData[PaymentProfileInterface::BILLING_ADDRESS])
-            || !$this->validateBillingAddress($profileData[PaymentProfileInterface::BILLING_ADDRESS])
         ) {
-            $isValid = false;
+            throw new LocalizedException(__('Not all fields are filled.'));
         }
 
-        return $isValid;
+        $updatedAddress = $this->updateRegion($profileData[PaymentProfileInterface::BILLING_ADDRESS]);
+        if (!$this->validateBillingAddress($updatedAddress)) {
+            throw new LocalizedException(__('Not all billing address fields are filled.'));
+        }
+
+        $profileData[PaymentProfileInterface::BILLING_ADDRESS] = $updatedAddress;
+
+        return $profileData;
     }
 
     /**
      * @param array $addressData
      * @return bool
      */
-    protected function validateBillingAddress(array &$addressData)
+    protected function validateBillingAddress(array $addressData)
     {
-        $this->updateRegion($addressData);
-
         $isValid = true;
         if (empty($addressData[AddressInterface::FIRST_NAME])
             || empty($addressData[AddressInterface::LAST_NAME])
@@ -76,7 +81,7 @@ class Validator
      * @param array $addressData
      * @return array
      */
-    protected function updateRegion(array &$addressData)
+    protected function updateRegion(array $addressData)
     {
         if (empty($addressData['region_id']) || empty($addressData['country'])) {
             return $addressData;

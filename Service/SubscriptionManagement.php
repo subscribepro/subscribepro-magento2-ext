@@ -11,8 +11,6 @@ use Swarming\SubscribePro\Api\SubscriptionManagementInterface;
 
 class SubscriptionManagement implements SubscriptionManagementInterface
 {
-    const MINIMUM_NEXT_ORDER_INTERVAL = '+2 days';
-
     /**
      * @var \Swarming\SubscribePro\Platform\Manager\Product
      */
@@ -34,19 +32,19 @@ class SubscriptionManagement implements SubscriptionManagementInterface
     protected $platformAddressManager;
 
     /**
-     * @var \Swarming\SubscribePro\Helper\SubscriptionProducts
+     * @var \Swarming\SubscribePro\Helper\SubscriptionProduct
      */
-    protected $subscriptionProductsHelper;
+    protected $subscriptionProductHelper;
+
+    /**
+     * @var \Swarming\SubscribePro\Model\Config\SubscriptionOptions
+     */
+    protected $subscriptionOptionConfig;
 
     /**
      * @var \Magento\Framework\View\DesignInterface
      */
     protected $design;
-
-    /**
-     * @var \Magento\Framework\Intl\DateTimeFactory
-     */
-    protected $dateTimeFactory;
 
     /**
      * @var \Psr\Log\LoggerInterface
@@ -58,9 +56,9 @@ class SubscriptionManagement implements SubscriptionManagementInterface
      * @param \Swarming\SubscribePro\Platform\Manager\Customer $platformCustomerManager
      * @param \Swarming\SubscribePro\Platform\Service\Subscription $platformSubscriptionService
      * @param \Swarming\SubscribePro\Platform\Manager\Address $platformAddressManager
-     * @param \Swarming\SubscribePro\Helper\SubscriptionProducts $subscriptionProductsHelper
+     * @param \Swarming\SubscribePro\Helper\SubscriptionProduct $subscriptionProductHelper
+     * @param \Swarming\SubscribePro\Model\Config\SubscriptionOptions $subscriptionOptionConfig
      * @param \Magento\Framework\View\DesignInterface $design
-     * @param \Magento\Framework\Intl\DateTimeFactory $dateTimeFactory
      * @param \Psr\Log\LoggerInterface $logger
      */
     public function __construct(
@@ -68,18 +66,18 @@ class SubscriptionManagement implements SubscriptionManagementInterface
         \Swarming\SubscribePro\Platform\Manager\Customer $platformCustomerManager,
         \Swarming\SubscribePro\Platform\Service\Subscription $platformSubscriptionService,
         \Swarming\SubscribePro\Platform\Manager\Address $platformAddressManager,
-        \Swarming\SubscribePro\Helper\SubscriptionProducts $subscriptionProductsHelper,
+        \Swarming\SubscribePro\Helper\SubscriptionProduct $subscriptionProductHelper,
+        \Swarming\SubscribePro\Model\Config\SubscriptionOptions $subscriptionOptionConfig,
         \Magento\Framework\View\DesignInterface $design,
-        \Magento\Framework\Intl\DateTimeFactory $dateTimeFactory,
         \Psr\Log\LoggerInterface $logger
     ) {
         $this->platformProductManager = $platformProductManager;
         $this->platformCustomerManager = $platformCustomerManager;
         $this->platformSubscriptionService = $platformSubscriptionService;
         $this->platformAddressManager = $platformAddressManager;
-        $this->subscriptionProductsHelper = $subscriptionProductsHelper;
+        $this->subscriptionProductHelper = $subscriptionProductHelper;
+        $this->subscriptionOptionConfig = $subscriptionOptionConfig;
         $this->design = $design;
-        $this->dateTimeFactory = $dateTimeFactory;
         $this->logger = $logger;
     }
 
@@ -104,7 +102,7 @@ class SubscriptionManagement implements SubscriptionManagementInterface
             $platformCustomer = $this->platformCustomerManager->getCustomerById($customerId);
             $subscriptions = $this->platformSubscriptionService->loadSubscriptionsByCustomer($platformCustomer->getId());
             if ($subscriptions) {
-                $this->subscriptionProductsHelper->linkProducts($subscriptions);
+                $this->subscriptionProductHelper->linkProducts($subscriptions);
             }
         } catch (NoSuchEntityException $e) {
             $subscriptions = [];
@@ -188,11 +186,10 @@ class SubscriptionManagement implements SubscriptionManagementInterface
      */
     public function updateNextOrderDate($customerId, $subscriptionId, $nextOrderDate)
     {
-        $minNextOrderDateInterval = $this->dateTimeFactory
-            ->create(self::MINIMUM_NEXT_ORDER_INTERVAL)
-            ->format('Y-m-d');
-        if ($nextOrderDate < $minNextOrderDateInterval) {
-            throw new LocalizedException(__('Invalid next order date, it must be not earlier than 2 days in the future.'));
+        if ($nextOrderDate < $this->subscriptionOptionConfig->getEarliestDateForNextOrder()) {
+            throw new LocalizedException(
+                __('Invalid next order date, it must be not earlier than 2 days in the future.')
+            );
         }
 
         try {
@@ -297,6 +294,10 @@ class SubscriptionManagement implements SubscriptionManagementInterface
      */
     public function cancel($customerId, $subscriptionId)
     {
+        if (!$this->subscriptionOptionConfig->isAllowedCancel()) {
+            throw new LocalizedException(__('The subscription cancellation is not allowed.'));
+        }
+
         try {
             $subscription = $this->platformSubscriptionService->loadSubscription($subscriptionId);
             $this->checkSubscriptionOwner($subscription, $customerId);

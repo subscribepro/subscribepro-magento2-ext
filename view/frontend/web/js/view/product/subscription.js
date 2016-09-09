@@ -45,8 +45,8 @@ define(
 
                 this.productPrice = productPriceModel.create(this.product, this.priceConfig);
 
-                var price = parseFloat(this.priceBoxElement.find('.price').parent().data('price-amount').toFixed(2));
-                this.syncProductPrice({oldPrice: {amount: basePrice}, finalPrice: {amount: price}});
+                var frontendFinalPrice = parseFloat(this.priceBoxElement.find('.price').parent().data('price-amount').toFixed(2));
+                this.syncProductPrice({oldPrice: {amount: basePrice}, finalPrice: {amount: frontendFinalPrice}});
 
                 this.productPrice.hasSpecialPrice(hasSpecialPrice);
             },
@@ -61,15 +61,15 @@ define(
             },
 
             syncProductPrice: function (prices) {
-                var finalPrice, oldPrice;
+                var frontendFinalPrice, frontendPrice;
                 if (prices.finalPrice) {
-                    finalPrice = oldPrice = prices.finalPrice.amount;
+                    frontendFinalPrice = frontendPrice = prices.finalPrice.amount;
                 }
                 if (prices.oldPrice) {
-                    oldPrice = prices.oldPrice.amount;
+                    frontendPrice = prices.oldPrice.amount;
                 }
-                this.productPrice.setCalculatedPrices(oldPrice, finalPrice);
-                this.productPrice.hasSpecialPrice(oldPrice != finalPrice);
+                this.productPrice.setFrontendPrice(frontendFinalPrice);
+                this.productPrice.hasSpecialPrice(frontendPrice != frontendFinalPrice);
             },
 
             getPriceBoxElement: function () {

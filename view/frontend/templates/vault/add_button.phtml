@@ -3,19 +3,10 @@
  * @var $block \Swarming\SubscribePro\Block\Vault\AddButton
  */
 ?>
-<style>
-    /* TODO temporary solution, just for dev testing */
-    .vault-list-action {
-        float: right;
-        position: relative;
-        top: -50px;
-    }
-
-</style>
 <div class="actions vault-list-action">
     <button class="action primary"
-            data-mage-init='{"redirectUrl":{"url":"<?php /* @escapeNotVerified */ echo $block->getUrl('swarming_subscribepro/cards/new') ?>"}}'
-            type="button" title="<?php /* @escapeNotVerified */ echo __('Add New Card') ?>">
-        <span><?php /* @escapeNotVerified */ echo __('Add New Card') ?></span>
+            data-mage-init='{"redirectUrl":{"url":"<?php echo $block->getUrl('swarming_subscribepro/cards/new') ?>"}}'
+            type="button" title="<?php echo __('Add New Card') ?>">
+        <span><?php echo __('Add New Card') ?></span>
     </button>
 </div>

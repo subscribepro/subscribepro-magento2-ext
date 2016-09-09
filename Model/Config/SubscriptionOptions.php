@@ -6,6 +6,25 @@ use Magento\Store\Model\ScopeInterface;
 
 class SubscriptionOptions extends General
 {
+    const QTY_MIN_DAYS_TO_NEXT_ORDER = 1;
+
+    /**
+     * @var \Magento\Framework\Intl\DateTimeFactory
+     */
+    protected $dateTimeFactory;
+
+    /**
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     * @param \Magento\Framework\Intl\DateTimeFactory $dateTimeFactory
+     */
+    public function __construct(
+        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
+        \Magento\Framework\Intl\DateTimeFactory $dateTimeFactory
+    ) {
+        parent::__construct($scopeConfig);
+        $this->dateTimeFactory = $dateTimeFactory;
+    }
+
     /**
      * @param string|null $store
      * @return bool
@@ -17,5 +36,28 @@ class SubscriptionOptions extends General
             ScopeInterface::SCOPE_STORE,
             $store
         );
+    }
+
+    /**
+     * @param string|null $store
+     * @return bool
+     */
+    public function isAllowedCancel($store = null)
+    {
+        return $this->scopeConfig->isSetFlag(
+            'swarming_subscribepro/subscription_options/allow_cancel',
+            ScopeInterface::SCOPE_STORE,
+            $store
+        );
+    }
+
+    /**
+     * @return string
+     */
+    public function getEarliestDateForNextOrder()
+    {
+        return $this->dateTimeFactory
+            ->create('+' . self::QTY_MIN_DAYS_TO_NEXT_ORDER . ' days')
+            ->format('Y-m-d');
     }
 }

@@ -10,6 +10,7 @@ class Product extends \Magento\Framework\Cache\Frontend\Decorator\TagScope
 
     /**
      * @param \Magento\Framework\App\Cache\Type\FrontendPool $cacheFrontendPool
+     * @codeCoverageIgnore
      */
     public function __construct(\Magento\Framework\App\Cache\Type\FrontendPool $cacheFrontendPool)
     {

@@ -24,9 +24,9 @@ class Config
     protected $storeManager;
 
     /**
-     * @var \Swarming\SubscribePro\Model\Config\Cache
+     * @var \Swarming\SubscribePro\Model\Config\Advanced
      */
-    protected $cacheConfig;
+    protected $advancedConfig;
 
     /**
      * @var array[]
@@ -36,18 +36,18 @@ class Config
     /**
      * @param \Magento\Framework\Cache\FrontendInterface $cache
      * @param \Magento\Framework\App\Cache\StateInterface $state
-     * @param \Swarming\SubscribePro\Model\Config\Cache $cacheConfig
+     * @param \Swarming\SubscribePro\Model\Config\Advanced $advancedConfig
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      */
     public function __construct(
         \Magento\Framework\Cache\FrontendInterface $cache,
         \Magento\Framework\App\Cache\StateInterface $state,
-        \Swarming\SubscribePro\Model\Config\Cache $cacheConfig,
+        \Swarming\SubscribePro\Model\Config\Advanced $advancedConfig,
         \Magento\Store\Model\StoreManagerInterface $storeManager
     ) {
         $this->cache = $cache;
         $this->state = $state;
-        $this->cacheConfig = $cacheConfig;
+        $this->advancedConfig = $advancedConfig;
         $this->storeManager = $storeManager;
     }
 
@@ -92,7 +92,7 @@ class Config
             return true;
         }
 
-        $lifeTime = $lifeTime ?: $this->cacheConfig->getCacheLifeTime($websiteId);
+        $lifeTime = $lifeTime ?: $this->advancedConfig->getCacheLifeTime($websiteId);
         return $this->cache->save(serialize($config), $cacheKey, [], $lifeTime);
     }
 

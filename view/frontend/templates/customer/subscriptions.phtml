@@ -11,11 +11,11 @@
 <script type="text/x-magento-init">
     {
         "*": {
-            "Magento_Ui/js/core/app": <?php /* @escapeNotVerified */ echo $block->getJsLayout();?>
+            "Magento_Ui/js/core/app": <?php echo $block->getJsLayout();?>
         }
     }
 </script>
 
 <script>
-    window.customerData = <?php /* @escapeNotVerified */ echo \Zend_Json::encode($block->getCustomerData()); ?>;
+    window.customerData = <?php echo \Zend_Json::encode($block->getCustomerData()); ?>;
 </script>

@@ -35,6 +35,11 @@ class Subscription extends \Magento\Checkout\Block\Cart\Additional\Info
     protected $platformProduct;
 
     /**
+     * @var bool
+     */
+    protected $canRender = false;
+
+    /**
      * @param \Magento\Catalog\Block\Product\Context $context
      * @param \Swarming\SubscribePro\Model\Config\General $generalConfig
      * @param \Swarming\SubscribePro\Platform\Manager\Product $platformProductManager
@@ -63,11 +68,23 @@ class Subscription extends \Magento\Checkout\Block\Cart\Additional\Info
     protected function _beforeToHtml()
     {
         if (!$this->generalConfig->isEnabled() || !$this->productHelper->isSubscriptionEnabled($this->getItem()->getProduct())) {
-            $this->setTemplate('');
+            $this->canRender = false;
         } else {
             $this->initJsLayout();
+            $this->canRender = true;
         }
         return parent::_beforeToHtml();
+    }
+
+    /**
+     * @return string
+     */
+    public function getTemplate()
+    {
+        if ($this->canRender) {
+            return parent::getTemplate();
+        }
+        return '';
     }
 
     /**
@@ -123,7 +140,7 @@ class Subscription extends \Magento\Checkout\Block\Cart\Additional\Info
             $subscriptionProduct->setDefaultInterval($intervalOption);
         }
 
-        $subscriptionOption = $this->quoteItemHelper->getSubscriptionOption($this->getItem());
+        $subscriptionOption = $this->quoteItemHelper->getSubscriptionOption($this->getItem()) ?: PlatformProductInterface::SO_ONETIME_PURCHASE;
         $subscriptionProduct->setDefaultSubscriptionOption($subscriptionOption);
 
         return $subscriptionProduct;

@@ -7,7 +7,7 @@ use Magento\Store\Model\StoreManagerInterface;
 use Swarming\SubscribePro\Platform\Storage\Config as ConfigStorage;
 use Magento\Framework\Cache\FrontendInterface as CacheFrontendInterface;
 use Magento\Framework\App\Cache\StateInterface as CacheStateInterface;
-use Swarming\SubscribePro\Model\Config\Cache as CacheConfig;
+use Swarming\SubscribePro\Model\Config\Advanced as CacheConfig;
 
 class ConfigTest extends \PHPUnit_Framework_TestCase
 {
@@ -32,22 +32,22 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
     protected $storeManagerMock;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|\Swarming\SubscribePro\Model\Config\Cache
+     * @var \PHPUnit_Framework_MockObject_MockObject|\Swarming\SubscribePro\Model\Config\Advanced
      */
-    protected $cacheConfigMock;
+    protected $advancedConfigMock;
 
     protected function setUp()
     {
         $this->cacheMock = $this->getMockBuilder(CacheFrontendInterface::class)->getMock();
         $this->stateMock = $this->getMockBuilder(CacheStateInterface::class)->getMock();
         $this->storeManagerMock = $this->getMockBuilder(StoreManagerInterface::class)->getMock();
-        $this->cacheConfigMock = $this->getMockBuilder(CacheConfig::class)
+        $this->advancedConfigMock = $this->getMockBuilder(CacheConfig::class)
             ->disableOriginalConstructor()->getMock();
 
         $this->configStorage = new ConfigStorage(
             $this->cacheMock,
             $this->stateMock,
-            $this->cacheConfigMock,
+            $this->advancedConfigMock,
             $this->storeManagerMock
         );
     }
@@ -182,7 +182,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
             ->with($websiteId)
             ->willReturn($websiteMock);
 
-        $this->cacheConfigMock->expects($this->once())
+        $this->advancedConfigMock->expects($this->once())
             ->method('getCacheLifeTime')
             ->with($websiteId)
             ->willReturn($lifeTime);
@@ -220,7 +220,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
             ->with($websiteId)
             ->willReturn($websiteMock);
 
-        $this->cacheConfigMock->expects($this->never())->method('getCacheLifeTime');
+        $this->advancedConfigMock->expects($this->never())->method('getCacheLifeTime');
 
         $this->cacheMock->expects($this->once())
             ->method('save')

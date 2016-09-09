@@ -10,23 +10,23 @@ class IsAllowedGuest implements ObserverInterface
     /**
      * @var \Swarming\SubscribePro\Model\Config\General
      */
-    protected $configGeneral;
+    protected $generalConfig;
 
     /**
-     * @var \Swarming\SubscribePro\Helper\QuoteItem
+     * @var \Swarming\SubscribePro\Helper\Quote
      */
-    protected $quoteItemHelper;
+    protected $quoteHelper;
 
     /**
-     * @param \Swarming\SubscribePro\Model\Config\General $configGeneral
-     * @param \Swarming\SubscribePro\Helper\QuoteItem $quoteItemHelper
+     * @param \Swarming\SubscribePro\Model\Config\General $generalConfig
+     * @param \Swarming\SubscribePro\Helper\Quote $quoteHelper
      */
     public function __construct(
-        \Swarming\SubscribePro\Model\Config\General $configGeneral,
-        \Swarming\SubscribePro\Helper\QuoteItem $quoteItemHelper
+        \Swarming\SubscribePro\Model\Config\General $generalConfig,
+        \Swarming\SubscribePro\Helper\Quote $quoteHelper
     ) {
-        $this->configGeneral = $configGeneral;
-        $this->quoteItemHelper = $quoteItemHelper;
+        $this->generalConfig = $generalConfig;
+        $this->quoteHelper = $quoteHelper;
     }
 
     /**
@@ -42,11 +42,11 @@ class IsAllowedGuest implements ObserverInterface
         $quote = $observer->getData('quote');
 
         $websiteCode = $quote->getStore()->getWebsite()->getCode();
-        if (!$this->configGeneral->isEnabled($websiteCode)) {
+        if (!$this->generalConfig->isEnabled($websiteCode)) {
             return;
         }
 
-        if ($this->quoteItemHelper->hasQuoteSubscription($quote)) {
+        if ($this->quoteHelper->hasSubscription($quote)) {
             $result->setIsAllowed(false);
         }
     }

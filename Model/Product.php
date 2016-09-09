@@ -4,14 +4,17 @@ namespace Swarming\SubscribePro\Model;
 
 use Swarming\SubscribePro\Api\Data\ProductInterface;
 
+/**
+ * @codeCoverageIgnore
+ */
 class Product extends \SubscribePro\Service\Product\Product implements ProductInterface
 {
     /**
-     * @return string|null
+     * @return string
      */
     public function getUrl()
     {
-        return $this->getData(self::URL);
+        return $this->getData(self::URL, '');
     }
 
     /**
@@ -41,11 +44,28 @@ class Product extends \SubscribePro\Service\Product\Product implements ProductIn
     }
 
     /**
+     * @return array
+     */
+    public function getOptionList()
+    {
+        return $this->getData(self::OPTION_LIST, []);
+    }
+
+    /**
+     * @param array $optionList
+     * @return $this
+     */
+    public function setOptionList(array $optionList)
+    {
+        return $this->setData(self::OPTION_LIST, $optionList);
+    }
+
+    /**
      * @return float|null
      */
     public function getFinalPrice()
     {
-        return $this->getData(self::FINAL_PRICE);
+        return $this->getData(self::FINAL_PRICE, 0);
     }
 
     /**
@@ -62,7 +82,7 @@ class Product extends \SubscribePro\Service\Product\Product implements ProductIn
      */
     public function getTaxRate()
     {
-        return $this->getData(self::TAX_RATE);
+        return $this->getData(self::TAX_RATE, 0);
     }
 
     /**
@@ -72,5 +92,22 @@ class Product extends \SubscribePro\Service\Product\Product implements ProductIn
     public function setTaxRate($taxRate)
     {
         return $this->setData(self::TAX_RATE, $taxRate);
+    }
+
+    /**
+     * @return bool
+     */
+    public function getIsCatalogRuleApplied()
+    {
+        return $this->getData(self::IS_CATALOG_RULE_APPLIED, false);
+    }
+
+    /**
+     * @param bool $isCatalogRuleApplied
+     * @return $this
+     */
+    public function setIsCatalogRuleApplied($isCatalogRuleApplied)
+    {
+        return $this->setData(self::IS_CATALOG_RULE_APPLIED, $isCatalogRuleApplied);
     }
 }

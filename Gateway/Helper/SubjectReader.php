@@ -11,6 +11,7 @@ class SubjectReader
      * @param array $subject
      * @return \Magento\Payment\Gateway\Data\PaymentDataObjectInterface
      * @throws \InvalidArgumentException
+     * @codeCoverageIgnore
      */
     public function readPayment(array $subject)
     {
@@ -21,6 +22,7 @@ class SubjectReader
      * @param array $subject
      * @return mixed
      * @throws \InvalidArgumentException
+     * @codeCoverageIgnore
      */
     public function readAmount(array $subject)
     {

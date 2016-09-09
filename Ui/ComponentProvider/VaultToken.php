@@ -14,20 +14,12 @@ class VaultToken implements TokenUiComponentProviderInterface
     protected $componentFactory;
 
     /**
-     * @var \Magento\Framework\UrlInterface
-     */
-    protected $urlBuilder;
-
-    /**
      * @param \Magento\Vault\Model\Ui\TokenUiComponentInterfaceFactory $componentFactory
-     * @param \Magento\Framework\UrlInterface $urlBuilder
      */
     public function __construct(
-        \Magento\Vault\Model\Ui\TokenUiComponentInterfaceFactory $componentFactory,
-        \Magento\Framework\UrlInterface $urlBuilder
+        \Magento\Vault\Model\Ui\TokenUiComponentInterfaceFactory $componentFactory
     ) {
         $this->componentFactory = $componentFactory;
-        $this->urlBuilder = $urlBuilder;
     }
 
     /**

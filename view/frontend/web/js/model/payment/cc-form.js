@@ -109,7 +109,7 @@ define(
             },
 
             validationPaymentData: function (inputProperties) {
-                if (inputProperties['validCvv'] && inputProperties['validNumber']) {
+                if (inputProperties['validNumber'] && (inputProperties['validCvv'] || !config.hasVerification())) {
                     this.tokenizeCreditCard();
                 }
 
@@ -117,7 +117,7 @@ define(
                     hostedFields.addClass('number', 'invalid');
                 }
 
-                if (!inputProperties['validCvv']) {
+                if (!inputProperties['validCvv'] && config.hasVerification()) {
                     hostedFields.addClass('cvv', 'invalid');
                 }
             },

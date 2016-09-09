@@ -8,8 +8,8 @@ use Magento\Quote\Model\Quote;
 use Magento\Store\Api\Data\WebsiteInterface;
 use Magento\Store\Model\Store;
 use Swarming\SubscribePro\Observer\Checkout\IsAllowedGuest;
-use Swarming\SubscribePro\Model\Config\General as ConfigGeneral;
-use Swarming\SubscribePro\Helper\QuoteItem as QuoteItemHelper;
+use Swarming\SubscribePro\Model\Config\General as GeneralConfig;
+use Swarming\SubscribePro\Helper\Quote as QuoteHelper;
 
 class IsAllowedGuestTest extends \PHPUnit_Framework_TestCase
 {
@@ -21,23 +21,23 @@ class IsAllowedGuestTest extends \PHPUnit_Framework_TestCase
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject|\Swarming\SubscribePro\Model\Config\General
      */
-    protected $configGeneralMock;
+    protected $generalConfigMock;
 
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject|\Swarming\SubscribePro\Helper\QuoteItem
      */
-    protected $quoteItemHelperMock;
+    protected $quoteHelperMock;
 
     protected function setUp()
     {
-        $this->configGeneralMock = $this->getMockBuilder(ConfigGeneral::class)
+        $this->generalConfigMock = $this->getMockBuilder(GeneralConfig::class)
             ->disableOriginalConstructor()->getMock();
-        $this->quoteItemHelperMock = $this->getMockBuilder(QuoteItemHelper::class)
+        $this->quoteHelperMock = $this->getMockBuilder(QuoteHelper::class)
             ->disableOriginalConstructor()->getMock();
 
         $this->isAllowedGuest = new IsAllowedGuest(
-            $this->configGeneralMock,
-            $this->quoteItemHelperMock
+            $this->generalConfigMock,
+            $this->quoteHelperMock
         );
     }
 
@@ -71,12 +71,12 @@ class IsAllowedGuestTest extends \PHPUnit_Framework_TestCase
             ->with('quote')
             ->willReturn($quoteMock);
 
-        $this->configGeneralMock->expects($this->once())
+        $this->generalConfigMock->expects($this->once())
             ->method('isEnabled')
             ->with($websiteCode)
             ->willReturn(false);
         
-        $this->quoteItemHelperMock->expects($this->never())->method('hasQuoteSubscription');
+        $this->quoteHelperMock->expects($this->never())->method('hasSubscription');
 
         $this->isAllowedGuest->execute($observerMock);
     }
@@ -113,13 +113,13 @@ class IsAllowedGuestTest extends \PHPUnit_Framework_TestCase
             ->with('quote')
             ->willReturn($quoteMock);
 
-        $this->configGeneralMock->expects($this->once())
+        $this->generalConfigMock->expects($this->once())
             ->method('isEnabled')
             ->with($websiteCode)
             ->willReturn(true);
 
-        $this->quoteItemHelperMock->expects($this->once())
-            ->method('hasQuoteSubscription')
+        $this->quoteHelperMock->expects($this->once())
+            ->method('hasSubscription')
             ->with($quoteMock)
             ->willReturn(false);
 
@@ -158,13 +158,13 @@ class IsAllowedGuestTest extends \PHPUnit_Framework_TestCase
             ->with('quote')
             ->willReturn($quoteMock);
 
-        $this->configGeneralMock->expects($this->once())
+        $this->generalConfigMock->expects($this->once())
             ->method('isEnabled')
             ->with($websiteCode)
             ->willReturn(true);
 
-        $this->quoteItemHelperMock->expects($this->once())
-            ->method('hasQuoteSubscription')
+        $this->quoteHelperMock->expects($this->once())
+            ->method('hasSubscription')
             ->with($quoteMock)
             ->willReturn(true);
 

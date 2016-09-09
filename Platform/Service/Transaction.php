@@ -73,29 +73,29 @@ class Transaction extends AbstractService
     /**
      * @param string $token
      * @param \SubscribePro\Service\Transaction\TransactionInterface $transaction
-     * @param \SubscribePro\Service\Address\AddressInterface|null $address
+     * @param \SubscribePro\Service\Address\AddressInterface|null $platformAddress
      * @param int|null $websiteId
      * @return \SubscribePro\Service\Token\TokenInterface
      * @throws \SubscribePro\Exception\EntityInvalidDataException
      * @throws \SubscribePro\Exception\HttpException
      */
-    public function authorizeByToken($token, TransactionInterface $transaction, AddressInterface $address = null, $websiteId = null)
+    public function authorizeByToken($token, TransactionInterface $transaction, AddressInterface $platformAddress = null, $websiteId = null)
     {
-        return $this->getService($websiteId)->authorizeByToken($token, $transaction, $address);
+        return $this->getService($websiteId)->authorizeByToken($token, $transaction, $platformAddress);
     }
 
     /**
      * @param string $token
      * @param \SubscribePro\Service\Transaction\TransactionInterface $transaction
-     * @param \SubscribePro\Service\Address\AddressInterface|null $address
+     * @param \SubscribePro\Service\Address\AddressInterface|null $platformAddress
      * @param int|null $websiteId
      * @return \SubscribePro\Service\Token\TokenInterface
      * @throws \SubscribePro\Exception\EntityInvalidDataException
      * @throws \SubscribePro\Exception\HttpException
      */
-    public function purchaseByToken($token, TransactionInterface $transaction, AddressInterface $address = null, $websiteId = null)
+    public function purchaseByToken($token, TransactionInterface $transaction, AddressInterface $platformAddress = null, $websiteId = null)
     {
-        return $this->getService($websiteId)->purchaseByToken($token, $transaction, $address);
+        return $this->getService($websiteId)->purchaseByToken($token, $transaction, $platformAddress);
     }
 
     /**

@@ -10,20 +10,20 @@ class Config extends AbstractTool
     /**
      * @var \Swarming\SubscribePro\Platform\Storage\Config
      */
-    protected $configStorage;
+    protected $platformStorageConfig;
 
     /**
      * @param \Swarming\SubscribePro\Platform\Platform $platform
-     * @param \Swarming\SubscribePro\Platform\Storage\Config $configStorage
      * @param string $name
+     * @param \Swarming\SubscribePro\Platform\Storage\Config $platformStorageConfig
      */
     public function __construct(
         \Swarming\SubscribePro\Platform\Platform $platform,
-        \Swarming\SubscribePro\Platform\Storage\Config $configStorage,
-        $name
+        $name,
+        \Swarming\SubscribePro\Platform\Storage\Config $platformStorageConfig
     ) {
         parent::__construct($platform, $name);
-        $this->configStorage = $configStorage;
+        $this->platformStorageConfig = $platformStorageConfig;
     }
 
     /**
@@ -46,10 +46,10 @@ class Config extends AbstractTool
      */
     protected function retrieveConfig($websiteId = null)
     {
-        $config = $this->configStorage->load($websiteId);
+        $config = $this->platformStorageConfig->load($websiteId);
         if (!$config) {
             $config = $this->getTool($websiteId)->load();
-            $this->configStorage->save($config, $websiteId);
+            $this->platformStorageConfig->save($config, $websiteId);
         }
         return $config;
     }

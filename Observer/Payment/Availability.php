@@ -15,20 +15,20 @@ class Availability implements ObserverInterface
     protected $checkoutSession;
 
     /**
-     * @var \Swarming\SubscribePro\Helper\QuoteItem
+     * @var \Swarming\SubscribePro\Helper\Quote
      */
-    protected $quoteItemHelper;
+    protected $quoteHelper;
 
     /**
      * @param \Magento\Checkout\Model\Session $checkoutSession
-     * @param \Swarming\SubscribePro\Helper\QuoteItem $quoteItemHelper
+     * @param \Swarming\SubscribePro\Helper\Quote $quoteHelper
      */
     public function __construct(
         \Magento\Checkout\Model\Session $checkoutSession,
-        \Swarming\SubscribePro\Helper\QuoteItem $quoteItemHelper
+        \Swarming\SubscribePro\Helper\Quote $quoteHelper
     ) {
         $this->checkoutSession = $checkoutSession;
-        $this->quoteItemHelper = $quoteItemHelper;
+        $this->quoteHelper = $quoteHelper;
     }
 
     /**
@@ -54,8 +54,8 @@ class Availability implements ObserverInterface
         $isAvailable = $result->getData('is_available');
         $isActiveNonSubscription = $methodInstance->getConfigData(Config::KEY_ACTIVE_NON_SUBSCRIPTION);
 
-        if ($this->quoteItemHelper->hasQuoteSubscription($quote)) {
-            $isAvailable = ConfigProvider::CODE == $methodCode;
+        if ($this->quoteHelper->hasSubscription($quote)) {
+            $isAvailable = ConfigProvider::CODE == $methodCode && $isAvailable;
         } else if (ConfigProvider::CODE == $methodCode && !$isActiveNonSubscription) {
             $isAvailable = false;
         }

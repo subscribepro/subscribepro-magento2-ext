@@ -36,16 +36,16 @@ class AddressTest extends AbstractService
      */
     public function testCreateAddress($websiteId, $expectedWebsiteId)
     {
-        $addressMock = $this->createAddressMock();
+        $platformAddressMock = $this->createPlatformAddressMock();
         
         $this->initService($this->addressPlatformService, $expectedWebsiteId);
         $this->addressPlatformService->expects($this->once())
             ->method('createAddress')
             ->with(['address data'])
-            ->willReturn($addressMock);
+            ->willReturn($platformAddressMock);
         
         $this->assertSame(
-            $addressMock, $this->addressService->createAddress(['address data'], $websiteId)
+            $platformAddressMock, $this->addressService->createAddress(['address data'], $websiteId)
         );
     }
 
@@ -70,48 +70,48 @@ class AddressTest extends AbstractService
     {
         $addressId = 111;
         $websiteId = 12;
-        $addressMock = $this->createAddressMock();
+        $platformAddressMock = $this->createPlatformAddressMock();
         $this->initService($this->addressPlatformService, $websiteId);
 
         $this->addressPlatformService->expects($this->once())
             ->method('loadAddress')
             ->with($addressId)
-            ->willReturn($addressMock);
+            ->willReturn($platformAddressMock);
 
         $this->assertSame(
-            $addressMock, $this->addressService->loadAddress($addressId, $websiteId)
+            $platformAddressMock, $this->addressService->loadAddress($addressId, $websiteId)
         );
     }
 
     public function testSaveAddress()
     {
         $websiteId = 12;
-        $addressMock = $this->createAddressMock();
+        $platformAddressMock = $this->createPlatformAddressMock();
         $this->initService($this->addressPlatformService, $websiteId);
 
         $this->addressPlatformService->expects($this->once())
             ->method('saveAddress')
-            ->with($addressMock)
-            ->willReturn($addressMock);
+            ->with($platformAddressMock)
+            ->willReturn($platformAddressMock);
 
         $this->assertSame(
-            $addressMock, $this->addressService->saveAddress($addressMock, $websiteId)
+            $platformAddressMock, $this->addressService->saveAddress($platformAddressMock, $websiteId)
         );
     }
 
     public function testFindOrSaveAddress()
     {
         $websiteId = 12;
-        $addressMock = $this->createAddressMock();
+        $platformAddressMock = $this->createPlatformAddressMock();
         $this->initService($this->addressPlatformService, $websiteId);
 
         $this->addressPlatformService->expects($this->once())
             ->method('findOrSave')
-            ->with($addressMock)
-            ->willReturn($addressMock);
+            ->with($platformAddressMock)
+            ->willReturn($platformAddressMock);
 
         $this->assertSame(
-            $addressMock, $this->addressService->findOrSave($addressMock, $websiteId)
+            $platformAddressMock, $this->addressService->findOrSave($platformAddressMock, $websiteId)
         );
     }
     
@@ -119,23 +119,23 @@ class AddressTest extends AbstractService
     {
         $websiteId = 12;
         $customerId = 33;
-        $addressesMock = [$this->createAddressMock(), $this->createAddressMock()];
+        $platformAddressesMock = [$this->createPlatformAddressMock(), $this->createPlatformAddressMock()];
         $this->initService($this->addressPlatformService, $websiteId);
 
         $this->addressPlatformService->expects($this->once())
             ->method('loadAddresses')
             ->with($customerId)
-            ->willReturn($addressesMock);
+            ->willReturn($platformAddressesMock);
 
         $this->assertEquals(
-            $addressesMock, $this->addressService->loadAddresses($customerId, $websiteId)
+            $platformAddressesMock, $this->addressService->loadAddresses($customerId, $websiteId)
         );
     }
 
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject|\Swarming\SubscribePro\Api\Data\AddressInterface
      */
-    private function createAddressMock()
+    private function createPlatformAddressMock()
     {
         return $this->getMockBuilder(AddressInterface::class)->getMock();
     }

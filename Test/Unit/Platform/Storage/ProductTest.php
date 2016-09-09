@@ -2,13 +2,13 @@
 
 namespace Swarming\SubscribePro\Test\Unit\Platform\Storage;
 
-use Swarming\SubscribePro\Api\Data\ProductInterface;
+use Swarming\SubscribePro\Api\Data\ProductInterface as PlatformProductInterface;
 use Swarming\SubscribePro\Platform\Storage\Product as ProductStorage;
 use Magento\Store\Api\Data\WebsiteInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\Framework\Cache\FrontendInterface as CacheFrontendInterface;
 use Magento\Framework\App\Cache\StateInterface as CacheStateInterface;
-use Swarming\SubscribePro\Model\Config\Cache as CacheConfig;
+use Swarming\SubscribePro\Model\Config\Advanced as CacheConfig;
 
 class ProductTest extends \PHPUnit_Framework_TestCase
 {
@@ -33,22 +33,22 @@ class ProductTest extends \PHPUnit_Framework_TestCase
     protected $storeManagerMock;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|\Swarming\SubscribePro\Model\Config\Cache
+     * @var \PHPUnit_Framework_MockObject_MockObject|\Swarming\SubscribePro\Model\Config\Advanced
      */
-    protected $cacheConfigMock;
+    protected $advancedConfigMock;
 
     protected function setUp()
     {
         $this->cacheMock = $this->getMockBuilder(CacheFrontendInterface::class)->getMock();
         $this->stateMock = $this->getMockBuilder(CacheStateInterface::class)->getMock();
         $this->storeManagerMock = $this->getMockBuilder(StoreManagerInterface::class)->getMock();
-        $this->cacheConfigMock = $this->getMockBuilder(CacheConfig::class)
+        $this->advancedConfigMock = $this->getMockBuilder(CacheConfig::class)
             ->disableOriginalConstructor()->getMock();
 
         $this->productStorage = new ProductStorage(
             $this->cacheMock,
             $this->stateMock,
-            $this->cacheConfigMock,
+            $this->advancedConfigMock,
             $this->storeManagerMock
         );
     }
@@ -106,7 +106,7 @@ class ProductTest extends \PHPUnit_Framework_TestCase
     {
         $sku = 'sku';
         $websiteId = 23;
-        $productMock = $this->createProductMock();
+        $platformProductMock = $this->createPlatformProductMock();
 
         $websiteMock = $this->createWebsiteMock();
         $websiteMock->expects($this->any())->method('getCode')->willReturn('code');
@@ -124,12 +124,12 @@ class ProductTest extends \PHPUnit_Framework_TestCase
         $this->cacheMock->expects($this->once())
             ->method('load')
             ->with($this->stringContains(ProductStorage::PRODUCT_CACHE_KEY . '_'))
-            ->willReturn(serialize($productMock));
+            ->willReturn(serialize($platformProductMock));
 
         $cachedProduct = $this->productStorage->load($sku, $websiteId);
 
         $this->assertEquals(
-            $productMock,
+            $platformProductMock,
             $cachedProduct,
             'Fail to test product storage load from cache'
         );
@@ -144,8 +144,8 @@ class ProductTest extends \PHPUnit_Framework_TestCase
     {
         $websiteId = 23;
 
-        $productMock = $this->createProductMock();
-        $productMock->expects($this->once())->method('getSku')->willReturn('sku');
+        $platformProductMock = $this->createPlatformProductMock();
+        $platformProductMock->expects($this->once())->method('getSku')->willReturn('sku');
 
         $websiteMock = $this->createWebsiteMock();
         $websiteMock->expects($this->any())->method('getCode')->willReturn('code');
@@ -162,7 +162,7 @@ class ProductTest extends \PHPUnit_Framework_TestCase
 
         $this->cacheMock->expects($this->never())->method('save');
 
-        $this->productStorage->save($productMock, $websiteId);
+        $this->productStorage->save($platformProductMock, $websiteId);
     }
 
     public function testSaveWithoutLifeTime()
@@ -170,8 +170,8 @@ class ProductTest extends \PHPUnit_Framework_TestCase
         $websiteId = 5002;
         $lifeTime = 5005;
 
-        $productMock = $this->createProductMock();
-        $productMock->expects($this->once())->method('getSku')->willReturn('sku');
+        $platformProductMock = $this->createPlatformProductMock();
+        $platformProductMock->expects($this->once())->method('getSku')->willReturn('sku');
 
         $websiteMock = $this->createWebsiteMock();
         $websiteMock->expects($this->any())->method('getCode')->willReturn('code');
@@ -186,7 +186,7 @@ class ProductTest extends \PHPUnit_Framework_TestCase
             ->with($websiteId)
             ->willReturn($websiteMock);
 
-        $this->cacheConfigMock->expects($this->once())
+        $this->advancedConfigMock->expects($this->once())
             ->method('getCacheLifeTime')
             ->with($websiteId)
             ->willReturn($lifeTime);
@@ -200,7 +200,7 @@ class ProductTest extends \PHPUnit_Framework_TestCase
                 $lifeTime
             );
 
-        $this->productStorage->save($productMock, $websiteId);
+        $this->productStorage->save($platformProductMock, $websiteId);
     }
 
     public function testSaveWithLifeTime()
@@ -208,8 +208,8 @@ class ProductTest extends \PHPUnit_Framework_TestCase
         $websiteId = 2020;
         $lifeTime = 1010;
 
-        $productMock = $this->createProductMock();
-        $productMock->expects($this->once())->method('getSku')->willReturn('sku');
+        $platformProductMock = $this->createPlatformProductMock();
+        $platformProductMock->expects($this->once())->method('getSku')->willReturn('sku');
 
         $websiteMock = $this->createWebsiteMock();
         $websiteMock->expects($this->any())->method('getCode')->willReturn('code');
@@ -224,7 +224,7 @@ class ProductTest extends \PHPUnit_Framework_TestCase
             ->with($websiteId)
             ->willReturn($websiteMock);
 
-        $this->cacheConfigMock->expects($this->never())->method('getCacheLifeTime');
+        $this->advancedConfigMock->expects($this->never())->method('getCacheLifeTime');
 
         $this->cacheMock->expects($this->once())
             ->method('save')
@@ -235,7 +235,7 @@ class ProductTest extends \PHPUnit_Framework_TestCase
                 $lifeTime
             );
 
-        $this->productStorage->save($productMock, $websiteId, $lifeTime);
+        $this->productStorage->save($platformProductMock, $websiteId, $lifeTime);
     }
 
     public function testRemoveIfProductCacheDisabled()
@@ -259,6 +259,34 @@ class ProductTest extends \PHPUnit_Framework_TestCase
         $this->cacheMock->expects($this->never())->method('remove');
 
         $this->productStorage->remove($sku, $websiteId);
+    }
+
+    public function testRemoveIfProductCachedInternal()
+    {
+        $websiteId = 12323;
+        $websiteMock = $this->createWebsiteMock();
+        $websiteMock->expects($this->any())->method('getCode')->willReturn('code');
+
+        $platformProductMock = $this->createPlatformProductMock();
+        $platformProductMock->expects($this->once())->method('getSku')->willReturn('sku');
+
+        $websiteMock = $this->createWebsiteMock();
+        $websiteMock->expects($this->any())->method('getCode')->willReturn('code');
+
+        $this->stateMock->expects($this->exactly(2))
+            ->method('isEnabled')
+            ->with(\Swarming\SubscribePro\Platform\Cache\Type\Product::TYPE_IDENTIFIER)
+            ->willReturn(false);
+
+        $this->storeManagerMock->expects($this->exactly(2))
+            ->method('getWebsite')
+            ->with($websiteId)
+            ->willReturn($websiteMock);
+
+        $this->cacheMock->expects($this->never())->method('remove');
+
+        $this->productStorage->save($platformProductMock, $websiteId);
+        $this->productStorage->remove('sku', $websiteId);
     }
 
     public function testRemove()
@@ -287,9 +315,9 @@ class ProductTest extends \PHPUnit_Framework_TestCase
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject|\Swarming\SubscribePro\Api\Data\ProductInterface
      */
-    private function createProductMock()
+    private function createPlatformProductMock()
     {
-        return $this->getMockBuilder(ProductInterface::class)->getMock();
+        return $this->getMockBuilder(PlatformProductInterface::class)->getMock();
     }
 
     /**

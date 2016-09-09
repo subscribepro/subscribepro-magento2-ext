@@ -2,7 +2,6 @@
 
 namespace Swarming\SubscribePro\Helper;
 
-use Magento\Quote\Model\Quote\Item\AbstractItem;
 use Swarming\SubscribePro\Model\Quote\SubscriptionOption\OptionProcessor;
 use Swarming\SubscribePro\Api\Data\SubscriptionOptionInterface;
 use Swarming\SubscribePro\Api\Data\ProductInterface as PlatformProductInterface;
@@ -15,94 +14,85 @@ class QuoteItem
     protected $itemOptionFactory;
 
     /**
+     * @var \Magento\Framework\Intl\DateTimeFactory
+     */
+    protected $dateTimeFactory;
+
+    /**
      * @param \Magento\Quote\Model\Quote\Item\OptionFactory $itemOptionFactory
+     * @param \Magento\Framework\Intl\DateTimeFactory $dateTimeFactory
      */
     public function __construct(
-        \Magento\Quote\Model\Quote\Item\OptionFactory $itemOptionFactory
+        \Magento\Quote\Model\Quote\Item\OptionFactory $itemOptionFactory,
+        \Magento\Framework\Intl\DateTimeFactory $dateTimeFactory
     ) {
         $this->itemOptionFactory = $itemOptionFactory;
+        $this->dateTimeFactory = $dateTimeFactory;
     }
 
     /**
-     * @param \Magento\Quote\Api\Data\CartInterface $quote
+     * @param \Magento\Quote\Model\Quote\Item $item
      * @return bool
      */
-    public function hasQuoteSubscription($quote)
-    {
-        $hasSubscription = false;
-        $items = (array)$quote->getItems();
-        foreach ($items as $item) {
-            if ($this->hasSubscription($item)) {
-                $hasSubscription = true;
-                break;
-            }
-        }
-        return $hasSubscription;
-    }
-
-    /**
-     * @param \Magento\Quote\Model\Quote\Item\AbstractItem $item
-     * @return bool
-     */
-    public function hasSubscription(AbstractItem $item)
+    public function hasSubscription($item)
     {
         return $this->isSubscriptionEnabled($item) || $this->isFulfilsSubscription($item);
     }
 
     /**
-     * @param \Magento\Quote\Model\Quote\Item\AbstractItem $item
+     * @param \Magento\Quote\Model\Quote\Item $item
      * @return bool
      */
-    public function isSubscriptionEnabled(AbstractItem $item)
+    public function isSubscriptionEnabled($item)
     {
         return $this->getSubscriptionOption($item) == PlatformProductInterface::SO_SUBSCRIPTION;
     }
 
     /**
-     * @param \Magento\Quote\Model\Quote\Item\AbstractItem $item
+     * @param \Magento\Quote\Model\Quote\Item $item
      * @return bool
      */
-    public function isFulfilsSubscription(AbstractItem $item)
+    public function isFulfilsSubscription($item)
     {
         return (bool)$this->getParam($item, SubscriptionOptionInterface::IS_FULFILLING);
     }
 
     /**
-     * @param \Magento\Quote\Model\Quote\Item\AbstractItem $item
-     * @return bool|string
+     * @param \Magento\Quote\Model\Quote\Item $item
+     * @return null|string
      */
-    public function getSubscriptionOption(AbstractItem $item)
+    public function getSubscriptionOption($item)
     {
         return $this->getParam($item, SubscriptionOptionInterface::OPTION);
     }
 
     /**
-     * @param \Magento\Quote\Model\Quote\Item\AbstractItem $item
-     * @return bool|string
+     * @param \Magento\Quote\Model\Quote\Item $item
+     * @return null|string
      */
-    public function getSubscriptionInterval(AbstractItem $item)
+    public function getSubscriptionInterval($item)
     {
         return $this->getParam($item, SubscriptionOptionInterface::INTERVAL);
     }
 
     /**
-     * @param \Magento\Quote\Model\Quote\Item\AbstractItem $item
+     * @param \Magento\Quote\Model\Quote\Item $item
      * @param string $paramKey
-     * @return bool
+     * @return mixed|null
      */
-    protected function getParam(AbstractItem $item, $paramKey)
+    protected function getParam($item, $paramKey)
     {
         $params = $this->getSubscriptionParams($item);
         return isset($params[$paramKey]) ? $params[$paramKey] : null;
     }
 
     /**
-     * @param \Magento\Quote\Model\Quote\Item\AbstractItem $item
+     * @param \Magento\Quote\Model\Quote\Item $item
      * @param string $paramKey
      * @param string $paramValue
      * @return $this
      */
-    public function setSubscriptionParam(AbstractItem $item, $paramKey, $paramValue)
+    public function setSubscriptionParam($item, $paramKey, $paramValue)
     {
         $params = $this->getSubscriptionParams($item);
         $params[$paramKey] = $paramValue;
@@ -112,10 +102,10 @@ class QuoteItem
     }
 
     /**
-     * @param \Magento\Quote\Model\Quote\Item\AbstractItem $item
+     * @param \Magento\Quote\Model\Quote\Item $item
      * @return array
      */
-    public function getSubscriptionParams(AbstractItem $item)
+    public function getSubscriptionParams($item)
     {
         $buyRequest = $item->getOptionByCode('info_buyRequest');
         $buyRequest = $buyRequest ? unserialize($buyRequest->getValue()) : [];
@@ -123,11 +113,11 @@ class QuoteItem
     }
 
     /**
-     * @param \Magento\Quote\Model\Quote\Item\AbstractItem $item
+     * @param \Magento\Quote\Model\Quote\Item $item
      * @param array $params
      * @return array
      */
-    protected function setSubscriptionParams(AbstractItem $item, $params)
+    protected function setSubscriptionParams($item, $params)
     {
         $buyRequestOption = !empty($item->getOptionByCode('info_buyRequest'))
             ? $item->getOptionByCode('info_buyRequest')
@@ -144,12 +134,12 @@ class QuoteItem
     /**
      * In case when only options are updated. Options are saved only if quote item is changed.
      *
-     * @param \Magento\Quote\Model\Quote\Item\AbstractItem $quoteItem
+     * @param \Magento\Quote\Model\Quote\Item $item
      */
-    protected function markQuoteItemAsModified(AbstractItem $quoteItem)
+    protected function markQuoteItemAsModified($item)
     {
-        if (!$quoteItem->isObjectNew()) {
-            $quoteItem->setUpdatedAt(date('Y-m-d H:i:s'));
+        if (!$item->isObjectNew()) {
+            $item->setUpdatedAt($this->dateTimeFactory->create()->format('Y-m-d H:i:s'));
         }
     }
 }

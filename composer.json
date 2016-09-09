@@ -5,22 +5,48 @@
   "license": [ "MIT" ],
   "authors": [
     {
-      "name": "Swarming Team",
+      "name": "Swarming Technology",
       "homepage": "http://swarmingtech.com"
-    }, 
+    },
     {
       "name": "SUBSCRIBE PRO INC",
       "homepage": "http://www.subscribepro.com"
     }
   ],
   "require": {
-    "magento/magento-composer-installer": "*",
+    "magento/module-customer": "^100.1.0",
+    "magento/module-checkout": "^100.1.0",
+    "magento/module-sales": "^100.1.0",
+    "magento/module-quote": "^100.1.0",
+    "magento/module-payment": "^100.1.0",
+    "magento/module-vault": "^100.1.0",
+    "magento/module-store": "^100.1.0",
+    "magento/module-backend": "^100.1.0",
+    "magento/module-theme": "^100.1.0",
+    "magento/module-ui": "^100.1.0",
+    "magento/framework": "^100.1.0",
     "subscribepro/subscribepro-php": "~0.9.3@dev"
+  },
+  "require-dev": {
+    "magento/zendframework1": "1.12.16",
+    "zendframework/zend-stdlib": "~2.4.6",
+    "monolog/monolog": "^1.16.0"
   },
   "autoload": {
     "files": [ "registration.php" ],
     "psr-4": {
       "Swarming\\SubscribePro\\": ""
     }
-  }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Swarming\\SubscribePro\\": "Test/Unit"
+    }
+  },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://repo.magento.com/"
+    }
+  ]
 }

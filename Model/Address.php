@@ -4,6 +4,9 @@ namespace Swarming\SubscribePro\Model;
 
 use Swarming\SubscribePro\Api\Data\AddressInterface;
 
+/**
+ * @codeCoverageIgnore
+ */
 class Address extends \SubscribePro\Service\Address\Address implements AddressInterface
 {
     /**

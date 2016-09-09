@@ -13,7 +13,7 @@ class CardDetailsHandler implements HandlerInterface
     /**
      * @var \Swarming\SubscribePro\Gateway\Config\Config
      */
-    protected $config;
+    protected $gatewayConfig;
 
     /**
      * @var \Swarming\SubscribePro\Gateway\Helper\SubjectReader
@@ -21,14 +21,14 @@ class CardDetailsHandler implements HandlerInterface
     protected $subjectReader;
 
     /**
-     * @param \Swarming\SubscribePro\Gateway\Config\Config $config
+     * @param \Swarming\SubscribePro\Gateway\Config\Config $gatewayConfig
      * @param \Swarming\SubscribePro\Gateway\Helper\SubjectReader $subjectReader
      */
     public function __construct(
-        \Swarming\SubscribePro\Gateway\Config\Config $config,
+        \Swarming\SubscribePro\Gateway\Config\Config $gatewayConfig,
         \Swarming\SubscribePro\Gateway\Helper\SubjectReader $subjectReader
     ) {
-        $this->config = $config;
+        $this->gatewayConfig = $gatewayConfig;
         $this->subjectReader = $subjectReader;
     }
 
@@ -52,7 +52,7 @@ class CardDetailsHandler implements HandlerInterface
         $payment->setCcExpMonth($transaction->getCreditcardMonth());
         $payment->setCcExpYear($transaction->getCreditcardYear());
 
-        $cardType = $this->config->getMappedCcType($transaction->getCreditcardType());
+        $cardType = $this->gatewayConfig->getMappedCcType($transaction->getCreditcardType());
         $payment->setCcType($cardType);
 
         $payment->setAdditionalInformation(self::CARD_TYPE, $cardType);

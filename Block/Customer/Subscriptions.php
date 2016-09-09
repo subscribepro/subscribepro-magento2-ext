@@ -2,6 +2,9 @@
 
 namespace Swarming\SubscribePro\Block\Customer;
 
+use Magento\Customer\Model\Address\Config as AddressConfig;
+use Swarming\SubscribePro\Model\Config\SubscriptionOptions;
+
 class Subscriptions extends \Magento\Framework\View\Element\Template
 {
     /**
@@ -38,6 +41,11 @@ class Subscriptions extends \Magento\Framework\View\Element\Template
      * @var \Magento\Customer\Model\Address\Config
      */
     protected $addressConfig;
+
+    /**
+     * @var \Swarming\SubscribePro\Ui\ConfigProvider\SubscriptionConfig
+     */
+    protected $subscriptionConfig;
     
     /**
      * @var \Swarming\SubscribePro\Ui\ComponentProvider\AddressAttributes
@@ -58,6 +66,7 @@ class Subscriptions extends \Magento\Framework\View\Element\Template
      * @param \Swarming\SubscribePro\Gateway\Config\Config $gatewayConfig
      * @param \Magento\Customer\Model\Address\Mapper $addressMapper
      * @param \Magento\Customer\Model\Address\Config $addressConfig
+     * @param \Swarming\SubscribePro\Ui\ConfigProvider\SubscriptionConfig $subscriptionConfig
      * @param \Swarming\SubscribePro\Ui\ComponentProvider\AddressAttributes $addressAttributes
      * @param \Magento\Checkout\Block\Checkout\AttributeMerger $attributeMerger
      * @param array $data
@@ -71,6 +80,7 @@ class Subscriptions extends \Magento\Framework\View\Element\Template
         \Swarming\SubscribePro\Gateway\Config\Config $gatewayConfig,
         \Magento\Customer\Model\Address\Mapper $addressMapper,
         \Magento\Customer\Model\Address\Config $addressConfig,
+        \Swarming\SubscribePro\Ui\ConfigProvider\SubscriptionConfig $subscriptionConfig,
         \Swarming\SubscribePro\Ui\ComponentProvider\AddressAttributes $addressAttributes,
         \Magento\Checkout\Block\Checkout\AttributeMerger $attributeMerger,
         array $data = []
@@ -83,6 +93,7 @@ class Subscriptions extends \Magento\Framework\View\Element\Template
         $this->gatewayConfig = $gatewayConfig;
         $this->addressMapper = $addressMapper;
         $this->addressConfig = $addressConfig;
+        $this->subscriptionConfig = $subscriptionConfig;
         $this->addressAttributes = $addressAttributes;
         $this->attributeMerger = $attributeMerger;
     }
@@ -115,7 +126,7 @@ class Subscriptions extends \Magento\Framework\View\Element\Template
     {
         $builtOutputAddressData = $this->addressMapper->toFlatArray($address);
         return $this->addressConfig
-            ->getFormatByCode(\Magento\Customer\Model\Address\Config::DEFAULT_ADDRESS_FORMAT)
+            ->getFormatByCode(AddressConfig::DEFAULT_ADDRESS_FORMAT)
             ->getRenderer()
             ->renderArray($builtOutputAddressData);
     }
@@ -129,13 +140,14 @@ class Subscriptions extends \Magento\Framework\View\Element\Template
                         'subscriptions' => [
                             'config' => [
                                 'datepickerOptions' => [
-                                    'minDate' => 2,
+                                    'minDate' => SubscriptionOptions::QTY_MIN_DAYS_TO_NEXT_ORDER,
                                     'showOn' => 'button',
                                     'buttonImage' => $this->getViewFileUrl('Magento_Theme::calendar.png'),
                                     'buttonText' => __('Click to change date'),
                                     'buttonImageOnly' => true,
                                     'dateFormat' => 'yyyy-mm-dd',
                                 ],
+                                'subscriptionConfig' => $this->subscriptionConfig->getConfig(),
                                 'priceConfig' => $this->priceConfigProvider->getConfig(),
                                 'paymentConfig' => [
                                     'ccIcons' => $this->ccConfigProvider->getIcons(),

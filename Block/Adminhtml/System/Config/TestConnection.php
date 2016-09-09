@@ -44,6 +44,14 @@ class TestConnection extends PlatformField
     /**
      * @return string
      */
+    public function getBaseUrlSelectorId()
+    {
+        return 'swarming_subscribepro_platform_base_url';
+    }
+
+    /**
+     * @return string
+     */
     public function getClientIdSelectorId()
     {
         return 'swarming_subscribepro_platform_client_id';

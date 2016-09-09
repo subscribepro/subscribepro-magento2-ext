@@ -17,7 +17,7 @@ class CartUpdateItemsAfter extends CheckoutCartAbstract implements ObserverInter
      */
     public function execute(Observer $observer)
     {
-        if (!$this->configGeneral->isEnabled()) {
+        if (!$this->generalConfig->isEnabled()) {
             return;
         }
 

@@ -40,6 +40,6 @@ class Subscription
         }
 
         return $this->subscriptionDiscountConfig->isEnabled()
-        && $this->productHelper->isSubscriptionEnabled($subject->getProduct());
+            && $this->productHelper->isSubscriptionEnabled($subject->getProduct());
     }
 }

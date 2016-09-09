@@ -14,7 +14,7 @@ abstract class CheckoutCartAbstract implements ObserverInterface
     /**
      * @var \Swarming\SubscribePro\Model\Config\General
      */
-    protected $configGeneral;
+    protected $generalConfig;
 
     /**
      * @var \Swarming\SubscribePro\Platform\Manager\Product
@@ -47,7 +47,7 @@ abstract class CheckoutCartAbstract implements ObserverInterface
     protected $logger;
 
     /**
-     * @param \Swarming\SubscribePro\Model\Config\General $configGeneral
+     * @param \Swarming\SubscribePro\Model\Config\General $generalConfig
      * @param \Swarming\SubscribePro\Platform\Manager\Product $platformProductManager
      * @param \Swarming\SubscribePro\Model\Quote\SubscriptionOption\Updater $subscriptionOptionUpdater
      * @param \Swarming\SubscribePro\Helper\Product $productHelper
@@ -56,7 +56,7 @@ abstract class CheckoutCartAbstract implements ObserverInterface
      * @param \Psr\Log\LoggerInterface $logger
      */
     public function __construct(
-        \Swarming\SubscribePro\Model\Config\General $configGeneral,
+        \Swarming\SubscribePro\Model\Config\General $generalConfig,
         \Swarming\SubscribePro\Platform\Manager\Product $platformProductManager,
         \Swarming\SubscribePro\Model\Quote\SubscriptionOption\Updater $subscriptionOptionUpdater,
         \Swarming\SubscribePro\Helper\Product $productHelper,
@@ -64,7 +64,7 @@ abstract class CheckoutCartAbstract implements ObserverInterface
         \Magento\Framework\App\State $appState,
         \Psr\Log\LoggerInterface $logger
     ) {
-        $this->configGeneral = $configGeneral;
+        $this->generalConfig = $generalConfig;
         $this->platformProductManager = $platformProductManager;
         $this->subscriptionOptionUpdater = $subscriptionOptionUpdater;
         $this->productHelper = $productHelper;
@@ -81,6 +81,10 @@ abstract class CheckoutCartAbstract implements ObserverInterface
     {
         $product = $quoteItem->getProduct();
         if (!$this->productHelper->isSubscriptionEnabled($product)) {
+            return;
+        }
+
+        if ($product->getParentItemId()) {
             return;
         }
 

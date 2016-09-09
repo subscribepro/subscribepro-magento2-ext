@@ -3,19 +3,12 @@
  * @var $block \Swarming\SubscribePro\Block\Vault\Edit
  */
 ?>
-<style>
-    /* TODO temporary solution, just for dev testing */
-    .form-vault-edit .actions-toolbar > .secondary .action.back {
-        display: inline !important;
-    }
-
-</style>
 <form class="form-address-edit form-vault-edit"
-      action="<?php /* @escapeNotVerified */ echo $block->getSaveUrl() ?>"
+      action="<?php echo $block->getSaveUrl() ?>"
       method="post"
       id="vault-edit"
       enctype="multipart/form-data"
-      data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>">
+      data-hasrequired="<?php echo __('* Required Fields') ?>">
 
     <?php echo $block->renderBillingAddress() ?>
 
@@ -23,12 +16,12 @@
 
     <div class="actions-toolbar">
         <div class="primary">
-            <button type="submit" class="action save primary" data-action="save-vault" title="<?php /* @escapeNotVerified */ echo __('Save Card') ?>">
-                <span><?php /* @escapeNotVerified */ echo __('Save Card') ?></span>
+            <button type="submit" class="action save primary" data-action="save-vault" title="<?php echo __('Save Card') ?>">
+                <span><?php echo __('Save Card') ?></span>
             </button>
         </div>
         <div class="secondary">
-            <a class="action back" href="<?php echo $block->escapeUrl($block->getBackUrl()) ?>"><span><?php /* @escapeNotVerified */ echo __('Go back') ?></span></a>
+            <a class="action back" href="<?php echo $block->escapeUrl($block->getBackUrl()) ?>"><span><?php echo __('Go back') ?></span></a>
         </div>
     </div>
 </form>

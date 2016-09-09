@@ -10,36 +10,36 @@ use SubscribePro\Service\Customer\CustomerInterface;
 class Customer extends AbstractService
 {
     /**
-     * @param array $customerData
+     * @param array $platformCustomerData
      * @param int|null $websiteId
      * @return \SubscribePro\Service\Customer\CustomerInterface
      */
-    public function createCustomer(array $customerData = [], $websiteId = null)
+    public function createCustomer(array $platformCustomerData = [], $websiteId = null)
     {
-        return $this->getService($websiteId)->createCustomer($customerData);
+        return $this->getService($websiteId)->createCustomer($platformCustomerData);
     }
 
     /**
-     * @param \SubscribePro\Service\Customer\CustomerInterface $customer
+     * @param \SubscribePro\Service\Customer\CustomerInterface $platformCustomer
      * @param int|null $websiteId
      * @return \SubscribePro\Service\Customer\CustomerInterface
      * @throws \SubscribePro\Exception\EntityInvalidDataException
      * @throws \SubscribePro\Exception\HttpException
      */
-    public function saveCustomer(CustomerInterface $customer, $websiteId = null)
+    public function saveCustomer(CustomerInterface $platformCustomer, $websiteId = null)
     {
-        return $this->getService($websiteId)->saveCustomer($customer);
+        return $this->getService($websiteId)->saveCustomer($platformCustomer);
     }
 
     /**
-     * @param int $customerId
+     * @param int $platformCustomerId
      * @param int|null $websiteId
      * @return \SubscribePro\Service\Customer\CustomerInterface
      * @throws \SubscribePro\Exception\HttpException
      */
-    public function loadCustomer($customerId, $websiteId = null)
+    public function loadCustomer($platformCustomerId, $websiteId = null)
     {
-        return $this->getService($websiteId)->loadCustomer($customerId);
+        return $this->getService($websiteId)->loadCustomer($platformCustomerId);
     }
 
     /**

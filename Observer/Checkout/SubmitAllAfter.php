@@ -2,16 +2,17 @@
 
 namespace Swarming\SubscribePro\Observer\Checkout;
 
-use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Event\Observer;
+use Magento\Framework\Event\ObserverInterface;
 use Swarming\SubscribePro\Model\Quote\SubscriptionCreator;
+use Swarming\SubscribePro\Gateway\Config\ConfigProvider as GatewayConfigProvider;
 
-class AllSubmitAfter implements ObserverInterface
+class SubmitAllAfter implements ObserverInterface
 {
     /**
      * @var \Swarming\SubscribePro\Model\Config\General
      */
-    protected $configGeneral;
+    protected $generalConfig;
 
     /**
      * @var \Magento\Checkout\Model\Session
@@ -29,18 +30,18 @@ class AllSubmitAfter implements ObserverInterface
     protected $logger;
 
     /**
-     * @param \Swarming\SubscribePro\Model\Config\General $configGeneral
+     * @param \Swarming\SubscribePro\Model\Config\General $generalConfig
      * @param \Magento\Checkout\Model\Session $checkoutSession
      * @param \Swarming\SubscribePro\Model\Quote\SubscriptionCreator $subscriptionCreator
      * @param \Psr\Log\LoggerInterface $logger
      */
     public function __construct(
-        \Swarming\SubscribePro\Model\Config\General $configGeneral,
+        \Swarming\SubscribePro\Model\Config\General $generalConfig,
         \Magento\Checkout\Model\Session $checkoutSession,
         \Swarming\SubscribePro\Model\Quote\SubscriptionCreator $subscriptionCreator,
         \Psr\Log\LoggerInterface $logger
     ) {
-        $this->configGeneral = $configGeneral;
+        $this->generalConfig = $generalConfig;
         $this->checkoutSession = $checkoutSession;
         $this->subscriptionCreator = $subscriptionCreator;
         $this->logger = $logger;
@@ -59,7 +60,7 @@ class AllSubmitAfter implements ObserverInterface
         $order = $observer->getData('order');
 
         $websiteCode = $quote->getStore()->getWebsite()->getCode();
-        if (!$this->configGeneral->isEnabled($websiteCode)) {
+        if (!$this->generalConfig->isEnabled($websiteCode) || $order->getPayment()->getMethod() != GatewayConfigProvider::CODE) {
             return;
         }
 

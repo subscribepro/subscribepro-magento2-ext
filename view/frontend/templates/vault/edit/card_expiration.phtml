@@ -3,72 +3,8 @@
  * @var $block \Swarming\SubscribePro\Block\Vault\Edit\CardExpiration
  */
 ?>
-<style>
-    /* TODO temporary solution, just for dev testing */
-
-    .card-number-type{
-        margin-bottom: 10px;
-    }
-
-    .card-number-type img {
-        vertical-align: middle;
-        margin-right: 5px;
-        padding-bottom: 4px;
-    }
-
-    .expiration-date .date-wrap .child-control{
-        float: left;
-        margin-right: 2rem;
-    }
-
-    .expiration-date .date-wrap input:focus{
-        outline: none;
-        -webkit-box-shadow: none;
-        box-shadow: none;
-    }
-
-    .expiration-date .date-wrap .month{
-        position: relative;
-    }
-    .expiration-date .date-wrap .month:after{
-        content: '/';
-        display: inline;
-        padding-bottom: inherit;
-        padding-top: inherit;
-        position: absolute;
-        right: -12px;
-        top: 5px;
-    }
-
-    .expiration-date .child-control.control-focused input {
-        border-color: #006bb4;
-    }
-
-    .expiration-date .child-control.control-valid input {
-        border-color: #006400;
-    }
-
-    .expiration-date .child-control.control-invalid:not(.control-focused) input {
-        border-color: #e02b27;
-    }
-
-    .expiration-date .error{
-        clear: both;
-        color: #e02b27;
-        font-size: 1.2rem;
-        height: 0;
-        margin-top: 7px;
-        opacity: 0;
-    }
-
-    .expiration-date .control-invalid:not(.control-focused) ~ .error {
-        opacity: 1;
-    }
-
-</style>
-
 <fieldset class="fieldset" data-bind="scope: 'subscribe-pro-vault-card-expiration'">
-    <legend class="legend"><span><?php /* @escapeNotVerified */ echo __('Payment Information') ?></span></legend><br>
+    <legend class="legend"><span><?php echo __('Payment Information') ?></span></legend><br>
 
     <div class="card-number-type">
         <img src="<?php /* @noEscape */ echo $block->getIconUrl(); ?>"
@@ -79,7 +15,7 @@
 
     <div class="field date required expiration-date">
         <label for="creditcard_month" class="label">
-            <span><?php /* @escapeNotVerified */ echo __('Expiration Date') ?></span>
+            <span><?php echo __('Expiration Date') ?></span>
         </label>
         <div class="control">
             <div class="date-wrap">
@@ -116,7 +52,7 @@
 <script type="text/x-magento-init">
     {
         "*": {
-            "Magento_Ui/js/core/app": <?php /* @escapeNotVerified */ echo $block->getJsLayout();?>
+            "Magento_Ui/js/core/app": <?php echo $block->getJsLayout();?>
         }
     }
 </script>

@@ -143,10 +143,10 @@ class TransactionTest extends AbstractService
      * @param int $websiteId
      * @param string $token
      * @param \PHPUnit_Framework_MockObject_MockObject $transactionMock
-     * @param \PHPUnit_Framework_MockObject_MockObject $addressMock
+     * @param \PHPUnit_Framework_MockObject_MockObject $platformAddressMock
      * @dataProvider authorizeByTokenDataProvider
      */
-    public function testAuthorizeByToken($websiteId, $token, $transactionMock, $addressMock)
+    public function testAuthorizeByToken($websiteId, $token, $transactionMock, $platformAddressMock)
     {
         $this->initService($this->transactionPlatformService, $websiteId);
 
@@ -157,7 +157,7 @@ class TransactionTest extends AbstractService
 
         $this->assertSame(
             $transactionMock, 
-            $this->transactionService->authorizeByToken($token, $transactionMock, $addressMock, $websiteId)
+            $this->transactionService->authorizeByToken($token, $transactionMock, $platformAddressMock, $websiteId)
         );
     }
 
@@ -177,7 +177,7 @@ class TransactionTest extends AbstractService
                 'websiteId' => 122,
                 'token' => 'token',
                 'transactionMock' => $this->createTransactionMock(),
-                'addressMock' => $this->createAddressMock()
+                'addressMock' => $this->createPlatformAddressMock()
             ]
         ];
     }
@@ -186,10 +186,10 @@ class TransactionTest extends AbstractService
      * @param int $websiteId
      * @param string $token
      * @param \PHPUnit_Framework_MockObject_MockObject $transactionMock
-     * @param \PHPUnit_Framework_MockObject_MockObject $addressMock
+     * @param \PHPUnit_Framework_MockObject_MockObject $platformAddressMock
      * @dataProvider purchaseByTokenDataProvider
      */
-    public function testPurchaseByToken($websiteId, $token, $transactionMock, $addressMock)
+    public function testPurchaseByToken($websiteId, $token, $transactionMock, $platformAddressMock)
     {
         $this->initService($this->transactionPlatformService, $websiteId);
 
@@ -200,7 +200,7 @@ class TransactionTest extends AbstractService
 
         $this->assertSame(
             $transactionMock, 
-            $this->transactionService->purchaseByToken($token, $transactionMock, $addressMock, $websiteId)
+            $this->transactionService->purchaseByToken($token, $transactionMock, $platformAddressMock, $websiteId)
         );
     }
 
@@ -220,7 +220,7 @@ class TransactionTest extends AbstractService
                 'websiteId' => 122,
                 'token' => 'token',
                 'transactionMock' => $this->createTransactionMock(),
-                'addressMock' => $this->createAddressMock()
+                'addressMock' => $this->createPlatformAddressMock()
             ]
         ];
     }
@@ -333,7 +333,7 @@ class TransactionTest extends AbstractService
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject|\Swarming\SubscribePro\Api\Data\AddressInterface
      */
-    private function createAddressMock()
+    private function createPlatformAddressMock()
     {
         return $this->getMockBuilder(AddressInterface::class)->getMock();
     }

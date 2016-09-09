@@ -11,7 +11,7 @@ class Vault
     /**
      * @var \Swarming\SubscribePro\Gateway\Config\Config
      */
-    protected $config;
+    protected $gatewayConfig;
 
     /**
      * @var \Magento\Framework\Encryption\EncryptorInterface
@@ -19,15 +19,23 @@ class Vault
     protected $encryptor;
 
     /**
-     * @param \Swarming\SubscribePro\Gateway\Config\Config $config
+     * @var \Magento\Framework\Intl\DateTimeFactory
+     */
+    protected $dateTimeFactory;
+
+    /**
+     * @param \Swarming\SubscribePro\Gateway\Config\Config $gatewayConfig
      * @param \Magento\Framework\Encryption\EncryptorInterface $encryptor
+     * @param \Magento\Framework\Intl\DateTimeFactory $dateTimeFactory
      */
     public function __construct(
-        \Swarming\SubscribePro\Gateway\Config\Config $config,
-        \Magento\Framework\Encryption\EncryptorInterface $encryptor
+        \Swarming\SubscribePro\Gateway\Config\Config $gatewayConfig,
+        \Magento\Framework\Encryption\EncryptorInterface $encryptor,
+        \Magento\Framework\Intl\DateTimeFactory $dateTimeFactory
     ) {
-        $this->config = $config;
+        $this->gatewayConfig = $gatewayConfig;
         $this->encryptor = $encryptor;
+        $this->dateTimeFactory = $dateTimeFactory;
     }
 
     /**
@@ -70,16 +78,16 @@ class Vault
     /**
      * @param string $cardType
      * @param string $lastDigits
-     * @param string $year
      * @param string $month
+     * @param string $year
      * @return string
      */
-    public function getTokenDetails($cardType, $lastDigits, $year, $month)
+    public function getTokenDetails($cardType, $lastDigits, $month, $year)
     {
         $tokenDetails = [
-            'type' => $this->config->getMappedCcType($cardType),
+            'type' => $this->gatewayConfig->getMappedCcType($cardType),
             'maskedCC' => $lastDigits,
-            'expirationDate' => $year . '/' . $month
+            'expirationDate' => $month . '/' . $year
         ];
         return $this->encodeDetails($tokenDetails);
     }
@@ -92,7 +100,7 @@ class Vault
     {
         $hashKey = $paymentToken->getGatewayToken();
         if ($paymentToken->getCustomerId()) {
-            $hashKey = $paymentToken->getCustomerId();
+            $hashKey .= $paymentToken->getCustomerId();
         }
 
         $hashKey .= $paymentToken->getPaymentMethodCode()
@@ -109,7 +117,10 @@ class Vault
      */
     public function getExpirationDate($year, $month)
     {
-        $expDate = new \DateTime($year . '-' . $month . '-01 00:00:00', new \DateTimeZone('UTC'));
+        $expDate = $this->dateTimeFactory->create(
+            $year . '-' . $month . '-01 00:00:00',
+            new \DateTimeZone('UTC')
+        );
         $expDate->add(new \DateInterval('P1M'));
         return $expDate->format('Y-m-d 00:00:00');
     }

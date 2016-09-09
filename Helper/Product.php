@@ -8,7 +8,7 @@ use Swarming\SubscribePro\Ui\DataProvider\Product\Modifier\Subscription as Subsc
 class Product
 {
     /**
-     * @param ProductInterface $product
+     * @param \Magento\Catalog\Api\Data\ProductInterface $product
      * @return bool
      */
     public function isSubscriptionEnabled(ProductInterface $product)

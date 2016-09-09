@@ -21,12 +21,25 @@ class SubscriptionDiscount extends General
 
     /**
      * @param string|null $store
-     * @return bool
+     * @return string
      */
     public function getCartRuleCombineType($store = null)
     {
         return $this->scopeConfig->getValue(
             'swarming_subscribepro/subscription_discount/cartrule_combine_type',
+            ScopeInterface::SCOPE_STORE,
+            $store
+        );
+    }
+
+    /**
+     * @param string|null $store
+     * @return string
+     */
+    public function getDiscountMessage($store = null)
+    {
+        return $this->scopeConfig->getValue(
+            'swarming_subscribepro/subscription_discount/discount_message',
             ScopeInterface::SCOPE_STORE,
             $store
         );

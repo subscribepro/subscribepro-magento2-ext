@@ -36,12 +36,12 @@ class Product
      */
     public function getProduct($sku, $websiteId = null)
     {
-        $product = $this->platformProductStorage->load($sku, $websiteId);
-        if (!$product) {
-            $product = $this->retrieveProduct($sku, $websiteId);
-            $this->platformProductStorage->save($product, $websiteId);
+        $platformProduct = $this->platformProductStorage->load($sku, $websiteId);
+        if (!$platformProduct) {
+            $platformProduct = $this->retrieveProduct($sku, $websiteId);
+            $this->platformProductStorage->save($platformProduct, $websiteId);
         }
-        return $product;
+        return $platformProduct;
     }
 
     /**
@@ -52,11 +52,11 @@ class Product
      */
     protected function retrieveProduct($sku, $websiteId = null)
     {
-        $products = $this->platformProductService->loadProducts($sku, $websiteId);
-        if (empty($products)) {
+        $platformProducts = $this->platformProductService->loadProducts($sku, $websiteId);
+        if (empty($platformProducts)) {
             throw new NoSuchEntityException(__('Product is not found on Subscribe Pro platform.'));
         }
-        return $products[0];
+        return $platformProducts[0];
     }
 
     /**

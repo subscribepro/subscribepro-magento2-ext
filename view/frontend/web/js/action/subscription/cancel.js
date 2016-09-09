@@ -10,14 +10,20 @@ define(
     ],
     function ($, $t, storage, confirmation, messageContainer, errorProcessor, subscriptionLoader) {
         'use strict';
-        return function (subscriptionId, deferred) {
-            confirmation({
+
+
+        return function (subscriptionId, cancelContent, isCancelAllowed, deferred) {
+            var confirmationConfig = {
                 title: $t('Cancel subscription'),
-                content: $t('Are you sure you want to cancel subscription?'),
+                content: cancelContent,
                 actions: {
                     confirm: function() {cancel(subscriptionId, deferred)}
                 }
-            });
+            };
+            if (!isCancelAllowed) {
+                confirmationConfig.buttons = getConfirmationButtons()
+            }
+            confirmation(confirmationConfig);
         };
         
         function cancel(subscriptionId, deferred) {
@@ -43,6 +49,19 @@ define(
                     subscriptionLoader.isLoading(false);
                 }
             );
+        }
+
+        function getConfirmationButtons() {
+            return [
+                {
+                    text: $.mage.__('Close'),
+                    class: 'action-primary action-accept',
+
+                    click: function (event) {
+                        this.closeModal(event);
+                    }
+                }
+            ];
         }
     }
 );

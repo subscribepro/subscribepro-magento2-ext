@@ -1,7 +1,3 @@
-<!-- ko foreach: getRegion('messages') -->
-    <!-- ko template: getTemplate() --><!-- /ko -->
-<!--/ko-->
-
 <!-- ko if: isProductLoaded() -->
     <div class="fieldset">
         <!-- ko if: isSubscriptionMode(subscriptionOnlyMode)  -->
@@ -47,3 +43,7 @@
         </div>
     </div>
 <!-- /ko -->
+
+<!-- ko foreach: getRegion('messages') -->
+    <!-- ko template: getTemplate() --><!-- /ko -->
+<!--/ko-->

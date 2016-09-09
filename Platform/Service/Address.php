@@ -10,48 +10,48 @@ use Swarming\SubscribePro\Api\Data\AddressInterface;
 class Address extends AbstractService
 {
     /**
-     * @param array $addressData
+     * @param array $platformAddressData
      * @param int|null $websiteId
      * @return \Swarming\SubscribePro\Api\Data\AddressInterface
      */
-    public function createAddress(array $addressData = [], $websiteId = null)
+    public function createAddress(array $platformAddressData = [], $websiteId = null)
     {
-        return $this->getService($websiteId)->createAddress($addressData);
+        return $this->getService($websiteId)->createAddress($platformAddressData);
     }
 
     /**
-     * @param int $addressId
+     * @param int $platformAddressId
      * @param int|null $websiteId
      * @return \Swarming\SubscribePro\Api\Data\AddressInterface
      * @throws \SubscribePro\Exception\HttpException
      */
-    public function loadAddress($addressId, $websiteId = null)
+    public function loadAddress($platformAddressId, $websiteId = null)
     {
-        return $this->getService($websiteId)->loadAddress($addressId);
+        return $this->getService($websiteId)->loadAddress($platformAddressId);
     }
 
     /**
-     * @param \Swarming\SubscribePro\Api\Data\AddressInterface $address
+     * @param \Swarming\SubscribePro\Api\Data\AddressInterface $platformAddress
      * @param int|null $websiteId
      * @return \Swarming\SubscribePro\Api\Data\AddressInterface
      * @throws \SubscribePro\Exception\EntityInvalidDataException
      * @throws \SubscribePro\Exception\HttpException
      */
-    public function saveAddress(AddressInterface $address, $websiteId = null)
+    public function saveAddress(AddressInterface $platformAddress, $websiteId = null)
     {
-        return $this->getService($websiteId)->saveAddress($address);
+        return $this->getService($websiteId)->saveAddress($platformAddress);
     }
 
     /**
-     * @param \Swarming\SubscribePro\Api\Data\AddressInterface $address
+     * @param \Swarming\SubscribePro\Api\Data\AddressInterface $platformAddress
      * @param int|null $websiteId
      * @return \Swarming\SubscribePro\Api\Data\AddressInterface
      * @throws \SubscribePro\Exception\EntityInvalidDataException
      * @throws \SubscribePro\Exception\HttpException
      */
-    public function findOrSave(AddressInterface $address, $websiteId = null)
+    public function findOrSave(AddressInterface $platformAddress, $websiteId = null)
     {
-        return $this->getService($websiteId)->findOrSave($address);
+        return $this->getService($websiteId)->findOrSave($platformAddress);
     }
 
     /**

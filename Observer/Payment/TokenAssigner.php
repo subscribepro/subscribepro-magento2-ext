@@ -42,10 +42,6 @@ class TokenAssigner extends \Magento\Payment\Observer\AbstractDataAssignObserver
 
         $profileId = $additionalData[VaultDataBuilder::PAYMENT_PROFILE_ID];
 
-        if ($profileId === null) {
-            return;
-        }
-
         /** @var \Magento\Quote\Model\Quote\Payment $paymentModel */
         $paymentModel = $this->readPaymentModelArgument($observer);
         if (!$paymentModel instanceof QuotePayment) {

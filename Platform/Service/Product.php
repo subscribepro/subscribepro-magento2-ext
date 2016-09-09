@@ -10,36 +10,36 @@ use Swarming\SubscribePro\Api\Data\ProductInterface;
 class Product extends AbstractService
 {
     /**
-     * @param array $productData
+     * @param array $platformProductData
      * @param int|null $websiteId
      * @return \Swarming\SubscribePro\Api\Data\ProductInterface
      */
-    public function createProduct(array $productData = [], $websiteId = null)
+    public function createProduct(array $platformProductData = [], $websiteId = null)
     {
-        return $this->getService($websiteId)->createProduct($productData);
+        return $this->getService($websiteId)->createProduct($platformProductData);
     }
 
     /**
-     * @param \Swarming\SubscribePro\Api\Data\ProductInterface $product
+     * @param \Swarming\SubscribePro\Api\Data\ProductInterface $platformProduct
      * @param int|null $websiteId
      * @return \Swarming\SubscribePro\Api\Data\ProductInterface
      * @throws \SubscribePro\Exception\EntityInvalidDataException
      * @throws \SubscribePro\Exception\HttpException
      */
-    public function saveProduct(ProductInterface $product, $websiteId = null)
+    public function saveProduct(ProductInterface $platformProduct, $websiteId = null)
     {
-        return $this->getService($websiteId)->saveProduct($product);
+        return $this->getService($websiteId)->saveProduct($platformProduct);
     }
 
     /**
-     * @param int $productId
+     * @param int $platformProductId
      * @param int|null $websiteId
      * @return \Swarming\SubscribePro\Api\Data\ProductInterface
      * @throws \SubscribePro\Exception\HttpException
      */
-    public function loadProduct($productId, $websiteId = null)
+    public function loadProduct($platformProductId, $websiteId = null)
     {
-        return $this->getService($websiteId)->loadProduct($productId);
+        return $this->getService($websiteId)->loadProduct($platformProductId);
     }
 
     /**

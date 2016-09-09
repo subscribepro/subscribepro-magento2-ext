@@ -57,7 +57,7 @@ define(
                     }
                 ];
                 options.opened = $.proxy(this.onOpen, this);
-                
+
                 this.modal = modal(options, $(element));
             },
 
@@ -96,6 +96,7 @@ define(
                         self.paymentProfile(response);
                         self.paymentProfileId(self.selectedPaymentProfileId());
                         self.modal.closeModal();
+                        self.scrollToTop();
                     })
                     .always(function () {
                         self.isLoading(false);
@@ -107,7 +108,7 @@ define(
                 $.each(response, function() {
                     self.payments.push(this);
                 });
-                
+
                 this.selectedPaymentProfileId(this.paymentProfileId());
                 this.paymentsLoadSuccess(true);
             },
@@ -136,6 +137,10 @@ define(
                     return this.ccTypesMapper[platformCcType];
                 }
                 return null;
+            },
+
+            scrollToTop: function () {
+                $("html, body").animate({ scrollTop: 0 }, 500);
             }
         });
     }

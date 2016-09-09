@@ -22,6 +22,11 @@ class Validator
     protected $itemSubscriptionDiscount;
 
     /**
+     * @var \Swarming\SubscribePro\Model\CatalogRule\InspectorInterface
+     */
+    protected $catalogRuleInspector;
+
+    /**
      * @var \Swarming\SubscribePro\Helper\QuoteItem
      */
     protected $quoteItemHelper;
@@ -29,15 +34,18 @@ class Validator
     /**
      * @param \Swarming\SubscribePro\Model\Config\SubscriptionDiscount $subscriptionDiscountConfig
      * @param \Swarming\SubscribePro\Model\Quote\ItemSubscriptionDiscount $itemSubscriptionDiscount
+     * @param \Swarming\SubscribePro\Model\CatalogRule\InspectorInterface $catalogRuleInspector
      * @param \Swarming\SubscribePro\Helper\QuoteItem $quoteItemHelper
      */
     public function __construct(
         \Swarming\SubscribePro\Model\Config\SubscriptionDiscount $subscriptionDiscountConfig,
         \Swarming\SubscribePro\Model\Quote\ItemSubscriptionDiscount $itemSubscriptionDiscount,
+        \Swarming\SubscribePro\Model\CatalogRule\InspectorInterface $catalogRuleInspector,
         \Swarming\SubscribePro\Helper\QuoteItem $quoteItemHelper
     ) {
         $this->subscriptionDiscountConfig = $subscriptionDiscountConfig;
         $this->itemSubscriptionDiscount = $itemSubscriptionDiscount;
+        $this->catalogRuleInspector = $catalogRuleInspector;
         $this->quoteItemHelper = $quoteItemHelper;
     }
 
@@ -49,19 +57,16 @@ class Validator
      */
     public function aroundProcess(SalesRuleValidator $subject, \Closure $proceed, QuoteItem $item)
     {
-        $appliedRuleIds = array(
+        $appliedRuleIds = [
             self::QUOTE_ITEM_RULES => $item->getAppliedRuleIds(),
             self::QUOTE_RULES => $item->getQuote()->getAppliedRuleIds(),
             self::ADDRESS_RULES => $item->getAddress()->getAppliedRuleIds(),
-        );
+        ];
         $discountDescriptions = (array)$item->getAddress()->getDiscountDescriptionArray();
-        $isCatalogDiscountApplied = $subject->getItemBasePrice($item) < $subject->getItemBaseOriginalPrice($item);
 
         $result = $proceed($item);
 
         $websiteId = $item->getQuote()->getStore()->getWebsiteId();
-        $storeCode = $item->getQuote()->getStore()->getCode();
-
         if (!$this->subscriptionDiscountConfig->isEnabled($websiteId)) {
             return $result;
         }
@@ -70,7 +75,8 @@ class Validator
             return $result;
         }
 
-        if ($isCatalogDiscountApplied && !$this->subscriptionDiscountConfig->isApplyDiscountToCatalogPrice($storeCode)) {
+        $storeCode = $item->getQuote()->getStore()->getCode();
+        if ($this->catalogRuleInspector->isApplied($item->getProduct()) && !$this->subscriptionDiscountConfig->isApplyDiscountToCatalogPrice($storeCode)) {
             return $result;
         }
 

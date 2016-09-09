@@ -8,6 +8,9 @@ use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface;
 
+/**
+ * @codeCoverageIgnore
+ */
 class InstallData implements InstallDataInterface
 {
     /**
