@@ -22,10 +22,11 @@
                 .css('color', '')
                 .text('');
 
+            var baseUrl = $('#<?php echo $block->getBaseUrlSelectorId() ?>').val();
             var clientId = $('#<?php echo $block->getClientIdSelectorId() ?>').val();
             var clientSecret = $('#<?php echo $block->getClientSecretSelectorId() ?>').val();
 
-            $.getJSON('<?php echo $block->getAjaxUrl() ?>', {client_id: clientId, client_secret: clientSecret, website: '<?php echo $block->getWebsiteCode() ?>'})
+            $.getJSON('<?php echo $block->getAjaxUrl() ?>', {base_url: baseUrl, client_id: clientId, client_secret: clientSecret, website: '<?php echo $block->getWebsiteCode() ?>'})
                 .done(function (result) {
                     console.log(result);
                     resultMessageBox

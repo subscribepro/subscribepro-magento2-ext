@@ -12,7 +12,7 @@ use Magento\Store\Model\Store;
 use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
 use Swarming\SubscribePro\Observer\Catalog\ProductSaveAfter;
-use Swarming\SubscribePro\Model\Config\General as ConfigGeneral;
+use Swarming\SubscribePro\Model\Config\General as GeneralConfig;
 use Swarming\SubscribePro\Platform\Manager\Product as ProductManager;
 use Swarming\SubscribePro\Helper\Product as ProductHelper;
 
@@ -26,7 +26,7 @@ class ProductSaveAfterTest extends \PHPUnit_Framework_TestCase
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject|\Swarming\SubscribePro\Model\Config\General
      */
-    protected $configGeneralMock;
+    protected $generalConfigMock;
 
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Store\Model\StoreManagerInterface
@@ -55,7 +55,7 @@ class ProductSaveAfterTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->configGeneralMock = $this->getMockBuilder(ConfigGeneral::class)
+        $this->generalConfigMock = $this->getMockBuilder(GeneralConfig::class)
             ->disableOriginalConstructor()->getMock();
         $this->productRepositoryMock = $this->getMockBuilder(ProductRepositoryInterface::class)->getMock();
         $this->storeManagerMock = $this->getMockBuilder(StoreManagerInterface::class)->getMock();
@@ -66,7 +66,7 @@ class ProductSaveAfterTest extends \PHPUnit_Framework_TestCase
         $this->loggerMock = $this->getMockBuilder(LoggerInterface::class)->getMock();
 
         $this->productSaveAfter = new ProductSaveAfter(
-            $this->configGeneralMock,
+            $this->generalConfigMock,
             $this->storeManagerMock,
             $this->productRepositoryMock,
             $this->platformProductManagerMock,
@@ -127,10 +127,10 @@ class ProductSaveAfterTest extends \PHPUnit_Framework_TestCase
             ]);
         $this->storeManagerMock->expects($this->once())->method('getStore')->willReturn($storeMock);
 
-        $this->configGeneralMock->expects($this->once())
+        $this->generalConfigMock->expects($this->once())
             ->method('isEnabled')
             ->with($website1Code)
-            ->willReturn(true);
+            ->willReturn(false);
 
         $this->platformProductManagerMock->expects($this->never())->method('saveProduct');
 
@@ -176,7 +176,7 @@ class ProductSaveAfterTest extends \PHPUnit_Framework_TestCase
             ->willReturn(null);
         $this->storeManagerMock->expects($this->once())->method('getStore')->willReturn($storeMock);
 
-        $this->configGeneralMock->expects($this->once())
+        $this->generalConfigMock->expects($this->once())
             ->method('isEnabled')
             ->with($website1Code)
             ->willReturn(true);
@@ -228,7 +228,7 @@ class ProductSaveAfterTest extends \PHPUnit_Framework_TestCase
             ->willReturn($groupMock);
         $this->storeManagerMock->expects($this->once())->method('getStore')->willReturn($storeMock);
 
-        $this->configGeneralMock->expects($this->once())
+        $this->generalConfigMock->expects($this->once())
             ->method('isEnabled')
             ->with($website1Code)
             ->willReturn(true);
@@ -283,7 +283,7 @@ class ProductSaveAfterTest extends \PHPUnit_Framework_TestCase
             ->willReturn($groupMock);
         $this->storeManagerMock->expects($this->once())->method('getStore')->willReturn($storeMock);
 
-        $this->configGeneralMock->expects($this->once())
+        $this->generalConfigMock->expects($this->once())
             ->method('isEnabled')
             ->with($website1Code)
             ->willReturn(true);
@@ -343,7 +343,7 @@ class ProductSaveAfterTest extends \PHPUnit_Framework_TestCase
             ->willReturn($groupMock);
         $this->storeManagerMock->expects($this->once())->method('getStore')->willReturn($storeMock);
 
-        $this->configGeneralMock->expects($this->once())
+        $this->generalConfigMock->expects($this->once())
             ->method('isEnabled')
             ->with($website1Code)
             ->willReturn(true);
@@ -416,7 +416,7 @@ class ProductSaveAfterTest extends \PHPUnit_Framework_TestCase
             ->willReturn($groupMock);
         $this->storeManagerMock->expects($this->once())->method('getStore')->willReturn($storeMock);
 
-        $this->configGeneralMock->expects($this->once())
+        $this->generalConfigMock->expects($this->once())
             ->method('isEnabled')
             ->with($website1Code)
             ->willReturn(true);
@@ -489,7 +489,7 @@ class ProductSaveAfterTest extends \PHPUnit_Framework_TestCase
             ->willReturn($groupMock);
         $this->storeManagerMock->expects($this->once())->method('getStore')->willReturn($storeMock);
 
-        $this->configGeneralMock->expects($this->once())
+        $this->generalConfigMock->expects($this->once())
             ->method('isEnabled')
             ->with($website1Code)
             ->willReturn(true);
@@ -572,11 +572,11 @@ class ProductSaveAfterTest extends \PHPUnit_Framework_TestCase
             ->willReturn($group2Mock);
         $this->storeManagerMock->expects($this->once())->method('getStore')->willReturn($storeMock);
 
-        $this->configGeneralMock->expects($this->at(0))
+        $this->generalConfigMock->expects($this->at(0))
             ->method('isEnabled')
             ->with($website1Code)
             ->willReturn(true);
-        $this->configGeneralMock->expects($this->at(1))
+        $this->generalConfigMock->expects($this->at(1))
             ->method('isEnabled')
             ->with($website2Code)
             ->willReturn(true);

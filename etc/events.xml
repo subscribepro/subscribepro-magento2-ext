@@ -10,6 +10,6 @@
         <observer name="subscribe_pro_gateway_data_assign" instance="Swarming\SubscribePro\Observer\Payment\TokenAssigner" />
     </event>
     <event name="checkout_submit_all_after">
-        <observer name="subscribe_pro" instance="Swarming\SubscribePro\Observer\Checkout\AllSubmitAfter"/>
+        <observer name="subscribe_pro" instance="Swarming\SubscribePro\Observer\Checkout\SubmitAllAfter"/>
     </event>
 </config>

@@ -49,6 +49,7 @@ define([
         renderSubscription: function (subscription) {
             var config = {
                 name: this.name,
+                subscriptionConfig: this.subscriptionConfig,
                 priceConfig: this.priceConfig,
                 paymentConfig: this.paymentConfig,
                 shippingAddressOptions: this.shippingAddressOptions,

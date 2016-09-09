@@ -2,11 +2,11 @@
 
 namespace Swarming\SubscribePro\Test\Unit\Platform\Manager;
 
-use Swarming\SubscribePro\Api\Data\ProductInterface;
+use Swarming\SubscribePro\Api\Data\ProductInterface as PlatformProductInterface;
 use Swarming\SubscribePro\Platform\Manager\Product;
 use Swarming\SubscribePro\Platform\Service\Product as ProductService;
 use Swarming\SubscribePro\Platform\Storage\Product as ProductStorage;
-use Magento\Catalog\Api\Data\ProductInterface as MagentoProductInterface;
+use Magento\Catalog\Api\Data\ProductInterface;
 
 class ProductTest extends \PHPUnit_Framework_TestCase
 {
@@ -42,17 +42,17 @@ class ProductTest extends \PHPUnit_Framework_TestCase
     {
         $sku = 'sku';
         $websiteId = 23;
-        $productMock = $this->createProductMock();
+        $platformProductMock = $this->createPlatformProductMock();
 
         $this->platformProductStorageMock->expects($this->once())
             ->method('load')
             ->with($sku, $websiteId)
-            ->willReturn($productMock);
+            ->willReturn($platformProductMock);
 
         $this->platformProductServiceMock->expects($this->never())->method('loadProducts');
         $this->platformProductStorageMock->expects($this->never())->method('save');
 
-        $this->assertSame($productMock, $this->productManager->getProduct($sku, $websiteId));
+        $this->assertSame($platformProductMock, $this->productManager->getProduct($sku, $websiteId));
     }
 
     /**
@@ -83,7 +83,7 @@ class ProductTest extends \PHPUnit_Framework_TestCase
     {
         $sku = 'sku';
         $websiteId = 23;
-        $productMock = $this->createProductMock();
+        $platformProductMock = $this->createPlatformProductMock();
 
         $this->platformProductStorageMock->expects($this->once())
             ->method('load')
@@ -93,13 +93,13 @@ class ProductTest extends \PHPUnit_Framework_TestCase
         $this->platformProductServiceMock->expects($this->once())
             ->method('loadProducts')
             ->with($sku, $websiteId)
-            ->willReturn([$productMock]);
+            ->willReturn([$platformProductMock]);
 
         $this->platformProductStorageMock->expects($this->once())
             ->method('save')
-            ->with($productMock, $websiteId);
+            ->with($platformProductMock, $websiteId);
 
-        $this->assertSame($productMock, $this->productManager->getProduct($sku, $websiteId));
+        $this->assertSame($platformProductMock, $this->productManager->getProduct($sku, $websiteId));
     }
 
     public function testSaveNewProduct()
@@ -107,15 +107,15 @@ class ProductTest extends \PHPUnit_Framework_TestCase
         $sku = 'sku';
         $websiteId = 23;
 
-        $productMock = $this->createProductMock();
-        $productMock->expects($this->once())->method('setSku')->with($sku)->willReturnSelf();
-        $productMock->expects($this->once())->method('setPrice')->with(100)->willReturnSelf();
-        $productMock->expects($this->once())->method('setName')->with('product name')->willReturnSelf();
+        $platformProductMock = $this->createPlatformProductMock();
+        $platformProductMock->expects($this->once())->method('setSku')->with($sku)->willReturnSelf();
+        $platformProductMock->expects($this->once())->method('setPrice')->with(100)->willReturnSelf();
+        $platformProductMock->expects($this->once())->method('setName')->with('product name')->willReturnSelf();
 
-        $magentoProduct = $this->getMockBuilder(MagentoProductInterface::class)->getMock();
-        $magentoProduct->expects($this->any())->method('getSku')->willReturn($sku);
-        $magentoProduct->expects($this->any())->method('getPrice')->willReturn(100);
-        $magentoProduct->expects($this->any())->method('getName')->willReturn('product name');
+        $productMock = $this->getMockBuilder(ProductInterface::class)->getMock();
+        $productMock->expects($this->any())->method('getSku')->willReturn($sku);
+        $productMock->expects($this->any())->method('getPrice')->willReturn(100);
+        $productMock->expects($this->any())->method('getName')->willReturn('product name');
 
         $this->platformProductStorageMock->expects($this->once())
             ->method('load')
@@ -131,20 +131,20 @@ class ProductTest extends \PHPUnit_Framework_TestCase
         $this->platformProductServiceMock->expects($this->once())
             ->method('createProduct')
             ->with([], $websiteId)
-            ->willReturn($productMock);
+            ->willReturn($platformProductMock);
 
         $this->platformProductServiceMock->expects($this->once())
             ->method('saveProduct')
-            ->with($productMock, $websiteId)
-            ->willReturn($productMock);
+            ->with($platformProductMock, $websiteId)
+            ->willReturn($platformProductMock);
 
         $this->platformProductStorageMock->expects($this->once())
             ->method('save')
-            ->with($productMock, $websiteId);
+            ->with($platformProductMock, $websiteId);
 
         $this->assertSame(
-            $productMock,
-            $this->productManager->saveProduct($magentoProduct, $websiteId)
+            $platformProductMock,
+            $this->productManager->saveProduct($productMock, $websiteId)
         );
     }
 
@@ -153,20 +153,20 @@ class ProductTest extends \PHPUnit_Framework_TestCase
         $sku = 'sku';
         $websiteId = 23;
 
-        $productMock = $this->createProductMock();
-        $productMock->expects($this->once())->method('setSku')->with($sku)->willReturnSelf();
-        $productMock->expects($this->once())->method('setPrice')->with(100)->willReturnSelf();
-        $productMock->expects($this->once())->method('setName')->with('product name')->willReturnSelf();
+        $platformProductMock = $this->createPlatformProductMock();
+        $platformProductMock->expects($this->once())->method('setSku')->with($sku)->willReturnSelf();
+        $platformProductMock->expects($this->once())->method('setPrice')->with(100)->willReturnSelf();
+        $platformProductMock->expects($this->once())->method('setName')->with('product name')->willReturnSelf();
 
-        $magentoProduct = $this->getMockBuilder(MagentoProductInterface::class)->getMock();
-        $magentoProduct->expects($this->any())->method('getSku')->willReturn($sku);
-        $magentoProduct->expects($this->any())->method('getPrice')->willReturn(100);
-        $magentoProduct->expects($this->any())->method('getName')->willReturn('product name');
+        $productMock = $this->getMockBuilder(ProductInterface::class)->getMock();
+        $productMock->expects($this->any())->method('getSku')->willReturn($sku);
+        $productMock->expects($this->any())->method('getPrice')->willReturn(100);
+        $productMock->expects($this->any())->method('getName')->willReturn('product name');
 
         $this->platformProductStorageMock->expects($this->once())
             ->method('load')
             ->with($sku, $websiteId)
-            ->willReturn($productMock);
+            ->willReturn($platformProductMock);
 
         $this->platformProductStorageMock->expects($this->once())
             ->method('remove')
@@ -175,16 +175,16 @@ class ProductTest extends \PHPUnit_Framework_TestCase
         $this->platformProductServiceMock->expects($this->never())->method('loadProducts');
         $this->platformProductServiceMock->expects($this->once())
             ->method('saveProduct')
-            ->with($productMock, $websiteId)
-            ->willReturn($productMock);
+            ->with($platformProductMock, $websiteId)
+            ->willReturn($platformProductMock);
 
         $this->platformProductStorageMock->expects($this->once())
             ->method('save')
-            ->with($productMock, $websiteId);
+            ->with($platformProductMock, $websiteId);
 
         $this->assertSame(
-            $productMock,
-            $this->productManager->saveProduct($magentoProduct, $websiteId)
+            $platformProductMock,
+            $this->productManager->saveProduct($productMock, $websiteId)
         );
     }
 
@@ -193,15 +193,15 @@ class ProductTest extends \PHPUnit_Framework_TestCase
         $sku = 'sku';
         $websiteId = 23;
 
-        $productMock = $this->createProductMock();
-        $productMock->expects($this->once())->method('setSku')->with($sku)->willReturnSelf();
-        $productMock->expects($this->once())->method('setPrice')->with(100)->willReturnSelf();
-        $productMock->expects($this->once())->method('setName')->with('product name')->willReturnSelf();
+        $platformProductMock = $this->createPlatformProductMock();
+        $platformProductMock->expects($this->once())->method('setSku')->with($sku)->willReturnSelf();
+        $platformProductMock->expects($this->once())->method('setPrice')->with(100)->willReturnSelf();
+        $platformProductMock->expects($this->once())->method('setName')->with('product name')->willReturnSelf();
 
-        $magentoProduct = $this->getMockBuilder(MagentoProductInterface::class)->getMock();
-        $magentoProduct->expects($this->any())->method('getSku')->willReturn($sku);
-        $magentoProduct->expects($this->any())->method('getPrice')->willReturn(100);
-        $magentoProduct->expects($this->any())->method('getName')->willReturn('product name');
+        $productMock = $this->getMockBuilder(ProductInterface::class)->getMock();
+        $productMock->expects($this->any())->method('getSku')->willReturn($sku);
+        $productMock->expects($this->any())->method('getPrice')->willReturn(100);
+        $productMock->expects($this->any())->method('getName')->willReturn('product name');
 
         $this->platformProductStorageMock->expects($this->once())
             ->method('load')
@@ -214,30 +214,30 @@ class ProductTest extends \PHPUnit_Framework_TestCase
         $this->platformProductServiceMock->expects($this->once())
             ->method('loadProducts')
             ->with($sku, $websiteId)
-            ->willReturn([$productMock]);
+            ->willReturn([$platformProductMock]);
 
         $this->platformProductServiceMock->expects($this->never())->method('createProduct');
 
         $this->platformProductServiceMock->expects($this->once())
             ->method('saveProduct')
-            ->with($productMock, $websiteId)
-            ->willReturn($productMock);
+            ->with($platformProductMock, $websiteId)
+            ->willReturn($platformProductMock);
 
         $this->platformProductStorageMock->expects($this->once())
             ->method('save')
-            ->with($productMock, $websiteId);
+            ->with($platformProductMock, $websiteId);
 
         $this->assertSame(
-            $productMock,
-            $this->productManager->saveProduct($magentoProduct, $websiteId)
+            $platformProductMock,
+            $this->productManager->saveProduct($productMock, $websiteId)
         );
     }
 
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject|\Swarming\SubscribePro\Api\Data\ProductInterface
      */
-    private function createProductMock()
+    private function createPlatformProductMock()
     {
-        return $this->getMockBuilder(ProductInterface::class)->getMock();
+        return $this->getMockBuilder(PlatformProductInterface::class)->getMock();
     }
 }

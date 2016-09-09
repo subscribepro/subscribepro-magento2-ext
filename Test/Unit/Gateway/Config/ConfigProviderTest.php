@@ -4,17 +4,28 @@ namespace Swarming\SubscribePro\Test\Unit\Gateway\Config;
 
 use Magento\Payment\Model\CcConfig;
 use Magento\Payment\Model\CcConfigProvider;
-use SubscribePro\Tools\Config as PlatformConfig;
+use SubscribePro\Tools\Config as ConfigTool;
 use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
-use Swarming\SubscribePro\Gateway\Config\Config as SubscribeProGatewayConfig;
-use Swarming\SubscribePro\Platform\Tool\Config as PlatformToolConfig;
+use Swarming\SubscribePro\Model\Config\General as GeneralConfig;
+use Swarming\SubscribePro\Gateway\Config\Config as GatewayConfig;
+use Swarming\SubscribePro\Platform\Tool\Config as PlatformConfigTool;
 
 class ConfigProviderTest extends \PHPUnit_Framework_TestCase
 {
     /**
+     * @var \Swarming\SubscribePro\Gateway\Config\ConfigProvider
+     */
+    protected $configProvider;
+
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject|\Swarming\SubscribePro\Model\Config\General
+     */
+    protected $generalConfigMock;
+
+    /**
      * @var \PHPUnit_Framework_MockObject_MockObject|\Swarming\SubscribePro\Gateway\Config\Config
      */
-    protected $configMock;
+    protected $gatewayConfigMock;
 
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Payment\Model\CcConfig
@@ -30,29 +41,60 @@ class ConfigProviderTest extends \PHPUnit_Framework_TestCase
      * @var \PHPUnit_Framework_MockObject_MockObject|\Swarming\SubscribePro\Platform\Tool\Config
      */
     protected $platformConfigToolMock;
-    
-    /**
-     * @var \Swarming\SubscribePro\Gateway\Config\ConfigProvider
-     */
-    protected $configProvider;
 
     protected function setUp()
     {
-        $this->configMock = $this->getMockBuilder(SubscribeProGatewayConfig::class)
-            ->disableOriginalConstructor()->getMock();
+        $this->generalConfigMock = $this->getMockBuilder(GeneralConfig::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->gatewayConfigMock = $this->getMockBuilder(GatewayConfig::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $this->ccConfigMock = $this->getMockBuilder(CcConfig::class)
-            ->disableOriginalConstructor()->getMock();
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $this->ccConfigProviderMock = $this->getMockBuilder(CcConfigProvider::class)
-            ->disableOriginalConstructor()->getMock();
-        $this->platformConfigToolMock = $this->getMockBuilder(PlatformToolConfig::class)
-            ->disableOriginalConstructor()->getMock();
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->platformConfigToolMock = $this->getMockBuilder(PlatformConfigTool::class)
+            ->disableOriginalConstructor()
+            ->getMock();
         
         $this->configProvider = new ConfigProvider(
-            $this->configMock,
+            $this->generalConfigMock,
+            $this->gatewayConfigMock,
             $this->ccConfigMock,
             $this->ccConfigProviderMock,
             $this->platformConfigToolMock
         );
+    }
+
+    public function testGetConfigIfModuleDisabled()
+    {
+        $result = [
+            'vaultCode' => ConfigProvider::VAULT_CODE,
+            'isActive' => false,
+        ];
+
+        $this->generalConfigMock->expects($this->once())->method('isEnabled')->willReturn(false);
+
+        $this->gatewayConfigMock->expects($this->never())->method('isActive');
+        $this->gatewayConfigMock->expects($this->never())->method('getAvailableCardTypes');
+        $this->gatewayConfigMock->expects($this->never())->method('getCcTypesMapper');
+        $this->gatewayConfigMock->expects($this->never())->method('hasVerification');
+
+        $this->platformConfigToolMock->expects($this->never())->method('getConfig');
+
+        $this->ccConfigMock->expects($this->never())->method('getCcAvailableTypes');
+        $this->ccConfigMock->expects($this->never())->method('getCvvImageUrl');
+
+        $this->ccConfigProviderMock->expects($this->never())->method('getIcons');
+
+        $this->assertEquals($result, $this->configProvider->getConfig());
     }
 
     /**
@@ -78,16 +120,16 @@ class ConfigProviderTest extends \PHPUnit_Framework_TestCase
         $icons, 
         $result
     ) {
-        $this->configMock->expects($this->once())->method('isActive')->willReturn($isActive);
-        $this->configMock->expects($this->once())
-            ->method('getAvailableCardTypes')
-            ->willReturn($availableCardTypes);
-        $this->configMock->expects($this->once())->method('getCcTypesMapper')->willReturn($ccTypesMapper);
-        $this->configMock->expects($this->once())->method('hasVerification')->willReturn($hasVerification);
+        $this->generalConfigMock->expects($this->once())->method('isEnabled')->willReturn(true);
+
+        $this->gatewayConfigMock->expects($this->once())->method('isActive')->willReturn($isActive);
+        $this->gatewayConfigMock->expects($this->once())->method('getAvailableCardTypes')->willReturn($availableCardTypes);
+        $this->gatewayConfigMock->expects($this->once())->method('getCcTypesMapper')->willReturn($ccTypesMapper);
+        $this->gatewayConfigMock->expects($this->once())->method('hasVerification')->willReturn($hasVerification);
         
         $this->platformConfigToolMock->expects($this->once())
             ->method('getConfig')
-            ->with(PlatformConfig::CONFIG_TRANSPARENT_REDIRECT_ENVIRONMENT_KEY)
+            ->with(ConfigTool::CONFIG_TRANSPARENT_REDIRECT_ENVIRONMENT_KEY)
             ->willReturn($environmentKey);
 
         $this->ccConfigMock->expects($this->once())->method('getCcAvailableTypes')->willReturn($ccAvailableTypes);

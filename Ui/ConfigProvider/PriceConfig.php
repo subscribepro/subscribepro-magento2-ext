@@ -49,6 +49,7 @@ class PriceConfig
                 $this->taxConfig->getPriceDisplayType() == TaxConfig::DISPLAY_TYPE_INCLUDING_TAX
                 || $this->taxConfig->getPriceDisplayType() == TaxConfig::DISPLAY_TYPE_BOTH,
             'applyDiscountToCatalogPrice' => $this->subscriptionDiscountConfig->isApplyDiscountToCatalogPrice(),
+            'discountMessage' => $this->subscriptionDiscountConfig->getDiscountMessage(),
             'priceFormat' => $this->localeFormat->getPriceFormat(),
         ];
     }

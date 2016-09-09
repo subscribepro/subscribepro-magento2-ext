@@ -12,7 +12,7 @@ class ProductSaveAfter implements ObserverInterface
     /**
      * @var \Swarming\SubscribePro\Model\Config\General
      */
-    protected $configGeneral;
+    protected $generalConfig;
 
     /**
      * @var \Magento\Store\Model\StoreManagerInterface
@@ -40,7 +40,7 @@ class ProductSaveAfter implements ObserverInterface
     protected $logger;
 
     /**
-     * @param \Swarming\SubscribePro\Model\Config\General $configGeneral
+     * @param \Swarming\SubscribePro\Model\Config\General $generalConfig
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      * @param \Magento\Catalog\Api\ProductRepositoryInterface $productRepository
      * @param \Swarming\SubscribePro\Platform\Manager\Product $platformProductManager
@@ -48,14 +48,14 @@ class ProductSaveAfter implements ObserverInterface
      * @param \Psr\Log\LoggerInterface $logger
      */
     public function __construct(
-        \Swarming\SubscribePro\Model\Config\General $configGeneral,
+        \Swarming\SubscribePro\Model\Config\General $generalConfig,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
         \Swarming\SubscribePro\Platform\Manager\Product $platformProductManager,
         \Swarming\SubscribePro\Helper\Product $productHelper,
         \Psr\Log\LoggerInterface $logger
     ) {
-        $this->configGeneral = $configGeneral;
+        $this->generalConfig = $generalConfig;
         $this->storeManager = $storeManager;
         $this->productRepository = $productRepository;
         $this->platformProductManager = $platformProductManager;
@@ -89,7 +89,7 @@ class ProductSaveAfter implements ObserverInterface
      */
     protected function saveProduct($sku, $website)
     {
-        if (!$this->configGeneral->isEnabled($website->getCode())) {
+        if (!$this->generalConfig->isEnabled($website->getCode())) {
             return;
         }
 

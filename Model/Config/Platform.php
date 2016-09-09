@@ -11,6 +11,15 @@ class Platform extends General
      * @param string|null $websiteCode
      * @return string
      */
+    public function getBaseUrl($websiteCode = null)
+    {
+        return $this->scopeConfig->getValue('swarming_subscribepro/platform/base_url', ScopeInterface::SCOPE_WEBSITE, $websiteCode);
+    }
+
+    /**
+     * @param string|null $websiteCode
+     * @return string
+     */
     public function getClientId($websiteCode = null)
     {
         return $this->scopeConfig->getValue('swarming_subscribepro/platform/client_id', ScopeInterface::SCOPE_WEBSITE, $websiteCode);
@@ -33,15 +42,6 @@ class Platform extends General
     public function isLogEnabled($websiteCode = null)
     {
         return $this->scopeConfig->isSetFlag('swarming_subscribepro/platform/log_enabled', ScopeInterface::SCOPE_WEBSITE, $websiteCode);
-    }
-
-    /**
-     * @param string|null $websiteCode
-     * @return string
-     */
-    public function getLogLevel($websiteCode = null)
-    {
-        return $this->scopeConfig->getValue('swarming_subscribepro/platform/log_level', ScopeInterface::SCOPE_WEBSITE, $websiteCode);
     }
 
     /**

@@ -1,5 +1,9 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Sales\Model\AdminOrder\Create">
+        <plugin name="subscribepro_options" type="Swarming\SubscribePro\Plugin\AdminOrder\Create"/>
+    </type>
+
     <type name="Swarming\SubscribePro\Block\Payment\Info">
         <arguments>
             <argument name="data" xsi:type="array">
@@ -7,6 +11,7 @@
             </argument>
         </arguments>
     </type>
+
     <virtualType name="Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\Pool">
         <arguments>
             <argument name="modifiers" xsi:type="array">

@@ -5,12 +5,11 @@ namespace Swarming\SubscribePro\Test\Unit\Service;
 use Magento\Framework\App\Area;
 use Magento\Customer\Model\Address\Config as AddressConfig;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Framework\Intl\DateTimeFactory;
 use Magento\Framework\View\DesignInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use SubscribePro\Exception\HttpException;
-use SubscribePro\Service\Customer\CustomerInterface;
+use SubscribePro\Service\Customer\CustomerInterface as PlatformCustomerInterface;
 use SubscribePro\Service\PaymentProfile\PaymentProfileInterface;
 use Swarming\SubscribePro\Api\Data\AddressInterface;
 use Swarming\SubscribePro\Api\Data\ProductInterface;
@@ -20,8 +19,9 @@ use Swarming\SubscribePro\Platform\Manager\Product as ProductManager;
 use Swarming\SubscribePro\Platform\Manager\Customer as CustomerManager;
 use Swarming\SubscribePro\Platform\Service\Subscription as SubscriptionService;
 use Swarming\SubscribePro\Platform\Manager\Address as AddressManager;
-use Swarming\SubscribePro\Helper\SubscriptionProducts as SubscriptionProductsHelper;
+use Swarming\SubscribePro\Helper\SubscriptionProduct as SubscriptionProductsHelper;
 use Magento\Quote\Model\Quote\Address as QuoteAddress;
+use Swarming\SubscribePro\Model\Config\SubscriptionOptions as SubscriptionOptionsConfig;
 
 class SubscriptionManagementTest extends \PHPUnit_Framework_TestCase
 {
@@ -51,19 +51,19 @@ class SubscriptionManagementTest extends \PHPUnit_Framework_TestCase
     protected $platformAddressManagerMock;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|\Swarming\SubscribePro\Helper\SubscriptionProducts
+     * @var \PHPUnit_Framework_MockObject_MockObject|\Swarming\SubscribePro\Helper\SubscriptionProduct
      */
-    protected $subscriptionProductsHelperMock;
+    protected $subscriptionProductHelperMock;
+
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject|\Swarming\SubscribePro\Model\Config\SubscriptionOptions
+     */
+    protected $subscriptionOptionConfigMock;
 
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Framework\View\DesignInterface
      */
     protected $designMock;
-
-    /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Framework\Intl\DateTimeFactory
-     */
-    protected $dateTimeFactoryMock;
 
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject|\Psr\Log\LoggerInterface
@@ -80,11 +80,11 @@ class SubscriptionManagementTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()->getMock();
         $this->platformAddressManagerMock = $this->getMockBuilder(AddressManager::class)
             ->disableOriginalConstructor()->getMock();
-        $this->subscriptionProductsHelperMock = $this->getMockBuilder(SubscriptionProductsHelper::class)
+        $this->subscriptionProductHelperMock = $this->getMockBuilder(SubscriptionProductsHelper::class)
+            ->disableOriginalConstructor()->getMock();
+        $this->subscriptionOptionConfigMock = $this->getMockBuilder(SubscriptionOptionsConfig::class)
             ->disableOriginalConstructor()->getMock();
         $this->designMock = $this->getMockBuilder(DesignInterface::class)->getMock();
-        $this->dateTimeFactoryMock = $this->getMockBuilder(DateTimeFactory::class)
-            ->disableOriginalConstructor()->getMock();
         $this->loggerMock = $this->getMockBuilder(LoggerInterface::class)->getMock();
 
         $this->subscriptionManagement = new SubscriptionManagement(
@@ -92,9 +92,9 @@ class SubscriptionManagementTest extends \PHPUnit_Framework_TestCase
             $this->platformCustomerManagerMock,
             $this->platformSubscriptionServiceMock,
             $this->platformAddressManagerMock,
-            $this->subscriptionProductsHelperMock,
+            $this->subscriptionProductHelperMock,
+            $this->subscriptionOptionConfigMock,
             $this->designMock,
-            $this->dateTimeFactoryMock,
             $this->loggerMock
         );
     }
@@ -108,8 +108,8 @@ class SubscriptionManagementTest extends \PHPUnit_Framework_TestCase
         $customerId = 1234;
         $platformCustomerId = 4321;
 
-        $customerMock = $this->createCustomerMock();
-        $customerMock->expects($this->once())->method('getId')->willReturn($platformCustomerId);
+        $platformCustomerMock = $this->createPlatformCustomerMock();
+        $platformCustomerMock->expects($this->once())->method('getId')->willReturn($platformCustomerId);
 
         $responseMock = $this->getMockBuilder(ResponseInterface::class)->getMock();
         $exception = new HttpException($responseMock);
@@ -126,7 +126,7 @@ class SubscriptionManagementTest extends \PHPUnit_Framework_TestCase
         $this->platformCustomerManagerMock->expects($this->once())
             ->method('getCustomerById')
             ->with($customerId)
-            ->willReturn($customerMock);
+            ->willReturn($platformCustomerMock);
 
         $this->platformSubscriptionServiceMock->expects($this->once())
             ->method('loadSubscriptionsByCustomer')
@@ -170,8 +170,8 @@ class SubscriptionManagementTest extends \PHPUnit_Framework_TestCase
         $customerId = 1234;
         $platformCustomerId = 4321;
 
-        $customerMock = $this->createCustomerMock();
-        $customerMock->expects($this->once())->method('getId')->willReturn($platformCustomerId);
+        $platformCustomerMock = $this->createPlatformCustomerMock();
+        $platformCustomerMock->expects($this->once())->method('getId')->willReturn($platformCustomerId);
 
         $this->designMock->expects($this->once())
             ->method('getConfigurationDesignTheme')
@@ -185,14 +185,14 @@ class SubscriptionManagementTest extends \PHPUnit_Framework_TestCase
         $this->platformCustomerManagerMock->expects($this->once())
             ->method('getCustomerById')
             ->with($customerId)
-            ->willReturn($customerMock);
+            ->willReturn($platformCustomerMock);
 
         $this->platformSubscriptionServiceMock->expects($this->once())
             ->method('loadSubscriptionsByCustomer')
             ->with($platformCustomerId)
             ->willReturn([]);
 
-        $this->subscriptionProductsHelperMock->expects($this->never())->method('linkProducts');
+        $this->subscriptionProductHelperMock->expects($this->never())->method('linkProducts');
 
         $this->assertEquals([], $this->subscriptionManagement->getSubscriptions($customerId));
     }
@@ -203,8 +203,8 @@ class SubscriptionManagementTest extends \PHPUnit_Framework_TestCase
         $platformCustomerId = 4321;
         $subscriptions = ['subscriptions'];
 
-        $customerMock = $this->createCustomerMock();
-        $customerMock->expects($this->once())->method('getId')->willReturn($platformCustomerId);
+        $platformCustomerMock = $this->createPlatformCustomerMock();
+        $platformCustomerMock->expects($this->once())->method('getId')->willReturn($platformCustomerId);
 
         $this->designMock->expects($this->once())
             ->method('getConfigurationDesignTheme')
@@ -218,14 +218,14 @@ class SubscriptionManagementTest extends \PHPUnit_Framework_TestCase
         $this->platformCustomerManagerMock->expects($this->once())
             ->method('getCustomerById')
             ->with($customerId)
-            ->willReturn($customerMock);
+            ->willReturn($platformCustomerMock);
 
         $this->platformSubscriptionServiceMock->expects($this->once())
             ->method('loadSubscriptionsByCustomer')
             ->with($platformCustomerId)
             ->willReturn($subscriptions);
 
-        $this->subscriptionProductsHelperMock->expects($this->once())
+        $this->subscriptionProductHelperMock->expects($this->once())
             ->method('linkProducts')
             ->with($subscriptions);
 
@@ -274,13 +274,13 @@ class SubscriptionManagementTest extends \PHPUnit_Framework_TestCase
         $subscriptionMock = $this->createSubscriptionMock();
         $subscriptionMock->expects($this->once())->method('getCustomerId')->willReturn(10000);
 
-        $customerMock = $this->createCustomerMock();
-        $customerMock->expects($this->once())->method('getId')->willReturn($platformCustomerId);
+        $platformCustomerMock = $this->createPlatformCustomerMock();
+        $platformCustomerMock->expects($this->once())->method('getId')->willReturn($platformCustomerId);
 
         $this->platformCustomerManagerMock->expects($this->once())
             ->method('getCustomerById')
             ->with($customerId)
-            ->willReturn($customerMock);
+            ->willReturn($platformCustomerMock);
 
         $this->platformSubscriptionServiceMock->expects($this->once())
             ->method('loadSubscription')
@@ -310,13 +310,13 @@ class SubscriptionManagementTest extends \PHPUnit_Framework_TestCase
         $subscriptionMock->expects($this->once())->method('getCustomerId')->willReturn($platformCustomerId);
         $subscriptionMock->expects($this->once())->method('getProductSku')->willReturn($productSku);
 
-        $customerMock = $this->createCustomerMock();
-        $customerMock->expects($this->once())->method('getId')->willReturn($platformCustomerId);
+        $platformCustomerMock = $this->createPlatformCustomerMock();
+        $platformCustomerMock->expects($this->once())->method('getId')->willReturn($platformCustomerId);
 
         $this->platformCustomerManagerMock->expects($this->once())
             ->method('getCustomerById')
             ->with($customerId)
-            ->willReturn($customerMock);
+            ->willReturn($platformCustomerMock);
 
         $this->platformSubscriptionServiceMock->expects($this->once())
             ->method('loadSubscription')
@@ -335,7 +335,7 @@ class SubscriptionManagementTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \Magento\Framework\Exception\LocalizedException
-     * @expectedExceptionMessageRegExp Invalid quantity, it must be in range from \d+ to \d+\.
+     * @expectedExceptionMessageRegExp /Invalid quantity, it must be in range from \d+ to \d+\./
      * @dataProvider failToUpdateQtyIfInvalidQtyDataProvider
      * @param int $qty
      * @param int $minQty
@@ -352,8 +352,8 @@ class SubscriptionManagementTest extends \PHPUnit_Framework_TestCase
         $subscriptionMock->expects($this->once())->method('getCustomerId')->willReturn($platformCustomerId);
         $subscriptionMock->expects($this->once())->method('getProductSku')->willReturn($productSku);
 
-        $customerMock = $this->createCustomerMock();
-        $customerMock->expects($this->once())->method('getId')->willReturn($platformCustomerId);
+        $platformCustomerMock = $this->createPlatformCustomerMock();
+        $platformCustomerMock->expects($this->once())->method('getId')->willReturn($platformCustomerId);
 
         $platformProductMock = $this->getMockBuilder(ProductInterface::class)->getMock();
         $platformProductMock->expects($this->any())->method('getMinQty')->willReturn($minQty);
@@ -362,7 +362,7 @@ class SubscriptionManagementTest extends \PHPUnit_Framework_TestCase
         $this->platformCustomerManagerMock->expects($this->once())
             ->method('getCustomerById')
             ->with($customerId)
-            ->willReturn($customerMock);
+            ->willReturn($platformCustomerMock);
 
         $this->platformSubscriptionServiceMock->expects($this->once())
             ->method('loadSubscription')
@@ -413,8 +413,8 @@ class SubscriptionManagementTest extends \PHPUnit_Framework_TestCase
         $subscriptionMock->expects($this->once())->method('getProductSku')->willReturn($productSku);
         $subscriptionMock->expects($this->once())->method('setQty')->with($qty);
 
-        $customerMock = $this->createCustomerMock();
-        $customerMock->expects($this->once())->method('getId')->willReturn($platformCustomerId);
+        $platformCustomerMock = $this->createPlatformCustomerMock();
+        $platformCustomerMock->expects($this->once())->method('getId')->willReturn($platformCustomerId);
 
         $platformProductMock = $this->getMockBuilder(ProductInterface::class)->getMock();
         $platformProductMock->expects($this->any())->method('getMinQty')->willReturn($minQty);
@@ -423,7 +423,7 @@ class SubscriptionManagementTest extends \PHPUnit_Framework_TestCase
         $this->platformCustomerManagerMock->expects($this->once())
             ->method('getCustomerById')
             ->with($customerId)
-            ->willReturn($customerMock);
+            ->willReturn($platformCustomerMock);
 
         $this->platformSubscriptionServiceMock->expects($this->once())
             ->method('loadSubscription')
@@ -511,13 +511,13 @@ class SubscriptionManagementTest extends \PHPUnit_Framework_TestCase
         $subscriptionMock = $this->createSubscriptionMock();
         $subscriptionMock->expects($this->once())->method('getCustomerId')->willReturn(10000);
 
-        $customerMock = $this->createCustomerMock();
-        $customerMock->expects($this->once())->method('getId')->willReturn($platformCustomerId);
+        $platformCustomerMock = $this->createPlatformCustomerMock();
+        $platformCustomerMock->expects($this->once())->method('getId')->willReturn($platformCustomerId);
 
         $this->platformCustomerManagerMock->expects($this->once())
             ->method('getCustomerById')
             ->with($customerId)
-            ->willReturn($customerMock);
+            ->willReturn($platformCustomerMock);
 
         $this->platformSubscriptionServiceMock->expects($this->once())
             ->method('loadSubscription')
@@ -540,13 +540,13 @@ class SubscriptionManagementTest extends \PHPUnit_Framework_TestCase
         $subscriptionMock->expects($this->once())->method('getCustomerId')->willReturn($platformCustomerId);
         $subscriptionMock->expects($this->once())->method('setInterval')->with($interval);
 
-        $customerMock = $this->createCustomerMock();
-        $customerMock->expects($this->once())->method('getId')->willReturn($platformCustomerId);
+        $platformCustomerMock = $this->createPlatformCustomerMock();
+        $platformCustomerMock->expects($this->once())->method('getId')->willReturn($platformCustomerId);
 
         $this->platformCustomerManagerMock->expects($this->once())
             ->method('getCustomerById')
             ->with($customerId)
-            ->willReturn($customerMock);
+            ->willReturn($platformCustomerMock);
 
         $this->platformSubscriptionServiceMock->expects($this->once())
             ->method('loadSubscription')
@@ -566,23 +566,14 @@ class SubscriptionManagementTest extends \PHPUnit_Framework_TestCase
      */
     public function testFailToUpdateNextOrderDateIfInvalidDate()
     {
-        $minNextOrderInterval = '2017-05-12';
+        $earliestDateForNextOrder = '2017-05-12';
         $nextOrderDate = '2017-05-11';
         $customerId = 1234;
         $subscriptionId = 555;
 
-        $dateTimeMock = $this->getMockBuilder('DateTime')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $dateTimeMock->expects($this->once())
-            ->method('format')
-            ->with('Y-m-d')
-            ->willReturn($minNextOrderInterval);
-
-        $this->dateTimeFactoryMock->expects($this->once())
-            ->method('create')
-            ->with(SubscriptionManagement::MINIMUM_NEXT_ORDER_INTERVAL)
-            ->willReturn($dateTimeMock);
+        $this->subscriptionOptionConfigMock->expects($this->once())
+            ->method('getEarliestDateForNextOrder')
+            ->willReturn($earliestDateForNextOrder);
 
         $this->platformSubscriptionServiceMock->expects($this->never())->method('loadSubscription');
         $this->platformSubscriptionServiceMock->expects($this->never())->method('saveSubscription');
@@ -598,24 +589,15 @@ class SubscriptionManagementTest extends \PHPUnit_Framework_TestCase
     {
         $customerId = 1234;
         $subscriptionId = 555;
-        $minNextOrderInterval = '2017-05-12';
+        $earliestDateForNextOrder = '2017-05-12';
         $nextOrderDate = '2017-05-15';
 
         $responseMock = $this->getMockBuilder(ResponseInterface::class)->getMock();
         $exception = new HttpException($responseMock);
 
-        $dateTimeMock = $this->getMockBuilder('DateTime')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $dateTimeMock->expects($this->once())
-            ->method('format')
-            ->with('Y-m-d')
-            ->willReturn($minNextOrderInterval);
-
-        $this->dateTimeFactoryMock->expects($this->once())
-            ->method('create')
-            ->with(SubscriptionManagement::MINIMUM_NEXT_ORDER_INTERVAL)
-            ->willReturn($dateTimeMock);
+        $this->subscriptionOptionConfigMock->expects($this->once())
+            ->method('getEarliestDateForNextOrder')
+            ->willReturn($earliestDateForNextOrder);
 
         $this->platformSubscriptionServiceMock->expects($this->once())
             ->method('loadSubscription')
@@ -639,24 +621,15 @@ class SubscriptionManagementTest extends \PHPUnit_Framework_TestCase
     {
         $customerId = 1234;
         $subscriptionId = 555;
-        $minNextOrderInterval = '2017-05-12';
+        $earliestDateForNextOrder = '2017-05-12';
         $nextOrderDate = '2017-05-15';
         $exception = new NoSuchEntityException(__('error'));
 
         $subscriptionMock = $this->createSubscriptionMock();
 
-        $dateTimeMock = $this->getMockBuilder('DateTime')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $dateTimeMock->expects($this->once())
-            ->method('format')
-            ->with('Y-m-d')
-            ->willReturn($minNextOrderInterval);
-
-        $this->dateTimeFactoryMock->expects($this->once())
-            ->method('create')
-            ->with(SubscriptionManagement::MINIMUM_NEXT_ORDER_INTERVAL)
-            ->willReturn($dateTimeMock);
+        $this->subscriptionOptionConfigMock->expects($this->once())
+            ->method('getEarliestDateForNextOrder')
+            ->willReturn($earliestDateForNextOrder);
 
         $this->platformCustomerManagerMock->expects($this->once())
             ->method('getCustomerById')
@@ -681,33 +654,24 @@ class SubscriptionManagementTest extends \PHPUnit_Framework_TestCase
     {
         $customerId = 1234;
         $subscriptionId = 555;
-        $minNextOrderInterval = '2017-05-12';
+        $earliestDateForNextOrder = '2017-05-12';
         $nextOrderDate = '2017-05-15';
         $platformCustomerId = 4321;
 
         $subscriptionMock = $this->createSubscriptionMock();
         $subscriptionMock->expects($this->once())->method('getCustomerId')->willReturn(10000);
 
-        $customerMock = $this->createCustomerMock();
-        $customerMock->expects($this->once())->method('getId')->willReturn($platformCustomerId);
+        $platformCustomerMock = $this->createPlatformCustomerMock();
+        $platformCustomerMock->expects($this->once())->method('getId')->willReturn($platformCustomerId);
 
-        $dateTimeMock = $this->getMockBuilder('DateTime')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $dateTimeMock->expects($this->once())
-            ->method('format')
-            ->with('Y-m-d')
-            ->willReturn($minNextOrderInterval);
-
-        $this->dateTimeFactoryMock->expects($this->once())
-            ->method('create')
-            ->with(SubscriptionManagement::MINIMUM_NEXT_ORDER_INTERVAL)
-            ->willReturn($dateTimeMock);
+        $this->subscriptionOptionConfigMock->expects($this->once())
+            ->method('getEarliestDateForNextOrder')
+            ->willReturn($earliestDateForNextOrder);
 
         $this->platformCustomerManagerMock->expects($this->once())
             ->method('getCustomerById')
             ->with($customerId)
-            ->willReturn($customerMock);
+            ->willReturn($platformCustomerMock);
 
         $this->platformSubscriptionServiceMock->expects($this->once())
             ->method('loadSubscription')
@@ -721,7 +685,7 @@ class SubscriptionManagementTest extends \PHPUnit_Framework_TestCase
 
     public function testUpdateNextOrderDate()
     {
-        $minNextOrderInterval = '2017-05-12';
+        $earliestDateForNextOrder = '2017-05-12';
         $nextOrderDate = '2017-05-15';
         $customerId = 1234;
         $subscriptionId = 555;
@@ -731,26 +695,17 @@ class SubscriptionManagementTest extends \PHPUnit_Framework_TestCase
         $subscriptionMock->expects($this->once())->method('getCustomerId')->willReturn($platformCustomerId);
         $subscriptionMock->expects($this->once())->method('setNextOrderDate')->with($nextOrderDate);
 
-        $customerMock = $this->createCustomerMock();
-        $customerMock->expects($this->once())->method('getId')->willReturn($platformCustomerId);
+        $platformCustomerMock = $this->createPlatformCustomerMock();
+        $platformCustomerMock->expects($this->once())->method('getId')->willReturn($platformCustomerId);
 
-        $dateTimeMock = $this->getMockBuilder('DateTime')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $dateTimeMock->expects($this->once())
-            ->method('format')
-            ->with('Y-m-d')
-            ->willReturn($minNextOrderInterval);
-
-        $this->dateTimeFactoryMock->expects($this->once())
-            ->method('create')
-            ->with(SubscriptionManagement::MINIMUM_NEXT_ORDER_INTERVAL)
-            ->willReturn($dateTimeMock);
+        $this->subscriptionOptionConfigMock->expects($this->once())
+            ->method('getEarliestDateForNextOrder')
+            ->willReturn($earliestDateForNextOrder);
 
         $this->platformCustomerManagerMock->expects($this->once())
             ->method('getCustomerById')
             ->with($customerId)
-            ->willReturn($customerMock);
+            ->willReturn($platformCustomerMock);
 
         $this->platformSubscriptionServiceMock->expects($this->once())
             ->method('loadSubscription')
@@ -833,13 +788,13 @@ class SubscriptionManagementTest extends \PHPUnit_Framework_TestCase
         $subscriptionMock = $this->createSubscriptionMock();
         $subscriptionMock->expects($this->once())->method('getCustomerId')->willReturn(10000);
 
-        $customerMock = $this->createCustomerMock();
-        $customerMock->expects($this->once())->method('getId')->willReturn($platformCustomerId);
+        $platformCustomerMock = $this->createPlatformCustomerMock();
+        $platformCustomerMock->expects($this->once())->method('getId')->willReturn($platformCustomerId);
 
         $this->platformCustomerManagerMock->expects($this->once())
             ->method('getCustomerById')
             ->with($customerId)
-            ->willReturn($customerMock);
+            ->willReturn($platformCustomerMock);
 
         $this->platformSubscriptionServiceMock->expects($this->once())
             ->method('loadSubscription')
@@ -865,13 +820,13 @@ class SubscriptionManagementTest extends \PHPUnit_Framework_TestCase
         $subscriptionMock->expects($this->once())->method('setPaymentProfileId')->with($paymentProfileId);
         $subscriptionMock->expects($this->once())->method('getPaymentProfile')->willReturn($profileMock);
 
-        $customerMock = $this->createCustomerMock();
-        $customerMock->expects($this->once())->method('getId')->willReturn($platformCustomerId);
+        $platformCustomerMock = $this->createPlatformCustomerMock();
+        $platformCustomerMock->expects($this->once())->method('getId')->willReturn($platformCustomerId);
 
         $this->platformCustomerManagerMock->expects($this->once())
             ->method('getCustomerById')
             ->with($customerId)
-            ->willReturn($customerMock);
+            ->willReturn($platformCustomerMock);
 
         $this->platformSubscriptionServiceMock->expects($this->once())
             ->method('loadSubscription')
@@ -957,13 +912,13 @@ class SubscriptionManagementTest extends \PHPUnit_Framework_TestCase
         $subscriptionMock = $this->createSubscriptionMock();
         $subscriptionMock->expects($this->once())->method('getCustomerId')->willReturn(10000);
 
-        $customerMock = $this->createCustomerMock();
-        $customerMock->expects($this->any())->method('getId')->willReturn($platformCustomerId);
+        $platformCustomerMock = $this->createPlatformCustomerMock();
+        $platformCustomerMock->expects($this->any())->method('getId')->willReturn($platformCustomerId);
 
         $this->platformCustomerManagerMock->expects($this->once())
             ->method('getCustomerById')
             ->with($customerId)
-            ->willReturn($customerMock);
+            ->willReturn($platformCustomerMock);
 
         $this->platformSubscriptionServiceMock->expects($this->once())
             ->method('loadSubscription')
@@ -991,13 +946,13 @@ class SubscriptionManagementTest extends \PHPUnit_Framework_TestCase
         $subscriptionMock->expects($this->once())->method('getCustomerId')->willReturn($platformCustomerId);
         $subscriptionMock->expects($this->once())->method('setShippingAddressId')->with($platformAddressId);
 
-        $customerMock = $this->createCustomerMock();
-        $customerMock->expects($this->any())->method('getId')->willReturn($platformCustomerId);
+        $platformCustomerMock = $this->createPlatformCustomerMock();
+        $platformCustomerMock->expects($this->any())->method('getId')->willReturn($platformCustomerId);
 
         $this->platformCustomerManagerMock->expects($this->once())
             ->method('getCustomerById')
             ->with($customerId)
-            ->willReturn($customerMock);
+            ->willReturn($platformCustomerMock);
 
         $this->platformSubscriptionServiceMock->expects($this->once())
             ->method('loadSubscription')
@@ -1086,13 +1041,13 @@ class SubscriptionManagementTest extends \PHPUnit_Framework_TestCase
         $subscriptionMock = $this->createSubscriptionMock();
         $subscriptionMock->expects($this->once())->method('getCustomerId')->willReturn(10000);
 
-        $customerMock = $this->createCustomerMock();
-        $customerMock->expects($this->once())->method('getId')->willReturn($platformCustomerId);
+        $platformCustomerMock = $this->createPlatformCustomerMock();
+        $platformCustomerMock->expects($this->once())->method('getId')->willReturn($platformCustomerId);
 
         $this->platformCustomerManagerMock->expects($this->once())
             ->method('getCustomerById')
             ->with($customerId)
-            ->willReturn($customerMock);
+            ->willReturn($platformCustomerMock);
 
         $this->platformSubscriptionServiceMock->expects($this->once())
             ->method('loadSubscription')
@@ -1115,13 +1070,13 @@ class SubscriptionManagementTest extends \PHPUnit_Framework_TestCase
         $subscriptionMock->expects($this->once())->method('getCustomerId')->willReturn($platformCustomerId);
         $subscriptionMock->expects($this->once())->method('getNextOrderDate')->willReturn($nextOrderDate);
 
-        $customerMock = $this->createCustomerMock();
-        $customerMock->expects($this->once())->method('getId')->willReturn($platformCustomerId);
+        $platformCustomerMock = $this->createPlatformCustomerMock();
+        $platformCustomerMock->expects($this->once())->method('getId')->willReturn($platformCustomerId);
 
         $this->platformCustomerManagerMock->expects($this->once())
             ->method('getCustomerById')
             ->with($customerId)
-            ->willReturn($customerMock);
+            ->willReturn($platformCustomerMock);
 
         $this->platformSubscriptionServiceMock->expects($this->exactly(2))
             ->method('loadSubscription')
@@ -1136,6 +1091,22 @@ class SubscriptionManagementTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @expectedExceptionMessage The subscription cancellation is not allowed.
+     * @expectedException \Magento\Framework\Exception\LocalizedException
+     */
+    public function testFailToCancelIfNotAllowedFromConfig()
+    {
+        $customerId = 1234;
+        $subscriptionId = 555;
+
+        $this->subscriptionOptionConfigMock->expects($this->once())
+            ->method('isAllowedCancel')
+            ->willReturn(false);
+
+        $this->subscriptionManagement->cancel($customerId, $subscriptionId);
+    }
+
+    /**
      * @expectedExceptionMessage An error occurred while canceling subscription.
      * @expectedException \Magento\Framework\Exception\LocalizedException
      */
@@ -1146,6 +1117,10 @@ class SubscriptionManagementTest extends \PHPUnit_Framework_TestCase
 
         $responseMock = $this->getMockBuilder(ResponseInterface::class)->getMock();
         $exception = new HttpException($responseMock);
+
+        $this->subscriptionOptionConfigMock->expects($this->once())
+            ->method('isAllowedCancel')
+            ->willReturn(true);
 
         $this->platformSubscriptionServiceMock->expects($this->once())
             ->method('loadSubscription')
@@ -1172,6 +1147,10 @@ class SubscriptionManagementTest extends \PHPUnit_Framework_TestCase
         $exception = new NoSuchEntityException(__('error'));
 
         $subscriptionMock = $this->createSubscriptionMock();
+
+        $this->subscriptionOptionConfigMock->expects($this->once())
+            ->method('isAllowedCancel')
+            ->willReturn(true);
 
         $this->platformCustomerManagerMock->expects($this->once())
             ->method('getCustomerById')
@@ -1201,13 +1180,17 @@ class SubscriptionManagementTest extends \PHPUnit_Framework_TestCase
         $subscriptionMock = $this->createSubscriptionMock();
         $subscriptionMock->expects($this->once())->method('getCustomerId')->willReturn(10000);
 
-        $customerMock = $this->createCustomerMock();
-        $customerMock->expects($this->once())->method('getId')->willReturn($platformCustomerId);
+        $platformCustomerMock = $this->createPlatformCustomerMock();
+        $platformCustomerMock->expects($this->once())->method('getId')->willReturn($platformCustomerId);
+
+        $this->subscriptionOptionConfigMock->expects($this->once())
+            ->method('isAllowedCancel')
+            ->willReturn(true);
 
         $this->platformCustomerManagerMock->expects($this->once())
             ->method('getCustomerById')
             ->with($customerId)
-            ->willReturn($customerMock);
+            ->willReturn($platformCustomerMock);
 
         $this->platformSubscriptionServiceMock->expects($this->once())
             ->method('loadSubscription')
@@ -1228,13 +1211,17 @@ class SubscriptionManagementTest extends \PHPUnit_Framework_TestCase
         $subscriptionMock = $this->createSubscriptionMock();
         $subscriptionMock->expects($this->once())->method('getCustomerId')->willReturn($platformCustomerId);
 
-        $customerMock = $this->createCustomerMock();
-        $customerMock->expects($this->once())->method('getId')->willReturn($platformCustomerId);
+        $platformCustomerMock = $this->createPlatformCustomerMock();
+        $platformCustomerMock->expects($this->once())->method('getId')->willReturn($platformCustomerId);
+
+        $this->subscriptionOptionConfigMock->expects($this->once())
+            ->method('isAllowedCancel')
+            ->willReturn(true);
 
         $this->platformCustomerManagerMock->expects($this->once())
             ->method('getCustomerById')
             ->with($customerId)
-            ->willReturn($customerMock);
+            ->willReturn($platformCustomerMock);
 
         $this->platformSubscriptionServiceMock->expects($this->once())
             ->method('loadSubscription')
@@ -1314,13 +1301,13 @@ class SubscriptionManagementTest extends \PHPUnit_Framework_TestCase
         $subscriptionMock = $this->createSubscriptionMock();
         $subscriptionMock->expects($this->once())->method('getCustomerId')->willReturn(10000);
 
-        $customerMock = $this->createCustomerMock();
-        $customerMock->expects($this->once())->method('getId')->willReturn($platformCustomerId);
+        $platformCustomerMock = $this->createPlatformCustomerMock();
+        $platformCustomerMock->expects($this->once())->method('getId')->willReturn($platformCustomerId);
 
         $this->platformCustomerManagerMock->expects($this->once())
             ->method('getCustomerById')
             ->with($customerId)
-            ->willReturn($customerMock);
+            ->willReturn($platformCustomerMock);
 
         $this->platformSubscriptionServiceMock->expects($this->once())
             ->method('loadSubscription')
@@ -1341,13 +1328,13 @@ class SubscriptionManagementTest extends \PHPUnit_Framework_TestCase
         $subscriptionMock = $this->createSubscriptionMock();
         $subscriptionMock->expects($this->once())->method('getCustomerId')->willReturn($platformCustomerId);
 
-        $customerMock = $this->createCustomerMock();
-        $customerMock->expects($this->once())->method('getId')->willReturn($platformCustomerId);
+        $platformCustomerMock = $this->createPlatformCustomerMock();
+        $platformCustomerMock->expects($this->once())->method('getId')->willReturn($platformCustomerId);
 
         $this->platformCustomerManagerMock->expects($this->once())
             ->method('getCustomerById')
             ->with($customerId)
-            ->willReturn($customerMock);
+            ->willReturn($platformCustomerMock);
 
         $this->platformSubscriptionServiceMock->expects($this->once())
             ->method('loadSubscription')
@@ -1427,13 +1414,13 @@ class SubscriptionManagementTest extends \PHPUnit_Framework_TestCase
         $subscriptionMock = $this->createSubscriptionMock();
         $subscriptionMock->expects($this->once())->method('getCustomerId')->willReturn(10000);
 
-        $customerMock = $this->createCustomerMock();
-        $customerMock->expects($this->once())->method('getId')->willReturn($platformCustomerId);
+        $platformCustomerMock = $this->createPlatformCustomerMock();
+        $platformCustomerMock->expects($this->once())->method('getId')->willReturn($platformCustomerId);
 
         $this->platformCustomerManagerMock->expects($this->once())
             ->method('getCustomerById')
             ->with($customerId)
-            ->willReturn($customerMock);
+            ->willReturn($platformCustomerMock);
 
         $this->platformSubscriptionServiceMock->expects($this->once())
             ->method('loadSubscription')
@@ -1454,13 +1441,13 @@ class SubscriptionManagementTest extends \PHPUnit_Framework_TestCase
         $subscriptionMock = $this->createSubscriptionMock();
         $subscriptionMock->expects($this->once())->method('getCustomerId')->willReturn($platformCustomerId);
 
-        $customerMock = $this->createCustomerMock();
-        $customerMock->expects($this->once())->method('getId')->willReturn($platformCustomerId);
+        $platformCustomerMock = $this->createPlatformCustomerMock();
+        $platformCustomerMock->expects($this->once())->method('getId')->willReturn($platformCustomerId);
 
         $this->platformCustomerManagerMock->expects($this->once())
             ->method('getCustomerById')
             ->with($customerId)
-            ->willReturn($customerMock);
+            ->willReturn($platformCustomerMock);
 
         $this->platformSubscriptionServiceMock->expects($this->once())
             ->method('loadSubscription')
@@ -1477,9 +1464,9 @@ class SubscriptionManagementTest extends \PHPUnit_Framework_TestCase
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject|\SubscribePro\Service\Customer\CustomerInterface
      */
-    private function createCustomerMock()
+    private function createPlatformCustomerMock()
     {
-        return $this->getMockBuilder(CustomerInterface::class)->getMock();
+        return $this->getMockBuilder(PlatformCustomerInterface::class)->getMock();
     }
 
     /**

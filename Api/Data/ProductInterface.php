@@ -16,9 +16,13 @@ interface ProductInterface extends \SubscribePro\Service\Product\ProductInterfac
 
     const IMAGE_URL = 'image_url';
 
+    const OPTION_LIST = 'option_list';
+
     const FINAL_PRICE = 'final_price';
 
     const TAX_RATE = 'tax_rate';
+
+    const IS_CATALOG_RULE_APPLIED = 'is_catalog_rule_applied';
     
     /**
      * @return string|null
@@ -43,6 +47,17 @@ interface ProductInterface extends \SubscribePro\Service\Product\ProductInterfac
     public function setImageUrl($imageUrl);
 
     /**
+     * @return array
+     */
+    public function getOptionList();
+
+    /**
+     * @param array $optionList
+     * @return $this
+     */
+    public function setOptionList(array $optionList);
+
+    /**
      * @return float|null
      */
     public function getFinalPrice();
@@ -63,4 +78,15 @@ interface ProductInterface extends \SubscribePro\Service\Product\ProductInterfac
      * @return $this
      */
     public function setTaxRate($taxRate);
+
+    /**
+     * @return bool
+     */
+    public function getIsCatalogRuleApplied();
+
+    /**
+     * @param bool $isCatalogRuleApplied
+     * @return $this
+     */
+    public function setIsCatalogRuleApplied($isCatalogRuleApplied);
 }

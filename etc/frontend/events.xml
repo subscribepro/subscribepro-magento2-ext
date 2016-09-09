@@ -1,10 +1,13 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
-    <event name="checkout_cart_product_add_after">
-        <observer name="subscribe_pro_cart_add_product_after" instance="Swarming\SubscribePro\Observer\CheckoutCart\AddProductToCartAfter" />
+    <event name="sales_quote_product_add_after">
+        <observer name="subscribe_pro_quote_product_add_after" instance="Swarming\SubscribePro\Observer\CheckoutCart\AddProductToCartAfter" />
     </event>
     <event name="checkout_cart_update_items_after">
         <observer name="subscribe_pro_cart_update_items_after" instance="Swarming\SubscribePro\Observer\CheckoutCart\CartUpdateItemsAfter" />
+    </event>
+    <event name="checkout_cart_product_update_after">
+        <observer name="subscribe_pro_cart_update_items_after" instance="Swarming\SubscribePro\Observer\CheckoutCart\UpdateProductAfter" />
     </event>
     <event name="checkout_allow_guest">
         <observer name="subscribe_pro_checkout_allow_guest" instance="Swarming\SubscribePro\Observer\Checkout\IsAllowedGuest" />

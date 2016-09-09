@@ -77,17 +77,11 @@ class OptionProcessor implements CartItemProcessorInterface
     public function processOptions(CartItemInterface $cartItem)
     {
         $options = $this->getOptions($cartItem);
-        if (!empty($options) && is_array($options)) {
-
+        if (!empty($options)) {
             $subscriptionOption = $this->subscriptionOptionFactory->create(['data' => $options]);
 
-            $productOption = $cartItem->getProductOption()
-                ? $cartItem->getProductOption()
-                : $this->productOptionFactory->create();
-
-            $extensibleAttribute = $productOption->getExtensionAttributes()
-                ? $productOption->getExtensionAttributes()
-                : $this->extensionFactory->create();
+            $productOption = $cartItem->getProductOption() ?: $this->productOptionFactory->create();
+            $extensibleAttribute = $productOption->getExtensionAttributes() ?: $this->extensionFactory->create();
 
             $extensibleAttribute->setSubscriptionOption($subscriptionOption);
             $productOption->setExtensionAttributes($extensibleAttribute);
@@ -108,8 +102,13 @@ class OptionProcessor implements CartItemProcessorInterface
             ? unserialize($cartItem->getOptionByCode('info_buyRequest')->getValue())
             : null;
 
-        return is_array($buyRequest) && isset($buyRequest[self::KEY_SUBSCRIPTION_OPTION])
-            ? $buyRequest[self::KEY_SUBSCRIPTION_OPTION]
-            : [];
+        if (!is_array($buyRequest)
+            || !isset($buyRequest[self::KEY_SUBSCRIPTION_OPTION])
+            || !is_array($buyRequest[self::KEY_SUBSCRIPTION_OPTION])
+        ) {
+            return [];
+        }
+
+        return $buyRequest[self::KEY_SUBSCRIPTION_OPTION];
     }
 }

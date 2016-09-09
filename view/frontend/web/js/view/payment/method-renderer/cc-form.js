@@ -14,18 +14,27 @@ define(
         return Component.extend(CcForm).extend({
             defaults: {
                 template: 'Swarming_SubscribePro/payment/cc-form',
+                canPlaceOrder: false
+            },
+
+            initObservable: function () {
+                this._super()
+                    .observe([
+                        'canPlaceOrder'
+                    ]);
+                return this;
             },
 
             initialize: function () {
                 this._super();
 
                 quote.billingAddress.subscribe(function (address) {
-                    this.isPlaceOrderActionAllowed(address !== null && this.isValidHostedFields && this.isValidExpDate);
+                    this.canPlaceOrder(address !== null && this.isValidHostedFields && this.isValidExpDate);
                 }, this);
             },
 
             updateSaveActionAllowed: function () {
-                this.isPlaceOrderActionAllowed(quote.billingAddress() != null && this.isValidHostedFields && this.isValidExpDate)
+                this.canPlaceOrder(quote.billingAddress() != null && this.isValidHostedFields && this.isValidExpDate)
             },
 
             isActive: function () {

@@ -13,7 +13,7 @@
             <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
                 <label>General</label>
 
-                <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
                     <label>Enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
@@ -36,7 +36,16 @@
                     </depends>
                 </field>
 
-                <field id="client_id" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="base_url" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                    <label>Base Url</label>
+                    <comment>Default base url is https://api.subscribepro.com</comment>
+                    <frontend_model>Swarming\SubscribePro\Block\Adminhtml\System\Config\PlatformField</frontend_model>
+                    <depends>
+                        <field id="swarming_subscribepro/general/enabled">1</field>
+                    </depends>
+                </field>
+
+                <field id="client_id" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Client Id</label>
                     <frontend_model>Swarming\SubscribePro\Block\Adminhtml\System\Config\PlatformField</frontend_model>
                     <depends>
@@ -44,7 +53,7 @@
                     </depends>
                 </field>
 
-                <field id="client_secret" translate="label comment" type="obscure" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="client_secret" translate="label comment" type="obscure" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Client Secret</label>
                     <frontend_model>Swarming\SubscribePro\Block\Adminhtml\System\Config\PlatformField</frontend_model>
                     <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
@@ -53,7 +62,7 @@
                     </depends>
                 </field>
 
-                <field id="log_enabled" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="log_enabled" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
                     <label>Enable Logging</label>
                     <frontend_model>Swarming\SubscribePro\Block\Adminhtml\System\Config\PlatformField</frontend_model>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -61,22 +70,21 @@
                         <field id="swarming_subscribepro/general/enabled">1</field>
                     </depends>
                 </field>
-
-                <field id="log_level" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Log Level</label>
-                    <frontend_model>Swarming\SubscribePro\Block\Adminhtml\System\Config\PlatformField</frontend_model>
-                    <source_model>Swarming\SubscribePro\Model\Config\Source\LogLevels</source_model>
-                    <depends>
-                        <field id="swarming_subscribepro/general/enabled">1</field>
-                        <field id="log_enabled">1</field>
-                    </depends>
-                </field>
             </group>
 
             <group id="subscription_options" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Subscription Mode</label>
+                <label>Subscription Options</label>
 
-                <field id="allow_coupon" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+
+                <field id="allow_cancel" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Allow Subscription Cancellation</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="swarming_subscribepro/general/enabled">1</field>
+                    </depends>
+                </field>
+
+                <field id="allow_coupon" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Save Coupons With Subscriptions</label>
                     <comment>Allow coupons to be added when a customer creates a new subscription using the New Subscription
                         page and saved with subscriptions created during the checkout process.</comment>
@@ -89,7 +97,7 @@
             <group id="subscription_discount" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Subscription Discount</label>
 
-                <field id="apply_discount_to_catalog_price" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="apply_discount_to_catalog_price" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Apply Discount To Catalog Price</label>
                     <comment>Apply subscription discount when catalog price rule or special price discount is in effect.</comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -98,10 +106,18 @@
                     </depends>
                 </field>
 
-                <field id="cartrule_combine_type" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="cartrule_combine_type" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Cart Rule Combine Type</label>
                     <comment>Specify how to combine the subscription discount with any shopping cart price rules or coupon code discounts.</comment>
                     <source_model>Swarming\SubscribePro\Model\Config\Source\CartRuleCombine</source_model>
+                    <depends>
+                        <field id="swarming_subscribepro/general/enabled">1</field>
+                    </depends>
+                </field>
+
+                <field id="discount_message" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Discount message</label>
+                    <comment>Available placeholders: %price - price with applied discount, %discount_text - discount in percentage or amount, %discount_amount - discount amount.</comment>
                     <depends>
                         <field id="swarming_subscribepro/general/enabled">1</field>
                     </depends>
@@ -111,13 +127,21 @@
             <group id="advanced" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0">
                 <label>Advanced</label>
 
-                <field id="cache_lifetime" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="cache_lifetime" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
                     <label>API Data Cache Lifetime</label>
-                    <comment>Enter cache lifetime value in seconds.  DEFAULT: 300 seconds.</comment>
+                    <comment>Enter cache lifetime value in seconds.</comment>
                     <depends>
                         <field id="swarming_subscribepro/general/enabled">1</field>
                     </depends>
                     <validate>validate-number validate-zero-or-greater</validate>
+                </field>
+
+                <field id="webhook_ipaddresses" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                    <label>Allowed Webhook IP Address</label>
+                    <comment>The IP Addresses from which webhooks are allowed. Enter comma separated. Leave empty for disabling webhooks.</comment>
+                    <depends>
+                        <field id="swarming_subscribepro/general/enabled">1</field>
+                    </depends>
                 </field>
             </group>
         </section>

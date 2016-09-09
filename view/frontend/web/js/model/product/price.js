@@ -14,13 +14,8 @@ define(
                 productPrice.discount = product.discount;
                 productPrice.is_discount_percentage = product.is_discount_percentage;
 
-                productPrice.finalPrice = ko.observable(product.final_price);
                 productPrice.price = ko.observable(product.price);
-                productPrice.hasSpecialPrice = ko.observable(product.final_price != product.price);
-
-                productPrice.price.subscribe(function(price) {
-                    productPrice.hasSpecialPrice(productPrice.finalPrice() != price);
-                });
+                productPrice.hasSpecialPrice = ko.observable(product.is_catalog_rule_applied);
 
                 productPrice.priceWithDiscountText = ko.pureComputed(function() {
                     var discount = productPrice.discountValue();
@@ -42,9 +37,10 @@ define(
                         priceText += ' ' + $t('(incl. tax)');
                     }
 
-                    return $t('%price with %discount subscription discount')
+                    return priceConfig.discountMessage
                         .replace('%price', priceText)
-                        .replace('%discount', productPrice.discountText());
+                        .replace('%discount_amount', getFormattedPrice(discount))
+                        .replace('%discount_text', productPrice.discountText());
                 });
 
                 productPrice.discountValue = ko.pureComputed(function() {
@@ -65,7 +61,7 @@ define(
                 });
 
                 productPrice.priceInclTax = ko.pureComputed(function() {
-                    var price = productPrice.finalPrice();
+                    var price = productPrice.price();
                     if (!product.tax_rate || priceConfig.priceIncludesTax) {
                         return price;
                     }
@@ -75,7 +71,7 @@ define(
                 });
 
                 productPrice.priceExclTax = ko.pureComputed(function() {
-                    var price = productPrice.finalPrice();
+                    var price = productPrice.price();
                     if (product.tax_rate && priceConfig.priceIncludesTax) {
                         price = parseFloat(price)/(1 + parseFloat(product.tax_rate)/100);
                     }
@@ -89,9 +85,8 @@ define(
                         : getFormattedPrice(productPrice.discount);
                 });
 
-                productPrice.setCalculatedPrices = function(basePrice, finalPrice) {
-                    productPrice.price(getBasePriceFromCalculatedPrice(basePrice));
-                    productPrice.finalPrice(getBasePriceFromCalculatedPrice(finalPrice));
+                productPrice.setFrontendPrice = function(frontendPrice) {
+                    productPrice.price(getPriceFromFrontendPrice(frontendPrice));
                 };
 
                 function getFormattedPrice(price) {
@@ -102,7 +97,7 @@ define(
                     return +(Math.round(num + 'e+2')  + 'e-2');
                 }
 
-                function getBasePriceFromCalculatedPrice(price) {
+                function getPriceFromFrontendPrice(price) {
                     if (!product.tax_rate) {
                         return price;
                     }

@@ -94,7 +94,7 @@ define(
             }
 
             return {
-                isValid: inputData.validNumber && inputData.validCvv,
+                isValid: inputData.validNumber && (inputData.validCvv || !config.hasVerification()),
                 cardType: cardType
             }
         }

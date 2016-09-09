@@ -34,4 +34,14 @@
     <type name="Magento\Catalog\Block\Product\View">
         <plugin name="subscribepro_subscription" type="Swarming\SubscribePro\Plugin\Product\Subscription"/>
     </type>
+
+    <type name="Swarming\SubscribePro\Platform\Webhook\HandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="payment_profile.created" xsi:type="object">Swarming\SubscribePro\Platform\Webhook\Handler\PaymentProfile\CreateHandler</item>
+                <item name="payment_profile.updated" xsi:type="object">Swarming\SubscribePro\Platform\Webhook\Handler\PaymentProfile\UpdateHandler</item>
+                <item name="payment_profile.redacted" xsi:type="object">Swarming\SubscribePro\Platform\Webhook\Handler\PaymentProfile\RedactHandler</item>
+            </argument>
+        </arguments>
+    </type>
 </config>

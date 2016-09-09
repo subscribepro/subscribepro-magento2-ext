@@ -1,13 +1,60 @@
 
-<tr>
+<tr data-bind="attr: {id: 'subscription-'+getSubscriptionId()}">
+    <td class="col product-image">
+        <!-- ko if: getProductUrl() -->
+            <a class="product-item-photo" data-bind="attr: {href: getProductUrl(), title: getProductName()}">
+                <img width="75" height="75" data-bind="attr: {src: getProductImageUrl(), title: getProductName()}" />
+            </a>
+        <!-- /ko -->
+        <!-- ko ifnot: getProductUrl() -->
+            <img width="75" height="75" data-bind="attr: {src: getProductImageUrl(), title: getProductName()}" />
+        <!-- /ko -->
+    </td>
+    <td class="col product-info">
+        <!-- ko if: getProductUrl() -->
+            <h2 class="product-name"><a data-bind="attr: {href: getProductUrl(), title: getProductName()}, text: getProductName()"></a></h2>
+        <!-- /ko -->
+        <!-- ko if: getProductOptionList().length -->
+        <div class="product option-list" data-bind="afterRender: initOptionList">
+            <span data-role="title" class="toggle"><!-- ko i18n: 'See Details' --><!-- /ko --></span>
+
+            <div data-role="content" class="content">
+                <strong class="subtitle"><!-- ko i18n: 'Options Details' --><!-- /ko --></strong>
+                <dl class="product options list">
+                    <!-- ko foreach: { data: getProductOptionList(), as: 'option' } -->
+                    <dt class="label"><!-- ko text: option.label --><!-- /ko --></dt>
+                    <dd class="values">
+                        <!-- ko if: Array.isArray(option.value) -->
+                        <span data-bind="html: option.value.join('<br>')"></span>
+                        <!-- /ko -->
+                        <!-- ko ifnot: Array.isArray(option.value) -->
+                        <span data-bind="html: option.value"></span>
+                        <!-- /ko -->
+                    </dd>
+                    <!-- /ko -->
+                </dl>
+            </div>
+        </div>
+        <!-- /ko -->
+        <p class="old-price">
+            <s>
+                <!-- ko i18n: 'One-Time Purchase Price' --><!-- /ko -->
+                <!-- ko text: ': ' --><!-- /ko -->
+                <!-- ko text: getProductPriceFormatted() --><!-- /ko -->
+            </s>
+        </p>
+        <p class="subscription-price">
+            <!-- ko text: getDiscountMessage(); --><!-- /ko -->
+        </p>
+    </td>
     <td class="col subscription">
-        <h2>
+        <div class="next-ship-date">
             <!-- ko i18n: 'Next Ship Date:' --><!-- /ko -->
             <!-- ko if: isStatus(['Active']) -->
                 <!-- ko text: nextOrderDate --><!-- /ko -->
                 <!-- ko if: canChangeNextOrderDate() -->
                 <input type="hidden"
-                       id="next-order-date"
+                       class="next-order-date"
                        data-bind="datepicker: {
                        storage: selectedNextOrderDate,
                        options: $parent.datepickerOptions
@@ -16,9 +63,9 @@
                 <!-- /ko -->
             <!-- /ko -->
             <!-- ko if: !isStatus(['Active']) -->
-                <!-- ko i18n: 'n/a' --><!-- /ko -->
+                <!-- ko i18n: 'N/A' --><!-- /ko -->
             <!-- /ko -->
-        </h2>
+        </div>
         <!-- ko if: isStatus(['Failed', 'Retry', 'Active']) -->
             <div class="options">
                 <select data-bind="options: getQtyValues(), value: selectedQty, event: {change: qtyChanged}"></select>
@@ -27,35 +74,10 @@
             </div>
         <!-- /ko -->
     </td>
-    <td class="col product-image">
-        <!-- ko if: getProductUrl() -->
-            <a class="product-item-photo" data-bind="attr: {href: getProductUrl(), title: getProductName()}">
-                <img width="75px" height="75px" data-bind="attr: {src: getProductImageUrl(), title: getProductName()}" />
-            </a>
-        <!-- /ko -->
-        <!-- ko ifnot: getProductUrl() -->
-            <img width="75px" height="75px" data-bind="attr: {src: getProductImageUrl(), title: getProductName()}" />
-        <!-- /ko -->
-    </td>
-    <td class="col product-info">
-        <!-- ko if: getProductUrl() -->
-            <h2 class="product-name"><a data-bind="attr: {href: getProductUrl(), title: getProductName()}, text: getProductName()"></a></h2>
-        <!-- /ko -->
-        <p>
-            <s>
-                <!-- ko i18n: 'One-Time Purchase Price' --><!-- /ko -->
-                <!-- ko text: ': ' --><!-- /ko -->
-                <!-- ko text: getProductPriceFormatted() --><!-- /ko -->
-            </s>
-        </p>
-        <p>
-            <!-- ko text: getDiscountMessage(); --><!-- /ko -->
-        </p>
-    </td>
     <td class="col actions">
         <!-- ko if: isStatus(['Cancelled', 'Expired', 'Paused', 'Failed', 'Retry']) -->
-            <p data-bind="i18n: 'Status:'"></p>
             <p>
+                <span data-bind="i18n: 'Status:'"></span>
                 <strong><!-- ko i18n: status() --><!-- /ko --></strong>
             </p>
         <!-- /ko -->
@@ -66,13 +88,13 @@
                 </button>
             </p>
             <p>
-                <a class="action" href="javascript:void(0)" style="cursor:pointer;" data-bind="click: pause, i18n: 'Pause Subscription'"></a>
+                <a class="action" href="javascript:void(0)" data-bind="click: pause, i18n: 'Pause Subscription'"></a>
             </p>
             <p>
-                <a class="action" href="javascript:void(0)" style="cursor:pointer;" data-bind="click: cancel, i18n: 'Cancel Subscription'"></a>
+                <a class="action" href="javascript:void(0)" data-bind="click: cancel, i18n: 'Cancel Subscription'"></a>
             </p>
         <!-- /ko -->
-        <!-- ko if: isStatus(['Failed', 'Retry', 'Paused']) -->
+        <!-- ko if: isStatus(['Failed', 'Retry', 'Paused', 'Cancelled']) -->
             <p>
                 <button type="button" class="action primary" data-bind="click: restart">
                     <span data-bind="i18n: 'Restart'"></span>
@@ -86,15 +108,24 @@
     </td>
 </tr>
 <tr data-bind="visible: showDetails()">
-    <td>
-        <!-- ko foreach: getRegion('shipping-info') -->
-            <!-- ko template: getTemplate() --><!-- /ko -->
-        <!--/ko-->
+    <td colspan="4">
+        <table>
+            <tbody>
+                <tr>
+                    <!-- ko if: isShippingRequired() -->
+                        <td class="col delivery-address" class="no-border">
+                            <!-- ko foreach: getRegion('shipping-info') -->
+                                <!-- ko template: getTemplate() --><!-- /ko -->
+                            <!--/ko-->
+                        </td>
+                    <!-- /ko -->
+                    <td class="col payment-information" class="no-border">
+                        <!-- ko foreach: getRegion('payment-info') -->
+                            <!-- ko template: getTemplate() --><!-- /ko -->
+                        <!--/ko-->
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </td>
-    <td colspan="2">
-        <!-- ko foreach: getRegion('payment-info') -->
-            <!-- ko template: getTemplate() --><!-- /ko -->
-        <!--/ko-->
-    </td>
-    <td></td>
 </tr>

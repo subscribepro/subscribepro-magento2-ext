@@ -13,7 +13,7 @@ use SubscribePro\Service\Transaction\TransactionInterface;
 use Swarming\SubscribePro\Gateway\Helper\SubjectReader;
 use Swarming\SubscribePro\Gateway\Response\VaultDetailsHandler;
 use Swarming\SubscribePro\Helper\Vault as SubscribeProVaultHelper;
-use Swarming\SubscribePro\Gateway\Config\Config as SubscribeGatewayConfig;
+use Swarming\SubscribePro\Gateway\Config\Config as GatewayConfig;
 
 class VaultDetailsHandlerTest extends \PHPUnit_Framework_TestCase
 {
@@ -40,7 +40,7 @@ class VaultDetailsHandlerTest extends \PHPUnit_Framework_TestCase
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject|\Swarming\SubscribePro\Gateway\Config\Config
      */
-    protected $configMock;
+    protected $gatewayConfigMock;
 
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject|\Swarming\SubscribePro\Gateway\Helper\SubjectReader
@@ -52,19 +52,21 @@ class VaultDetailsHandlerTest extends \PHPUnit_Framework_TestCase
         $this->subjectReaderMock = $this->getMockBuilder(SubjectReader::class)
             ->disableOriginalConstructor()->getMock();
         $this->paymentTokenFactoryMock = $this->getMockBuilder(PaymentTokenInterfaceFactory::class)
+            ->disableOriginalConstructor()
             ->setMethods(['create'])->getMock();
         $this->paymentExtensionFactoryMock = $this->getMockBuilder(OrderPaymentExtensionInterfaceFactory::class)
+            ->disableOriginalConstructor()
             ->setMethods(['create'])->getMock();
         $this->vaultHelperMock = $this->getMockBuilder(SubscribeProVaultHelper::class)
             ->disableOriginalConstructor()->getMock();
-        $this->configMock = $this->getMockBuilder(SubscribeGatewayConfig::class)
+        $this->gatewayConfigMock = $this->getMockBuilder(GatewayConfig::class)
             ->disableOriginalConstructor()->getMock();
 
         $this->vaultDetailsHandler = new VaultDetailsHandler(
             $this->paymentTokenFactoryMock,
             $this->paymentExtensionFactoryMock,
             $this->vaultHelperMock,
-            $this->configMock,
+            $this->gatewayConfigMock,
             $this->subjectReaderMock
         );
     }

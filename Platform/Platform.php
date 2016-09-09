@@ -12,7 +12,7 @@ class Platform
     /**
      * @var \Swarming\SubscribePro\Model\Config\Platform
      */
-    protected $configPlatform;
+    protected $platformConfig;
 
     /**
      * @var array
@@ -31,20 +31,20 @@ class Platform
 
     /**
      * @param \SubscribePro\SdkFactory $sdkFactory
-     * @param \Swarming\SubscribePro\Model\Config\Platform $configPlatform
+     * @param \Swarming\SubscribePro\Model\Config\Platform $platformConfig
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      * @param array $config
      */
     public function __construct(
         \SubscribePro\SdkFactory $sdkFactory,
-        \Swarming\SubscribePro\Model\Config\Platform $configPlatform,
+        \Swarming\SubscribePro\Model\Config\Platform $platformConfig,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         array $config = []
     ) {
         $this->sdkFactory = $sdkFactory;
-        $this->configPlatform = $configPlatform;
-        $this->config = $config;
+        $this->platformConfig = $platformConfig;
         $this->storeManager = $storeManager;
+        $this->config = $config;
     }
 
     /**
@@ -67,11 +67,11 @@ class Platform
     private function createSdk($websiteCode)
     {
         $platformConfig = [
-            'client_id' => $this->configPlatform->getClientId($websiteCode),
-            'client_secret' => $this->configPlatform->getClientSecret($websiteCode),
-            'logging_enable' => $this->configPlatform->isLogEnabled($websiteCode),
-            'logging_level' => $this->configPlatform->getLogLevel($websiteCode),
-            'logging_file_name' => $this->configPlatform->getLogFilename($websiteCode)
+            'base_url' => $this->platformConfig->getBaseUrl($websiteCode),
+            'client_id' => $this->platformConfig->getClientId($websiteCode),
+            'client_secret' => $this->platformConfig->getClientSecret($websiteCode),
+            'logging_enable' => $this->platformConfig->isLogEnabled($websiteCode),
+            'logging_file_name' => $this->platformConfig->getLogFilename($websiteCode)
         ];
         return $this->sdkFactory->create(['config' => array_merge($this->config, $platformConfig)]);
     }

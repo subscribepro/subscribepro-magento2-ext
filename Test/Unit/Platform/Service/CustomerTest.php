@@ -36,16 +36,16 @@ class CustomerTest extends AbstractService
      */
     public function testCreateCustomer($websiteId, $expectedWebsiteId)
     {
-        $customerMock = $this->createCustomerMock();
+        $platformCustomerMock = $this->createPlatformCustomerMock();
         
         $this->initService($this->customerPlatformService, $expectedWebsiteId);
         $this->customerPlatformService->expects($this->once())
             ->method('createCustomer')
             ->with(['customer data'])
-            ->willReturn($customerMock);
+            ->willReturn($platformCustomerMock);
         
         $this->assertSame(
-            $customerMock, $this->customerService->createCustomer(['customer data'], $websiteId)
+            $platformCustomerMock, $this->customerService->createCustomer(['customer data'], $websiteId)
         );
     }
 
@@ -70,32 +70,32 @@ class CustomerTest extends AbstractService
     {
         $customerId = 111;
         $websiteId = 12;
-        $customerMock = $this->createCustomerMock();
+        $platformCustomerMock = $this->createPlatformCustomerMock();
         $this->initService($this->customerPlatformService, $websiteId);
 
         $this->customerPlatformService->expects($this->once())
             ->method('loadCustomer')
             ->with($customerId)
-            ->willReturn($customerMock);
+            ->willReturn($platformCustomerMock);
 
         $this->assertSame(
-            $customerMock, $this->customerService->loadCustomer($customerId, $websiteId)
+            $platformCustomerMock, $this->customerService->loadCustomer($customerId, $websiteId)
         );
     }
 
     public function testSaveCustomer()
     {
         $websiteId = 12;
-        $customerMock = $this->createCustomerMock();
+        $platformCustomerMock = $this->createPlatformCustomerMock();
         $this->initService($this->customerPlatformService, $websiteId);
 
         $this->customerPlatformService->expects($this->once())
             ->method('saveCustomer')
-            ->with($customerMock)
-            ->willReturn($customerMock);
+            ->with($platformCustomerMock)
+            ->willReturn($platformCustomerMock);
 
         $this->assertSame(
-            $customerMock, $this->customerService->saveCustomer($customerMock, $websiteId)
+            $platformCustomerMock, $this->customerService->saveCustomer($platformCustomerMock, $websiteId)
         );
     }
 
@@ -103,23 +103,23 @@ class CustomerTest extends AbstractService
     {
         $websiteId = 12;
         $filters = ['filters'];
-        $customersMock = [$this->createCustomerMock(), $this->createCustomerMock()];
+        $platformCustomersMock = [$this->createPlatformCustomerMock(), $this->createPlatformCustomerMock()];
         $this->initService($this->customerPlatformService, $websiteId);
 
         $this->customerPlatformService->expects($this->once())
             ->method('loadCustomers')
             ->with($filters)
-            ->willReturn($customersMock);
+            ->willReturn($platformCustomersMock);
 
         $this->assertEquals(
-            $customersMock, $this->customerService->loadCustomers($filters, $websiteId)
+            $platformCustomersMock, $this->customerService->loadCustomers($filters, $websiteId)
         );
     }
 
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject|\SubscribePro\Service\Customer\CustomerInterface
      */
-    private function createCustomerMock()
+    private function createPlatformCustomerMock()
     {
         return $this->getMockBuilder(CustomerInterface::class)->getMock();
     }

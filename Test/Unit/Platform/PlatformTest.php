@@ -6,7 +6,8 @@ use Magento\Store\Api\Data\WebsiteInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use SubscribePro\SdkFactory;
 use Swarming\SubscribePro\Platform\Platform;
-use Swarming\SubscribePro\Model\Config\Platform as ConfigPlatform;
+use Swarming\SubscribePro\Model\Config\Platform as PlatformConfig;
+use SubscribePro\Sdk as SubscribeProSdk;
 
 class PlatformTest extends \PHPUnit_Framework_TestCase
 {
@@ -18,7 +19,7 @@ class PlatformTest extends \PHPUnit_Framework_TestCase
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject|\Swarming\SubscribePro\Model\Config\Platform
      */
-    protected $configPlatformMock;
+    protected $platformConfigMock;
 
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject|\SubscribePro\SdkFactory
@@ -35,13 +36,8 @@ class PlatformTest extends \PHPUnit_Framework_TestCase
      */
     protected $config = [
         'key' => 'value',
-        'logging_level' => 'error'
+        'logging_file_name' => 'config_file_name'
     ];
-
-    /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|\Swarming\SubscribePro\Platform\Service\Address
-     */
-    protected $platformAddressServiceMock;
 
     protected function setUp()
     {
@@ -49,13 +45,13 @@ class PlatformTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->setMethods(['create'])
             ->getMock();
-        $this->configPlatformMock = $this->getMockBuilder(ConfigPlatform::class)
+        $this->platformConfigMock = $this->getMockBuilder(PlatformConfig::class)
             ->disableOriginalConstructor()->getMock();
         $this->storeManagerMock = $this->getMockBuilder(StoreManagerInterface::class)->getMock();
 
         $this->platform = new Platform(
             $this->sdkFactoryMock,
-            $this->configPlatformMock,
+            $this->platformConfigMock,
             $this->storeManagerMock,
             $this->config
         );
@@ -70,34 +66,34 @@ class PlatformTest extends \PHPUnit_Framework_TestCase
             'client_id' => '123',
             'client_secret' => 'clientSecret',
             'logging_enable' => true,
-            'logging_level' => 'notice',
-            'logging_file_name' => 'file_name'
+            'logging_file_name' => 'file_name',
+            'base_url' => 'test_base_url'
         ];
 
         $websiteMock = $this->getMockBuilder(WebsiteInterface::class)->getMock();
         $websiteMock->expects($this->exactly(2))->method('getCode')->willReturn($websiteCode);
 
-        $sdkMock = $this->getMockBuilder('SubscribePro\Sdk')
+        $sdkMock = $this->getMockBuilder(SubscribeProSdk::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->configPlatformMock->expects($this->once())
+        $this->platformConfigMock->expects($this->once())
+            ->method('getBaseUrl')
+            ->with($websiteCode)
+            ->willReturn('test_base_url');
+        $this->platformConfigMock->expects($this->once())
             ->method('getClientId')
             ->with($websiteCode)
             ->willReturn('123');
-        $this->configPlatformMock->expects($this->once())
+        $this->platformConfigMock->expects($this->once())
             ->method('getClientSecret')
             ->with($websiteCode)
             ->willReturn('clientSecret');
-        $this->configPlatformMock->expects($this->once())
+        $this->platformConfigMock->expects($this->once())
             ->method('isLogEnabled')
             ->with($websiteCode)
             ->willReturn(true);
-        $this->configPlatformMock->expects($this->once())
-            ->method('getLogLevel')
-            ->with($websiteCode)
-            ->willReturn('notice');
-        $this->configPlatformMock->expects($this->once())
+        $this->platformConfigMock->expects($this->once())
             ->method('getLogFilename')
             ->with($websiteCode)
             ->willReturn('file_name');
@@ -112,7 +108,15 @@ class PlatformTest extends \PHPUnit_Framework_TestCase
             ->with(['config' => $expectedConfig])
             ->willReturn($sdkMock);
         
-        $this->assertSame($sdkMock, $this->platform->getSdk($websiteId));
-        $this->assertSame($sdkMock, $this->platform->getSdk($websiteId));
+        $this->assertSame(
+            $sdkMock,
+            $this->platform->getSdk($websiteId),
+            'Fail asserting new sdk instance was returned'
+        );
+        $this->assertSame(
+            $sdkMock,
+            $this->platform->getSdk($websiteId),
+            'Fail asserting that the same sdk instance was returned'
+        );
     }
 }

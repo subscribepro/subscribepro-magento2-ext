@@ -36,16 +36,16 @@ class ProductTest extends AbstractService
      */
     public function testCreateProduct($websiteId, $expectedWebsiteId)
     {
-        $productMock = $this->createProductMock();
+        $platformProductMock = $this->createPlatformProductMock();
         
         $this->initService($this->productPlatformService, $expectedWebsiteId);
         $this->productPlatformService->expects($this->once())
             ->method('createProduct')
             ->with(['product data'])
-            ->willReturn($productMock);
+            ->willReturn($platformProductMock);
         
         $this->assertSame(
-            $productMock, $this->productService->createProduct(['product data'], $websiteId)
+            $platformProductMock, $this->productService->createProduct(['product data'], $websiteId)
         );
     }
 
@@ -70,32 +70,32 @@ class ProductTest extends AbstractService
     {
         $productId = 111;
         $websiteId = 12;
-        $productMock = $this->createProductMock();
+        $platformProductMock = $this->createPlatformProductMock();
         $this->initService($this->productPlatformService, $websiteId);
 
         $this->productPlatformService->expects($this->once())
             ->method('loadProduct')
             ->with($productId)
-            ->willReturn($productMock);
+            ->willReturn($platformProductMock);
 
         $this->assertSame(
-            $productMock, $this->productService->loadProduct($productId, $websiteId)
+            $platformProductMock, $this->productService->loadProduct($productId, $websiteId)
         );
     }
 
     public function testSaveProduct()
     {
         $websiteId = 12;
-        $productMock = $this->createProductMock();
+        $platformProductMock = $this->createPlatformProductMock();
         $this->initService($this->productPlatformService, $websiteId);
 
         $this->productPlatformService->expects($this->once())
             ->method('saveProduct')
-            ->with($productMock)
-            ->willReturn($productMock);
+            ->with($platformProductMock)
+            ->willReturn($platformProductMock);
 
         $this->assertSame(
-            $productMock, $this->productService->saveProduct($productMock, $websiteId)
+            $platformProductMock, $this->productService->saveProduct($platformProductMock, $websiteId)
         );
     }
 
@@ -103,23 +103,23 @@ class ProductTest extends AbstractService
     {
         $websiteId = 12;
         $sku = 'sku';
-        $productsMock = [$this->createProductMock(), $this->createProductMock()];
+        $platformProductsMock = [$this->createPlatformProductMock(), $this->createPlatformProductMock()];
         $this->initService($this->productPlatformService, $websiteId);
 
         $this->productPlatformService->expects($this->once())
             ->method('loadProducts')
             ->with($sku)
-            ->willReturn($productsMock);
+            ->willReturn($platformProductsMock);
 
         $this->assertEquals(
-            $productsMock, $this->productService->loadProducts($sku, $websiteId)
+            $platformProductsMock, $this->productService->loadProducts($sku, $websiteId)
         );
     }
 
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject|\Swarming\SubscribePro\Api\Data\ProductInterface
      */
-    private function createProductMock()
+    private function createPlatformProductMock()
     {
         return $this->getMockBuilder(ProductInterface::class)->getMock();
     }

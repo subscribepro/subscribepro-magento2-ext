@@ -10,7 +10,8 @@ define(
         'Swarming_SubscribePro/js/action/subscription/cancel',
         'Swarming_SubscribePro/js/action/subscription/restart',
         'Swarming_SubscribePro/js/action/subscription/change-qty',
-        'Swarming_SubscribePro/js/action/subscription/change-interval'
+        'Swarming_SubscribePro/js/action/subscription/change-interval',
+        'mage/collapsible'
     ],
     function ($, ko, Component, productPriceModel, changeNextOrderDate, skip, pause, cancel, restart, changeQty, changeInterval) {
         'use strict';
@@ -61,7 +62,7 @@ define(
                 this.canChangeNextOrderDate = ko.pureComputed(function() {
                     var nextOrderDate = new Date(self.nextOrderDate());
                     var dateToCompare = new Date();
-                    dateToCompare.setDate(dateToCompare.getDate() + 2);
+                    dateToCompare.setDate(dateToCompare.getDate() + self.subscriptionConfig.minDaysToNextOrder);
 
                     nextOrderDate.setHours(0,0,0,0);
                     dateToCompare.setHours(0,0,0,0);
@@ -87,6 +88,14 @@ define(
                 return this.subscription.product.image_url;
             },
 
+            getProductOptionList: function () {
+                return this.subscription.product.option_list;
+            },
+
+            initOptionList: function () {
+                $('#subscription-' + this.getSubscriptionId() + ' .option-list').collapsible({"openedState": "active"});
+            },
+
             getProductInterval: function () {
                 return this.subscription.product.intervals;
             },
@@ -99,10 +108,14 @@ define(
                 return this.productPrice.priceWithDiscountText();
             },
 
+            isShippingRequired: function () {
+                return this.subscription.requires_shipping;
+            },
+
             isStatus: function (statuses) {
                 return !($.inArray(this.status(), statuses) == -1);
             },
-           
+
             toggleShowDetails: function() {
                 this.showDetails(!this.showDetails());
             },
@@ -126,7 +139,8 @@ define(
                     })
                     .fail(function () {
                         self.selectedQty(self.qty());
-                    });
+                    })
+                    .always(this.scrollToTop);
             },
 
             intervalChanged: function () {
@@ -140,12 +154,14 @@ define(
                     })
                     .fail(function () {
                         self.selectedInterval(self.interval());
-                    });
+                    })
+                    .always(this.scrollToTop);
             },
 
             nextOrderDateChanged: function () {
+                var subscriptionId = this.getSubscriptionId();
                 var deferred = $.Deferred();
-                changeNextOrderDate(this.getSubscriptionId(), this.selectedNextOrderDate(), deferred);
+                changeNextOrderDate(subscriptionId, this.selectedNextOrderDate(), deferred);
 
                 var self = this;
                 $.when(deferred)
@@ -153,19 +169,23 @@ define(
                         self.nextOrderDate(self.selectedNextOrderDate());
                     })
                     .fail(function () {
-                        $('#next-order-date').datepicker('setDate', self.nextOrderDate());
-                    });
+                        $('#subscription-'+subscriptionId+' .next-order-date').datepicker('setDate', self.nextOrderDate());
+                    })
+                    .always(this.scrollToTop);
             },
 
             skip: function () {
+                var subscriptionId = this.getSubscriptionId();
                 var deferred = $.Deferred();
-                skip(this.getSubscriptionId(), deferred);
+                skip(subscriptionId, deferred);
 
                 var self = this;
                 $.when(deferred)
                     .done(function (date) {
                         self.nextOrderDate(date);
-                    });
+                        $('#subscription-'+subscriptionId+' .next-order-date').datepicker('setDate', date);
+                    })
+                    .always(this.scrollToTop);
             },
 
             pause: function () {
@@ -176,18 +196,25 @@ define(
                 $.when(deferred)
                     .done(function () {
                         self.status('Paused');
-                    });
+                    })
+                    .always(this.scrollToTop);
             },
 
             cancel: function () {
                 var deferred = $.Deferred();
-                cancel(this.getSubscriptionId(), deferred);
+                cancel(
+                    this.getSubscriptionId(),
+                    this.subscriptionConfig.cancelContent,
+                    this.subscriptionConfig.isCancelAllowed,
+                    deferred
+                );
 
                 var self = this;
                 $.when(deferred)
                     .done(function () {
                         self.status('Cancelled');
-                    });
+                    })
+                    .always(this.scrollToTop);
             },
 
             restart: function () {
@@ -198,7 +225,12 @@ define(
                 $.when(deferred)
                     .done(function () {
                         self.status('Active');
-                    });
+                    })
+                    .always(this.scrollToTop);
+            },
+
+            scrollToTop: function () {
+                $("html, body").animate({ scrollTop: 0 }, 500);
             }
         });
     }

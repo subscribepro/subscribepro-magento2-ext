@@ -5,6 +5,9 @@ namespace Swarming\SubscribePro\Model\Quote;
 use Magento\Framework\Api\AbstractSimpleObject;
 use Swarming\SubscribePro\Api\Data\SubscriptionOptionInterface;
 
+/**
+ * @codeCoverageIgnore
+ */
 class SubscriptionOption extends AbstractSimpleObject implements SubscriptionOptionInterface
 {
     /**

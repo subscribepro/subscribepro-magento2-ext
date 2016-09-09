@@ -14,21 +14,22 @@ class Subscriptions extends \Magento\Framework\View\Element\Template
     /**
      * @var \Swarming\SubscribePro\Model\Config\General
      */
-    protected $configGeneral;
+    protected $generalConfig;
 
     /**
      * @param \Magento\Framework\View\Element\Template\Context $context
+     * @param \Swarming\SubscribePro\Model\Config\General $generalConfig
      * @param \Magento\Checkout\Model\Session $checkoutSession
      * @param array $data
      */
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
-        \Swarming\SubscribePro\Model\Config\General $configGeneral,
+        \Swarming\SubscribePro\Model\Config\General $generalConfig,
         \Magento\Checkout\Model\Session $checkoutSession,
         array $data = []
     ) {
         $this->checkoutSession = $checkoutSession;
-        $this->configGeneral = $configGeneral;
+        $this->generalConfig = $generalConfig;
         parent::__construct($context, $data);
     }
 
@@ -53,7 +54,7 @@ class Subscriptions extends \Magento\Framework\View\Element\Template
      */
     protected function _toHtml()
     {
-        if ($this->configGeneral->isEnabled()) {
+        if ($this->generalConfig->isEnabled()) {
             return parent::_toHtml();
         }
         return '';

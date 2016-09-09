@@ -7,7 +7,7 @@ use Magento\Sales\Model\Order\Payment;
 use SubscribePro\Service\Transaction\TransactionInterface;
 use Swarming\SubscribePro\Gateway\Helper\SubjectReader;
 use Swarming\SubscribePro\Gateway\Response\CardDetailsHandler;
-use Swarming\SubscribePro\Gateway\Config\Config as SubscribeProGatewayConfig;
+use Swarming\SubscribePro\Gateway\Config\Config as GatewayConfig;
 use Magento\Payment\Model\InfoInterface as PaymentInfoInterface;
 
 class CardDetailsHandlerTest extends \PHPUnit_Framework_TestCase
@@ -20,7 +20,7 @@ class CardDetailsHandlerTest extends \PHPUnit_Framework_TestCase
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject|\Swarming\SubscribePro\Gateway\Config\Config
      */
-    protected $configMock;
+    protected $gatewayConfigMock;
 
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject|\Swarming\SubscribePro\Gateway\Helper\SubjectReader
@@ -29,12 +29,12 @@ class CardDetailsHandlerTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->configMock = $this->getMockBuilder(SubscribeProGatewayConfig::class)
+        $this->gatewayConfigMock = $this->getMockBuilder(GatewayConfig::class)
             ->disableOriginalConstructor()->getMock();
         $this->subjectReaderMock = $this->getMockBuilder(SubjectReader::class)
             ->disableOriginalConstructor()->getMock();
 
-        $this->cardDetailsHandler = new CardDetailsHandler($this->configMock, $this->subjectReaderMock);
+        $this->cardDetailsHandler = new CardDetailsHandler($this->gatewayConfigMock, $this->subjectReaderMock);
     }
 
     /**
@@ -101,7 +101,7 @@ class CardDetailsHandlerTest extends \PHPUnit_Framework_TestCase
             ->with($response)
             ->willReturn($transactionMock);
         
-        $this->configMock->expects($this->once())
+        $this->gatewayConfigMock->expects($this->once())
             ->method('getMappedCcType')
             ->with('visa')
             ->willReturn('visa-type');

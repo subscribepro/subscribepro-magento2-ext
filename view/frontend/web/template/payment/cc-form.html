@@ -35,7 +35,7 @@
                         data-bind="
                         click: startPlaceOrder,
                         attr: {title: $t('Place Order')},
-                        css: {disabled: !isPlaceOrderActionAllowed()}
+                        css: {disabled: !canPlaceOrder()}
                         ">
                     <span data-bind="i18n: 'Place Order'"></span>
                 </button>
@@ -43,83 +43,3 @@
         </div>
     </div>
 </div>
-<style>
-    /* TODO temporary solution, just for dev testing */
-    .payment-method-subscribe_pro .form .hosted-control {
-        background: #fff;
-        background-clip: padding-box;
-        border: 1px solid #c2c2c2;
-        border-radius: 1px;
-        font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-        font-size: 14px;
-        height: 32px;
-        line-height: 1.42857143;
-        padding: 0 9px;
-        vertical-align: baseline;
-        box-sizing: border-box;
-        position: relative;
-        width: 225px;
-    }
-
-    .payment-method-subscribe_pro .form .child-control.control-focused input,
-    .payment-method-subscribe_pro .form .hosted-control.hosted-control-focused {
-        border-color: #006bb4;
-    }
-
-    .payment-method-subscribe_pro .form .child-control.control-valid input,
-    .payment-method-subscribe_pro .form .hosted-control.hosted-control-valid {
-        border-color: #006400;
-    }
-
-    .payment-method-subscribe_pro .form .child-control.control-invalid:not(.control-focused) input,
-    .payment-method-subscribe_pro .form .hosted-control.hosted-control-invalid:not(.hosted-control-focused) {
-        border-color: #e02b27;
-    }
-
-    .payment-method-subscribe_pro .form .control-invalid:not(.control-focused) ~ .error,
-    .payment-method-subscribe_pro .form .hosted-control-invalid:not(.hosted-control-focused) ~ .hosted-error {
-        opacity: 1;
-    }
-
-    .payment-method-subscribe_pro .form .hosted-control.hosted-cid {
-        width: 6rem;
-    }
-
-    .payment-method-subscribe_pro .form .cvv .field-tooltip {
-        left: 7rem;
-    }
-
-    .payment-method-subscribe_pro .form .error,
-    .payment-method-subscribe_pro .form .hosted-error {
-        clear: both;
-        color: #e02b27;
-        font-size: 1.2rem;
-        height: 0;
-        margin-top: 7px;
-        opacity: 0;
-    }
-
-    .payment-method-subscribe_pro .form .date-wrap .child-control{
-        float: left;
-        margin-right: 2rem;
-    }
-
-    .payment-method-subscribe_pro .form .date-wrap input:focus{
-        outline: none;
-        -webkit-box-shadow: none;
-        box-shadow: none;
-    }
-
-    .payment-method-subscribe_pro .form .date-wrap .month{
-        position: relative;
-    }
-    .payment-method-subscribe_pro .form .date-wrap .month:after{
-        content: '/';
-        display: inline;
-        padding-bottom: inherit;
-        padding-top: inherit;
-        position: absolute;
-        right: -12px;
-        top: 5px;
-    }
-</style>

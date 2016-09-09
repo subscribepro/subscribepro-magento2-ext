@@ -9,7 +9,7 @@ class Edit extends \Magento\Customer\Controller\AbstractAccount
     /**
      * @var \Swarming\SubscribePro\Gateway\Config\VaultConfig
      */
-    protected $spVaultConfig;
+    protected $platformVaultConfig;
 
     /**
      * @param \Magento\Framework\App\Action\Context $context
@@ -19,7 +19,7 @@ class Edit extends \Magento\Customer\Controller\AbstractAccount
         \Magento\Framework\App\Action\Context $context,
         \Swarming\SubscribePro\Gateway\Config\VaultConfig $spVaultConfig
     ) {
-        $this->spVaultConfig = $spVaultConfig;
+        $this->platformVaultConfig = $spVaultConfig;
         parent::__construct($context);
     }
 
@@ -28,7 +28,7 @@ class Edit extends \Magento\Customer\Controller\AbstractAccount
      */
     public function execute()
     {
-        if (!$this->spVaultConfig->isActive()) {
+        if (!$this->platformVaultConfig->isActive()) {
             /** @var \Magento\Framework\Controller\Result\Forward $resultForward */
             $resultForward = $this->resultFactory->create(ResultFactory::TYPE_FORWARD);
             return $resultForward->forward('noroute');

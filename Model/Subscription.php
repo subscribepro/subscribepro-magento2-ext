@@ -4,8 +4,12 @@ namespace Swarming\SubscribePro\Model;
 
 use Swarming\SubscribePro\Api\Data\ProductInterface;
 use Swarming\SubscribePro\Api\Data\SubscriptionInterface;
+use SubscribePro\Service\Subscription\Subscription as PlatformSubscription;
 
-class Subscription extends \SubscribePro\Service\Subscription\Subscription implements SubscriptionInterface
+/**
+ * @codeCoverageIgnore
+ */
+class Subscription extends PlatformSubscription implements SubscriptionInterface
 {
     /**
      * @return \Swarming\SubscribePro\Api\Data\ProductInterface|null
@@ -22,5 +26,27 @@ class Subscription extends \SubscribePro\Service\Subscription\Subscription imple
     public function setProduct(ProductInterface $product)
     {
         return $this->setData(self::PRODUCT, $product);
+    }
+
+    /**
+     * @return array
+     */
+    public function getProductOption()
+    {
+        $platformSpecificFields = $this->getPlatformSpecificFields();
+        return isset($platformSpecificFields[self::PLATFORM_FIELD_KEY][self::PRODUCT_OPTION])
+            ? $platformSpecificFields[self::PLATFORM_FIELD_KEY][self::PRODUCT_OPTION]
+            : [];
+    }
+
+    /**
+     * @param array $productOptions
+     * @return $this
+     */
+    public function setProductOption(array $productOptions)
+    {
+        $platformSpecificFields = $this->getPlatformSpecificFields();
+        $platformSpecificFields[self::PLATFORM_FIELD_KEY][self::PRODUCT_OPTION] = $productOptions;
+        return $this->setPlatformSpecificFields($platformSpecificFields);
     }
 }

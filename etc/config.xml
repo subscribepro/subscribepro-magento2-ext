@@ -3,20 +3,26 @@
     <default>
         <swarming_subscribepro>
             <general>
-                <enabled>1</enabled>
+                <enabled>0</enabled>
             </general>
             <platform>
+                <base_url>https://api.subscribepro.com</base_url>
                 <client_secret backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
-                <log_enabled>1</log_enabled>
-                <log_level>debug</log_level>
+                <log_enabled>0</log_enabled>
                 <log_filename>var/log/subscribepro/log.log</log_filename>
             </platform>
+            <subscription_options>
+                <allow_coupon>0</allow_coupon>
+                <allow_cancel>1</allow_cancel>
+            </subscription_options>
             <subscription_discount>
                 <apply_discount_to_catalog_price>0</apply_discount_to_catalog_price>
                 <cartrule_combine_type>combine</cartrule_combine_type>
+                <discount_message>%price with %discount_text subscription discount</discount_message>
             </subscription_discount>
             <advanced>
-                <cache_lifetime>300</cache_lifetime>
+                <cache_lifetime>3600</cache_lifetime>
+                <webhook_ipaddresses>52.87.63.105,52.205.106.230,52.207.125.59,52.206.240.107</webhook_ipaddresses>
             </advanced>
         </swarming_subscribepro>
         <payment>

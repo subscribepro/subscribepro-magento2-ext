@@ -191,6 +191,7 @@ define(
                         messageContainer.addSuccessMessage({'message': $t('Subscription shipping address has been updated.')});
                         self.updateCurrentAddress(response);
                         self.closeModal();
+                        self.scrollToTop();
                     })
                     .fail(function (response, messageContainer) {
                         if (successMessage) {
@@ -210,6 +211,10 @@ define(
 
             closeModal: function () {
                 this.modal.closeModal();
+            },
+
+            scrollToTop: function () {
+                $("html, body").animate({ scrollTop: 0 }, 500);
             }
         });
     }

@@ -9,7 +9,7 @@ class AddButton extends \Magento\Framework\View\Element\Template
     /**
      * @var \Swarming\SubscribePro\Gateway\Config\VaultConfig
      */
-    protected $spVaultConfig;
+    protected $platformVaultConfig;
 
     /**
      * @param \Magento\Framework\View\Element\Template\Context $context
@@ -21,7 +21,7 @@ class AddButton extends \Magento\Framework\View\Element\Template
         \Swarming\SubscribePro\Gateway\Config\VaultConfig $spVaultConfig,
         array $data = []
     ) {
-        $this->spVaultConfig = $spVaultConfig;
+        $this->platformVaultConfig = $spVaultConfig;
         parent::__construct($context, $data);
     }
 
@@ -30,7 +30,7 @@ class AddButton extends \Magento\Framework\View\Element\Template
      */
     protected function _toHtml()
     {
-        if ($this->spVaultConfig->getValue('active')) {
+        if ($this->platformVaultConfig->getValue('active')) {
             return parent::_toHtml();
         }
         return '';

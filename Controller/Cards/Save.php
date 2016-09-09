@@ -26,26 +26,26 @@ class Save extends \Magento\Customer\Controller\AbstractAccount
     /**
      * @var \Swarming\SubscribePro\Gateway\Config\VaultConfig
      */
-    protected $spVaultConfig;
+    protected $platformVaultConfig;
 
     /**
      * @param \Magento\Framework\App\Action\Context $context
      * @param \Magento\Framework\Data\Form\FormKey\Validator $formKeyValidator
      * @param \Magento\Customer\Model\Session $customerSession
      * @param \Swarming\SubscribePro\Model\Vault\Form $paymentProfileForm
-     * @param \Swarming\SubscribePro\Gateway\Config\VaultConfig $spVaultConfig
+     * @param \Swarming\SubscribePro\Gateway\Config\VaultConfig $platformVaultConfig
      */
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
         \Magento\Framework\Data\Form\FormKey\Validator $formKeyValidator,
         \Magento\Customer\Model\Session $customerSession,
         \Swarming\SubscribePro\Model\Vault\Form $paymentProfileForm,
-        \Swarming\SubscribePro\Gateway\Config\VaultConfig $spVaultConfig
+        \Swarming\SubscribePro\Gateway\Config\VaultConfig $platformVaultConfig
     ) {
         $this->formKeyValidator = $formKeyValidator;
         $this->customerSession = $customerSession;
         $this->vaultForm = $paymentProfileForm;
-        $this->spVaultConfig = $spVaultConfig;
+        $this->platformVaultConfig = $platformVaultConfig;
         parent::__construct($context);
     }
 
@@ -59,7 +59,7 @@ class Save extends \Magento\Customer\Controller\AbstractAccount
 
         if (!$this->formKeyValidator->validate($this->getRequest())
             || !$this->getRequest()->isPost()
-            || !$this->spVaultConfig->isActive()
+            || !$this->platformVaultConfig->isActive()
         ) {
             return $resultRedirect->setPath('vault/cards/listaction');
         }

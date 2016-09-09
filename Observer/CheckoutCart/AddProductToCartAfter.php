@@ -4,6 +4,7 @@ namespace Swarming\SubscribePro\Observer\CheckoutCart;
 
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
+use Magento\Framework\Exception\LocalizedException;
 
 class AddProductToCartAfter extends CheckoutCartAbstract implements ObserverInterface
 {
@@ -13,7 +14,7 @@ class AddProductToCartAfter extends CheckoutCartAbstract implements ObserverInte
     protected $quoteItemHelper;
 
     /**
-     * @param \Swarming\SubscribePro\Model\Config\General $configGeneral
+     * @param \Swarming\SubscribePro\Model\Config\General $generalConfig
      * @param \Swarming\SubscribePro\Platform\Manager\Product $platformProductManager
      * @param \Swarming\SubscribePro\Model\Quote\SubscriptionOption\Updater $subscriptionOptionUpdater
      * @param \Swarming\SubscribePro\Helper\Product $productHelper
@@ -23,7 +24,7 @@ class AddProductToCartAfter extends CheckoutCartAbstract implements ObserverInte
      * @param \Swarming\SubscribePro\Helper\QuoteItem $quoteItemHelper
      */
     public function __construct(
-        \Swarming\SubscribePro\Model\Config\General $configGeneral,
+        \Swarming\SubscribePro\Model\Config\General $generalConfig,
         \Swarming\SubscribePro\Platform\Manager\Product $platformProductManager,
         \Swarming\SubscribePro\Model\Quote\SubscriptionOption\Updater $subscriptionOptionUpdater,
         \Swarming\SubscribePro\Helper\Product $productHelper,
@@ -34,7 +35,7 @@ class AddProductToCartAfter extends CheckoutCartAbstract implements ObserverInte
     ) {
         $this->quoteItemHelper = $quoteItemHelper;
         parent::__construct(
-            $configGeneral,
+            $generalConfig,
             $platformProductManager,
             $subscriptionOptionUpdater,
             $productHelper,
@@ -51,15 +52,21 @@ class AddProductToCartAfter extends CheckoutCartAbstract implements ObserverInte
      */
     public function execute(Observer $observer)
     {
-        if (!$this->configGeneral->isEnabled()) {
+        if (!$this->generalConfig->isEnabled()) {
             return;
         }
 
-        /** @var \Magento\Quote\Model\Quote\Item $quoteItem */
-        $quoteItem = $observer->getData('quote_item');
+        /** @var array $items */
+        $items = $observer->getData('items');
 
-        $subscriptionParams = $this->quoteItemHelper->getSubscriptionParams($quoteItem);
-
-        $this->updateQuoteItem($quoteItem, $subscriptionParams);
+        foreach ($items as $quoteItem) {
+            $subscriptionParams = $this->quoteItemHelper->getSubscriptionParams($quoteItem);
+            try {
+                $this->updateQuoteItem($quoteItem, $subscriptionParams);
+            } catch (LocalizedException $e) {
+                $quoteItem->isDeleted(true);
+                $this->messageManager->addErrorMessage($e->getMessage());
+            }
+        }
     }
 }

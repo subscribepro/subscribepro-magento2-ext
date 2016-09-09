@@ -42,6 +42,16 @@ class Subscription extends \Magento\Catalog\Block\Product\AbstractProduct
     protected $productHelper;
 
     /**
+     * @var \Magento\Checkout\Model\Cart
+     */
+    protected $cart;
+
+    /**
+     * @var \Swarming\SubscribePro\Helper\QuoteItem
+     */
+    protected $quoteItemHelper;
+
+    /**
      * @param \Magento\Catalog\Block\Product\Context $context
      * @param \Swarming\SubscribePro\Model\Config\SubscriptionDiscount $subscriptionDiscountConfig
      * @param \Swarming\SubscribePro\Platform\Manager\Product $platformProductManager
@@ -50,6 +60,8 @@ class Subscription extends \Magento\Catalog\Block\Product\AbstractProduct
      * @param \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency
      * @param \Magento\Framework\Locale\FormatInterface $localeFormat
      * @param \Swarming\SubscribePro\Helper\Product $productHelper
+     * @param \Magento\Checkout\Model\Cart $cart
+     * @param \Swarming\SubscribePro\Helper\QuoteItem $quoteItemHelper
      * @param array $data
      */
     public function __construct(
@@ -61,6 +73,8 @@ class Subscription extends \Magento\Catalog\Block\Product\AbstractProduct
         \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency,
         \Magento\Framework\Locale\FormatInterface $localeFormat,
         \Swarming\SubscribePro\Helper\Product $productHelper,
+        \Magento\Checkout\Model\Cart $cart,
+        \Swarming\SubscribePro\Helper\QuoteItem $quoteItemHelper,
         array $data = []
     ) {
         $this->subscriptionDiscountConfig = $subscriptionDiscountConfig;
@@ -69,7 +83,17 @@ class Subscription extends \Magento\Catalog\Block\Product\AbstractProduct
         $this->taxCalculation = $taxCalculation;
         $this->priceCurrency = $priceCurrency;
         $this->productHelper = $productHelper;
+        $this->cart = $cart;
+        $this->quoteItemHelper = $quoteItemHelper;
         parent::__construct($context, $data);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCart()
+    {
+        return (bool)$this->getData('is_cart');
     }
 
     /**
@@ -128,6 +152,33 @@ class Subscription extends \Magento\Catalog\Block\Product\AbstractProduct
             $this->taxCalculation->getCalculatedRate($this->getProduct()->getCustomAttribute(self::TAX_CLASS_ID)->getValue())
         );
 
+        if ($this->isCart()) {
+            $this->updateSubscriptionParams($platformProduct);
+        }
+
         return $platformProduct;
+    }
+
+    /**
+     * @param \Swarming\SubscribePro\Api\Data\ProductInterface $platformProduct
+     */
+    protected function updateSubscriptionParams($platformProduct)
+    {
+        $id = (int)$this->getRequest()->getParam('id');
+        $quoteItem = $this->cart->getQuote()->getItemById($id);
+
+        if ($this->getProduct()->getId() != $quoteItem->getProduct()->getId()) {
+            return;
+        }
+
+        $subscriptionOption = $this->quoteItemHelper->getSubscriptionOption($quoteItem);
+        if ($subscriptionOption) {
+            $platformProduct->setDefaultSubscriptionOption($subscriptionOption);
+        }
+
+        $subscriptionInterval = $this->quoteItemHelper->getSubscriptionInterval($quoteItem);
+        if ($subscriptionInterval) {
+            $platformProduct->setDefaultInterval($subscriptionInterval);
+        }
     }
 }

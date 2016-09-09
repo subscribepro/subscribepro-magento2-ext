@@ -1,9 +1,10 @@
 <?php
 
-namespace Swarming\SubscribePro\Helper\QuoteItem;
+namespace Swarming\SubscribePro\Helper;
 
 use Magento\Framework\Api\ExtensibleDataInterface;
 use Magento\Quote\Api\Data\ProductOptionInterface;
+use Magento\Quote\Api\Data\CartItemInterface;
 use Swarming\SubscribePro\Model\Quote\SubscriptionOption\OptionProcessor;
 
 class ProductOption
@@ -14,19 +15,44 @@ class ProductOption
     protected $reflectionObjectProcessor;
 
     /**
+     * @var \Magento\Framework\Webapi\ServiceInputProcessor
+     */
+    protected $inputProcessor;
+
+    /**
      * @param \Magento\Framework\Reflection\DataObjectProcessor $reflectionObjectProcessor
+     * @param \Magento\Framework\Webapi\ServiceInputProcessor $inputProcessor
      */
     public function __construct(
-        \Magento\Framework\Reflection\DataObjectProcessor $reflectionObjectProcessor
+        \Magento\Framework\Reflection\DataObjectProcessor $reflectionObjectProcessor,
+        \Magento\Framework\Webapi\ServiceInputProcessor $inputProcessor
     ) {
         $this->reflectionObjectProcessor = $reflectionObjectProcessor;
+        $this->inputProcessor = $inputProcessor;
+    }
+
+    /**
+     * @param \Swarming\SubscribePro\Api\Data\SubscriptionInterface $subscription
+     * @return \Magento\Quote\Api\Data\CartItemInterface
+     */
+    public function getCartItem($subscription)
+    {
+        $cartItemData = [
+            CartItemInterface::KEY_SKU => $subscription->getProductSku(),
+            CartItemInterface::KEY_QTY => $subscription->getQty(),
+            CartItemInterface::KEY_PRODUCT_OPTION => $subscription->getProductOption()
+        ];
+
+        /** @var \Magento\Quote\Api\Data\CartItemInterface $cartItem */
+        $cartItem = $this->inputProcessor->convertValue($cartItemData, CartItemInterface::class);
+        return $cartItem;
     }
 
     /**
      * @param \Magento\Quote\Api\Data\CartItemInterface $quoteItem
      * @return array
      */
-    public function getProductOptions($quoteItem)
+    public function getProductOption($quoteItem)
     {
         $productOptions = $quoteItem->getProductOption();
         if ($productOptions) {

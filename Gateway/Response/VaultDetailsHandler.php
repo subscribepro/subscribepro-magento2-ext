@@ -27,7 +27,7 @@ class VaultDetailsHandler implements HandlerInterface
     /**
      * @var \Swarming\SubscribePro\Gateway\Config\Config
      */
-    protected $config;
+    protected $gatewayConfig;
 
     /**
      * @var \Swarming\SubscribePro\Gateway\Helper\SubjectReader
@@ -38,20 +38,20 @@ class VaultDetailsHandler implements HandlerInterface
      * @param \Magento\Vault\Api\Data\PaymentTokenInterfaceFactory $paymentTokenFactory
      * @param \Magento\Sales\Api\Data\OrderPaymentExtensionInterfaceFactory $paymentExtensionFactory
      * @param \Swarming\SubscribePro\Helper\Vault $vaultHelper
-     * @param \Swarming\SubscribePro\Gateway\Config\Config $config
+     * @param \Swarming\SubscribePro\Gateway\Config\Config $gatewayConfig
      * @param \Swarming\SubscribePro\Gateway\Helper\SubjectReader $subjectReader
      */
     public function __construct(
         \Magento\Vault\Api\Data\PaymentTokenInterfaceFactory $paymentTokenFactory,
         \Magento\Sales\Api\Data\OrderPaymentExtensionInterfaceFactory $paymentExtensionFactory,
         \Swarming\SubscribePro\Helper\Vault $vaultHelper,
-        \Swarming\SubscribePro\Gateway\Config\Config $config,
+        \Swarming\SubscribePro\Gateway\Config\Config $gatewayConfig,
         \Swarming\SubscribePro\Gateway\Helper\SubjectReader $subjectReader
     ) {
         $this->paymentTokenFactory = $paymentTokenFactory;
         $this->paymentExtensionFactory = $paymentExtensionFactory;
         $this->vaultHelper = $vaultHelper;
-        $this->config = $config;
+        $this->gatewayConfig = $gatewayConfig;
         $this->subjectReader = $subjectReader;
     }
 

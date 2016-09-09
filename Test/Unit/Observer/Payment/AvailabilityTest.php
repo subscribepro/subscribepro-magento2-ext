@@ -10,7 +10,7 @@ use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
 use Magento\Payment\Model\Method\Adapter as MethodAdapter;
 use Swarming\SubscribePro\Observer\Payment\Availability as PaymentAvailability;
 use Magento\Checkout\Model\Session as CheckoutSession;
-use Swarming\SubscribePro\Helper\QuoteItem as QuoteItemHelper;
+use Swarming\SubscribePro\Helper\Quote as QuoteHelper;
 
 class Availability extends \PHPUnit_Framework_TestCase
 {
@@ -27,18 +27,18 @@ class Availability extends \PHPUnit_Framework_TestCase
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject|\Swarming\SubscribePro\Helper\QuoteItem
      */
-    protected $quoteItemHelperMock;
+    protected $quoteHelperMock;
 
     protected function setUp()
     {
         $this->checkoutSessionMock = $this->getMockBuilder(CheckoutSession::class)
             ->disableOriginalConstructor()->getMock();
-        $this->quoteItemHelperMock = $this->getMockBuilder(QuoteItemHelper::class)
+        $this->quoteHelperMock = $this->getMockBuilder(QuoteHelper::class)
             ->disableOriginalConstructor()->getMock();
 
         $this->paymentAvailability = new PaymentAvailability(
             $this->checkoutSessionMock,
-            $this->quoteItemHelperMock
+            $this->quoteHelperMock
         );
     }
 
@@ -71,34 +71,39 @@ class Availability extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param \PHPUnit_Framework_MockObject_MockObject $observerMock
-     * @param \PHPUnit_Framework_MockObject_MockObject $quoteMock
-     * @param \PHPUnit_Framework_MockObject_MockObject $resultMock
-     * @param \PHPUnit_Framework_MockObject_MockObject $methodInstanceMock
      * @param string $methodCode
      * @param bool $isActiveNonSubscription
-     * @param bool $hasQuoteSubscription
+     * @param bool $hasSubscription
      * @param bool $isAvailable
      * @param bool $expectedIsAvailable
      * @dataProvider executeDataProvider
      */
     public function testExecute(
-        $observerMock,
-        $quoteMock,
-        $resultMock,
-        $methodInstanceMock,
         $methodCode,
         $isAvailable,
-        $hasQuoteSubscription,
+        $hasSubscription,
         $isActiveNonSubscription,
         $expectedIsAvailable
     ) {
+        $quoteMock = $this->createQuoteMock();
+
+        $methodInstanceMock = $this->createMethodInstanceMock();
         $methodInstanceMock->expects($this->once())->method('getCode')->willReturn($methodCode);
         $methodInstanceMock->expects($this->once())
             ->method('getConfigData')
             ->with(GatewayConfig::KEY_ACTIVE_NON_SUBSCRIPTION)
             ->willReturn($isActiveNonSubscription);
 
+        $resultMock = $this->createResultMock();
+        $resultMock->expects($this->once())
+            ->method('getData')
+            ->with('is_available')
+            ->willReturn($isAvailable);
+        $resultMock->expects($this->once())
+            ->method('setData')
+            ->with('is_available', $expectedIsAvailable);
+
+        $observerMock = $this->createObserverMock();
         $observerMock->expects($this->at(0))
             ->method('getData')
             ->with('method_instance')
@@ -111,20 +116,11 @@ class Availability extends \PHPUnit_Framework_TestCase
             ->method('getData')
             ->with('quote')
             ->willReturn($quoteMock);
-        $observerMock->expects($this->at(3))
-            ->method('getData')
-            ->with('is_available')
-            ->willReturn($isAvailable);
-        
-        $this->quoteItemHelperMock->expects($this->once())
-            ->method('hasQuoteSubscription')
-            ->with($quoteMock)
-            ->willReturn($hasQuoteSubscription);
 
-        $resultMock->expects($this->once())
-            ->method('setData')
-            ->with('is_available')
-            ->willReturn($expectedIsAvailable);
+        $this->quoteHelperMock->expects($this->once())
+            ->method('hasSubscription')
+            ->with($quoteMock)
+            ->willReturn($hasSubscription);
 
         $this->paymentAvailability->execute($observerMock);
     }
@@ -136,46 +132,37 @@ class Availability extends \PHPUnit_Framework_TestCase
     {
         return [
             'No subscription: method code is not subscribe pro' => [
-                'observerMock' => $this->createObserverMock(),
-                'quoteMock' => $this->createQuoteMock(),
-                'resultMock' => $this->createResultMock(),
-                'methodInstanceMock' => $this->createMethodInstanceMock(),
                 'methodCode' => 'code',
                 'isAvailable' => false,
-                'hasQuoteSubscription' => false,
+                'hasSubscription' => false,
                 'isActiveNonSubscription' => true,
                 'expectedIsAvailable' => false
             ],
             'No subscription: subscribePro method with active subscription config' => [
-                'observerMock' => $this->createObserverMock(),
-                'quoteMock' => $this->createQuoteMock(),
-                'resultMock' => $this->createResultMock(),
-                'methodInstanceMock' => $this->createMethodInstanceMock(),
                 'methodCode' => ConfigProvider::CODE,
                 'isAvailable' => true,
-                'hasQuoteSubscription' => false,
+                'hasSubscription' => false,
                 'isActiveNonSubscription' => false,
                 'expectedIsAvailable' => false
             ],
-            'With subscription: payment not available' => [
-                'observerMock' => $this->createObserverMock(),
-                'quoteMock' => $this->createQuoteMock(),
-                'resultMock' => $this->createResultMock(),
-                'methodInstanceMock' => $this->createMethodInstanceMock(),
+            'With subscription:not available:payment not available' => [
+                'methodCode' => ConfigProvider::CODE,
+                'isAvailable' => false,
+                'hasSubscription' => true,
+                'isActiveNonSubscription' => true,
+                'expectedIsAvailable' => false
+            ],
+            'With subscription:payment method not subscribe pro:payment not available' => [
                 'methodCode' => 'not_subscribe_pro_code',
                 'isAvailable' => true,
-                'hasQuoteSubscription' => true,
+                'hasSubscription' => true,
                 'isActiveNonSubscription' => true,
                 'expectedIsAvailable' => false
             ],
             'With subscription: payment available' => [
-                'observerMock' => $this->createObserverMock(),
-                'quoteMock' => $this->createQuoteMock(),
-                'resultMock' => $this->createResultMock(),
-                'methodInstanceMock' => $this->createMethodInstanceMock(),
                 'methodCode' => ConfigProvider::CODE,
-                'isAvailable' => false,
-                'hasQuoteSubscription' => true,
+                'isAvailable' => true,
+                'hasSubscription' => true,
                 'isActiveNonSubscription' => true,
                 'expectedIsAvailable' => true
             ],

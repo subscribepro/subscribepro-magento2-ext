@@ -24,9 +24,9 @@ class Product
     protected $storeManager;
 
     /**
-     * @var \Swarming\SubscribePro\Model\Config\Cache
+     * @var \Swarming\SubscribePro\Model\Config\Advanced
      */
-    protected $cacheConfig;
+    protected $advancedConfig;
 
     /**
      * @var \Swarming\SubscribePro\Api\Data\ProductInterface[]
@@ -36,18 +36,18 @@ class Product
     /**
      * @param \Magento\Framework\Cache\FrontendInterface $cache
      * @param \Magento\Framework\App\Cache\StateInterface $state
-     * @param \Swarming\SubscribePro\Model\Config\Cache $cacheConfig
+     * @param \Swarming\SubscribePro\Model\Config\Advanced $advancedConfig
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      */
     public function __construct(
         \Magento\Framework\Cache\FrontendInterface $cache,
         \Magento\Framework\App\Cache\StateInterface $state,
-        \Swarming\SubscribePro\Model\Config\Cache $cacheConfig,
+        \Swarming\SubscribePro\Model\Config\Advanced $advancedConfig,
         \Magento\Store\Model\StoreManagerInterface $storeManager
     ) {
         $this->cache = $cache;
         $this->state = $state;
-        $this->cacheConfig = $cacheConfig;
+        $this->advancedConfig = $advancedConfig;
         $this->storeManager = $storeManager;
     }
 
@@ -79,22 +79,22 @@ class Product
     }
 
     /**
-     * @param \Swarming\SubscribePro\Api\Data\ProductInterface $product
+     * @param \Swarming\SubscribePro\Api\Data\ProductInterface $platformProduct
      * @param null|int $websiteId
      * @param null|int $lifeTime
      * @return void
      */
-    public function save($product, $websiteId, $lifeTime = null)
+    public function save($platformProduct, $websiteId, $lifeTime = null)
     {
-        $cacheKey = $this->getCacheKey($product->getSku(), $websiteId);
-        $this->platformProducts[$cacheKey] = $product;
+        $cacheKey = $this->getCacheKey($platformProduct->getSku(), $websiteId);
+        $this->platformProducts[$cacheKey] = $platformProduct;
 
         if (!$this->state->isEnabled(PlatformProductCache::TYPE_IDENTIFIER)) {
             return;
         }
 
-        $lifeTime = $lifeTime ?: $this->cacheConfig->getCacheLifeTime($websiteId);
-        $this->cache->save(serialize($product), $cacheKey, [], $lifeTime);
+        $lifeTime = $lifeTime ?: $this->advancedConfig->getCacheLifeTime($websiteId);
+        $this->cache->save(serialize($platformProduct), $cacheKey, [], $lifeTime);
     }
 
     /**

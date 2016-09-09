@@ -3,8 +3,6 @@
 namespace Swarming\SubscribePro\Model\Vault;
 
 use Magento\Framework\Exception\LocalizedException;
-use SubscribePro\Service\PaymentProfile\PaymentProfileInterface;
-use Magento\Vault\Api\Data\PaymentTokenInterface;
 
 class Form
 {
@@ -49,7 +47,6 @@ class Form
      * @param \Magento\Vault\Model\PaymentTokenFactory $paymentTokenFactory
      * @param \Swarming\SubscribePro\Helper\Vault $vaultHelper
      * @param \Swarming\SubscribePro\Platform\Service\PaymentProfile $platformPaymentProfileService
-     * @param \Magento\Directory\Model\RegionFactory $regionFactory
      * @param \Swarming\SubscribePro\Platform\Manager\Customer $platformCustomerManager
      * @param \Swarming\SubscribePro\Model\Vault\Validator $validator
      */
@@ -59,7 +56,6 @@ class Form
         \Magento\Vault\Model\PaymentTokenFactory $paymentTokenFactory,
         \Swarming\SubscribePro\Helper\Vault $vaultHelper,
         \Swarming\SubscribePro\Platform\Service\PaymentProfile $platformPaymentProfileService,
-        \Magento\Directory\Model\RegionFactory $regionFactory,
         \Swarming\SubscribePro\Platform\Manager\Customer $platformCustomerManager,
         \Swarming\SubscribePro\Model\Vault\Validator $validator
     ) {
@@ -84,17 +80,18 @@ class Form
         }
         $platformCustomer = $this->platformCustomerManager->getCustomerById($customerId, true);
 
-        if (!$this->validator->validate($profileData)) {
-            throw new LocalizedException(__('Not all fields are filled.'));
-        }
+        $profileData = $this->validator->validate($profileData);
 
         $profile = $this->platformPaymentProfileService->createProfile();
         $profile->importData($profileData);
         $profile->setCustomerId($platformCustomer->getId());
         $profile->setMagentoCustomerId($platformCustomer->getMagentoCustomerId());
+
         $this->platformPaymentProfileService->saveToken($profileData['token'], $profile);
 
-        $this->saveProfileToToken($profile);
+        $paymentToken = $this->paymentTokenFactory->create();
+        $this->vaultHelper->initVault($paymentToken, $profile);
+        $this->paymentTokenRepository->save($paymentToken);
     }
 
     /**
@@ -110,32 +107,14 @@ class Form
             throw new LocalizedException(__('The credit card is not found.'));
         }
 
-        if (!$this->validator->validate($profileData)) {
-            throw new LocalizedException(__('Not all fields are filled.'));
-        }
+        $profileData = $this->validator->validate($profileData);
 
         $profile = $this->platformPaymentProfileService->createProfile();
         $profile->importData($profileData);
         $profile->setId($paymentToken->getGatewayToken());
         $this->platformPaymentProfileService->saveProfile($profile);
 
-        $this->saveProfileToToken($profile, $paymentToken);
-    }
-
-    /**
-     * @param \SubscribePro\Service\PaymentProfile\PaymentProfileInterface $profile
-     * @param \Magento\Vault\Api\Data\PaymentTokenInterface|null $paymentToken
-     */
-    protected function saveProfileToToken(PaymentProfileInterface $profile, PaymentTokenInterface $paymentToken = null)
-    {
-        $paymentToken = $paymentToken ?: $this->paymentTokenFactory->create();
-
-        if ($paymentToken->isEmpty()) {
-            $this->vaultHelper->initVault($paymentToken, $profile);
-        } else {
-            $this->vaultHelper->updateVault($paymentToken, $profile);
-        }
-
+        $this->vaultHelper->updateVault($paymentToken, $profile);
         $this->paymentTokenRepository->save($paymentToken);
     }
 }

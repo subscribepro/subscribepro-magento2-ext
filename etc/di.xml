@@ -4,6 +4,7 @@
     <preference for="Swarming\SubscribePro\Api\PaymentTokenManagementInterface" type="Swarming\SubscribePro\Service\PaymentTokenManagement" />
     <preference for="Swarming\SubscribePro\Api\AddressManagementInterface" type="Swarming\SubscribePro\Service\AddressManagement" />
     <preference for="Swarming\SubscribePro\Api\Data\SubscriptionOptionInterface" type="Swarming\SubscribePro\Model\Quote\SubscriptionOption" />
+    <preference for="Swarming\SubscribePro\Model\CatalogRule\InspectorInterface" type="Swarming\SubscribePro\Model\CatalogRule\Inspector" />
 
     <type name="Swarming\SubscribePro\Platform\Platform">
         <arguments>
@@ -51,9 +52,24 @@
             <argument name="name" xsi:type="const">SubscribePro\Service\Transaction\TransactionService::NAME</argument>
         </arguments>
     </type>
+    <type name="Swarming\SubscribePro\Platform\Service\Webhook">
+        <arguments>
+            <argument name="name" xsi:type="const">SubscribePro\Service\Webhook\WebhookService::NAME</argument>
+        </arguments>
+    </type>
     <type name="Swarming\SubscribePro\Platform\Tool\Config">
         <arguments>
             <argument name="name" xsi:type="const">SubscribePro\Tools\Config::NAME</argument>
+        </arguments>
+    </type>
+
+    <type name="Swarming\SubscribePro\Model\CatalogRule\InspectorRepository">
+        <arguments>
+            <argument name="defaultInspector" xsi:type="string">Swarming\SubscribePro\Model\CatalogRule\Inspector\DefaultInspector</argument>
+            <argument name="inspectors" xsi:type="array">
+                <item name="configurable" xsi:type="string">Swarming\SubscribePro\Model\CatalogRule\Inspector\ConfigurableProduct</item>
+                <item name="bundle" xsi:type="string">Swarming\SubscribePro\Model\CatalogRule\Inspector\BundleProduct</item>
+            </argument>
         </arguments>
     </type>
 
@@ -63,6 +79,30 @@
 
     <type name="Magento\Quote\Model\Quote\Item\CartItemOptionsProcessor">
         <plugin name="subscribepro_subscription_option" type="Swarming\SubscribePro\Plugin\Quote\CartItemOptionsProcessor" />
+    </type>
+
+    <type name="Magento\Vault\Api\PaymentTokenRepositoryInterface">
+        <plugin name="subscribepro_vault_repository" type="Swarming\SubscribePro\Plugin\Vault\TokenRepository" />
+    </type>
+
+    <type name="Magento\Catalog\Helper\Product\Configuration">
+        <plugin name="subscribepro_options" type="Swarming\SubscribePro\Plugin\Product\Configuration" sortOrder="80" />
+    </type>
+
+    <type name="Magento\Quote\Model\Quote\Item">
+        <plugin name="subscribepro_options" type="Swarming\SubscribePro\Plugin\Quote\Item" />
+    </type>
+
+    <type name="Magento\Quote\Model\Quote\Item\ToOrderItem">
+        <plugin name="subscribepro_options" type="Swarming\SubscribePro\Plugin\Quote\ToOrderItem"/>
+    </type>
+
+    <type name="Magento\Checkout\Model\Cart">
+        <plugin name="subscribepro_options" type="Swarming\SubscribePro\Plugin\Checkout\Cart"/>
+    </type>
+
+    <type name="Magento\GroupedProduct\Model\Product\Type\Grouped">
+        <plugin name="subscribepro_attribute" type="Swarming\SubscribePro\Plugin\GroupedProduct\TypeGrouped"/>
     </type>
 
     <!-- SubscribeProAdapter -->
