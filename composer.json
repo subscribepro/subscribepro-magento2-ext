@@ -25,7 +25,7 @@
     "magento/module-theme": "^100.1.0",
     "magento/module-ui": "^100.1.0",
     "magento/framework": "^100.1.0",
-    "subscribepro/subscribepro-php": "~0.9.3@dev"
+    "subscribepro/subscribepro-php": "~0.9.4"
   },
   "require-dev": {
     "magento/zendframework1": "1.12.16",
