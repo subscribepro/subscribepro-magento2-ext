@@ -8,7 +8,7 @@ use Magento\Framework\Controller\ResultFactory;
 class TestConnection extends Action
 {
     /**
-     * @var \SubscribePro\SdkFactory
+     * @var \Swarming\SubscribePro\Platform\SdkFactory
      */
     protected $sdkFactory;
 
@@ -20,12 +20,12 @@ class TestConnection extends Action
     /**
      * @param \Magento\Backend\App\Action\Context $context
      * @param \Swarming\SubscribePro\Model\Config\Platform $platformConfig
-     * @param \SubscribePro\SdkFactory $sdkFactory
+     * @param \Swarming\SubscribePro\Platform\SdkFactory $sdkFactory
      */
     public function __construct(
         \Magento\Backend\App\Action\Context $context,
         \Swarming\SubscribePro\Model\Config\Platform $platformConfig,
-        \SubscribePro\SdkFactory $sdkFactory
+        \Swarming\SubscribePro\Platform\SdkFactory $sdkFactory
     ) {
         $this->platformConfig = $platformConfig;
         $this->sdkFactory = $sdkFactory;

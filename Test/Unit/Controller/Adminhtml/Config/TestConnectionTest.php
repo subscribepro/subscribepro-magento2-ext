@@ -6,7 +6,7 @@ use Magento\Backend\App\Action\Context;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Controller\ResultFactory;
 use SubscribePro\Sdk;
-use SubscribePro\SdkFactory;
+use Swarming\SubscribePro\Platform\SdkFactory;
 use SubscribePro\Service\Webhook\WebhookService;
 use Swarming\SubscribePro\Controller\Adminhtml\Config\TestConnection;
 use Swarming\SubscribePro\Model\Config\Platform as PlatformConfig;
@@ -25,7 +25,7 @@ class TestConnectionTest extends \PHPUnit_Framework_TestCase
     protected $platformConfigMock;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|\SubscribePro\SdkFactory
+     * @var \PHPUnit_Framework_MockObject_MockObject|\Swarming\SubscribePro\Platform\SdkFactory
      */
     protected $sdkFactoryMock;
 
