@@ -5,7 +5,7 @@ namespace Swarming\SubscribePro\Platform;
 class Platform
 {
     /**
-     * @var \SubscribePro\SdkFactory
+     * @var \Swarming\SubscribePro\Platform\SdkFactory
      */
     protected $sdkFactory;
 
@@ -30,13 +30,13 @@ class Platform
     protected $sdkByWebsiteCode = [];
 
     /**
-     * @param \SubscribePro\SdkFactory $sdkFactory
+     * @param \Swarming\SubscribePro\Platform\SdkFactory $sdkFactory
      * @param \Swarming\SubscribePro\Model\Config\Platform $platformConfig
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      * @param array $config
      */
     public function __construct(
-        \SubscribePro\SdkFactory $sdkFactory,
+        \Swarming\SubscribePro\Platform\SdkFactory $sdkFactory,
         \Swarming\SubscribePro\Model\Config\Platform $platformConfig,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         array $config = []
