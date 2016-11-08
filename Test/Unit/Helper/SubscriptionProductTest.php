@@ -168,6 +168,101 @@ class SubscriptionProductTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testLinkProductsIfProductNotVisibleInSite()
+    {
+        $imageUrl = 'url/image';
+        $platformDiscount = 10;
+        $finalPrice = 90;
+        $convertedFinalPrice = 1200;
+        $taxRate = 8;
+        $taxClassId = 'taxable';
+        $productTypeId = 'some_type';
+        $isCatalogRuleApplied = true;
+        $options = ['options'];
+
+        $customAttributeMock = $this->createCustomAttributeMock();
+        $customAttributeMock->expects($this->once())->method('getValue')->willReturn($taxClassId);
+
+        $sku = 'product_sku';
+        $productMock = $this->createProductMock();
+        $productMock->expects($this->any())->method('getSku')->willReturn($sku);
+        $productMock->expects($this->once())->method('getFinalPrice')->willReturn($finalPrice);
+        $productMock->expects($this->any())->method('getTypeId')->willReturn($productTypeId);
+        $productMock->expects($this->any())->method('isVisibleInSiteVisibility')->willReturn(false);
+        $productMock->expects($this->once())
+            ->method('getCustomAttribute')
+            ->with(SubscriptionBlock::TAX_CLASS_ID)
+            ->willReturn($customAttributeMock);
+
+        $subscriptionOptionItemMock = $this->createSubscriptionOptionItemMock();
+        $subscriptionOptionItemMock->expects($this->any())->method('getProduct')->willReturn($productMock);
+
+        $configurationMock = $this->createProductConfigurationMock();
+        $configurationMock->expects($this->once())
+            ->method('getOptions')
+            ->with($subscriptionOptionItemMock)
+            ->willReturn($options);
+
+        $platformProductMock = $this->createPlatformProductMock();
+        $platformProductMock->expects($this->once())->method('getDiscount')->willReturn($platformDiscount);
+        $platformProductMock->expects($this->once())->method('setDiscount')->willReturn($platformDiscount);
+        $platformProductMock->expects($this->once())->method('getIsDiscountPercentage')->willReturn(true);
+        $platformProductMock->expects($this->once())->method('setUrl')->with(null)->willReturnSelf();
+        $platformProductMock->expects($this->once())->method('setImageUrl')->with($imageUrl)->willReturnSelf();
+        $platformProductMock->expects($this->once())->method('setPrice')->with($convertedFinalPrice)->willReturnSelf();
+        $platformProductMock->expects($this->once())->method('setTaxRate')->with($taxRate)->willReturnSelf();
+        $platformProductMock->expects($this->once())->method('setIsCatalogRuleApplied')->with($isCatalogRuleApplied)->willReturnSelf();
+        $platformProductMock->expects($this->once())->method('setOptionList')->with($options)->willReturnSelf();
+
+        $subscriptionMock = $this->createSubscriptionMock();
+        $subscriptionMock->expects($this->any())->method('getProductSku')->willReturn($sku);
+        $subscriptionMock->expects($this->once())->method('setProduct')->with($platformProductMock);
+        $subscriptions = [$subscriptionMock];
+
+        $this->platformProductManagerMock->expects($this->once())
+            ->method('getProduct')
+            ->with($sku)
+            ->willReturn($platformProductMock);
+
+        $this->subscriptionOptionItemManagerMock->expects($this->once())
+            ->method('getSubscriptionOptionItem')
+            ->with($subscriptionMock)
+            ->willReturn($subscriptionOptionItemMock);
+
+        $this->priceCurrencyMock->expects($this->once())
+            ->method('convertAndRound')
+            ->with($finalPrice)
+            ->willReturn($convertedFinalPrice);
+
+        $this->catalogRuleInspectorMock->expects($this->once())
+            ->method('isApplied')
+            ->with($productMock)
+            ->willReturn($isCatalogRuleApplied);
+
+        $this->imageHelperMock->expects($this->once())
+            ->method('init')
+            ->with($productMock, 'product_thumbnail_image')
+            ->willReturnSelf();
+        $this->imageHelperMock->expects($this->once())->method('getUrl')->willReturn($imageUrl);
+
+        $this->productConfigurationPoolMock->expects($this->once())
+            ->method('getByProductType')
+            ->with($productTypeId)
+            ->willReturn($configurationMock);
+
+        $this->taxCalculationMock->expects($this->once())
+            ->method('getCalculatedRate')
+            ->with($taxClassId)
+            ->willReturn($taxRate);
+
+        $this->productUrlModelMock->expects($this->never())->method('getProductUrl');
+
+        $this->assertEquals(
+            $subscriptions,
+            $this->subscriptionProductHelper->linkProducts($subscriptions)
+        );
+    }
+
     public function testLinkProducts()
     {
         $imageUrl = 'url/image';
@@ -189,6 +284,7 @@ class SubscriptionProductTest extends \PHPUnit_Framework_TestCase
         $productMock->expects($this->any())->method('getSku')->willReturn($sku);
         $productMock->expects($this->once())->method('getFinalPrice')->willReturn($finalPrice);
         $productMock->expects($this->any())->method('getTypeId')->willReturn($productTypeId);
+        $productMock->expects($this->any())->method('isVisibleInSiteVisibility')->willReturn(true);
         $productMock->expects($this->once())
             ->method('getCustomAttribute')
             ->with(SubscriptionBlock::TAX_CLASS_ID)
@@ -288,6 +384,7 @@ class SubscriptionProductTest extends \PHPUnit_Framework_TestCase
         $productMock->expects($this->any())->method('getSku')->willReturn($sku);
         $productMock->expects($this->once())->method('getFinalPrice')->willReturn($finalPrice);
         $productMock->expects($this->any())->method('getTypeId')->willReturn($productTypeId);
+        $productMock->expects($this->any())->method('isVisibleInSiteVisibility')->willReturn(true);
         $productMock->expects($this->once())
             ->method('getCustomAttribute')
             ->with(SubscriptionBlock::TAX_CLASS_ID)
@@ -391,6 +488,7 @@ class SubscriptionProductTest extends \PHPUnit_Framework_TestCase
         $product1Mock = $this->createProductMock();
         $product1Mock->expects($this->once())->method('getFinalPrice')->willReturn($finalPrice);
         $product1Mock->expects($this->any())->method('getTypeId')->willReturn($productTypeId);
+        $product1Mock->expects($this->any())->method('isVisibleInSiteVisibility')->willReturn(true);
         $product1Mock->expects($this->once())
             ->method('getCustomAttribute')
             ->with(SubscriptionBlock::TAX_CLASS_ID)

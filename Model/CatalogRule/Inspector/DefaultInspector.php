@@ -59,6 +59,24 @@ class DefaultInspector implements InspectorInterface
      */
     protected function isAppliedToProduct($product)
     {
+        return $this->hasSpecialPrice($product) || $this->isAppliedCatalogRule($product);
+    }
+
+    /**
+     * @param \Magento\Catalog\Model\Product $product
+     * @return bool
+     */
+    protected function hasSpecialPrice($product)
+    {
+        return $product->getPrice() != $product->getPriceModel()->getBasePrice($product);
+    }
+
+    /**
+     * @param \Magento\Catalog\Model\Product $product
+     * @return bool
+     */
+    protected function isAppliedCatalogRule($product)
+    {
         $productId = $product->getId();
 
         $storeId = $product->getStoreId();

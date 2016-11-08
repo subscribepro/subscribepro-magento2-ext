@@ -8,12 +8,12 @@ define(
     ],
     function ($, $t, storage, globalMessageContainer, errorProcessor) {
         'use strict';
-        return function (subscriptionId, paymentProfileId, messageContainer, deferred) {
+        return function (subscriptionId, paymentProfileId, isApplyToOther, messageContainer, deferred) {
 
             deferred = deferred || $.Deferred();
             return storage.post(
                 '/rest/V1/swarming_subscribepro/me/subscriptions/update-payment-profile',
-                JSON.stringify({subscriptionId: subscriptionId, paymentProfileId: paymentProfileId}),
+                JSON.stringify({subscriptionId: subscriptionId, paymentProfileId: paymentProfileId, isApplyToOther: isApplyToOther}),
                 false
             ).done(
                 function (response) {

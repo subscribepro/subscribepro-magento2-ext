@@ -114,11 +114,11 @@ class SubscriptionProduct
 
     /**
      * @param \Magento\Catalog\Api\Data\ProductInterface|\Magento\Catalog\Model\Product $product
-     * @return string
+     * @return string|null
      */
     protected function getProductUrl($product)
     {
-        return $this->productUrlModel->getProductUrl($product);
+        return $product->isVisibleInSiteVisibility() ? $this->productUrlModel->getProductUrl($product) : null;
     }
 
     /**

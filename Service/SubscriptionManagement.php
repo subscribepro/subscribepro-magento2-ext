@@ -99,8 +99,7 @@ class SubscriptionManagement implements SubscriptionManagementInterface
         $this->enableFrontendDesignArea();
 
         try {
-            $platformCustomer = $this->platformCustomerManager->getCustomerById($customerId);
-            $subscriptions = $this->platformSubscriptionService->loadSubscriptionsByCustomer($platformCustomer->getId());
+            $subscriptions = $this->getSubscriptionByCustomerId($customerId);
             if ($subscriptions) {
                 $this->subscriptionProductHelper->linkProducts($subscriptions);
             }
@@ -111,6 +110,17 @@ class SubscriptionManagement implements SubscriptionManagementInterface
             throw new LocalizedException(__('Unable to load subscriptions.'));
         }
 
+        return $subscriptions;
+    }
+
+    /**
+     * @param int $customerId
+     * @return \Swarming\SubscribePro\Api\Data\SubscriptionInterface[]
+     */
+    protected function getSubscriptionByCustomerId($customerId)
+    {
+        $platformCustomer = $this->platformCustomerManager->getCustomerById($customerId);
+        $subscriptions = $this->platformSubscriptionService->loadSubscriptionsByCustomer($platformCustomer->getId());
         return $subscriptions;
     }
 
@@ -130,8 +140,7 @@ class SubscriptionManagement implements SubscriptionManagementInterface
 
             $platformProduct = $this->platformProductManager->getProduct($subscription->getProductSku());
             if (($platformProduct->getMinQty() && $platformProduct->getMinQty() > $qty)
-                ||
-                ($platformProduct->getMaxQty() && $platformProduct->getMaxQty() < $qty)
+                || ($platformProduct->getMaxQty() && $platformProduct->getMaxQty() < $qty)
             ) {
                 throw new LocalizedException(__(
                     'Invalid quantity, it must be in range from %1 to %2.',
@@ -211,18 +220,28 @@ class SubscriptionManagement implements SubscriptionManagementInterface
      * @param int $customerId
      * @param int $subscriptionId
      * @param int $paymentProfileId
+     * @param bool $isApplyToOther
      * @return \SubscribePro\Service\PaymentProfile\PaymentProfileInterface
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\AuthorizationException
      */
-    public function updatePaymentProfile($customerId, $subscriptionId, $paymentProfileId)
+    public function updatePaymentProfile($customerId, $subscriptionId, $paymentProfileId, $isApplyToOther = false)
     {
         try {
             $subscription = $this->platformSubscriptionService->loadSubscription($subscriptionId);
             $this->checkSubscriptionOwner($subscription, $customerId);
 
-            $subscription->setPaymentProfileId($paymentProfileId);
-            $subscription = $this->platformSubscriptionService->saveSubscription($subscription);
+            $currentPaymentId = $subscription->getPaymentProfile()->getId();
+            $this->setPaymentProfileProfile($subscription, $paymentProfileId);
+
+            if ($isApplyToOther) {
+                $subscriptions = $this->getSubscriptionByCustomerId($customerId);
+                foreach ($subscriptions as $item) {
+                    if ($item->getPaymentProfileId() == $currentPaymentId) {
+                        $this->setPaymentProfileProfile($item, $paymentProfileId);
+                    }
+                }
+            }
         } catch (NoSuchEntityException $e) {
             throw new LocalizedException(__('The subscription is not found.'));
         } catch (HttpException $e) {
@@ -231,6 +250,16 @@ class SubscriptionManagement implements SubscriptionManagementInterface
         }
 
         return $subscription->getPaymentProfile();
+    }
+
+    /**
+     * @param \Swarming\SubscribePro\Api\Data\SubscriptionInterface $subscription
+     * @param $paymentProfileId
+     */
+    protected function setPaymentProfileProfile($subscription, $paymentProfileId)
+    {
+        $subscription->setPaymentProfileId($paymentProfileId);
+        $this->platformSubscriptionService->saveSubscription($subscription);
     }
 
     /**

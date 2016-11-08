@@ -4,6 +4,7 @@ namespace Swarming\SubscribePro\Gateway\Request;
 
 use Exception;
 use Magento\Payment\Gateway\Request\BuilderInterface;
+use SubscribePro\Service\Transaction\TransactionInterface;
 
 class VaultDataBuilder implements BuilderInterface
 {
@@ -44,8 +45,11 @@ class VaultDataBuilder implements BuilderInterface
 
         $paymentToken = $extensionAttributes->getVaultPaymentToken();
 
-        return [
-            self::PAYMENT_PROFILE_ID => $paymentToken->getGatewayToken()
-        ];
+        $result = [self::PAYMENT_PROFILE_ID => $paymentToken->getGatewayToken()];
+        if ($payment->getAdditionalInformation(TransactionInterface::UNIQUE_ID)) {
+            $result[TransactionInterface::UNIQUE_ID] = $payment->getAdditionalInformation(TransactionInterface::UNIQUE_ID);
+        }
+
+        return $result;
     }
 }

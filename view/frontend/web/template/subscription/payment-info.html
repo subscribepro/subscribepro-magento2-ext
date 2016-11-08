@@ -19,30 +19,51 @@
     </a>
 </div>
 <div data-bind="afterRender: initModal, blockLoader: isLoading">
-    <!-- ko foreach: getRegion('messages') -->
-        <!-- ko template: getTemplate() --><!-- /ko -->
-    <!--/ko-->
+    <div class="fieldset">
+        <!-- ko foreach: getRegion('messages') -->
+            <!-- ko template: getTemplate() --><!-- /ko -->
+        <!--/ko-->
 
-    <!-- ko foreach: {data: payments, as: 'paymentToken'} -->
-        <p class="card-number-type">
-            <label>
-                <input type="radio"
-                       class="radio"
-                       data-bind="checked: $parent.selectedPaymentProfileId, value: paymentToken.gateway_token" />
-                <!-- ko i18n: 'Use' --><!-- /ko -->
-                <!--ko if: $parent.getProfileIcon(paymentToken) -->
-                <img data-bind="attr: {
-                            'src': $parent.getProfileIcon(paymentToken).url,
-                            'width': $parent.getProfileIcon(paymentToken).width,
-                            'height': $parent.getProfileIcon(paymentToken).height
-                            }"/>
-                <!--/ko-->
-                <!-- ko i18n: 'ending' --><!-- /ko -->
-                <!-- ko text: $parent.getMaskedCC(paymentToken) --><!-- /ko -->
-            </label>
-        </p>
-    <!-- /ko -->
-    <!-- ko if: paymentsLoadSuccess() && !payments().length -->
-        <!-- ko i18n: 'You don\'t have saved subscribe pro credit cards' --><!-- /ko -->
-    <!-- /ko -->
+        <!-- ko foreach: {data: payments, as: 'paymentToken'} -->
+            <div class="field card-number-type">
+                <label class="label">
+                    <input type="radio"
+                           class="radio"
+                           data-bind="checked: $parent.selectedPaymentProfileId, value: paymentToken.gateway_token" />
+                    <!-- ko i18n: 'Use' --><!-- /ko -->
+                    <!--ko if: $parent.getProfileIcon(paymentToken) -->
+                    <img data-bind="attr: {
+                                'src': $parent.getProfileIcon(paymentToken).url,
+                                'width': $parent.getProfileIcon(paymentToken).width,
+                                'height': $parent.getProfileIcon(paymentToken).height
+                                }"/>
+                    <!--/ko-->
+                    <!-- ko i18n: 'ending' --><!-- /ko -->
+                    <!-- ko text: $parent.getMaskedCC(paymentToken) --><!-- /ko -->
+                </label>
+            </div>
+        <!-- /ko -->
+        <!-- ko if: paymentsLoadSuccess() && payments().length -->
+            <div class="field required" data-bind="css: { _error: showApplyWarning() }">
+                <label class="label">
+                    <!-- ko i18n: 'Would you like to apply this same change to your other subscriptions using this Credit Card to the new one you have supplied?' --><!-- /ko -->
+                </label>
+
+                <div class="control">
+                    <select class="select inline" data-bind="checked: applyToOther, value: applyToOther">
+                        <option value="0"><!-- ko text: '--' --><!-- /ko --></option>
+                        <option value="2"><!-- ko text: 'Yes' --><!-- /ko --></option>
+                        <option value="1"><!-- ko text: 'No' --><!-- /ko --></option>
+                    </select>
+
+                    <div class="mage-error" data-bind="visible: showApplyWarning()" generated="true">
+                        <!-- ko i18n: 'Please choose an action.' --><!-- /ko -->
+                    </div>
+                </div>
+            </div>
+        <!-- /ko -->
+        <!-- ko if: paymentsLoadSuccess() && !payments().length -->
+            <!-- ko i18n: 'You don\'t have saved subscribe pro credit cards' --><!-- /ko -->
+        <!-- /ko -->
+    </div>
 </div>

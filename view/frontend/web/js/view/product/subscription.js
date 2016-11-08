@@ -12,7 +12,9 @@ define(
         return Component.extend({
             defaults: {
                 template: 'Swarming_SubscribePro/product/subscription',
-                priceBoxSelector: '.price-box',
+                oneTimePurchasePriceTemplate: 'Swarming_SubscribePro/product/price/default/one-time-purchase',
+                subscriptionPriceTemplate: 'Swarming_SubscribePro/product/price/default/subscription',
+                priceBoxSelector: '[data-role=priceBox]',
                 qtyFieldSelector: '#qty',
                 product: {},
                 priceConfig: {},
@@ -26,29 +28,11 @@ define(
                 this.priceBoxElement = this.getPriceBoxElement();
                 this.priceBoxElement.on('reloadPrice', this.onPriceChange.bind(this));
                 this.initProductPrice();
+                this.priceBoxElement.trigger('reloadPrice');
             },
 
             initProductPrice: function () {
-                var finalPrice = parseFloat(parseFloat(this.product.final_price).toFixed(2));
-                var basePrice = this.product.base_price ? parseFloat(parseFloat(this.product.base_price).toFixed(2)) : finalPrice;
-                var hasSpecialPrice = finalPrice != basePrice;
-
-                var priceBox = this.priceBoxElement.data('mage-priceBox');
-                if (priceBox
-                    && priceBox.options
-                    && priceBox.options.priceConfig
-                    && priceBox.options.priceConfig.prices.finalPrice
-                    && priceBox.options.priceConfig.prices.oldPrice
-                ) {
-                    hasSpecialPrice = priceBox.options.priceConfig.prices.finalPrice.amount != priceBox.options.priceConfig.prices.oldPrice.amount;
-                }
-
                 this.productPrice = productPriceModel.create(this.product, this.priceConfig);
-
-                var frontendFinalPrice = parseFloat(this.priceBoxElement.find('.price').parent().data('price-amount').toFixed(2));
-                this.syncProductPrice({oldPrice: {amount: basePrice}, finalPrice: {amount: frontendFinalPrice}});
-
-                this.productPrice.hasSpecialPrice(hasSpecialPrice);
             },
 
             onPriceChange: function () {
@@ -62,8 +46,9 @@ define(
 
             syncProductPrice: function (prices) {
                 var frontendFinalPrice, frontendPrice;
-                if (prices.finalPrice) {
-                    frontendFinalPrice = frontendPrice = prices.finalPrice.amount;
+                var code = this.getFrontendPriceCode();
+                if (prices[code]) {
+                    frontendFinalPrice = frontendPrice = prices[code].amount;
                 }
                 if (prices.oldPrice) {
                     frontendPrice = prices.oldPrice.amount;
@@ -77,6 +62,15 @@ define(
                     return el && $(el).data('mage-priceBox');
                 });
                 return $(priceBoxElement);
+            },
+
+            getFrontendPriceCode: function () {
+                var code = 'finalPrice';
+                if (this.priceConfig.displayPriceExcludingTax && this.priceConfig.priceIncludesTax) {
+                    code = 'basePrice';
+                }
+
+                return code;
             }
         });
     }

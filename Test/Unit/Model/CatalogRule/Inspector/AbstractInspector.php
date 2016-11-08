@@ -9,6 +9,7 @@ use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 use Magento\CatalogRule\Observer\RulePricesStorage;
 use Magento\Catalog\Model\Product;
 use DateTime;
+use Magento\Catalog\Model\Product\Type\Price as PriceModel;
 
 abstract class AbstractInspector extends \PHPUnit_Framework_TestCase
 {
@@ -66,17 +67,51 @@ abstract class AbstractInspector extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @param float $price
+     * @param float $basePrice
+     * @return \Magento\Catalog\Model\Product|\PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function prepareProductMockWithSpecialPrice($price, $basePrice)
+    {
+        $priceModel = $this->getMockBuilder(PriceModel::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $priceModel->expects($this->once())
+            ->method('getBasePrice')
+            ->willReturn($basePrice);
+
+        $product = $this->createProductMock();
+        $product->expects($this->once())->method('getPrice')->willReturn($price);
+        $product->expects($this->once())->method('getPriceModel')->willReturn($priceModel);
+
+        $product->expects($this->never())->method('getId');
+        $product->expects($this->never())->method('hasCustomerGroupId');
+        $product->expects($this->never())->method('getCustomerGroupId');
+        $product->expects($this->never())->method('getStoreId');
+
+        return $product;
+    }
+
+    /**
+     * @param float $price
      * @param int $productId
      * @param int $customerGroupId
      * @param int $storeId
      * @return \Magento\Catalog\Model\Product|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected function prepareProductMock($productId, $customerGroupId, $storeId)
+    protected function prepareProductMock($price, $productId, $customerGroupId, $storeId)
     {
-        $product = $this->getMockBuilder(Product::class)
+        $priceModel = $this->getMockBuilder(PriceModel::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getId', 'getStoreId', 'hasCustomerGroupId', 'getCustomerGroupId', 'getCustomOption', '__wakeup'])
             ->getMock();
+        $priceModel->expects($this->once())
+            ->method('getBasePrice')
+            ->willReturn($price);
+
+        $product = $this->createProductMock();
+
+        $product->expects($this->once())->method('getPrice')->willReturn($price);
+        $product->expects($this->once())->method('getPriceModel')->willReturn($priceModel);
 
         $product->expects($this->atLeastOnce())
             ->method('getId')
@@ -155,5 +190,25 @@ abstract class AbstractInspector extends \PHPUnit_Framework_TestCase
             ->willReturn($store);
 
         return $store;
+    }
+
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject|\Magento\Catalog\Model\Product
+     */
+    protected function createProductMock()
+    {
+        return $this->getMockBuilder(Product::class)
+            ->disableOriginalConstructor()
+            ->setMethods([
+                'getId',
+                'getStoreId',
+                'hasCustomerGroupId',
+                'getCustomerGroupId',
+                'getCustomOption',
+                '__wakeup',
+                'getPrice',
+                'getPriceModel'
+            ])
+            ->getMock();
     }
 }

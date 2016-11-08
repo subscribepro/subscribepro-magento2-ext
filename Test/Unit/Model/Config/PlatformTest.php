@@ -3,6 +3,7 @@
 namespace Swarming\SubscribePro\Test\Unit\Model\Config;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\App\Filesystem\DirectoryList;
 use Swarming\SubscribePro\Model\Config\Platform;
 use Magento\Store\Model\ScopeInterface;
 
@@ -18,10 +19,19 @@ class PlatformTest extends \PHPUnit_Framework_TestCase
      */
     protected $scopeConfigMock;
 
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Framework\App\Filesystem\DirectoryList
+     */
+    protected $directoryList;
+
     protected function setUp()
     {
         $this->scopeConfigMock = $this->getMockBuilder(ScopeConfigInterface::class)->getMock();
-        $this->platformConfig = new Platform($this->scopeConfigMock);
+        $this->directoryList = $this->getMockBuilder(DirectoryList::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->platformConfig = new Platform($this->scopeConfigMock, $this->directoryList);
     }
 
     public function testGetBaseUrl()
@@ -106,13 +116,20 @@ class PlatformTest extends \PHPUnit_Framework_TestCase
     public function testLogFilename()
     {
         $websiteCode = 'custom_website';
-        $fileName = 'filename';
+        $varDirPath = implode(DIRECTORY_SEPARATOR, ['var', 'dir', 'path']);
+        $fileName = DIRECTORY_SEPARATOR . 'filename';
+        $result = implode(DIRECTORY_SEPARATOR, ['var', 'dir', 'path', 'filename']);
 
         $this->scopeConfigMock->expects($this->once())
             ->method('getValue')
             ->with('swarming_subscribepro/platform/log_filename', ScopeInterface::SCOPE_WEBSITE, $websiteCode)
             ->willReturn($fileName);
 
-        $this->assertEquals($fileName, $this->platformConfig->getLogFilename($websiteCode));
+        $this->directoryList->expects($this->once())
+            ->method('getPath')
+            ->with(DirectoryList::VAR_DIR)
+            ->willReturn($varDirPath);
+
+        $this->assertEquals($result, $this->platformConfig->getLogFilename($websiteCode));
     }
 }

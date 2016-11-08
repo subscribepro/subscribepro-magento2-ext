@@ -93,6 +93,7 @@ class Validator
      * @param array $appliedRuleIds
      * @param array|null $discountDescriptions
      * @return callable
+     * @codeCoverageIgnore
      */
     protected function getRollbackCallback($appliedRuleIds, $discountDescriptions)
     {

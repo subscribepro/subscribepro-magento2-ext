@@ -14,6 +14,9 @@
         <!-- ko if: getProductUrl() -->
             <h2 class="product-name"><a data-bind="attr: {href: getProductUrl(), title: getProductName()}, text: getProductName()"></a></h2>
         <!-- /ko -->
+        <!-- ko if: !getProductUrl() && getProductName() -->
+            <h2 class="product-name"><!-- ko text: getProductName() --><!-- /ko --></h2>
+        <!-- /ko -->
         <!-- ko if: getProductOptionList().length -->
         <div class="product option-list" data-bind="afterRender: initOptionList">
             <span data-role="title" class="toggle"><!-- ko i18n: 'See Details' --><!-- /ko --></span>

@@ -808,17 +808,21 @@ class SubscriptionManagementTest extends \PHPUnit_Framework_TestCase
 
     public function testUpdatePaymentProfile()
     {
+        $currentPaymentId = 497;
         $paymentProfileId = 7721;
         $customerId = 1234;
         $subscriptionId = 555;
         $platformCustomerId = 4321;
 
         $profileMock = $this->getMockBuilder(PaymentProfileInterface::class)->getMock();
+        $profileMock->expects($this->atLeastOnce())
+            ->method('getId')
+            ->willReturn($currentPaymentId);
 
         $subscriptionMock = $this->createSubscriptionMock();
         $subscriptionMock->expects($this->once())->method('getCustomerId')->willReturn($platformCustomerId);
         $subscriptionMock->expects($this->once())->method('setPaymentProfileId')->with($paymentProfileId);
-        $subscriptionMock->expects($this->once())->method('getPaymentProfile')->willReturn($profileMock);
+        $subscriptionMock->expects($this->atLeastOnce())->method('getPaymentProfile')->willReturn($profileMock);
 
         $platformCustomerMock = $this->createPlatformCustomerMock();
         $platformCustomerMock->expects($this->once())->method('getId')->willReturn($platformCustomerId);
@@ -839,6 +843,67 @@ class SubscriptionManagementTest extends \PHPUnit_Framework_TestCase
             ->willReturn($subscriptionMock);
 
         $this->assertSame($profileMock, $this->subscriptionManagement->updatePaymentProfile($customerId, $subscriptionId, $paymentProfileId));
+    }
+
+    public function testUpdatePaymentProfileWithApplyToOther()
+    {
+        $currentPaymentId = 497;
+        $paymentProfileId = 7721;
+        $oddPaymentProfileId = 1111;
+        $customerId = 1234;
+        $subscriptionId = 555;
+        $platformCustomerId = 4321;
+
+        $profileMock = $this->getMockBuilder(PaymentProfileInterface::class)->getMock();
+        $profileMock->expects($this->atLeastOnce())
+            ->method('getId')
+            ->willReturn($currentPaymentId);
+
+        $subscriptionMock = $this->createSubscriptionMock();
+        $subscriptionMock->expects($this->once())->method('getCustomerId')->willReturn($platformCustomerId);
+        $subscriptionMock->expects($this->once())->method('setPaymentProfileId')->with($paymentProfileId);
+        $subscriptionMock->expects($this->atLeastOnce())->method('getPaymentProfile')->willReturn($profileMock);
+
+        $otherSubscriptionMock = $this->createSubscriptionMock();
+        $otherSubscriptionMock->expects($this->once())->method('getPaymentProfileId')->willReturn($currentPaymentId);
+        $otherSubscriptionMock->expects($this->once())->method('setPaymentProfileId')->with($paymentProfileId);
+
+        $oddSubscriptionMock = $this->createSubscriptionMock();
+        $oddSubscriptionMock->expects($this->once())->method('getPaymentProfileId')->willReturn($oddPaymentProfileId);
+
+        $subscriptions = [$otherSubscriptionMock, $oddSubscriptionMock];
+
+        $platformCustomerMock = $this->createPlatformCustomerMock();
+        $platformCustomerMock->expects($this->atLeastOnce())->method('getId')->willReturn($platformCustomerId);
+
+        $this->platformCustomerManagerMock->expects($this->atLeastOnce())
+            ->method('getCustomerById')
+            ->with($customerId)
+            ->willReturn($platformCustomerMock);
+
+        $this->platformSubscriptionServiceMock->expects($this->once())
+            ->method('loadSubscription')
+            ->with($subscriptionId)
+            ->willReturn($subscriptionMock);
+
+        $this->platformSubscriptionServiceMock->expects($this->exactly(2))
+            ->method('saveSubscription')
+            ->withConsecutive(
+                [$subscriptionMock],
+                [$otherSubscriptionMock]
+            );
+
+        $this->platformCustomerManagerMock->expects($this->atLeastOnce())
+            ->method('getCustomerById')
+            ->with($customerId)
+            ->willReturn($platformCustomerMock);
+
+        $this->platformSubscriptionServiceMock->expects($this->once())
+            ->method('loadSubscriptionsByCustomer')
+            ->with($platformCustomerId)
+            ->willReturn($subscriptions);
+
+        $this->assertSame($profileMock, $this->subscriptionManagement->updatePaymentProfile($customerId, $subscriptionId, $paymentProfileId, true));
     }
 
     /**

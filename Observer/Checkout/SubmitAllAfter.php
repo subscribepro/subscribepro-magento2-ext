@@ -60,7 +60,10 @@ class SubmitAllAfter implements ObserverInterface
         $order = $observer->getData('order');
 
         $websiteCode = $quote->getStore()->getWebsite()->getCode();
-        if (!$this->generalConfig->isEnabled($websiteCode) || $order->getPayment()->getMethod() != GatewayConfigProvider::CODE) {
+        if (!$this->generalConfig->isEnabled($websiteCode)
+            || $order->getPayment()->getMethod() != GatewayConfigProvider::CODE
+            || !$quote->getCustomerId()
+        ) {
             return;
         }
 
