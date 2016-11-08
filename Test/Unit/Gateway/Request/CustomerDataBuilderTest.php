@@ -41,13 +41,14 @@ class CustomerDataBuilderTest extends \PHPUnit_Framework_TestCase
         $billingAddressMock = $this->getMockBuilder(AddressAdapterInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $billingAddressMock->expects($this->once())->method('getCustomerId')->willReturn($customerId);
+
         $billingAddressMock->expects($this->once())->method('getEmail')->willReturn($customerEmail);
 
         $orderMock = $this->getMockBuilder(OrderAdapterInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
         $orderMock->expects($this->once())->method('getBillingAddress')->willReturn($billingAddressMock);
+        $orderMock->expects($this->once())->method('getCustomerId')->willReturn($customerId);
 
         $paymentDOMock = $this->getMockBuilder(PaymentDataObjectInterface::class)->getMock();
         $paymentDOMock->expects($this->once())->method('getOrder')->willReturn($orderMock);

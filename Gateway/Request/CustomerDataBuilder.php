@@ -34,7 +34,7 @@ class CustomerDataBuilder implements BuilderInterface
         $billingAddress = $order->getBillingAddress();
 
         return [
-            PaymentProfileInterface::MAGENTO_CUSTOMER_ID => $billingAddress->getCustomerId(),
+            PaymentProfileInterface::MAGENTO_CUSTOMER_ID => $order->getCustomerId(),
             PaymentProfileInterface::CUSTOMER_EMAIL => $billingAddress->getEmail()
         ];
     }
