@@ -14,6 +14,7 @@ use Magento\Vault\Api\PaymentTokenManagementInterface;
 use Magento\Vault\Model\Method\Vault;
 use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
 use Swarming\SubscribePro\Gateway\Request\VaultDataBuilder;
+use SubscribePro\Service\Transaction\TransactionInterface;
 use Magento\Quote\Model\Quote\Payment as QuotePayment;
 use Swarming\SubscribePro\Observer\Payment\TokenAssigner as PaymentTokenAssigner;
 use Magento\Payment\Model\InfoInterface as PaymentInfoInterface;
@@ -207,9 +208,11 @@ class TokenAssignerTest extends \PHPUnit_Framework_TestCase
     public function testExecute()
     {
         $profileId = 4441;
+        $uniqueId = 123456789;
         $customerId = 334;
         $additionalInfo = [
-            VaultDataBuilder::PAYMENT_PROFILE_ID => $profileId
+            VaultDataBuilder::PAYMENT_PROFILE_ID => $profileId,
+            TransactionInterface::UNIQUE_ID => $uniqueId
         ];
         $tokenHash = 'hash';
         $tokenAdditionalInfo = [
@@ -236,9 +239,12 @@ class TokenAssignerTest extends \PHPUnit_Framework_TestCase
         $paymentInfoMock->expects($this->once())
             ->method('getQuote')
             ->willReturn($quoteMock);
-        $paymentInfoMock->expects($this->once())
+        $paymentInfoMock->expects($this->exactly(2))
             ->method('setAdditionalInformation')
-            ->with(Vault::TOKEN_METADATA_KEY, $tokenAdditionalInfo);
+            ->withConsecutive(
+                [Vault::TOKEN_METADATA_KEY, $tokenAdditionalInfo],
+                [TransactionInterface::UNIQUE_ID, $uniqueId]
+            );
 
         $eventMock = $this->createEventMock();
         $eventMock->expects($this->at(0))

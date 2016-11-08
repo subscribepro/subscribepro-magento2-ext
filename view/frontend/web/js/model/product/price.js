@@ -11,6 +11,8 @@ define(
             create: function (product, priceConfig) {
                 var productPrice = {};
 
+                var displayPriceIncludingTax = priceConfig.displayPriceIncludingTax || priceConfig.displayPriceBoth;
+
                 productPrice.discount = product.discount;
                 productPrice.is_discount_percentage = product.is_discount_percentage;
 
@@ -20,7 +22,7 @@ define(
                 productPrice.priceWithDiscountText = ko.pureComputed(function() {
                     var discount = productPrice.discountValue();
                     var price = parseFloat(productPrice.priceToDisplay()) - discount;
-                    if (product.tax_rate && priceConfig.applyTaxAfterDiscount && priceConfig.displayPriceIncludingTax && !priceConfig.priceIncludesTax) {
+                    if (product.tax_rate && priceConfig.applyTaxAfterDiscount && displayPriceIncludingTax && !priceConfig.priceIncludesTax) {
                         price = (1 + product.tax_rate/100)*(productPrice.priceExclTax() - discount);
                     }
                     var priceText = getFormattedPrice(round(price));
@@ -33,7 +35,7 @@ define(
                     if (discount <= 0) {
                         return priceText;
                     }
-                    if (!priceConfig.discountTax && priceConfig.displayPriceIncludingTax) {
+                    if (!priceConfig.discountTax && displayPriceIncludingTax) {
                         priceText += ' ' + $t('(incl. tax)');
                     }
 
@@ -57,7 +59,7 @@ define(
                 });
 
                 productPrice.priceToDisplay = ko.pureComputed(function() {
-                    return priceConfig.displayPriceIncludingTax ? productPrice.priceInclTax() : productPrice.priceExclTax();
+                    return displayPriceIncludingTax ? productPrice.priceInclTax() : productPrice.priceExclTax();
                 });
 
                 productPrice.priceInclTax = ko.pureComputed(function() {
@@ -102,10 +104,10 @@ define(
                         return price;
                     }
 
-                    if (priceConfig.displayPriceIncludingTax && !priceConfig.priceIncludesTax) {
+                    if (displayPriceIncludingTax && !priceConfig.priceIncludesTax) {
                         return price/(1 + product.tax_rate/100);
                     }
-                    if (!priceConfig.displayPriceIncludingTax && priceConfig.priceIncludesTax) {
+                    if (!displayPriceIncludingTax && priceConfig.priceIncludesTax) {
                         return price*(1 + product.tax_rate/100);
                     }
 

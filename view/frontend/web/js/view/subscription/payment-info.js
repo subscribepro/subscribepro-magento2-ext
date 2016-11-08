@@ -19,6 +19,8 @@ define(
                 paymentProfile: null,
                 paymentProfileId: null,
                 selectedPaymentProfileId: null,
+                applyToOther: '0',
+                showApplyWarning: false,
                 ccIcons: {},
                 ccTypesMapper: {},
                 payments: []
@@ -35,8 +37,12 @@ define(
                         'paymentProfile',
                         'paymentProfileId',
                         'selectedPaymentProfileId',
+                        'applyToOther',
+                        'showApplyWarning',
                         'payments'
                     ]);
+
+                $('body').on('apply-payment-profile', $.proxy(this.applyPaymentProfile, this));
                 return this;
             },
 
@@ -62,9 +68,13 @@ define(
             },
 
             onOpen: function () {
+                this.applyToOther('0');
+
                 if (this.paymentsLoaded()) {
+                    this.selectedPaymentProfileId(this.paymentProfileId());
                     return;
                 }
+
                 this.isLoading(true);
                 var deferred = $.Deferred();
                 loadPayments(this.messageContainer, deferred);
@@ -86,21 +96,39 @@ define(
                     return;
                 }
 
+                if (this.applyToOther() == '0') {
+                    this.showApplyWarning(true);
+                    return;
+                }
+                this.showApplyWarning(false);
+                var isApplyToOther = this.applyToOther() == '2'; // yes = 2, no = 1, 0 - not selected
+
                 this.isLoading(true);
                 var deferred = $.Deferred();
-                changePayment(this.subscriptionId, this.selectedPaymentProfileId(), this.messageContainer, deferred);
+                changePayment(this.subscriptionId, this.selectedPaymentProfileId(), isApplyToOther, this.messageContainer, deferred);
 
                 var self = this;
                 $.when(deferred)
                     .done(function (response) {
-                        self.paymentProfile(response);
-                        self.paymentProfileId(self.selectedPaymentProfileId());
+                        if (isApplyToOther) {
+                            $('body').trigger('apply-payment-profile', {currentPaymentId: self.paymentProfileId(), paymentProfile: response});
+                        } else {
+                            self.paymentProfile(response);
+                            self.paymentProfileId(self.selectedPaymentProfileId());
+                        }
                         self.modal.closeModal();
                         self.scrollToTop();
                     })
                     .always(function () {
                         self.isLoading(false);
                     });
+            },
+
+            applyPaymentProfile: function (event, eventData) {
+                if (this.paymentProfileId() == eventData.currentPaymentId) {
+                    this.paymentProfile(eventData.paymentProfile);
+                    this.paymentProfileId(eventData.paymentProfile.id + '');
+                }
             },
 
             initPayments: function (response) {

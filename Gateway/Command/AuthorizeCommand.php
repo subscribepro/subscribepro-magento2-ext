@@ -2,6 +2,7 @@
 
 namespace Swarming\SubscribePro\Gateway\Command;
 
+use Exception;
 use Magento\Payment\Gateway\CommandInterface;
 use Magento\Vault\Model\Ui\VaultConfigProvider;
 use Swarming\SubscribePro\Gateway\Request\PaymentDataBuilder;
@@ -19,7 +20,7 @@ class AuthorizeCommand extends AbstractProfileCreatorCommand implements CommandI
     protected function processTransaction(array $requestData)
     {
         if (empty($requestData[PaymentDataBuilder::PAYMENT_METHOD_TOKEN])) {
-            throw new \Exception('Payment token is not passed');
+            throw new Exception('Payment token is not passed');
         }
 
         $transaction = $this->platformTransactionService->createTransaction($requestData);

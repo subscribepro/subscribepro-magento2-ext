@@ -2,11 +2,30 @@
 
 namespace Swarming\SubscribePro\Model\Config;
 
+use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Store\Model\ScopeInterface;
 
 class Platform extends General
 {
+    /**
+     * @var \Magento\Framework\App\Filesystem\DirectoryList
+     */
+    protected $directoryList;
+
+    /**
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     * @param \Magento\Framework\App\Filesystem\DirectoryList $directoryList
+     */
+    public function __construct(
+        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
+        \Magento\Framework\App\Filesystem\DirectoryList $directoryList
+    ) {
+        $this->directoryList = $directoryList;
+        parent::__construct($scopeConfig);
+    }
+
+
     /**
      * @param string|null $websiteCode
      * @return string
@@ -50,6 +69,8 @@ class Platform extends General
      */
     public function getLogFilename($websiteCode = null)
     {
-        return $this->scopeConfig->getValue('swarming_subscribepro/platform/log_filename', ScopeInterface::SCOPE_WEBSITE, $websiteCode);
+        $fileName = $this->scopeConfig->getValue('swarming_subscribepro/platform/log_filename', ScopeInterface::SCOPE_WEBSITE, $websiteCode);
+        $varDir = $this->directoryList->getPath(DirectoryList::VAR_DIR);
+        return $varDir . DIRECTORY_SEPARATOR . ltrim($fileName, DIRECTORY_SEPARATOR);
     }
 }

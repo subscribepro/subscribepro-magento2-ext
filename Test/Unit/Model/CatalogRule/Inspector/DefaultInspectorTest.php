@@ -23,9 +23,21 @@ class DefaultInspectorTest extends AbstractInspector
         );
     }
 
+    public function testIsAppliedIfHasSpecialPrice() {
+        $price = 100;
+        $basePrice = 110;
+
+        $product = $this->prepareProductMockWithSpecialPrice($price, $basePrice);
+
+        $this->rulePricesStorage->expects($this->never())->method('getRulePrice');
+
+        $this->assertTrue($this->defaultInspector->isApplied($product));
+    }
+
     /**
      * @param bool $isApplied
      * @param int $rulePrice
+     * @param float $price
      * @param string $productId
      * @param bool $customerGroupId
      * @param string $sessionCustomerGroupId
@@ -37,6 +49,7 @@ class DefaultInspectorTest extends AbstractInspector
     public function testIsApplied(
         $isApplied,
         $rulePrice,
+        $price,
         $productId,
         $customerGroupId,
         $sessionCustomerGroupId,
@@ -48,7 +61,7 @@ class DefaultInspectorTest extends AbstractInspector
 
         $this->prepareStoreMock($storeId, $websiteId);
 
-        $product = $this->prepareProductMock($productId, $customerGroupId, $storeId);
+        $product = $this->prepareProductMock($price, $productId, $customerGroupId, $storeId);
 
         if (!$customerGroupId) {
             $this->prepareCustomerSession($sessionCustomerGroupId);
@@ -69,6 +82,7 @@ class DefaultInspectorTest extends AbstractInspector
             'applied' => [
                 'isApplied' => true,
                 'rulePrice' => '5.1',
+                'price' => 123,
                 'productId' => 12,
                 'customerGroupId' => 2,
                 'sessionCustomerGroupId' => 2,
@@ -79,6 +93,7 @@ class DefaultInspectorTest extends AbstractInspector
             'applied with customer group in session' => [
                 'isApplied' => true,
                 'rulePrice' => '5.1',
+                'price' => 323,
                 'productId' => 9,
                 'customerGroupId' => false,
                 'sessionCustomerGroupId' => 5,
@@ -89,6 +104,7 @@ class DefaultInspectorTest extends AbstractInspector
             'not applied' => [
                 'isApplied' => false,
                 'rulePrice' => false,
+                'price' => 222,
                 'productId' => 4,
                 'customerGroupId' => 3,
                 'sessionCustomerGroupId' => 3,
@@ -99,6 +115,7 @@ class DefaultInspectorTest extends AbstractInspector
             'not applied with 0. rule price' => [
                 'isApplied' => false,
                 'rulePrice' => '0.0',
+                'price' => 423,
                 'productId' => 14,
                 'customerGroupId' => 1,
                 'sessionCustomerGroupId' => 1,

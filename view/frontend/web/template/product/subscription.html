@@ -14,7 +14,7 @@
                 <label class="label" for="option_oneTimePurchase">
                     <!-- ko i18n: 'One Time Delivery' --><!-- /ko -->
                     <!-- ko text: ' - ' --><!-- /ko -->
-                    <!-- ko text: productPrice.formattedPrice --><!-- /ko -->
+                    <!-- ko template: oneTimePurchasePriceTemplate --><!-- /ko -->
                 </label>
             </div>
             <div class="field choice">
@@ -26,7 +26,7 @@
                 <label class="label" for="option_subscription">
                     <!-- ko i18n: 'Regular Delivery' --><!-- /ko -->
                     <!-- ko text: ' - ' --><!-- /ko -->
-                    <!-- ko i18n: productPrice.priceWithDiscountText --><!-- /ko -->
+                    <!-- ko template: subscriptionPriceTemplate --><!-- /ko -->
                 </label>
             </div>
         <!-- /ko -->

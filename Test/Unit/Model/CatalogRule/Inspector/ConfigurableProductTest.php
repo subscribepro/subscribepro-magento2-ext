@@ -4,7 +4,6 @@ namespace Swarming\SubscribePro\Test\Unit\Model\CatalogRule\Inspector;
 
 use Swarming\SubscribePro\Model\CatalogRule\Inspector\ConfigurableProduct;
 use Magento\Catalog\Model\Product\Configuration\Item\Option as ProductConfigurationOption;
-use Magento\Catalog\Model\Product;
 
 class ConfigurableProductTest extends AbstractInspector
 {
@@ -25,9 +24,46 @@ class ConfigurableProductTest extends AbstractInspector
         );
     }
 
+    public function testIsAppliedIfChildHasSpecialPrice() {
+        $price = 100;
+        $basePrice = 110;
+
+        $childProduct = $this->prepareProductMockWithSpecialPrice($price, $basePrice);
+
+        $option = $this->getMockBuilder(ProductConfigurationOption::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getProduct'])
+            ->getMock();
+        $option->expects($this->atLeastOnce())
+            ->method('getProduct')
+            ->willReturn($childProduct);
+
+        $product = $this->createProductMock();
+        $product->expects($this->atLeastOnce())
+            ->method('getCustomOption')
+            ->with('simple_product')
+            ->willReturn($option);
+
+        $this->rulePricesStorage->expects($this->never())->method('getRulePrice');
+
+        $this->assertTrue($this->configurableProduct->isApplied($product));
+    }
+
+    public function testIsAppliedIfHasSpecialPrice() {
+        $price = 100;
+        $basePrice = 110;
+
+        $product = $this->prepareProductMockWithSpecialPrice($price, $basePrice);
+
+        $this->rulePricesStorage->expects($this->never())->method('getRulePrice');
+
+        $this->assertTrue($this->configurableProduct->isApplied($product));
+    }
+
     /**
      * @param bool $isApplied
      * @param int $rulePrice
+     * @param float $price
      * @param string $productId
      * @param bool $customerGroupId
      * @param string $sessionCustomerGroupId
@@ -39,6 +75,7 @@ class ConfigurableProductTest extends AbstractInspector
     public function testIsApplied(
         $isApplied,
         $rulePrice,
+        $price,
         $productId,
         $customerGroupId,
         $sessionCustomerGroupId,
@@ -50,7 +87,7 @@ class ConfigurableProductTest extends AbstractInspector
 
         $this->prepareStoreMock($storeId, $websiteId);
 
-        $product = $this->prepareChildProductMock($productId, $customerGroupId, $storeId);
+        $product = $this->prepareChildProductMock($price, $productId, $customerGroupId, $storeId);
 
         if (!$customerGroupId) {
             $this->prepareCustomerSession($sessionCustomerGroupId);
@@ -63,14 +100,15 @@ class ConfigurableProductTest extends AbstractInspector
     }
 
     /**
+     * @param float $price
      * @param int $productId
      * @param int $customerGroupId
      * @param int $storeId
      * @return \Magento\Catalog\Model\Product|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected function prepareChildProductMock($productId, $customerGroupId, $storeId)
+    protected function prepareChildProductMock($price, $productId, $customerGroupId, $storeId)
     {
-        $childProduct = $this->prepareProductMock($productId, $customerGroupId, $storeId);
+        $childProduct = $this->prepareProductMock($price, $productId, $customerGroupId, $storeId);
 
         $option = $this->getMockBuilder(ProductConfigurationOption::class)
             ->disableOriginalConstructor()
@@ -80,10 +118,7 @@ class ConfigurableProductTest extends AbstractInspector
             ->method('getProduct')
             ->willReturn($childProduct);
 
-        $product = $this->getMockBuilder(Product::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['getId', 'getStoreId', 'hasCustomerGroupId', 'getCustomerGroupId', 'getCustomOption', '__wakeup'])
-            ->getMock();
+        $product = $this->createProductMock();
         $product->expects($this->atLeastOnce())
             ->method('getCustomOption')
             ->with('simple_product')
@@ -95,6 +130,7 @@ class ConfigurableProductTest extends AbstractInspector
     /**
      * @param bool $isApplied
      * @param int $rulePrice
+     * @param float $price
      * @param string $productId
      * @param bool $customerGroupId
      * @param string $sessionCustomerGroupId
@@ -106,6 +142,7 @@ class ConfigurableProductTest extends AbstractInspector
     public function testIsAppliedIfNoChildProduct(
         $isApplied,
         $rulePrice,
+        $price,
         $productId,
         $customerGroupId,
         $sessionCustomerGroupId,
@@ -117,7 +154,7 @@ class ConfigurableProductTest extends AbstractInspector
 
         $this->prepareStoreMock($storeId, $websiteId);
 
-        $product = $this->prepareProductMock($productId, $customerGroupId, $storeId);
+        $product = $this->prepareProductMock($price, $productId, $customerGroupId, $storeId);
         $product->expects($this->atLeastOnce())
             ->method('getCustomOption')
             ->with('simple_product')
@@ -142,6 +179,7 @@ class ConfigurableProductTest extends AbstractInspector
             'applied' => [
                 'isApplied' => true,
                 'rulePrice' => '3.1',
+                'price' => '50',
                 'productId' => 76,
                 'customerGroupId' => 1,
                 'sessionCustomerGroupId' => 1,
@@ -152,6 +190,7 @@ class ConfigurableProductTest extends AbstractInspector
             'not applied' => [
                 'isApplied' => false,
                 'rulePrice' => false,
+                'price' => '60',
                 'productId' => 43,
                 'customerGroupId' => 3,
                 'sessionCustomerGroupId' => 5,
@@ -162,6 +201,7 @@ class ConfigurableProductTest extends AbstractInspector
             'not applied with 0. rule price' => [
                 'isApplied' => false,
                 'rulePrice' => '0.0',
+                'price' => '70',
                 'productId' => 7,
                 'customerGroupId' => 2,
                 'sessionCustomerGroupId' => 2,

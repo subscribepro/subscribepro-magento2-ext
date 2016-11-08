@@ -130,7 +130,13 @@ class Subscription extends \Magento\Catalog\Block\Product\AbstractProduct
             ]
         ];
 
-        $this->jsLayout = array_merge_recursive($data, $this->jsLayout);
+        $jsLayout = array_merge_recursive($this->jsLayout, $data);
+        if ($this->isPriceHidden()) {
+            $jsLayout['components']['subscription-container']['component'] = 'Swarming_SubscribePro/js/view/product/subscription-msrp';
+            $jsLayout['components']['subscription-container']['config']['msrpPrice'] = $this->getMsrpPrice();
+        }
+
+        $this->jsLayout = $jsLayout;
     }
 
     /**
@@ -180,5 +186,31 @@ class Subscription extends \Magento\Catalog\Block\Product\AbstractProduct
         if ($subscriptionInterval) {
             $platformProduct->setDefaultInterval($subscriptionInterval);
         }
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isPriceHidden()
+    {
+        $product = $this->getProduct();
+
+        try {
+            /** @var \Magento\Msrp\Pricing\Price\MsrpPrice $msrpPriceType */
+            $msrpPriceType = $product->getPriceInfo()->getPrice('msrp_price');
+        } catch (\InvalidArgumentException $e) {
+            return false;
+        }
+
+        return $msrpPriceType->canApplyMsrp($product) && $msrpPriceType->isMinimalPriceLessMsrp($product);
+    }
+
+    /**
+     * @return float
+     */
+    protected function getMsrpPrice()
+    {
+        $msrp = $this->getProduct()->getMsrp();
+        return $msrp ? $this->priceCurrency->convertAndRound($msrp) : 0;
     }
 }

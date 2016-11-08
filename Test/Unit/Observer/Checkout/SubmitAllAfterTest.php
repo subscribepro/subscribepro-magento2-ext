@@ -89,6 +89,8 @@ class SubmitAllAfterTest extends \PHPUnit_Framework_TestCase
         $quoteMock->expects($this->once())
             ->method('getStore')
             ->willReturn($storeMock);
+        $quoteMock->expects($this->never())
+            ->method('getCustomerId');
 
         $observerMock = $this->createObserverMock();
         $observerMock->expects($this->at(0))
@@ -141,6 +143,61 @@ class SubmitAllAfterTest extends \PHPUnit_Framework_TestCase
         $quoteMock->expects($this->once())
             ->method('getStore')
             ->willReturn($storeMock);
+        $quoteMock->expects($this->never())
+            ->method('getCustomerId');
+
+        $observerMock = $this->createObserverMock();
+        $observerMock->expects($this->exactly(2))
+            ->method('getData')
+            ->willReturnMap([
+                ['quote', null, $quoteMock],
+                ['order', null, $orderMock]
+            ]);
+
+        $this->generalConfigMock->expects($this->once())
+            ->method('isEnabled')
+            ->with($websiteCode)
+            ->willReturn(true);
+
+        $this->subscriptionCreatorMock->expects($this->never())
+            ->method('createSubscriptions');
+        $this->checkoutSessionMock->expects($this->never())
+            ->method('setData');
+
+        $this->checkoutSubmitAllAfter->execute($observerMock);
+    }
+
+    public function testExecuteIfCustomerIdIsEmpty()
+    {
+        $websiteCode = 'some_website_code';
+
+        $paymentMock = $this->createPaymentMock();
+        $paymentMock->expects($this->once())
+            ->method('getMethod')
+            ->willReturn(ConfigProvider::CODE);
+
+        $orderMock = $this->createOrderMock();
+        $orderMock->expects($this->once())
+            ->method('getPayment')
+            ->willReturn($paymentMock);
+
+        $websiteMock = $this->createWebsiteMock();
+        $websiteMock->expects($this->once())
+            ->method('getCode')
+            ->willReturn($websiteCode);
+
+        $storeMock = $this->createStoreMock();
+        $storeMock->expects($this->once())
+            ->method('getWebsite')
+            ->willReturn($websiteMock);
+
+        $quoteMock = $this->createQuoteMock();
+        $quoteMock->expects($this->once())
+            ->method('getStore')
+            ->willReturn($storeMock);
+        $quoteMock->expects($this->once())
+            ->method('getCustomerId')
+            ->willReturn(null);
 
         $observerMock = $this->createObserverMock();
         $observerMock->expects($this->exactly(2))
@@ -168,6 +225,7 @@ class SubmitAllAfterTest extends \PHPUnit_Framework_TestCase
         $exception = new \Exception('error');
 
         $websiteCode = 'website_code';
+        $customerId = 123;
 
         $websiteMock = $this->createWebsiteMock();
         $websiteMock->expects($this->once())
@@ -183,6 +241,9 @@ class SubmitAllAfterTest extends \PHPUnit_Framework_TestCase
         $quoteMock->expects($this->once())
             ->method('getStore')
             ->willReturn($storeMock);
+        $quoteMock->expects($this->once())
+            ->method('getCustomerId')
+            ->willReturn($customerId);
 
         $paymentMock = $this->createPaymentMock();
         $paymentMock->expects($this->once())
@@ -224,6 +285,7 @@ class SubmitAllAfterTest extends \PHPUnit_Framework_TestCase
     public function testExecute()
     {
         $websiteCode = 'website_code';
+        $customerId = 321;
         $createdSubscriptionIds = [11, 12, 13];
         $failedSubscriptionsCount = 2;
 
@@ -241,6 +303,9 @@ class SubmitAllAfterTest extends \PHPUnit_Framework_TestCase
         $quoteMock->expects($this->once())
             ->method('getStore')
             ->willReturn($storeMock);
+        $quoteMock->expects($this->once())
+            ->method('getCustomerId')
+            ->willReturn($customerId);
 
         $paymentMock = $this->createPaymentMock();
         $paymentMock->expects($this->once())
@@ -331,6 +396,9 @@ class SubmitAllAfterTest extends \PHPUnit_Framework_TestCase
      */
     private function createQuoteMock()
     {
-        return $this->getMockBuilder(Quote::class)->disableOriginalConstructor()->getMock();
+        return $this->getMockBuilder(Quote::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getStore', 'getCustomerId', '__wakeup'])
+            ->getMock();
     }
 }

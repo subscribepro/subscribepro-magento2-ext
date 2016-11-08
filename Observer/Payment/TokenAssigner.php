@@ -6,6 +6,7 @@ use Magento\Framework\Event\Observer;
 use Magento\Quote\Api\Data\PaymentInterface;
 use Magento\Vault\Api\Data\PaymentTokenInterface;
 use Magento\Vault\Model\Method\Vault;
+use SubscribePro\Service\Transaction\TransactionInterface;
 use Swarming\SubscribePro\Gateway\Request\VaultDataBuilder;
 use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
 use Magento\Quote\Model\Quote\Payment as QuotePayment;
@@ -66,5 +67,9 @@ class TokenAssigner extends \Magento\Payment\Observer\AbstractDataAssignObserver
                 PaymentTokenInterface::PUBLIC_HASH => $paymentToken->getPublicHash()
             ]
         );
+
+        if (!empty($additionalData[TransactionInterface::UNIQUE_ID])) {
+            $paymentModel->setAdditionalInformation(TransactionInterface::UNIQUE_ID, $additionalData[TransactionInterface::UNIQUE_ID]);
+        }
     }
 }

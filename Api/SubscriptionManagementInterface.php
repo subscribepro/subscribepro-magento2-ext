@@ -50,11 +50,12 @@ interface SubscriptionManagementInterface
      * @param int $customerId
      * @param int $subscriptionId
      * @param int $paymentProfileId
+     * @param bool $isApplyToOther
      * @return \SubscribePro\Service\PaymentProfile\PaymentProfileInterface
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\AuthorizationException
      */
-    public function updatePaymentProfile($customerId, $subscriptionId, $paymentProfileId);
+    public function updatePaymentProfile($customerId, $subscriptionId, $paymentProfileId, $isApplyToOther = false);
 
     /**
      * @param int $customerId

@@ -13,6 +13,7 @@ class PurchaseCommand extends AbstractProfileCreatorCommand implements CommandIn
      * @param array $requestData
      * @return \SubscribePro\Service\Transaction\TransactionInterface
      * @throws Exception
+     * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \SubscribePro\Exception\EntityInvalidDataException
      * @throws \SubscribePro\Exception\HttpException
      */
@@ -22,12 +23,11 @@ class PurchaseCommand extends AbstractProfileCreatorCommand implements CommandIn
             throw new Exception('Payment token is not passed');
         }
 
+        $transaction = $this->platformTransactionService->createTransaction($requestData);
         if (!empty($requestData[VaultConfigProvider::IS_ACTIVE_CODE]) && $requestData[VaultConfigProvider::IS_ACTIVE_CODE]) {
             $profile = $this->createProfile($requestData);
-            $transaction = $this->platformTransactionService->createTransaction($requestData);
             $this->platformTransactionService->purchaseByProfile($profile->getId(), $transaction);
         } else {
-            $transaction = $this->platformTransactionService->createTransaction($requestData);
             $this->platformTransactionService->purchaseByToken($requestData[PaymentDataBuilder::PAYMENT_METHOD_TOKEN], $transaction);
         }
 

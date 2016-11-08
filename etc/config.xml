@@ -9,7 +9,7 @@
                 <base_url>https://api.subscribepro.com</base_url>
                 <client_secret backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
                 <log_enabled>0</log_enabled>
-                <log_filename>var/log/subscribepro/log.log</log_filename>
+                <log_filename>log/subscribepro/log.log</log_filename>
             </platform>
             <subscription_options>
                 <allow_coupon>0</allow_coupon>
