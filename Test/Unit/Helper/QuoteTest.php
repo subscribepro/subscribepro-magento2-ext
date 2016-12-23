@@ -113,7 +113,10 @@ class QuoteTest extends \PHPUnit_Framework_TestCase
      */
     private function createQuoteItemMock()
     {
-        return $this->getMockBuilder(QuoteItem::class)->disableOriginalConstructor()->getMock();
+        return $this->getMockBuilder(QuoteItem::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['__clone', '__wakeUp'])
+            ->getMock();
     }
 
     /**

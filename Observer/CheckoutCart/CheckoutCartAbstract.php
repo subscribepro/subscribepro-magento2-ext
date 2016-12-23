@@ -27,6 +27,11 @@ abstract class CheckoutCartAbstract implements ObserverInterface
     protected $subscriptionOptionUpdater;
 
     /**
+     * @var \Magento\Catalog\Api\ProductRepositoryInterface
+     */
+    protected $productRepository;
+
+    /**
      * @var \Swarming\SubscribePro\Helper\Product
      */
     protected $productHelper;
@@ -50,6 +55,7 @@ abstract class CheckoutCartAbstract implements ObserverInterface
      * @param \Swarming\SubscribePro\Model\Config\General $generalConfig
      * @param \Swarming\SubscribePro\Platform\Manager\Product $platformProductManager
      * @param \Swarming\SubscribePro\Model\Quote\SubscriptionOption\Updater $subscriptionOptionUpdater
+     * @param \Magento\Catalog\Api\ProductRepositoryInterface $productRepository
      * @param \Swarming\SubscribePro\Helper\Product $productHelper
      * @param \Magento\Framework\Message\ManagerInterface $messageManager
      * @param \Magento\Framework\App\State $appState
@@ -59,6 +65,7 @@ abstract class CheckoutCartAbstract implements ObserverInterface
         \Swarming\SubscribePro\Model\Config\General $generalConfig,
         \Swarming\SubscribePro\Platform\Manager\Product $platformProductManager,
         \Swarming\SubscribePro\Model\Quote\SubscriptionOption\Updater $subscriptionOptionUpdater,
+        \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
         \Swarming\SubscribePro\Helper\Product $productHelper,
         \Magento\Framework\Message\ManagerInterface $messageManager,
         \Magento\Framework\App\State $appState,
@@ -67,6 +74,7 @@ abstract class CheckoutCartAbstract implements ObserverInterface
         $this->generalConfig = $generalConfig;
         $this->platformProductManager = $platformProductManager;
         $this->subscriptionOptionUpdater = $subscriptionOptionUpdater;
+        $this->productRepository = $productRepository;
         $this->productHelper = $productHelper;
         $this->messageManager = $messageManager;
         $this->appState = $appState;
@@ -80,11 +88,11 @@ abstract class CheckoutCartAbstract implements ObserverInterface
     protected function updateQuoteItem(QuoteItem $quoteItem, array $quoteItemParams)
     {
         $product = $quoteItem->getProduct();
-        if (!$this->productHelper->isSubscriptionEnabled($product)) {
-            return;
+        if ($quoteItem->getParentItem() && $quoteItem->getParentItem()->getProduct()) {
+            $product = $quoteItem->getParentItem()->getProduct();
         }
 
-        if ($product->getParentItemId()) {
+        if (!$this->productHelper->isSubscriptionEnabled($product)) {
             return;
         }
 

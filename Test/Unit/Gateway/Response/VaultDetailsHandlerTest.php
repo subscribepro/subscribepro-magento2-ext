@@ -53,7 +53,7 @@ class VaultDetailsHandlerTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()->getMock();
         $this->paymentTokenFactoryMock = $this->getMockBuilder(PaymentTokenInterfaceFactory::class)
             ->disableOriginalConstructor()
-            ->setMethods(['create'])->getMock();
+            ->setMethods(['create', 'getType'])->getMock();
         $this->paymentExtensionFactoryMock = $this->getMockBuilder(OrderPaymentExtensionInterfaceFactory::class)
             ->disableOriginalConstructor()
             ->setMethods(['create'])->getMock();

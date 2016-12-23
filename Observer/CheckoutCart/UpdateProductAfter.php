@@ -17,6 +17,7 @@ class UpdateProductAfter extends CheckoutCartAbstract implements ObserverInterfa
      * @param \Swarming\SubscribePro\Model\Config\General $generalConfig
      * @param \Swarming\SubscribePro\Platform\Manager\Product $platformProductManager
      * @param \Swarming\SubscribePro\Model\Quote\SubscriptionOption\Updater $subscriptionOptionUpdater
+     * @param \Magento\Catalog\Api\ProductRepositoryInterface $productRepository
      * @param \Swarming\SubscribePro\Helper\Product $productHelper
      * @param \Magento\Framework\Message\ManagerInterface $messageManager
      * @param \Magento\Framework\App\State $appState
@@ -27,6 +28,7 @@ class UpdateProductAfter extends CheckoutCartAbstract implements ObserverInterfa
         \Swarming\SubscribePro\Model\Config\General $generalConfig,
         \Swarming\SubscribePro\Platform\Manager\Product $platformProductManager,
         \Swarming\SubscribePro\Model\Quote\SubscriptionOption\Updater $subscriptionOptionUpdater,
+        \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
         \Swarming\SubscribePro\Helper\Product $productHelper,
         \Magento\Framework\Message\ManagerInterface $messageManager,
         \Magento\Framework\App\State $appState,
@@ -38,6 +40,7 @@ class UpdateProductAfter extends CheckoutCartAbstract implements ObserverInterfa
             $generalConfig,
             $platformProductManager,
             $subscriptionOptionUpdater,
+            $productRepository,
             $productHelper,
             $messageManager,
             $appState,
