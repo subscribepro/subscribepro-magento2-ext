@@ -17,6 +17,7 @@ use Swarming\SubscribePro\Model\Quote\SubscriptionOption\OptionProcessor;
 use Swarming\SubscribePro\Model\Quote\SubscriptionOption\Updater as SubscriptionOptionUpdater;
 use Swarming\SubscribePro\Observer\CheckoutCart\UpdateProductAfter;
 use Swarming\SubscribePro\Platform\Manager\Product as ProductManager;
+use Magento\Catalog\Api\ProductRepositoryInterface;
 use Swarming\SubscribePro\Helper\Product as ProductHelper;
 use Swarming\SubscribePro\Helper\QuoteItem as QuoteItemHelper;
 use Magento\Quote\Model\Quote\Item as QuoteItem;
@@ -42,6 +43,11 @@ class UpdateProductAfterTest extends \PHPUnit_Framework_TestCase
      * @var \PHPUnit_Framework_MockObject_MockObject|\Swarming\SubscribePro\Platform\Manager\Product
      */
     protected $platformProductManagerMock;
+
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Catalog\Api\ProductRepositoryInterface
+     */
+    protected $productRepositoryMock;
 
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject|\Swarming\SubscribePro\Helper\Product
@@ -76,6 +82,8 @@ class UpdateProductAfterTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()->getMock();
         $this->platformProductManagerMock = $this->getMockBuilder(ProductManager::class)
             ->disableOriginalConstructor()->getMock();
+        $this->productRepositoryMock = $this->getMockBuilder(ProductRepositoryInterface::class)
+            ->getMock();
         $this->productHelperMock = $this->getMockBuilder(ProductHelper::class)
             ->disableOriginalConstructor()->getMock();
         $this->appStateMock = $this->getMockBuilder(State::class)
@@ -88,6 +96,7 @@ class UpdateProductAfterTest extends \PHPUnit_Framework_TestCase
             $this->generalConfigMock,
             $this->platformProductManagerMock,
             $this->subscriptionOptionUpdaterMock,
+            $this->productRepositoryMock,
             $this->productHelperMock,
             $this->messageManagerMock,
             $this->appStateMock,
@@ -148,14 +157,34 @@ class UpdateProductAfterTest extends \PHPUnit_Framework_TestCase
 
     public function testExecuteIfProductHasParent()
     {
+        $productParentSku = 'product-sku';
+        $subscriptionOption = 'some_option';
+        $subscriptionInterval = 'interval';
+        $subscriptionParams = [
+            SubscriptionOptionInterface::OPTION => $subscriptionOption,
+            SubscriptionOptionInterface::INTERVAL => $subscriptionInterval
+        ];
+
+        $platformProductMock = $this->getMockBuilder(ProductInterface::class)->getMock();
+
+        $productParentMock = $this->createProductMock();
+        $productParentMock->expects($this->once())
+            ->method('getData')
+            ->with(ProductInterface::SKU)
+            ->willReturn($productParentSku);
+
         $productMock = $this->createProductMock();
-        $productMock->expects($this->once())->method('getParentItemId')->willReturn(true);
-        $subscriptionParams = ['params'];
+
+        $quoteItemParentMock = $this->createQuoteItemMock();
+        $quoteItemParentMock->expects($this->atLeastOnce())
+            ->method('getProduct')
+            ->willReturn($productParentMock);
 
         $quoteItemMock = $this->createQuoteItemMock();
         $quoteItemMock->expects($this->once())
             ->method('getProduct')
             ->willReturn($productMock);
+        $quoteItemMock->expects($this->atLeastOnce())->method('getParentItem')->willReturn($quoteItemParentMock);
 
         $observerMock = $this->createObserverMock();
         $observerMock->expects($this->once())
@@ -169,7 +198,7 @@ class UpdateProductAfterTest extends \PHPUnit_Framework_TestCase
 
         $this->productHelperMock->expects($this->once())
             ->method('isSubscriptionEnabled')
-            ->with($productMock)
+            ->with($productParentMock)
             ->willReturn(true);
 
         $this->requestMock->expects($this->once())
@@ -177,8 +206,15 @@ class UpdateProductAfterTest extends \PHPUnit_Framework_TestCase
             ->with(OptionProcessor::KEY_SUBSCRIPTION_OPTION)
             ->willReturn($subscriptionParams);
 
-        $this->platformProductManagerMock->expects($this->never())->method('getProduct');
-        $this->subscriptionOptionUpdaterMock->expects($this->never())->method('update');
+        $this->platformProductManagerMock->expects($this->once())
+            ->method('getProduct')
+            ->with($productParentSku)
+            ->willReturn($platformProductMock);
+
+        $this->subscriptionOptionUpdaterMock->expects($this->once())
+            ->method('update')
+            ->with($quoteItemMock, $platformProductMock, $subscriptionOption, $subscriptionInterval)
+            ->willReturn([]);
 
         $this->updateProductAfter->execute($observerMock);
     }
@@ -198,12 +234,12 @@ class UpdateProductAfterTest extends \PHPUnit_Framework_TestCase
             ->method('getData')
             ->with(ProductInterface::SKU)
             ->willReturn($sku);
-        $productMock->expects($this->once())->method('getParentItemId')->willReturn(false);
-        
+
         $quoteItemMock = $this->createQuoteItemMock();
         $quoteItemMock->expects($this->once())
             ->method('getProduct')
             ->willReturn($productMock);
+        $quoteItemMock->expects($this->once())->method('getParentItem')->willReturn(null);
 
         $observerMock = $this->createObserverMock();
         $observerMock->expects($this->once())
@@ -254,12 +290,12 @@ class UpdateProductAfterTest extends \PHPUnit_Framework_TestCase
             ->method('getData')
             ->with(ProductInterface::SKU)
             ->willReturn($sku);
-        $productMock->expects($this->once())->method('getParentItemId')->willReturn(false);
-        
+
         $quoteItemMock = $this->createQuoteItemMock();
         $quoteItemMock->expects($this->once())
             ->method('getProduct')
             ->willReturn($productMock);
+        $quoteItemMock->expects($this->once())->method('getParentItem')->willReturn(null);
 
         $observerMock = $this->createObserverMock();
         $observerMock->expects($this->once())
@@ -339,12 +375,12 @@ class UpdateProductAfterTest extends \PHPUnit_Framework_TestCase
             ->method('getData')
             ->with(ProductInterface::SKU)
             ->willReturn($sku);
-        $productMock->expects($this->once())->method('getParentItemId')->willReturn(false);
-        
+
         $quoteItemMock = $this->createQuoteItemMock();
         $quoteItemMock->expects($this->once())
             ->method('getProduct')
             ->willReturn($productMock);
+        $quoteItemMock->expects($this->once())->method('getParentItem')->willReturn(null);
 
         $observerMock = $this->createObserverMock();
         $observerMock->expects($this->once())

@@ -28,7 +28,7 @@ class CartUpdateItemsAfter extends CheckoutCartAbstract implements ObserverInter
         /** @var \Magento\Framework\DataObject $infoDataObject */
         $infoDataObject = $observer->getData('info');
 
-        foreach ($quote->getAllVisibleItems() as $quoteItem) {
+        foreach ($quote->getAllItems() as $quoteItem) {
             $subscriptionParams = $this->getSubscriptionParams($quoteItem, $infoDataObject);
             try {
                 $this->updateQuoteItem($quoteItem, $subscriptionParams);
@@ -46,7 +46,8 @@ class CartUpdateItemsAfter extends CheckoutCartAbstract implements ObserverInter
      */
     protected function getSubscriptionParams(QuoteItem $quoteItem, $infoDataObject)
     {
-        $quoteItemParams = $infoDataObject->getData($quoteItem->getItemId());
+        $quoteItemId = $quoteItem->getParentItemId() ?: $quoteItem->getItemId();
+        $quoteItemParams = $infoDataObject->getData($quoteItemId);
 
         return isset($quoteItemParams[SubscriptionOptionProcessor::KEY_SUBSCRIPTION_OPTION])
             ? $quoteItemParams[SubscriptionOptionProcessor::KEY_SUBSCRIPTION_OPTION]
