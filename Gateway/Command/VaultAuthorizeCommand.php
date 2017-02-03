@@ -18,11 +18,17 @@ class VaultAuthorizeCommand extends AbstractCommand implements CommandInterface
     protected function processTransaction(array $requestData)
     {
         if (empty($requestData[VaultDataBuilder::PAYMENT_PROFILE_ID])) {
-            throw new Exception('Payment profile is not passed');
+            throw new Exception('Payment profile was not passed');
+        }
+
+        $authorizeData = [];
+        $authorizeData[VaultDataBuilder::PAYMENT_PROFILE_ID] = $requestData[VaultDataBuilder::PAYMENT_PROFILE_ID];
+        if (isset($requestData[VaultDataBuilder::ORDER_TOKEN])) {
+            $authorizeData[VaultDataBuilder::ORDER_TOKEN] = $requestData[VaultDataBuilder::ORDER_TOKEN];
         }
 
         $transaction = $this->platformTransactionService->createTransaction($requestData);
-        $this->platformTransactionService->authorizeByProfile($requestData[VaultDataBuilder::PAYMENT_PROFILE_ID], $transaction);
+        $this->platformTransactionService->authorizeByProfile($authorizeData, $transaction);
 
         return $transaction;
     }
