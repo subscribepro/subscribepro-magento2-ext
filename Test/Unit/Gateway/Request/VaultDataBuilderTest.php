@@ -76,8 +76,9 @@ class VaultDataBuilderTest extends \PHPUnit_Framework_TestCase
     public function testBuild() {
         $profileId = 'token';
         $uniqueId = 'unique_id';
+        $orderToken = 'orderToken1234';
         $subject = ['subject'];
-        $result = [VaultDataBuilder::PAYMENT_PROFILE_ID => $profileId, TransactionInterface::UNIQUE_ID => $uniqueId];
+        $result = [VaultDataBuilder::PAYMENT_PROFILE_ID => $profileId, TransactionInterface::UNIQUE_ID => $uniqueId, TransactionInterface::SUBSCRIBE_PRO_ORDER_TOKEN => $orderToken];
 
         $paymentTokenMock = $this->getMockBuilder(PaymentTokenInterface::class)->getMock();
         $paymentTokenMock->expects($this->once())
@@ -97,10 +98,15 @@ class VaultDataBuilderTest extends \PHPUnit_Framework_TestCase
         $paymentInfoMock->expects($this->once())
             ->method('getExtensionAttributes')
             ->willReturn($extensionAttributes);
-        $paymentInfoMock->expects($this->atLeastOnce())
+        $paymentInfoMock->expects($this->exactly(4))
             ->method('getAdditionalInformation')
-            ->with(TransactionInterface::UNIQUE_ID)
-            ->willReturn($uniqueId);
+            ->withConsecutive(
+                [TransactionInterface::UNIQUE_ID],
+                [TransactionInterface::UNIQUE_ID],
+                [TransactionInterface::SUBSCRIBE_PRO_ORDER_TOKEN],
+                [TransactionInterface::SUBSCRIBE_PRO_ORDER_TOKEN]
+            )
+            ->willReturnOnConsecutiveCalls($uniqueId, $uniqueId, $orderToken, $orderToken);
 
         $paymentDOMock = $this->getMockBuilder(PaymentDataObjectInterface::class)->getMock();
         $paymentDOMock->expects($this->once())->method('getPayment')->willReturn($paymentInfoMock);
@@ -115,8 +121,9 @@ class VaultDataBuilderTest extends \PHPUnit_Framework_TestCase
 
     public function testBuildWithoutUniqueId() {
         $profileId = 'token';
+        $orderToken = 'orderToken4567';
         $subject = ['subject'];
-        $result = [VaultDataBuilder::PAYMENT_PROFILE_ID => $profileId];
+        $result = [VaultDataBuilder::PAYMENT_PROFILE_ID => $profileId, TransactionInterface::SUBSCRIBE_PRO_ORDER_TOKEN => $orderToken];
 
         $paymentTokenMock = $this->getMockBuilder(PaymentTokenInterface::class)->getMock();
         $paymentTokenMock->expects($this->once())
@@ -136,10 +143,14 @@ class VaultDataBuilderTest extends \PHPUnit_Framework_TestCase
         $paymentInfoMock->expects($this->once())
             ->method('getExtensionAttributes')
             ->willReturn($extensionAttributes);
-        $paymentInfoMock->expects($this->once())
+        $paymentInfoMock->expects($this->exactly(3))
             ->method('getAdditionalInformation')
-            ->with(TransactionInterface::UNIQUE_ID)
-            ->willReturn(false);
+            ->withConsecutive(
+                [TransactionInterface::UNIQUE_ID],
+                [TransactionInterface::SUBSCRIBE_PRO_ORDER_TOKEN],
+                [TransactionInterface::SUBSCRIBE_PRO_ORDER_TOKEN]
+            )
+            ->willReturnOnConsecutiveCalls(false, $orderToken, $orderToken);
 
         $paymentDOMock = $this->getMockBuilder(PaymentDataObjectInterface::class)->getMock();
         $paymentDOMock->expects($this->once())->method('getPayment')->willReturn($paymentInfoMock);
