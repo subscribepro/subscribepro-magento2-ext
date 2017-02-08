@@ -3,7 +3,6 @@
   "description": "Subscribe Pro Magento 2 Integration Extension",
   "type": "magento2-module",
   "license": [ "MIT" ],
-  "minimum-stability": "dev",
   "authors": [
     {
       "name": "Swarming Technology",
