@@ -28,7 +28,7 @@ class PurchaseCommand extends AbstractProfileCreatorCommand implements CommandIn
         if (!empty($requestData[VaultConfigProvider::IS_ACTIVE_CODE]) && $requestData[VaultConfigProvider::IS_ACTIVE_CODE]) {
             $profile = $this->createProfile($requestData);
             $this->platformTransactionService->purchaseByProfile([
-                VaultDataBuilder::ORDER_TOKEN => $profile->getId()
+                VaultDataBuilder::PAYMENT_PROFILE_ID => $profile->getId()
             ], $transaction);
         } else {
             $this->platformTransactionService->purchaseByToken($requestData[PaymentDataBuilder::PAYMENT_METHOD_TOKEN], $transaction);

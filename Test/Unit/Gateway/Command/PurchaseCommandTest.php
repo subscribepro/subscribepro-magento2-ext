@@ -85,7 +85,7 @@ class PurchaseCommandTest extends AbstractProfileCreatorCommand
         $transactionMock = $this->createTransactionMock();
         $profileId = 123;
         $authorizeData = [
-            VaultDataBuilder::ORDER_TOKEN => $profileId
+            VaultDataBuilder::PAYMENT_PROFILE_ID => $profileId
         ];
         $profileMock = $this->createPaymentProfile($requestData);
         $profileMock->expects($this->once())->method('getId')->willReturn($profileId);
