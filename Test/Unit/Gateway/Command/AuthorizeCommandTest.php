@@ -5,6 +5,7 @@ namespace Swarming\SubscribePro\Test\Unit\Gateway\Command;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Vault\Model\Ui\VaultConfigProvider;
 use SubscribePro\Service\PaymentProfile\PaymentProfileInterface;
+use Swarming\SubscribePro\Gateway\Request\VaultDataBuilder;
 use Swarming\SubscribePro\Gateway\Command\AuthorizeCommand;
 use Swarming\SubscribePro\Gateway\Request\PaymentDataBuilder;
 
@@ -83,6 +84,9 @@ class AuthorizeCommandTest extends AbstractProfileCreatorCommand
         ];
         $transactionMock = $this->createTransactionMock();
         $profileId = 123;
+        $authorizeData = [
+            VaultDataBuilder::ORDER_TOKEN => $profileId
+        ];
         $profileMock = $this->createPaymentProfile($requestData);
         $profileMock->expects($this->once())->method('getId')->willReturn($profileId);
         
@@ -93,7 +97,7 @@ class AuthorizeCommandTest extends AbstractProfileCreatorCommand
 
         $this->platformTransactionServiceMock->expects($this->once())
             ->method('authorizeByProfile')
-            ->with($profileId, $transactionMock);
+            ->with($authorizeData, $transactionMock);
 
         $this->executeCommand($requestData, $transactionMock);
         $this->authorizeCommand->execute($this->commandSubject);
