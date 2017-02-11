@@ -6,6 +6,7 @@ use Exception;
 use Magento\Payment\Gateway\CommandInterface;
 use Magento\Vault\Model\Ui\VaultConfigProvider;
 use Swarming\SubscribePro\Gateway\Request\PaymentDataBuilder;
+use Swarming\SubscribePro\Gateway\Request\VaultDataBuilder;
 
 class PurchaseCommand extends AbstractProfileCreatorCommand implements CommandInterface
 {
@@ -26,7 +27,9 @@ class PurchaseCommand extends AbstractProfileCreatorCommand implements CommandIn
         $transaction = $this->platformTransactionService->createTransaction($requestData);
         if (!empty($requestData[VaultConfigProvider::IS_ACTIVE_CODE]) && $requestData[VaultConfigProvider::IS_ACTIVE_CODE]) {
             $profile = $this->createProfile($requestData);
-            $this->platformTransactionService->purchaseByProfile($profile->getId(), $transaction);
+            $this->platformTransactionService->purchaseByProfile([
+                VaultDataBuilder::PAYMENT_PROFILE_ID => $profile->getId()
+            ], $transaction);
         } else {
             $this->platformTransactionService->purchaseByToken($requestData[PaymentDataBuilder::PAYMENT_METHOD_TOKEN], $transaction);
         }

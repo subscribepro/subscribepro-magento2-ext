@@ -9,6 +9,7 @@ use SubscribePro\Service\Transaction\TransactionInterface;
 class VaultDataBuilder implements BuilderInterface
 {
     const PAYMENT_PROFILE_ID = 'profile_id';
+    const ORDER_TOKEN = 'subscribe_pro_order_token';
 
     /**
      * @var \Swarming\SubscribePro\Gateway\Helper\SubjectReader
@@ -46,8 +47,13 @@ class VaultDataBuilder implements BuilderInterface
         $paymentToken = $extensionAttributes->getVaultPaymentToken();
 
         $result = [self::PAYMENT_PROFILE_ID => $paymentToken->getGatewayToken()];
+
         if ($payment->getAdditionalInformation(TransactionInterface::UNIQUE_ID)) {
             $result[TransactionInterface::UNIQUE_ID] = $payment->getAdditionalInformation(TransactionInterface::UNIQUE_ID);
+        }
+
+        if ($payment->getAdditionalInformation(TransactionInterface::SUBSCRIBE_PRO_ORDER_TOKEN)) {
+            $result[TransactionInterface::SUBSCRIBE_PRO_ORDER_TOKEN] = $payment->getAdditionalInformation(TransactionInterface::SUBSCRIBE_PRO_ORDER_TOKEN);
         }
 
         return $result;

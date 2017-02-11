@@ -18,11 +18,17 @@ class VaultPurchaseCommand extends AbstractCommand implements CommandInterface
     protected function processTransaction(array $requestData)
     {
         if (empty($requestData[VaultDataBuilder::PAYMENT_PROFILE_ID])) {
-            throw new Exception('Payment profile is not passed');
+            throw new Exception('Payment profile was not passed');
+        }
+
+        $purchaseData = [];
+        $purchaseData[VaultDataBuilder::PAYMENT_PROFILE_ID] = $requestData[VaultDataBuilder::PAYMENT_PROFILE_ID];
+        if (isset($requestData[VaultDataBuilder::ORDER_TOKEN])) {
+            $purchaseData[VaultDataBuilder::ORDER_TOKEN] = $requestData[VaultDataBuilder::ORDER_TOKEN];
         }
 
         $transaction = $this->platformTransactionService->createTransaction($requestData);
-        $this->platformTransactionService->purchaseByProfile($requestData[VaultDataBuilder::PAYMENT_PROFILE_ID], $transaction);
+        $this->platformTransactionService->purchaseByProfile($purchaseData, $transaction);
 
         return $transaction;
     }
