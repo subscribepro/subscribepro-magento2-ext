@@ -48,6 +48,8 @@ class VaultDataBuilder implements BuilderInterface
 
         $result = [self::PAYMENT_PROFILE_ID => $paymentToken->getGatewayToken()];
 
+        $payment->setAdditionalInformation('public_hash', 'yay');
+
         if ($payment->getAdditionalInformation(TransactionInterface::UNIQUE_ID)) {
             $result[TransactionInterface::UNIQUE_ID] = $payment->getAdditionalInformation(TransactionInterface::UNIQUE_ID);
         }
