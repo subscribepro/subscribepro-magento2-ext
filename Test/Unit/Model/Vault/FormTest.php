@@ -5,7 +5,7 @@ namespace Swarming\SubscribePro\Test\Unit\Model\Vault;
 use Magento\Vault\Api\PaymentTokenManagementInterface;
 use Magento\Vault\Api\PaymentTokenRepositoryInterface;
 use Magento\Vault\Model\PaymentToken;
-use \Magento\Vault\Model\CreditCardTokenFactory;
+use Magento\Vault\Model\CreditCardTokenFactory;
 use SubscribePro\Service\PaymentProfile\PaymentProfileInterface;
 use Swarming\SubscribePro\Model\Vault\Form;
 use Swarming\SubscribePro\Helper\Vault as VaultHelper;

@@ -7,7 +7,7 @@ use Magento\Sales\Api\Data\OrderPaymentExtensionInterface;
 use Magento\Sales\Api\Data\OrderPaymentExtensionInterfaceFactory;
 use Magento\Sales\Model\Order\Payment;
 use Magento\Vault\Api\Data\PaymentTokenInterface;
-use \Magento\Vault\Model\CreditCardTokenFactory;
+use Magento\Vault\Model\CreditCardTokenFactory;
 use Magento\Vault\Model\Ui\VaultConfigProvider;
 use SubscribePro\Service\Transaction\TransactionInterface;
 use Swarming\SubscribePro\Gateway\Helper\SubjectReader;

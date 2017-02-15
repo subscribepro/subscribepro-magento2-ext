@@ -12,7 +12,7 @@ use SubscribePro\Service\Webhook\EventInterface;
 use Swarming\SubscribePro\Platform\Webhook\Handler\PaymentProfile\CreateHandler;
 use Swarming\SubscribePro\Platform\Service\PaymentProfile as PaymentProfileService;
 use Swarming\SubscribePro\Helper\Vault as VaultHelper;
-use \Magento\Vault\Model\CreditCardTokenFactory;
+use Magento\Vault\Model\CreditCardTokenFactory;
 use SubscribePro\Service\Customer\CustomerInterface as PlatformCustomerInterface;
 
 class CreateHandlerTest extends \PHPUnit_Framework_TestCase
