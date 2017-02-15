@@ -19,7 +19,7 @@ class CreateHandler extends AbstractHandler implements HandlerInterface
     protected $vaultHelper;
 
     /**
-     * @var \Magento\Vault\Model\CreditCardTokenFactory
+     * @var \Magento\Vault\Model\PaymentTokenFactory
      */
     protected $paymentTokenFactory;
 
@@ -29,7 +29,7 @@ class CreateHandler extends AbstractHandler implements HandlerInterface
      * @param \Magento\Customer\Api\CustomerRepositoryInterface $customerRepository
      * @param \Swarming\SubscribePro\Platform\Service\PaymentProfile $platformPaymentProfileService
      * @param \Swarming\SubscribePro\Helper\Vault $vaultHelper
-     * @param \Magento\Vault\Model\CreditCardTokenFactory $paymentTokenFactory
+     * @param \Magento\Vault\Model\PaymentTokenFactory $paymentTokenFactory
      */
     public function __construct(
         \Magento\Vault\Api\PaymentTokenManagementInterface $paymentTokenManagement,
@@ -37,7 +37,7 @@ class CreateHandler extends AbstractHandler implements HandlerInterface
         \Magento\Customer\Api\CustomerRepositoryInterface $customerRepository,
         \Swarming\SubscribePro\Platform\Service\PaymentProfile $platformPaymentProfileService,
         \Swarming\SubscribePro\Helper\Vault $vaultHelper,
-        \Magento\Vault\Model\CreditCardTokenFactory $paymentTokenFactory
+        \Magento\Vault\Model\PaymentTokenFactory $paymentTokenFactory
     ) {
         $this->platformPaymentProfileService = $platformPaymentProfileService;
         $this->vaultHelper = $vaultHelper;
