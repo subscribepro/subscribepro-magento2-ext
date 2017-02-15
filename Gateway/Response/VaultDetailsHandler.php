@@ -10,7 +10,7 @@ use Magento\Vault\Model\Ui\VaultConfigProvider;
 class VaultDetailsHandler implements HandlerInterface
 {
     /**
-     * @var \Magento\Vault\Api\Data\PaymentTokenInterfaceFactory
+     * @var \Magento\Vault\Model\CreditCardTokenFactory
      */
     protected $paymentTokenFactory;
 
@@ -35,14 +35,14 @@ class VaultDetailsHandler implements HandlerInterface
     protected $subjectReader;
 
     /**
-     * @param \Magento\Vault\Api\Data\PaymentTokenInterfaceFactory $paymentTokenFactory
+     * @param \Magento\Vault\Model\CreditCardTokenFactory $paymentTokenFactory
      * @param \Magento\Sales\Api\Data\OrderPaymentExtensionInterfaceFactory $paymentExtensionFactory
      * @param \Swarming\SubscribePro\Helper\Vault $vaultHelper
      * @param \Swarming\SubscribePro\Gateway\Config\Config $gatewayConfig
      * @param \Swarming\SubscribePro\Gateway\Helper\SubjectReader $subjectReader
      */
     public function __construct(
-        \Magento\Vault\Api\Data\PaymentTokenInterfaceFactory $paymentTokenFactory,
+        \Magento\Vault\Model\CreditCardTokenFactory $paymentTokenFactory,
         \Magento\Sales\Api\Data\OrderPaymentExtensionInterfaceFactory $paymentExtensionFactory,
         \Swarming\SubscribePro\Helper\Vault $vaultHelper,
         \Swarming\SubscribePro\Gateway\Config\Config $gatewayConfig,
