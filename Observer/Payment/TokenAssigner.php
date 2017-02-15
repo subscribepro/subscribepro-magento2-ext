@@ -60,13 +60,8 @@ class TokenAssigner extends \Magento\Payment\Observer\AbstractDataAssignObserver
             return;
         }
 
-        $paymentModel->setAdditionalInformation(
-            Vault::TOKEN_METADATA_KEY,
-            [
-                PaymentTokenInterface::CUSTOMER_ID => $customerId,
-                PaymentTokenInterface::PUBLIC_HASH => $paymentToken->getPublicHash()
-            ]
-        );
+        $paymentModel->setAdditionalInformation(PaymentTokenInterface::CUSTOMER_ID, $customerId);
+        $paymentModel->setAdditionalInformation(PaymentTokenInterface::PUBLIC_HASH, $paymentToken->getPublicHash());
 
         if (!empty($additionalData[TransactionInterface::UNIQUE_ID])) {
             $paymentModel->setAdditionalInformation(TransactionInterface::UNIQUE_ID, $additionalData[TransactionInterface::UNIQUE_ID]);
