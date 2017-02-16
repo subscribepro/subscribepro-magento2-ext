@@ -5,7 +5,7 @@ namespace Swarming\SubscribePro\Test\Unit\Model\Vault;
 use Magento\Vault\Api\PaymentTokenManagementInterface;
 use Magento\Vault\Api\PaymentTokenRepositoryInterface;
 use Magento\Vault\Model\PaymentToken;
-use Magento\Vault\Model\PaymentTokenFactory;
+use Magento\Vault\Model\CreditCardTokenFactory;
 use SubscribePro\Service\PaymentProfile\PaymentProfileInterface;
 use Swarming\SubscribePro\Model\Vault\Form;
 use Swarming\SubscribePro\Helper\Vault as VaultHelper;
@@ -32,7 +32,7 @@ class FormTest extends \PHPUnit_Framework_TestCase
     protected $paymentTokenManagementMock;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Vault\Model\PaymentTokenFactory
+     * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Vault\Model\CreditCardTokenFactory
      */
     protected $paymentTokenFactoryMock;
 
@@ -62,7 +62,7 @@ class FormTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()->getMock();
         $this->paymentTokenManagementMock = $this->getMockBuilder(PaymentTokenManagementInterface::class)
             ->disableOriginalConstructor()->getMock();
-        $this->paymentTokenFactoryMock = $this->getMockBuilder(PaymentTokenFactory::class)
+        $this->paymentTokenFactoryMock = $this->getMockBuilder(CreditCardTokenFactory::class)
             ->disableOriginalConstructor()
             ->setMethods(['create'])
             ->getMock();

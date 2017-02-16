@@ -7,7 +7,7 @@ use Magento\Sales\Api\Data\OrderPaymentExtensionInterface;
 use Magento\Sales\Api\Data\OrderPaymentExtensionInterfaceFactory;
 use Magento\Sales\Model\Order\Payment;
 use Magento\Vault\Api\Data\PaymentTokenInterface;
-use Magento\Vault\Api\Data\PaymentTokenInterfaceFactory;
+use Magento\Vault\Model\CreditCardTokenFactory;
 use Magento\Vault\Model\Ui\VaultConfigProvider;
 use SubscribePro\Service\Transaction\TransactionInterface;
 use Swarming\SubscribePro\Gateway\Helper\SubjectReader;
@@ -23,7 +23,7 @@ class VaultDetailsHandlerTest extends \PHPUnit_Framework_TestCase
     protected $vaultDetailsHandler;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Vault\Api\Data\PaymentTokenInterfaceFactory
+     * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Vault\Model\CreditCardTokenFactory
      */
     protected $paymentTokenFactoryMock;
 
@@ -51,7 +51,7 @@ class VaultDetailsHandlerTest extends \PHPUnit_Framework_TestCase
     {
         $this->subjectReaderMock = $this->getMockBuilder(SubjectReader::class)
             ->disableOriginalConstructor()->getMock();
-        $this->paymentTokenFactoryMock = $this->getMockBuilder(PaymentTokenInterfaceFactory::class)
+        $this->paymentTokenFactoryMock = $this->getMockBuilder(CreditCardTokenFactory::class)
             ->disableOriginalConstructor()
             ->setMethods(['create', 'getType'])->getMock();
         $this->paymentExtensionFactoryMock = $this->getMockBuilder(OrderPaymentExtensionInterfaceFactory::class)

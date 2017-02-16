@@ -12,7 +12,7 @@ use SubscribePro\Service\Webhook\EventInterface;
 use Swarming\SubscribePro\Platform\Webhook\Handler\PaymentProfile\CreateHandler;
 use Swarming\SubscribePro\Platform\Service\PaymentProfile as PaymentProfileService;
 use Swarming\SubscribePro\Helper\Vault as VaultHelper;
-use Magento\Vault\Model\PaymentTokenFactory;
+use Magento\Vault\Model\CreditCardTokenFactory;
 use SubscribePro\Service\Customer\CustomerInterface as PlatformCustomerInterface;
 
 class CreateHandlerTest extends \PHPUnit_Framework_TestCase
@@ -48,7 +48,7 @@ class CreateHandlerTest extends \PHPUnit_Framework_TestCase
     protected $vaultHelperMock;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Vault\Model\PaymentTokenFactory
+     * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Vault\Model\CreditCardTokenFactory
      */
     protected $paymentTokenFactoryMock;
 
@@ -61,7 +61,7 @@ class CreateHandlerTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()->getMock();
         $this->vaultHelperMock = $this->getMockBuilder(VaultHelper::class)
             ->disableOriginalConstructor()->getMock();
-        $this->paymentTokenFactoryMock = $this->getMockBuilder(PaymentTokenFactory::class)
+        $this->paymentTokenFactoryMock = $this->getMockBuilder(CreditCardTokenFactory::class)
             ->disableOriginalConstructor()
             ->setMethods(['create'])
             ->getMock();

@@ -210,9 +210,11 @@ class TokenAssignerTest extends \PHPUnit_Framework_TestCase
         $profileId = 4441;
         $uniqueId = 123456789;
         $customerId = 334;
+        $subscribeProToken = 'testtesttoken';
         $additionalInfo = [
             VaultDataBuilder::PAYMENT_PROFILE_ID => $profileId,
-            TransactionInterface::UNIQUE_ID => $uniqueId
+            TransactionInterface::UNIQUE_ID => $uniqueId,
+            TransactionInterface::SUBSCRIBE_PRO_ORDER_TOKEN => $subscribeProToken
         ];
         $tokenHash = 'hash';
         $tokenAdditionalInfo = [
@@ -239,11 +241,13 @@ class TokenAssignerTest extends \PHPUnit_Framework_TestCase
         $paymentInfoMock->expects($this->once())
             ->method('getQuote')
             ->willReturn($quoteMock);
-        $paymentInfoMock->expects($this->exactly(2))
+        $paymentInfoMock->expects($this->exactly(4))
             ->method('setAdditionalInformation')
             ->withConsecutive(
-                [Vault::TOKEN_METADATA_KEY, $tokenAdditionalInfo],
-                [TransactionInterface::UNIQUE_ID, $uniqueId]
+                [PaymentTokenInterface::CUSTOMER_ID, $customerId],
+                [PaymentTokenInterface::PUBLIC_HASH, $tokenHash],
+                [TransactionInterface::UNIQUE_ID, $uniqueId],
+                [TransactionInterface::SUBSCRIBE_PRO_ORDER_TOKEN, $subscribeProToken]
             );
 
         $eventMock = $this->createEventMock();

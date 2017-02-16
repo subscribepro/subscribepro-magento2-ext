@@ -17,7 +17,7 @@ class Form
     protected $paymentTokenManagement;
 
     /**
-     * @var \Magento\Vault\Model\PaymentTokenFactory
+     * @var \Magento\Vault\Model\CreditCardTokenFactory
      */
     protected $paymentTokenFactory;
 
@@ -44,7 +44,7 @@ class Form
     /**
      * @param \Magento\Vault\Api\PaymentTokenRepositoryInterface $paymentTokenRepository
      * @param \Magento\Vault\Api\PaymentTokenManagementInterface $paymentTokenManagement
-     * @param \Magento\Vault\Model\PaymentTokenFactory $paymentTokenFactory
+     * @param \Magento\Vault\Model\CreditCardTokenFactory $paymentTokenFactory
      * @param \Swarming\SubscribePro\Helper\Vault $vaultHelper
      * @param \Swarming\SubscribePro\Platform\Service\PaymentProfile $platformPaymentProfileService
      * @param \Swarming\SubscribePro\Platform\Manager\Customer $platformCustomerManager
@@ -53,7 +53,7 @@ class Form
     public function __construct(
         \Magento\Vault\Api\PaymentTokenRepositoryInterface $paymentTokenRepository,
         \Magento\Vault\Api\PaymentTokenManagementInterface $paymentTokenManagement,
-        \Magento\Vault\Model\PaymentTokenFactory $paymentTokenFactory,
+        \Magento\Vault\Model\CreditCardTokenFactory $paymentTokenFactory,
         \Swarming\SubscribePro\Helper\Vault $vaultHelper,
         \Swarming\SubscribePro\Platform\Service\PaymentProfile $platformPaymentProfileService,
         \Swarming\SubscribePro\Platform\Manager\Customer $platformCustomerManager,
