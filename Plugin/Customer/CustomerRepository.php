@@ -99,5 +99,6 @@ class CustomerRepository
         $platformCustomer->setFirstName($customer->getFirstname());
         $platformCustomer->setLastName($customer->getLastname());
         $platformCustomer->setEmail($customer->getEmail());
+        $platformCustomer->setMagentoCustomerGroupId($customer->getGroupId());
     }
 }
