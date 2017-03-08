@@ -92,6 +92,7 @@ class SubscriptionCreator
             $subscription->setNextOrderDate($this->dateTimeFactory->create()->format('Y-m-d'));
             $subscription->setFirstOrderAlreadyCreated(true);
             $subscription->setMagentoStoreCode($store->getCode());
+            $subscription->setSendCustomerNotificationEmail(true);
 
             $subscription->setRequiresShipping((bool)$address);
             if ($address) {
