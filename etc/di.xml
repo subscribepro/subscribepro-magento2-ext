@@ -109,6 +109,11 @@
         <plugin name="subscribepro_attribute" type="Swarming\SubscribePro\Plugin\GroupedProduct\TypeGrouped"/>
     </type>
 
+    <!-- ShipperHQ extension -->
+    <type name="ShipperHQ\Shipper\Model\Carrier\Processor\ShipperMapper">
+        <plugin name="subscribepro_shipperhq" type="Swarming\SubscribePro\Plugin\ShipperHQ\ShipperMapperPlugin" />
+    </type>
+
     <!-- SubscribeProAdapter -->
     <virtualType name="SubscribeProAdapter" type="Magento\Payment\Model\Method\Adapter">
         <arguments>
