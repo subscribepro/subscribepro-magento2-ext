@@ -42,7 +42,7 @@ class Form
     protected $validator;
 
     /**
-     * @var \Psr\Log\LoggerInterface
+     * @var \Swarming\SubscribePro\Helper\DebugLogger
      */
     protected $logger;
 
@@ -64,7 +64,7 @@ class Form
         \Swarming\SubscribePro\Platform\Service\PaymentProfile $platformPaymentProfileService,
         \Swarming\SubscribePro\Platform\Manager\Customer $platformCustomerManager,
         \Swarming\SubscribePro\Model\Vault\Validator $validator,
-        \Psr\Log\LoggerInterface $logger
+        \Swarming\SubscribePro\Helper\DebugLogger $logger
     ) {
         $this->paymentTokenRepository = $paymentTokenRepository;
         $this->paymentTokenManagement = $paymentTokenManagement;
@@ -99,9 +99,9 @@ class Form
 
         $paymentToken = $this->paymentTokenFactory->create();
         $this->vaultHelper->initVault($paymentToken, $profile);
-        $this->logger->info('debug');
+        $this->logger->logStackTrace();
         $this->paymentTokenRepository->save($paymentToken);
-        $this->logger->info('debug');
+        $this->logger->logStackTrace();
     }
 
     /**
@@ -125,8 +125,8 @@ class Form
         $this->platformPaymentProfileService->saveProfile($profile);
 
         $this->vaultHelper->updateVault($paymentToken, $profile);
-        $this->logger->info('debug');
+        $this->logger->logStackTrace();
         $this->paymentTokenRepository->save($paymentToken);
-        $this->logger->info('debug');
+        $this->logger->logStackTrace();
     }
 }
