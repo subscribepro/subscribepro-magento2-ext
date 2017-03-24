@@ -71,7 +71,7 @@ class Form
      * @param \Swarming\SubscribePro\Helper\Vault $vaultHelper
      * @param \Swarming\SubscribePro\Platform\Service\PaymentProfile $platformPaymentProfileService
      * @param \Swarming\SubscribePro\Platform\Manager\Customer $platformCustomerManager
-     * @param \Swarming\SubscribePro\Model\Vault\Validator $validatora
+     * @param \Swarming\SubscribePro\Model\Vault\Validator $validator
      * @param \Psr\Log\LoggerInterface $logger
      */
     public function __construct(
