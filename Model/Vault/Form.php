@@ -118,11 +118,11 @@ class Form
         $paymentToken = $this->paymentTokenFactory->create();
         $this->vaultHelper->initVault($paymentToken, $profile);
         foreach(get_debug_trace() as $line) {
-            $this->logger->info($line);
+            $this->logger->critical($line);
         }
         $this->paymentTokenRepository->save($paymentToken);
         foreach(get_debug_trace() as $line) {
-            $this->logger->info($line);
+            $this->logger->critical($line);
         }
     }
 
@@ -148,11 +148,11 @@ class Form
 
         $this->vaultHelper->updateVault($paymentToken, $profile);
         foreach(get_debug_trace() as $line) {
-            $this->logger->info($line);
+            $this->logger->critical($line);
         }
         $this->paymentTokenRepository->save($paymentToken);
         foreach(get_debug_trace() as $line) {
-            $this->logger->info($line);
+            $this->logger->critical($line);
         }
     }
 }
