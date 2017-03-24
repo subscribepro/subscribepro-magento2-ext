@@ -13,6 +13,7 @@ use Swarming\SubscribePro\Platform\Service\PaymentProfile as PaymentProfileServi
 use Swarming\SubscribePro\Platform\Manager\Customer as CustomerManager;
 use Swarming\SubscribePro\Model\Vault\Validator as VaultValidator;
 use SubscribePro\Service\Customer\CustomerInterface as PlatformCustomerInterface;
+use Swarming\SubscribePro\Helper\DebugLogger;
 
 class FormTest extends \PHPUnit_Framework_TestCase
 {
@@ -56,6 +57,11 @@ class FormTest extends \PHPUnit_Framework_TestCase
      */
     protected $validatorMock;
 
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject| \Swarming\SubscribePro\Helper\DebugLogger
+     */
+    protected $loggerMock;
+
     protected function setUp()
     {
         $this->paymentTokenRepositoryMock = $this->getMockBuilder(PaymentTokenRepositoryInterface::class)
@@ -74,6 +80,8 @@ class FormTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()->getMock();
         $this->validatorMock = $this->getMockBuilder(VaultValidator::class)
             ->disableOriginalConstructor()->getMock();
+        $this->loggerMock = $this->getMockBuilder(DebugLogger::class)
+            ->disableOriginalConstructor()->getMock();
 
         $this->vaultForm = new Form(
             $this->paymentTokenRepositoryMock,
@@ -82,7 +90,8 @@ class FormTest extends \PHPUnit_Framework_TestCase
             $this->vaultHelperMock,
             $this->platformPaymentProfileServiceMock,
             $this->platformCustomerManagerMock,
-            $this->validatorMock
+            $this->validatorMock,
+            $this->loggerMock
         );
     }
 
