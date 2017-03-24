@@ -2,23 +2,22 @@
 
 namespace Swarming\SubscribePro\Model\Vault;
 
-function log_trace($message = '') {
+function get_debug_trace() {
+    $traceArray = [];
     $trace = debug_backtrace();
-    if ($message) {
-        error_log($message);
-    }
     $caller = array_shift($trace);
     $function_name = $caller['function'];
-    error_log(sprintf('%s: Called from %s:%s', $function_name, $caller['file'], $caller['line']));
+    $traceArray[] = sprintf('%s: Called from %s:%s', $function_name, $caller['file'], $caller['line']);
     foreach ($trace as $entry_id => $entry) {
         $entry['file'] = $entry['file'] ? : '-';
         $entry['line'] = $entry['line'] ? : '-';
         if (empty($entry['class'])) {
-            error_log(sprintf('%s %3s. %s() %s:%s', $function_name, $entry_id + 1, $entry['function'], $entry['file'], $entry['line']));
+            $traceArray[] = sprintf('%s %3s. %s() %s:%s', $function_name, $entry_id + 1, $entry['function'], $entry['file'], $entry['line']);
         } else {
-            error_log(sprintf('%s %3s. %s->%s() %s:%s', $function_name, $entry_id + 1, $entry['class'], $entry['function'], $entry['file'], $entry['line']));
+            $traceArray[] = sprintf('%s %3s. %s->%s() %s:%s', $function_name, $entry_id + 1, $entry['class'], $entry['function'], $entry['file'], $entry['line']);
         }
     }
+    return $traceArray;
 }
 
 use Magento\Framework\Exception\LocalizedException;
@@ -61,13 +60,19 @@ class Form
     protected $validator;
 
     /**
+     * @var \Psr\Log\LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * @param \Magento\Vault\Api\PaymentTokenRepositoryInterface $paymentTokenRepository
      * @param \Magento\Vault\Api\PaymentTokenManagementInterface $paymentTokenManagement
      * @param \Magento\Vault\Model\CreditCardTokenFactory $paymentTokenFactory
      * @param \Swarming\SubscribePro\Helper\Vault $vaultHelper
      * @param \Swarming\SubscribePro\Platform\Service\PaymentProfile $platformPaymentProfileService
      * @param \Swarming\SubscribePro\Platform\Manager\Customer $platformCustomerManager
-     * @param \Swarming\SubscribePro\Model\Vault\Validator $validator
+     * @param \Swarming\SubscribePro\Model\Vault\Validator $validatora
+     * @param \Psr\Log\LoggerInterface $logger
      */
     public function __construct(
         \Magento\Vault\Api\PaymentTokenRepositoryInterface $paymentTokenRepository,
@@ -76,7 +81,8 @@ class Form
         \Swarming\SubscribePro\Helper\Vault $vaultHelper,
         \Swarming\SubscribePro\Platform\Service\PaymentProfile $platformPaymentProfileService,
         \Swarming\SubscribePro\Platform\Manager\Customer $platformCustomerManager,
-        \Swarming\SubscribePro\Model\Vault\Validator $validator
+        \Swarming\SubscribePro\Model\Vault\Validator $validator,
+        \Psr\Log\LoggerInterface $logger
     ) {
         $this->paymentTokenRepository = $paymentTokenRepository;
         $this->paymentTokenManagement = $paymentTokenManagement;
@@ -85,6 +91,7 @@ class Form
         $this->platformPaymentProfileService = $platformPaymentProfileService;
         $this->platformCustomerManager = $platformCustomerManager;
         $this->validator = $validator;
+        $this->logger = $logger;
     }
 
     /**
@@ -110,9 +117,13 @@ class Form
 
         $paymentToken = $this->paymentTokenFactory->create();
         $this->vaultHelper->initVault($paymentToken, $profile);
-        log_trace();
+        foreach(get_debug_trace() as $line) {
+            $this->logger->info($line);
+        }
         $this->paymentTokenRepository->save($paymentToken);
-        log_trace();
+        foreach(get_debug_trace() as $line) {
+            $this->logger->info($line);
+        }
     }
 
     /**
@@ -136,8 +147,12 @@ class Form
         $this->platformPaymentProfileService->saveProfile($profile);
 
         $this->vaultHelper->updateVault($paymentToken, $profile);
-        log_trace();
+        foreach(get_debug_trace() as $line) {
+            $this->logger->info($line);
+        }
         $this->paymentTokenRepository->save($paymentToken);
-        log_trace();
+        foreach(get_debug_trace() as $line) {
+            $this->logger->info($line);
+        }
     }
 }
