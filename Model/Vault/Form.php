@@ -2,24 +2,6 @@
 
 namespace Swarming\SubscribePro\Model\Vault;
 
-function get_debug_trace() {
-    $traceArray = [];
-    $trace = debug_backtrace();
-    $caller = array_shift($trace);
-    $function_name = $caller['function'];
-    $traceArray[] = sprintf('%s: Called from %s:%s', $function_name, $caller['file'], $caller['line']);
-    foreach ($trace as $entry_id => $entry) {
-        $entry['file'] = $entry['file'] ? : '-';
-        $entry['line'] = $entry['line'] ? : '-';
-        if (empty($entry['class'])) {
-            $traceArray[] = sprintf('%s %3s. %s() %s:%s', $function_name, $entry_id + 1, $entry['function'], $entry['file'], $entry['line']);
-        } else {
-            $traceArray[] = sprintf('%s %3s. %s->%s() %s:%s', $function_name, $entry_id + 1, $entry['class'], $entry['function'], $entry['file'], $entry['line']);
-        }
-    }
-    return $traceArray;
-}
-
 use Magento\Framework\Exception\LocalizedException;
 
 class Form
@@ -117,13 +99,9 @@ class Form
 
         $paymentToken = $this->paymentTokenFactory->create();
         $this->vaultHelper->initVault($paymentToken, $profile);
-        foreach(get_debug_trace() as $line) {
-            $this->logger->critical($line);
-        }
+        $this->logger->info('debug');
         $this->paymentTokenRepository->save($paymentToken);
-        foreach(get_debug_trace() as $line) {
-            $this->logger->critical($line);
-        }
+        $this->logger->info('debug');
     }
 
     /**
@@ -147,12 +125,8 @@ class Form
         $this->platformPaymentProfileService->saveProfile($profile);
 
         $this->vaultHelper->updateVault($paymentToken, $profile);
-        foreach(get_debug_trace() as $line) {
-            $this->logger->critical($line);
-        }
+        $this->logger->info('debug');
         $this->paymentTokenRepository->save($paymentToken);
-        foreach(get_debug_trace() as $line) {
-            $this->logger->critical($line);
-        }
+        $this->logger->info('debug');
     }
 }
