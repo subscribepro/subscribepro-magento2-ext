@@ -13,17 +13,17 @@ class ShipperMapperPlugin
     protected $quoteItemHelper;
 
     /**
-     * @var \Swarming\SubscribePro\Model\ShipperHQ
+     * @var \Swarming\SubscribePro\Model\Config\ShipperHQ
      */
     protected $shipperHQConfig;
 
     /**
      * @param \Swarming\SubscribePro\Helper\QuoteItem $quoteItemHelper
-     * @param \Swarming\SubscribePro\Model\ShipperHQ $shipperHQConfig
+     * @param \Swarming\SubscribePro\Model\Config\ShipperHQ $shipperHQConfig
      */
     public function __construct(
         \Swarming\SubscribePro\Helper\QuoteItem $quoteItemHelper,
-        \Swarming\SubscribePro\Model\ShipperHQ $shipperHQConfig
+        \Swarming\SubscribePro\Model\Config\ShipperHQ $shipperHQConfig
     ) {
         $this->shipperHQConfig = $shipperHQConfig;
         $this->quoteItemHelper = $quoteItemHelper;
