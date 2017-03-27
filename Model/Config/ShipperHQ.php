@@ -7,6 +7,15 @@ use Magento\Store\Model\ScopeInterface;
 class ShipperHQ extends General
 {
     /**
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     */
+    public function __construct(
+        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+    ) {
+        $this->scopeConfig = $scopeConfig;
+    }
+
+    /**
      * @param string|null $websiteCode
      * @return string
      */
