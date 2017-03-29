@@ -2,7 +2,6 @@
 
 namespace Swarming\SubscribePro\Plugin\ShipperHQ;
 
-use Swarming\SubscribePro\Model\Quote\SubscriptionOption\OptionProcessor;
 use Swarming\SubscribePro\Api\Data\SubscriptionOptionInterface;
 use Swarming\SubscribePro\Api\Data\ProductInterface as PlatformProductInterface;
 
@@ -14,9 +13,19 @@ class ShipperMapperPlugin
     protected $quoteItemHelper;
 
     /**
-     * @param \Swarming\SubscribePro\Helper\QuoteItem $quoteItemHelper
+     * @var \Swarming\SubscribePro\Model\Config\ShipperHQ
      */
-    public function __construct(\Swarming\SubscribePro\Helper\QuoteItem $quoteItemHelper) {
+    protected $shipperHQConfig;
+
+    /**
+     * @param \Swarming\SubscribePro\Helper\QuoteItem $quoteItemHelper
+     * @param \Swarming\SubscribePro\Model\Config\ShipperHQ $shipperHQConfig
+     */
+    public function __construct(
+        \Swarming\SubscribePro\Helper\QuoteItem $quoteItemHelper,
+        \Swarming\SubscribePro\Model\Config\ShipperHQ $shipperHQConfig
+    ) {
+        $this->shipperHQConfig = $shipperHQConfig;
         $this->quoteItemHelper = $quoteItemHelper;
     }
 
@@ -31,11 +40,9 @@ class ShipperMapperPlugin
     {
         $attributes = $proceed($reqdAttributeNames, $item);
 
-        if ($this->determineIfSubscription($item)) {
+        if ($recurringShippingCode = $this->determineSubscriptionCode($item)) {
             $shippingGroup = '';
             $shippingGroupSet = false;
-
-            $recurringShippingCode = 'SUBSCRIBEPRO_RECURRING';
 
             if (is_array($attributes)) {
                 foreach($attributes as $key => $attribute) {
@@ -57,11 +64,17 @@ class ShipperMapperPlugin
 
     /**
      * @param \Magento\Quote\Model\Quote\Item $item
-     * @return bool
+     * @return string|bool
      */
-    private function determineIfSubscription($item)
+    private function determineSubscriptionCode($item)
     {
-        return $this->quoteItemHelper->isFulfilsSubscription($item) || $this->quoteItemHelper->hasSubscription($item);
+        if ($this->quoteItemHelper->isFulfilsSubscription($item)) {
+            return $this->shipperHQConfig->getRecurringOrderGroup();
+        }
+        if ($this->quoteItemHelper->hasSubscription($item)) {
+            return $this->shipperHQConfig->getSubscriptionProductGroup();
+        }
+        return false;
     }
 }
 
