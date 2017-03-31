@@ -41,7 +41,7 @@ class Advanced extends General
      */
     public function isDebuggingEnabled($websiteCode = null)
     {
-        return (bool) $this->scopeConfig->getValue('swarming_subscribepro/advanced/enable_debugging', ScopeInterface::SCOPE_WEBSITE, $websiteCode);
+        return $this->scopeConfig->isSetFlag('swarming_subscribepro/advanced/enable_debugging', ScopeInterface::SCOPE_WEBSITE, $websiteCode);
     }
 
     /**
