@@ -144,6 +144,26 @@
                     </depends>
                 </field>
             </group>
+
+            <group id="shipperhq" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0">
+                <label>Shipper HQ</label>
+
+                <field id="recurring_order_group" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                    <label>Recurring Order Group</label>
+                    <comment>The shipping group to add to recurring orders created by the SubscribePro platform</comment>
+                    <depends>
+                        <field id="swarming_subscribepro/general/enabled">1</field>
+                    </depends>
+                </field>
+
+                <field id="frontend_subscription_product_group" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                    <label>Frontend Subscription Product Group</label>
+                    <comment>The shipping group to add to products that are ordered as subscriptions</comment>
+                    <depends>
+                        <field id="swarming_subscribepro/general/enabled">1</field>
+                    </depends>
+                </field>
+            </group>
         </section>
 
         <section id="payment">
