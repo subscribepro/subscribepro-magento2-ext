@@ -2,8 +2,6 @@
 
 namespace Swarming\SubscribePro\Helper;
 
-use \Psr\Log\LoggerInterface;
-
 class DebugLogger
 {
     /**
@@ -12,12 +10,21 @@ class DebugLogger
     protected $logger;
 
     /**
+     * @var \Swarming\SubscribePro\Model\Config\Advanced
+     */
+    protected $config;
+
+    /**
      * DebugLogger constructor.
      * @param LoggerInterface $logger
      */
-    public function __construct(LoggerInterface $logger)
+    public function __construct(
+        \Psr\Log\LoggerInterface $logger,
+        \Swarming\SubscribePro\Model\Config\Advanced $config
+    )
     {
         $this->logger = $logger;
+        $this->config = $config;
     }
 
     /**
@@ -25,8 +32,11 @@ class DebugLogger
      */
     public function logStackTrace()
     {
-        foreach($this->getStackTrace() as $line) {
-            $this->logger->info($line);
+        // Check if the configuration value is set for debugging
+        if ($this->config->isDebuggingEnabled()) {
+            foreach($this->getStackTrace() as $line) {
+                $this->logger->info($line);
+            }
         }
     }
 

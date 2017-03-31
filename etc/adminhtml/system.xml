@@ -143,6 +143,15 @@
                         <field id="swarming_subscribepro/general/enabled">1</field>
                     </depends>
                 </field>
+
+                <field id="enabled_debugging" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                    <label>Enabled deubgging for development</label>
+                    <comment>This enables the debug logging system within the SubscribePro extention</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="swarming_subscribepro/general/enabled">1</field>
+                    </depends>
+                </field>
             </group>
 
             <group id="shipperhq" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0">
