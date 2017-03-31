@@ -99,9 +99,7 @@ class Form
 
         $paymentToken = $this->paymentTokenFactory->create();
         $this->vaultHelper->initVault($paymentToken, $profile);
-        $this->logger->logStackTrace();
         $this->paymentTokenRepository->save($paymentToken);
-        $this->logger->logStackTrace();
     }
 
     /**
@@ -125,8 +123,6 @@ class Form
         $this->platformPaymentProfileService->saveProfile($profile);
 
         $this->vaultHelper->updateVault($paymentToken, $profile);
-        $this->logger->logStackTrace();
         $this->paymentTokenRepository->save($paymentToken);
-        $this->logger->logStackTrace();
     }
 }

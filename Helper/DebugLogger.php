@@ -33,7 +33,6 @@ class DebugLogger
     public function logStackTrace()
     {
         // Check if the configuration value is set for debugging
-        $this->logger->info(print_r($this->config->isDebuggingEnabled(), true));
         if ($this->config->isDebuggingEnabled()) {
             foreach($this->getStackTrace() as $line) {
                 $this->logger->info($line);
