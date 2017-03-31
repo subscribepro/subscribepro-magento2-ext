@@ -23,6 +23,7 @@
             <advanced>
                 <cache_lifetime>3600</cache_lifetime>
                 <webhook_ipaddresses>52.87.63.105,52.205.106.230,52.207.125.59,52.206.240.107</webhook_ipaddresses>
+                <enable_debugging>0</enable_debugging>
             </advanced>
             <shipperhq>
                 <recurring_order_group>SUBSCRIBEPRO_RECURRING</recurring_order_group>

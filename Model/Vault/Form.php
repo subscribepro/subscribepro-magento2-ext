@@ -42,6 +42,11 @@ class Form
     protected $validator;
 
     /**
+     * @var \Swarming\SubscribePro\Helper\DebugLogger
+     */
+    protected $logger;
+
+    /**
      * @param \Magento\Vault\Api\PaymentTokenRepositoryInterface $paymentTokenRepository
      * @param \Magento\Vault\Api\PaymentTokenManagementInterface $paymentTokenManagement
      * @param \Magento\Vault\Model\CreditCardTokenFactory $paymentTokenFactory
@@ -49,6 +54,7 @@ class Form
      * @param \Swarming\SubscribePro\Platform\Service\PaymentProfile $platformPaymentProfileService
      * @param \Swarming\SubscribePro\Platform\Manager\Customer $platformCustomerManager
      * @param \Swarming\SubscribePro\Model\Vault\Validator $validator
+     * @param \Psr\Log\LoggerInterface $logger
      */
     public function __construct(
         \Magento\Vault\Api\PaymentTokenRepositoryInterface $paymentTokenRepository,
@@ -57,7 +63,8 @@ class Form
         \Swarming\SubscribePro\Helper\Vault $vaultHelper,
         \Swarming\SubscribePro\Platform\Service\PaymentProfile $platformPaymentProfileService,
         \Swarming\SubscribePro\Platform\Manager\Customer $platformCustomerManager,
-        \Swarming\SubscribePro\Model\Vault\Validator $validator
+        \Swarming\SubscribePro\Model\Vault\Validator $validator,
+        \Swarming\SubscribePro\Helper\DebugLogger $logger
     ) {
         $this->paymentTokenRepository = $paymentTokenRepository;
         $this->paymentTokenManagement = $paymentTokenManagement;
@@ -66,6 +73,7 @@ class Form
         $this->platformPaymentProfileService = $platformPaymentProfileService;
         $this->platformCustomerManager = $platformCustomerManager;
         $this->validator = $validator;
+        $this->logger = $logger;
     }
 
     /**
