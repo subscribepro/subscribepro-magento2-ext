@@ -364,7 +364,7 @@ class UpdateProductAfterTest extends \PHPUnit_Framework_TestCase
      * @param null|string $subscriptionOption
      * @param null|string $subscriptionInterval
      * @param array $warnings
-     * @dataProvider testExecuteDataProvider
+     * @dataProvider executeDataProvider
      */
     public function testExecute($sku, $subscriptionParams, $subscriptionOption, $subscriptionInterval, $warnings)
     {
@@ -423,7 +423,7 @@ class UpdateProductAfterTest extends \PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function testExecuteDataProvider()
+    public function executeDataProvider()
     {
         return [
             'Subscription params not set' => [

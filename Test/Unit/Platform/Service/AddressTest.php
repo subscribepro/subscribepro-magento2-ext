@@ -26,7 +26,6 @@ class AddressTest extends AbstractService
             ->getMock();
 
         $this->addressService = new Address($this->platformMock, $this->name);
-        $this->addressService->setWebsite($this->defaultWebsiteId);
     }
 
     /**
@@ -61,7 +60,7 @@ class AddressTest extends AbstractService
             ],
             'Without website Id' => [
                 'websiteId' => null,
-                'expectedWebsiteId' => $this->defaultWebsiteId,
+                'expectedWebsiteId' => null,
             ]
         ];
     }

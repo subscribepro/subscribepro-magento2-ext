@@ -26,7 +26,6 @@ class WebhookTest extends AbstractService
             ->getMock();
 
         $this->webhookService = new Webhook($this->platformMock, $this->name);
-        $this->webhookService->setWebsite($this->defaultWebsiteId);
     }
 
     public function testReadEvent()
