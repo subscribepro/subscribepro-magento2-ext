@@ -118,7 +118,7 @@
     <virtualType name="SubscribeProAdapter" type="Magento\Payment\Model\Method\Adapter">
         <arguments>
             <argument name="code" xsi:type="const">Swarming\SubscribePro\Gateway\Config\ConfigProvider::CODE</argument>
-            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form\Cc</argument>
+            <argument name="formBlockType" xsi:type="string">Swarming\SubscribePro\Block\Adminhtml\Payment\Cc</argument>
             <argument name="infoBlockType" xsi:type="string">Swarming\SubscribePro\Block\Payment\Info</argument>
             <argument name="valueHandlerPool" xsi:type="object">SubscribeProValueHandlerPool</argument>
             <argument name="validatorPool" xsi:type="object">SubscribeProValidatorPool</argument>

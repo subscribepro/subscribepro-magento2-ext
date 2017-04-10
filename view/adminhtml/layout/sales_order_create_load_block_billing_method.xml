@@ -3,6 +3,10 @@
     <body>
         <referenceBlock name="order.create.billing.method.form">
             <action method="setMethodFormTemplate">
+                <argument name="method" xsi:type="string">subscribe_pro</argument>
+                <argument name="template" xsi:type="string">Swarming_SubscribePro::payment/cc.phtml</argument>
+            </action>
+            <action method="setMethodFormTemplate">
                 <argument name="method" xsi:type="string">subscribe_pro_vault</argument>
                 <argument name="template" xsi:type="string">Magento_Vault::form/vault.phtml</argument>
             </action>
