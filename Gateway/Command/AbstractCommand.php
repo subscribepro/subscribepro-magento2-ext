@@ -13,6 +13,21 @@ abstract class AbstractCommand implements CommandInterface
     protected $requestBuilder;
 
     /**
+     * @var \Swarming\SubscribePro\Platform\Platform
+     */
+    protected $platform;
+
+    /**
+     * @var \Magento\Store\Model\StoreManagerInterface
+     */
+    protected $storeManager;
+
+    /**
+     * @var \Swarming\SubscribePro\Gateway\Helper\SubjectReader
+     */
+    protected $subjectReader;
+
+    /**
      * @var \Swarming\SubscribePro\Platform\Service\PaymentProfile
      */
     protected $platformPaymentProfileService;
@@ -39,6 +54,9 @@ abstract class AbstractCommand implements CommandInterface
 
     /**
      * @param \Magento\Payment\Gateway\Request\BuilderInterface $requestBuilder
+     * @param \Swarming\SubscribePro\Platform\Platform $platform
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     * @param \Swarming\SubscribePro\Gateway\Helper\SubjectReader $subjectReader
      * @param \Magento\Payment\Gateway\Response\HandlerInterface $handler
      * @param \Magento\Payment\Gateway\Validator\ValidatorInterface $validator
      * @param \Swarming\SubscribePro\Platform\Service\PaymentProfile $platformPaymentProfileService
@@ -47,6 +65,9 @@ abstract class AbstractCommand implements CommandInterface
      */
     public function __construct(
         \Magento\Payment\Gateway\Request\BuilderInterface $requestBuilder,
+        \Swarming\SubscribePro\Platform\Platform $platform,
+        \Magento\Store\Model\StoreManagerInterface $storeManager,
+        \Swarming\SubscribePro\Gateway\Helper\SubjectReader $subjectReader,
         \Magento\Payment\Gateway\Response\HandlerInterface $handler,
         \Magento\Payment\Gateway\Validator\ValidatorInterface $validator,
         \Swarming\SubscribePro\Platform\Service\PaymentProfile $platformPaymentProfileService,
@@ -54,6 +75,9 @@ abstract class AbstractCommand implements CommandInterface
         \Psr\Log\LoggerInterface $logger
     ) {
         $this->requestBuilder = $requestBuilder;
+        $this->platform = $platform;
+        $this->storeManager = $storeManager;
+        $this->subjectReader = $subjectReader;
         $this->handler = $handler;
         $this->validator = $validator;
         $this->platformPaymentProfileService = $platformPaymentProfileService;
@@ -71,6 +95,7 @@ abstract class AbstractCommand implements CommandInterface
         $requestData = $this->requestBuilder->build($commandSubject);
 
         try {
+            $this->setPlatformWebsite($commandSubject);
             $transaction = $this->processTransaction($requestData);
         } catch (\Exception $e) {
             $this->logger->critical($e);
@@ -85,6 +110,20 @@ abstract class AbstractCommand implements CommandInterface
         }
 
         $this->handler->handle($commandSubject, $response);
+    }
+
+    /**
+     * @param array $commandSubject
+     * @return void
+     */
+    protected function setPlatformWebsite($commandSubject)
+    {
+        $paymentDO = $this->subjectReader->readPayment($commandSubject);
+
+        $storeId = $paymentDO->getOrder()->getStoreId();
+        $websiteId = $this->storeManager->getStore($storeId)->getWebsiteId();
+
+        $this->platform->setDefaultWebsite($websiteId);
     }
 
     /**
