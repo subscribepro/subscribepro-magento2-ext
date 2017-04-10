@@ -22,4 +22,12 @@
             </argument>
         </arguments>
     </virtualType>
+
+    <type name="Magento\Vault\Model\Ui\Adminhtml\TokensConfigProvider">
+        <arguments>
+            <argument name="tokenUiComponentProviders" xsi:type="array">
+                <item name="subscribe_pro" xsi:type="object">Swarming\SubscribePro\Ui\ComponentProvider\Adminhtml\VaultToken</item>
+            </argument>
+        </arguments>
+    </type>
 </config>
