@@ -100,7 +100,7 @@ class Vault
     {
         $hashKey = $paymentToken->getGatewayToken();
         if ($paymentToken->getCustomerId()) {
-            $hashKey .= $paymentToken->getCustomerId();
+            $hashKey = $paymentToken->getCustomerId();
         }
 
         $hashKey .= $paymentToken->getPaymentMethodCode()
