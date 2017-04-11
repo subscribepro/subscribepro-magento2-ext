@@ -26,7 +26,6 @@ class SubscriptionTest extends AbstractService
             ->getMock();
 
         $this->subscriptionService = new Subscription($this->platformMock, $this->name);
-        $this->subscriptionService->setWebsite($this->defaultWebsiteId);
     }
 
     /**
@@ -61,7 +60,7 @@ class SubscriptionTest extends AbstractService
             ],
             'Without website Id' => [
                 'websiteId' => null,
-                'expectedWebsiteId' => $this->defaultWebsiteId,
+                'expectedWebsiteId' => null
             ]
         ];
     }

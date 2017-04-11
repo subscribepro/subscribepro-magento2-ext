@@ -26,7 +26,6 @@ class PaymentProfileTest extends AbstractService
             ->getMock();
 
         $this->paymentProfileService = new PaymentProfile($this->platformMock, $this->name);
-        $this->paymentProfileService->setWebsite($this->defaultWebsiteId);
     }
 
     /**
@@ -62,7 +61,7 @@ class PaymentProfileTest extends AbstractService
             ],
             'Without website Id' => [
                 'websiteId' => null,
-                'expectedWebsiteId' => $this->defaultWebsiteId,
+                'expectedWebsiteId' => null,
             ]
         ];
     }
@@ -141,12 +140,12 @@ class PaymentProfileTest extends AbstractService
         $this->initService($this->paymentProfilePlatformService, $websiteId);
 
         $this->paymentProfilePlatformService->expects($this->once())
-            ->method('saveThirdPartyToken')
+            ->method('saveProfile')
             ->with($profileMock)
             ->willReturn($profileMock);
 
         $this->assertSame(
-            $profileMock, $this->paymentProfileService->saveThirdPartyToken($profileMock, $websiteId)
+            $profileMock, $this->paymentProfileService->saveProfile($profileMock, $websiteId)
         );
     }
 

@@ -31,8 +31,6 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 
     protected $name = 'test_name';
 
-    protected $defaultWebsiteId = 'testId';
-
     protected function setUp()
     {
         $this->platformMock = $this->getMockBuilder(Platform::class)
@@ -49,7 +47,6 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
             $this->name,
             $this->configStorageMock
         );
-        $this->configTool->setWebsite($this->defaultWebsiteId);
     }
 
     /**
@@ -143,13 +140,6 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
             'With website Id' => [
                 'websiteId' => 12,
                 'expectedWebsiteId' => 12,
-                'key' => 'key',
-                'config' => [],
-                'result' => null,
-            ],
-            'Without website Id' => [
-                'websiteId' => null,
-                'expectedWebsiteId' => $this->defaultWebsiteId,
                 'key' => 'key',
                 'config' => [],
                 'result' => null,

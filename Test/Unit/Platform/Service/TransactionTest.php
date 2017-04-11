@@ -27,7 +27,6 @@ class TransactionTest extends AbstractService
             ->getMock();
 
         $this->transactionService = new Transaction($this->platformMock, $this->name);
-        $this->transactionService->setWebsite($this->defaultWebsiteId);
     }
 
     /**
@@ -63,7 +62,7 @@ class TransactionTest extends AbstractService
             ],
             'Without website Id' => [
                 'websiteId' => null,
-                'expectedWebsiteId' => $this->defaultWebsiteId,
+                'expectedWebsiteId' => null,
             ]
         ];
     }
