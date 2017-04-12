@@ -10,6 +10,9 @@ use Psr\Log\LoggerInterface;
 use SubscribePro\Service\Transaction\TransactionInterface;
 use Swarming\SubscribePro\Platform\Service\PaymentProfile as PaymentProfileService;
 use Swarming\SubscribePro\Platform\Service\Transaction as TransactionService;
+use Swarming\SubscribePro\Platform\Platform;
+use Magento\Store\Model\StoreManagerInterface;
+use Swarming\SubscribePro\Gateway\Helper\SubjectReader;
 
 class AbstractCommand extends \PHPUnit_Framework_TestCase
 {
@@ -17,6 +20,21 @@ class AbstractCommand extends \PHPUnit_Framework_TestCase
      * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Payment\Gateway\Request\BuilderInterface
      */
     protected $requestBuilderMock;
+
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject|\Swarming\SubscribePro\Platform\Platform
+     */
+    protected $platformMock;
+
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Store\Model\StoreManagerInterface
+     */
+    protected $storeManagerMock;
+
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject|\Swarming\SubscribePro\Gateway\Helper\SubjectReader
+     */
+    protected $subjectReaderMock;
 
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Payment\Gateway\Response\HandlerInterface
@@ -51,6 +69,10 @@ class AbstractCommand extends \PHPUnit_Framework_TestCase
     protected function initProperties()
     {
         $this->requestBuilderMock = $this->getMockBuilder(BuilderInterface::class)->getMock();
+        $this->platformMock = $this->getMockBuilder(Platform::class)
+            ->disableOriginalConstructor()->getMock();
+        $this->storeManagerMock = $this->getMockBuilder(StoreManagerInterface::class)->getMock();
+        $this->subjectReaderMock = $this->getMockBuilder(SubjectReader::class)->getMock();
         $this->handlerMock = $this->getMockBuilder(HandlerInterface::class)->getMock();
         $this->validatorMock = $this->getMockBuilder(ValidatorInterface::class)->getMock();
         $this->platformPaymentProfileServiceMock = $this->getMockBuilder(PaymentProfileService::class)

@@ -24,13 +24,16 @@ class AbstractCommandTest extends TestAbstractCommand
         $this->abstractCommand = $this->getMockBuilder(AbstractCommand::class)
             ->setConstructorArgs([
                 $this->requestBuilderMock,
+                $this->platformMock,
+                $this->storeManagerMock,
+                $this->subjectReaderMock,
                 $this->handlerMock,
                 $this->validatorMock,
                 $this->platformPaymentProfileServiceMock,
                 $this->platformTransactionServiceMock,
                 $this->loggerMock,
             ])
-            ->setMethods(['processTransaction'])
+            ->setMethods(['processTransaction', 'setPlatformWebsite'])
             ->getMockForAbstractClass();
 
         $this->requestBuilderMock->expects($this->once())
@@ -46,6 +49,11 @@ class AbstractCommandTest extends TestAbstractCommand
     public function testExecuteIfFailToProcessTransaction()
     {
         $exception = new \Exception('message');
+
+        $this->abstractCommand->expects($this->once())
+            ->method('setPlatformWebsite')
+            ->with($this->requestData);
+
         $this->abstractCommand->expects($this->once())
             ->method('processTransaction')
             ->with($this->requestData)
@@ -67,6 +75,10 @@ class AbstractCommandTest extends TestAbstractCommand
         $resultMock->expects($this->once())
             ->method('isValid')
             ->willReturn(false);
+
+        $this->abstractCommand->expects($this->once())
+            ->method('setPlatformWebsite')
+            ->with($this->requestData);
         
         $this->abstractCommand->expects($this->once())
             ->method('processTransaction')
@@ -86,6 +98,10 @@ class AbstractCommandTest extends TestAbstractCommand
     public function testExecute()
     {
         $transaction = $this->createTransactionMock();
+
+        $this->abstractCommand->expects($this->once())
+            ->method('setPlatformWebsite')
+            ->with($this->requestData);
         
         $this->abstractCommand->expects($this->once())
             ->method('processTransaction')

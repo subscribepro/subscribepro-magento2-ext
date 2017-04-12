@@ -21,6 +21,9 @@ class AuthorizeCommandTest extends AbstractProfileCreatorCommand
         $this->initProperties();
         $this->authorizeCommand = new AuthorizeCommand(
             $this->requestBuilderMock,
+            $this->platformMock,
+            $this->storeManagerMock,
+            $this->subjectReaderMock,
             $this->handlerMock,
             $this->validatorMock,
             $this->platformPaymentProfileServiceMock,
