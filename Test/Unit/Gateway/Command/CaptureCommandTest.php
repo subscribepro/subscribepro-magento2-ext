@@ -33,7 +33,7 @@ class CaptureCommandTest extends AbstractCommand
         $transactionMock = $this->createTransactionMock();
         $refTransactionId = 432;
         $transactionMock->expects($this->once())->method('getRefTransactionId')->willReturn($refTransactionId);
-        
+        $this->executeSetPlatformWebsite($this->subjectReaderMock, $this->storeManagerMock, $this->platformMock);
         $this->platformTransactionServiceMock->expects($this->once())
             ->method('createTransaction')
             ->with($requestData)

@@ -42,7 +42,7 @@ class PurchaseCommandTest extends AbstractProfileCreatorCommand
     public function testExecuteIfFailToProcessTransaction(array $requestData)
     {
         $exception = new \Exception('Payment token is not passed');
-        
+        $this->executeSetPlatformWebsite($this->subjectReaderMock, $this->storeManagerMock, $this->platformMock);
         $this->processTransactionFail($requestData, $exception);
         $this->purchaseCommand->execute($this->commandSubject);
     }
@@ -73,7 +73,7 @@ class PurchaseCommandTest extends AbstractProfileCreatorCommand
             VaultConfigProvider::IS_ACTIVE_CODE => true, 
             PaymentDataBuilder::PAYMENT_METHOD_TOKEN => 'token'
         ];
-
+        $this->executeSetPlatformWebsite($this->subjectReaderMock, $this->storeManagerMock, $this->platformMock);
         $this->processTransactionFail($requestData, $exception);
         $this->purchaseCommand->execute($this->commandSubject);
     }
@@ -85,6 +85,7 @@ class PurchaseCommandTest extends AbstractProfileCreatorCommand
             PaymentDataBuilder::PAYMENT_METHOD_TOKEN => 'token',
             PaymentProfileInterface::MAGENTO_CUSTOMER_ID => 123
         ];
+        $this->executeSetPlatformWebsite($this->subjectReaderMock, $this->storeManagerMock, $this->platformMock);
         $transactionMock = $this->createTransactionMock();
         $profileId = 123;
         $authorizeData = [
@@ -114,7 +115,7 @@ class PurchaseCommandTest extends AbstractProfileCreatorCommand
             PaymentProfileInterface::MAGENTO_CUSTOMER_ID => 123
         ];
         $transactionMock = $this->createTransactionMock();
-        
+        $this->executeSetPlatformWebsite($this->subjectReaderMock, $this->storeManagerMock, $this->platformMock);
         $this->platformTransactionServiceMock->expects($this->once())
             ->method('createTransaction')
             ->with($requestData)

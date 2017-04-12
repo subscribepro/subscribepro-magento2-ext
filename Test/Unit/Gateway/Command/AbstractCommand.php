@@ -13,6 +13,9 @@ use Swarming\SubscribePro\Platform\Service\Transaction as TransactionService;
 use Swarming\SubscribePro\Platform\Platform;
 use Magento\Store\Model\StoreManagerInterface;
 use Swarming\SubscribePro\Gateway\Helper\SubjectReader;
+use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
+use Magento\Payment\Gateway\Data\OrderAdapterInterface;
+use Magento\Store\Api\Data\StoreInterface;
 
 class AbstractCommand extends \PHPUnit_Framework_TestCase
 {
@@ -132,5 +135,36 @@ class AbstractCommand extends \PHPUnit_Framework_TestCase
     protected function createTransactionMock()
     {
         return $this->getMockBuilder(TransactionInterface::class)->getMock();
+    }
+
+    protected function executeSetPlatformWebsite($subjectReaderMock, $storeManagerMock, $platformMock)
+    {
+        $orderAdapterMock = $this->getMockBuilder(OrderAdapterInterface::class)->getMock();
+        $paymentDOMock = $this->getMockBuilder(PaymentDataObjectInterface::class)->getMock();
+        $storeMock = $this->getMockBuilder(StoreInterface::class)->getMock();
+
+        $subjectReaderMock->expects($this->once())
+            ->method('readPayment')
+            ->willReturn($paymentDOMock);
+
+        $paymentDOMock->expects($this->once())
+            ->method('getOrder')
+            ->willReturn($orderAdapterMock);
+
+        $orderAdapterMock->expects($this->once())
+            ->method('getStoreId')
+            ->willReturn(1);
+
+        $storeManagerMock->expects($this->once())
+            ->method('getStore')
+            ->willReturn($storeMock);
+
+        $storeMock->expects($this->once())
+            ->method('getWebsiteId')
+            ->willReturn(1);
+
+        $platformMock->expects($this->once())
+            ->method('setDefaultWebsite')
+            ->willReturn(null);
     }
 }
