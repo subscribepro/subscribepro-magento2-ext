@@ -15,11 +15,6 @@ abstract class AbstractGeneral
     protected $name;
 
     /**
-     * @var string
-     */
-    protected $websiteId;
-
-    /**
      * @param \Swarming\SubscribePro\Platform\Platform $platform
      * @param string $name
      */
@@ -33,19 +28,10 @@ abstract class AbstractGeneral
 
     /**
      * @param int $websiteId
-     */
-    public function setWebsite($websiteId)
-    {
-        $this->websiteId = $websiteId;
-    }
-
-    /**
-     * @param int $websiteId
      * @return \SubscribePro\Sdk
      */
     protected function getSdk($websiteId = null)
     {
-        $websiteId = null !== $websiteId ? $websiteId : $this->websiteId;
         return $this->platform->getSdk($websiteId);
     }
 }

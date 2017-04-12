@@ -178,7 +178,7 @@ class VaultTest extends \PHPUnit_Framework_TestCase
                     'maskedCC' => 4444,
                     'expirationDate' => '04/2025'
                 ]),
-                'hashKey' => 'gateway5551some_methodtype_credit' . json_encode([
+                'hashKey' => '5551some_methodtype_credit' . json_encode([
                         'type' => 'master_type',
                         'maskedCC' => 4444,
                         'expirationDate' => '04/2025'

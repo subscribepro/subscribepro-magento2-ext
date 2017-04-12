@@ -26,7 +26,6 @@ class ProductTest extends AbstractService
             ->getMock();
 
         $this->productService = new Product($this->platformMock, $this->name);
-        $this->productService->setWebsite($this->defaultWebsiteId);
     }
 
     /**
@@ -61,7 +60,7 @@ class ProductTest extends AbstractService
             ],
             'Without website Id' => [
                 'websiteId' => null,
-                'expectedWebsiteId' => $this->defaultWebsiteId,
+                'expectedWebsiteId' => null,
             ]
         ];
     }

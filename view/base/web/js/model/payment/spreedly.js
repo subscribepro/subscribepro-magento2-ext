@@ -32,7 +32,7 @@ define(
                 Spreedly.setFieldType('text');
                 Spreedly.setNumberFormat('prettyFormat');
                 Spreedly.setStyle('number','padding: .45em .35em; font-size: 91%;');
-                Spreedly.setStyle('cvv', 'padding: .45em .35em; font-size: 91%;');
+                Spreedly.setStyle('cvv', 'padding: .45em .35em; font-size: 91%; width: 45px;');
             }
         };
     }

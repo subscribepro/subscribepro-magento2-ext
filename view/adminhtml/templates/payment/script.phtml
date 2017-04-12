@@ -1,0 +1,123 @@
+<?php
+
+/** @var \Magento\Framework\View\Element\Template $block */
+
+use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
+?>
+<script>
+    //<![CDATA[
+    require(
+        [
+            'Swarming_SubscribePro/js/cc',
+            'jquery',
+            'domReady!'
+        ], function(SubscribePro, $) {
+            var config = {};
+            var form = $('#payment_form_<?php echo ConfigProvider::CODE; ?>');
+
+            config.active = form.length > 0 && !form.is(':hidden');
+            var payment = new SubscribePro(config);
+        });
+    //]]>
+</script>
+<style>
+    /* TODO temporary solution, just for dev testing */
+    #payment_form_subscribe_pro .hosted-control,
+    #payment_form_subscribe_pro .month input,
+    #payment_form_subscribe_pro .year input {
+        background: #fff;
+        background-clip: padding-box;
+        border: 1px solid #c2c2c2;
+        border-radius: 1px;
+        font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-size: 14px;
+        height: 35px;
+        line-height: 1.42857143;
+        padding: 1.2px 9px 0;
+        vertical-align: baseline;
+        box-sizing: border-box;
+        position: relative;
+    }
+    #payment_form_subscribe_pro .hosted-control {
+        width: 225px;
+    }
+    #payment_form_subscribe_pro .hosted-control .icon-type {
+        height: 28px;
+    }
+    #payment_form_subscribe_pro .hosted-control .icon-type.icon-type-DI {
+        background-position: 0 0;
+    }
+    #payment_form_subscribe_pro .hosted-control .icon-type.icon-type-VI {
+        background-position: 0 -29px;
+    }
+    #payment_form_subscribe_pro .hosted-control .icon-type.icon-type-MC {
+        background-position: 0 -58px;
+    }
+    #payment_form_subscribe_pro .hosted-control .icon-type.icon-type-AE {
+        background-position: 0 -114px;
+    }
+    #payment_form_subscribe_pro .hosted-control .icon-type.icon-type-JCB {
+        background-position: 0 -200px; /* TODO  */
+    }
+    #payment_form_subscribe_pro .hosted-control .icon-type.icon-type-DN {
+        background-position: 0 -168px;
+    }
+
+    #payment_form_subscribe_pro .child-control.control-focused input,
+    #payment_form_subscribe_pro .hosted-control.hosted-control-focused {
+        border-color: #006bb4;
+    }
+
+    #payment_form_subscribe_pro .child-control.control-valid input,
+    #payment_form_subscribe_pro .hosted-control.hosted-control-valid {
+        border-color: #006400;
+    }
+
+    #payment_form_subscribe_pro .child-control.control-invalid:not(.control-focused) input,
+    #payment_form_subscribe_pro .hosted-control.hosted-control-invalid:not(.hosted-control-focused) {
+        border-color: #e02b27;
+    }
+
+    #payment_form_subscribe_pro .control-invalid:not(.control-focused) ~ .error,
+    #payment_form_subscribe_pro .hosted-control-invalid:not(.hosted-control-focused) ~ .hosted-error {
+        opacity: 1;
+    }
+
+    #payment_form_subscribe_pro .hosted-control.hosted-cid {
+        width: 7rem;
+    }
+
+    #payment_form_subscribe_pro .error,
+    #payment_form_subscribe_pro .hosted-error {
+        clear: both;
+        color: #e02b27;
+        font-size: 1.2rem;
+        height: 0;
+        margin-top: 7px;
+        opacity: 0;
+    }
+
+    #payment_form_subscribe_pro .date-wrap .child-control{
+        float: left;
+        margin-right: 2rem;
+    }
+
+    #payment_form_subscribe_pro .date-wrap input:focus{
+        outline: none;
+        -webkit-box-shadow: none;
+        box-shadow: none;
+    }
+
+    #payment_form_subscribe_pro .date-wrap .month{
+        position: relative;
+    }
+    #payment_form_subscribe_pro .date-wrap .month:after{
+        content: '/';
+        display: inline;
+        padding-bottom: inherit;
+        padding-top: inherit;
+        position: absolute;
+        right: -12px;
+        top: 5px;
+    }
+</style>

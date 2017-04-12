@@ -24,6 +24,9 @@ class AbstractCommandTest extends TestAbstractCommand
         $this->abstractCommand = $this->getMockBuilder(AbstractCommand::class)
             ->setConstructorArgs([
                 $this->requestBuilderMock,
+                $this->platformMock,
+                $this->storeManagerMock,
+                $this->subjectReaderMock,
                 $this->handlerMock,
                 $this->validatorMock,
                 $this->platformPaymentProfileServiceMock,
@@ -46,6 +49,9 @@ class AbstractCommandTest extends TestAbstractCommand
     public function testExecuteIfFailToProcessTransaction()
     {
         $exception = new \Exception('message');
+
+        $this->executeSetPlatformWebsite($this->subjectReaderMock, $this->storeManagerMock, $this->platformMock);
+
         $this->abstractCommand->expects($this->once())
             ->method('processTransaction')
             ->with($this->requestData)
@@ -62,12 +68,13 @@ class AbstractCommandTest extends TestAbstractCommand
     public function testFailToExecuteIfNotValid()
     {
         $transaction = $this->createTransactionMock();
-        
+        $this->executeSetPlatformWebsite($this->subjectReaderMock, $this->storeManagerMock, $this->platformMock);
+
         $resultMock = $this->getMockBuilder(ResultInterface::class)->getMock();
         $resultMock->expects($this->once())
             ->method('isValid')
             ->willReturn(false);
-        
+
         $this->abstractCommand->expects($this->once())
             ->method('processTransaction')
             ->with($this->requestData)
@@ -86,7 +93,7 @@ class AbstractCommandTest extends TestAbstractCommand
     public function testExecute()
     {
         $transaction = $this->createTransactionMock();
-        
+        $this->executeSetPlatformWebsite($this->subjectReaderMock, $this->storeManagerMock, $this->platformMock);
         $this->abstractCommand->expects($this->once())
             ->method('processTransaction')
             ->with($this->requestData)

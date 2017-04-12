@@ -13,8 +13,6 @@ class AbstractService extends \PHPUnit_Framework_TestCase
 
     protected $name = 'test_name';
 
-    protected $defaultWebsiteId = 'testId';
-
     protected function initService($service, $websiteId = null)
     {
         $sdkMock = $this->getMockBuilder(\SubscribePro\Sdk::class)

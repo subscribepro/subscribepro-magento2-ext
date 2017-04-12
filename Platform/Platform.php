@@ -25,6 +25,11 @@ class Platform
     protected $storeManager;
 
     /**
+     * @var string
+     */
+    protected $defaultWebsiteId;
+
+    /**
      * @var \SubscribePro\Sdk[]
      */
     protected $sdkByWebsiteCode = [];
@@ -48,16 +53,34 @@ class Platform
     }
 
     /**
+     * @param int $websiteId
+     */
+    public function setDefaultWebsite($websiteId)
+    {
+        $this->defaultWebsiteId = $websiteId;
+    }
+
+    /**
      * @param int|null $websiteId
      * @return \SubscribePro\Sdk
      */
     public function getSdk($websiteId = null)
     {
-        $websiteCode = $this->storeManager->getWebsite($websiteId)->getCode();
+        $websiteCode = $this->getWebsiteCode($websiteId);
         if (empty($this->sdkByWebsiteCode[$websiteCode])) {
             $this->sdkByWebsiteCode[$websiteCode] = $this->createSdk($websiteCode);
         }
         return $this->sdkByWebsiteCode[$websiteCode];
+    }
+
+    /**
+     * @param int|null $websiteId
+     * @return string
+     */
+    protected function getWebsiteCode($websiteId = null)
+    {
+        $websiteId = null !== $websiteId ? $websiteId : $this->defaultWebsiteId;
+        return $this->storeManager->getWebsite($websiteId)->getCode();
     }
 
     /**

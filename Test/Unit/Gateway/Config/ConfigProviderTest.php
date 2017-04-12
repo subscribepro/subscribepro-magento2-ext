@@ -4,6 +4,8 @@ namespace Swarming\SubscribePro\Test\Unit\Gateway\Config;
 
 use Magento\Payment\Model\CcConfig;
 use Magento\Payment\Model\CcConfigProvider;
+use Magento\Store\Model\StoreManagerInterface;
+use Magento\Store\Api\Data\StoreInterface;
 use SubscribePro\Tools\Config as ConfigTool;
 use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
 use Swarming\SubscribePro\Model\Config\General as GeneralConfig;
@@ -42,6 +44,11 @@ class ConfigProviderTest extends \PHPUnit_Framework_TestCase
      */
     protected $platformConfigToolMock;
 
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Store\Model\StoreManagerInterface
+     */
+    protected $storeManagerMock;
+
     protected function setUp()
     {
         $this->generalConfigMock = $this->getMockBuilder(GeneralConfig::class)
@@ -63,13 +70,18 @@ class ConfigProviderTest extends \PHPUnit_Framework_TestCase
         $this->platformConfigToolMock = $this->getMockBuilder(PlatformConfigTool::class)
             ->disableOriginalConstructor()
             ->getMock();
-        
+
+        $this->storeManagerMock = $this->getMockBuilder(StoreManagerInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $this->configProvider = new ConfigProvider(
             $this->generalConfigMock,
             $this->gatewayConfigMock,
             $this->ccConfigMock,
             $this->ccConfigProviderMock,
-            $this->platformConfigToolMock
+            $this->platformConfigToolMock,
+            $this->storeManagerMock
         );
     }
 
@@ -79,7 +91,9 @@ class ConfigProviderTest extends \PHPUnit_Framework_TestCase
             'vaultCode' => ConfigProvider::VAULT_CODE,
             'isActive' => false,
         ];
-
+        $storeMock = $this->getMockBuilder(StoreInterface::class)->getMock();
+        $this->storeManagerMock->expects($this->once())->method('getStore')->willReturn($storeMock);
+        $storeMock->expects($this->once())->method('getWebsiteId')->willReturn(1);
         $this->generalConfigMock->expects($this->once())->method('isEnabled')->willReturn(false);
 
         $this->gatewayConfigMock->expects($this->never())->method('isActive');
@@ -120,6 +134,9 @@ class ConfigProviderTest extends \PHPUnit_Framework_TestCase
         $icons, 
         $result
     ) {
+        $storeMock = $this->getMockBuilder(StoreInterface::class)->getMock();
+        $this->storeManagerMock->expects($this->once())->method('getStore')->willReturn($storeMock);
+        $storeMock->expects($this->once())->method('getWebsiteId')->willReturn(1);
         $this->generalConfigMock->expects($this->once())->method('isEnabled')->willReturn(true);
 
         $this->gatewayConfigMock->expects($this->once())->method('isActive')->willReturn($isActive);

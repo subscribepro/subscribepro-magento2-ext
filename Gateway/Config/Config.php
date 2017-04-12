@@ -11,38 +11,42 @@ class Config extends \Magento\Payment\Gateway\Config\Config
     const KEY_CC_USE_CCV = 'useccv';
 
     /**
+     * @param int|null $storeId
      * @return bool
      */
-    public function isActive()
+    public function isActive($storeId = null)
     {
-        return (bool) $this->getValue(self::KEY_ACTIVE);
+        return (bool) $this->getValue(self::KEY_ACTIVE, $storeId);
     }
 
     /**
+     * @param int|null $storeId
      * @return bool
      */
-    public function hasVerification()
+    public function hasVerification($storeId = null)
     {
-        return (bool) $this->getValue(self::KEY_CC_USE_CCV);
+        return (bool) $this->getValue(self::KEY_CC_USE_CCV, $storeId);
     }
 
     /**
+     * @param int|null $storeId
      * @return array
      */
-    public function getAvailableCardTypes()
+    public function getAvailableCardTypes($storeId = null)
     {
-        $ccTypes = $this->getValue(self::KEY_CC_TYPES);
+        $ccTypes = $this->getValue(self::KEY_CC_TYPES, $storeId);
 
         return !empty($ccTypes) ? explode(',', $ccTypes) : [];
     }
 
     /**
+     * @param int|null $storeId
      * @return array
      */
-    public function getCcTypesMapper()
+    public function getCcTypesMapper($storeId = null)
     {
         $result = json_decode(
-            $this->getValue(self::KEY_CC_TYPES_MAPPER),
+            $this->getValue(self::KEY_CC_TYPES_MAPPER, $storeId),
             true
         );
 
@@ -51,11 +55,12 @@ class Config extends \Magento\Payment\Gateway\Config\Config
 
     /**
      * @param string $cardType
+     * @param int|null $storeId
      * @return string
      */
-    public function getMappedCcType($cardType)
+    public function getMappedCcType($cardType, $storeId = null)
     {
-        $mapper = $this->getCcTypesMapper();
+        $mapper = $this->getCcTypesMapper($storeId);
         return $cardType && isset($mapper[$cardType]) ? $mapper[$cardType] : $cardType;
     }
 }
