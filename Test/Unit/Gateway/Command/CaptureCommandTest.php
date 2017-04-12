@@ -16,6 +16,9 @@ class CaptureCommandTest extends AbstractCommand
         $this->initProperties();
         $this->captureCommand = new CaptureCommand(
             $this->requestBuilderMock,
+            $this->platformMock,
+            $this->storeManagerMock,
+            $this->subjectReaderMock,
             $this->handlerMock,
             $this->validatorMock,
             $this->platformPaymentProfileServiceMock,

@@ -16,6 +16,9 @@ class RefundCommandTest extends AbstractCommand
         $this->initProperties();
         $this->refundCommand = new RefundCommand(
             $this->requestBuilderMock,
+            $this->platformMock,
+            $this->storeManagerMock,
+            $this->subjectReaderMock,
             $this->handlerMock,
             $this->validatorMock,
             $this->platformPaymentProfileServiceMock,

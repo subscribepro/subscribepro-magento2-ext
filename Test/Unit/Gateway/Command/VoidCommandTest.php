@@ -17,6 +17,9 @@ class VoidCommandTest extends AbstractCommand
         $this->initProperties();
         $this->voidCommand = new VoidCommand(
             $this->requestBuilderMock,
+            $this->platformMock,
+            $this->storeManagerMock,
+            $this->subjectReaderMock,
             $this->handlerMock,
             $this->validatorMock,
             $this->platformPaymentProfileServiceMock,

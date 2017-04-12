@@ -17,6 +17,9 @@ class VaultAuthorizeCommandTest extends AbstractCommand
         $this->initProperties();
         $this->vaultAuthorizeCommand = new VaultAuthorizeCommand(
             $this->requestBuilderMock,
+            $this->platformMock,
+            $this->storeManagerMock,
+            $this->subjectReaderMock,
             $this->handlerMock,
             $this->validatorMock,
             $this->platformPaymentProfileServiceMock,

@@ -21,6 +21,9 @@ class PurchaseCommandTest extends AbstractProfileCreatorCommand
         $this->initProperties();
         $this->purchaseCommand = new PurchaseCommand(
             $this->requestBuilderMock,
+            $this->platformMock,
+            $this->storeManagerMock,
+            $this->subjectReaderMock,
             $this->handlerMock,
             $this->validatorMock,
             $this->platformPaymentProfileServiceMock,

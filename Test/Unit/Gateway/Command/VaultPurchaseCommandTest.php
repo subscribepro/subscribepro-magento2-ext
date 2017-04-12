@@ -17,6 +17,9 @@ class VaultPurchaseCommandTest extends AbstractCommand
         $this->initProperties();
         $this->vaultPurchaseCommand = new VaultPurchaseCommand(
             $this->requestBuilderMock,
+            $this->platformMock,
+            $this->storeManagerMock,
+            $this->subjectReaderMock,
             $this->handlerMock,
             $this->validatorMock,
             $this->platformPaymentProfileServiceMock,

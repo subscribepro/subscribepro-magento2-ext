@@ -4,6 +4,7 @@ namespace Swarming\SubscribePro\Test\Unit\Gateway\Config;
 
 use Magento\Payment\Model\CcConfig;
 use Magento\Payment\Model\CcConfigProvider;
+use Magento\Store\Model\StoreManagerInterface;
 use SubscribePro\Tools\Config as ConfigTool;
 use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
 use Swarming\SubscribePro\Model\Config\General as GeneralConfig;
@@ -42,6 +43,11 @@ class ConfigProviderTest extends \PHPUnit_Framework_TestCase
      */
     protected $platformConfigToolMock;
 
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Store\Model\StoreManagerInterface
+     */
+    protected $storeManagerMock;
+
     protected function setUp()
     {
         $this->generalConfigMock = $this->getMockBuilder(GeneralConfig::class)
@@ -63,13 +69,18 @@ class ConfigProviderTest extends \PHPUnit_Framework_TestCase
         $this->platformConfigToolMock = $this->getMockBuilder(PlatformConfigTool::class)
             ->disableOriginalConstructor()
             ->getMock();
-        
+
+        $this->storeManagerMock = $this->getMockBuilder(StoreManagerInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $this->configProvider = new ConfigProvider(
             $this->generalConfigMock,
             $this->gatewayConfigMock,
             $this->ccConfigMock,
             $this->ccConfigProviderMock,
-            $this->platformConfigToolMock
+            $this->platformConfigToolMock,
+            $this->storeManagerMock
         );
     }
 
