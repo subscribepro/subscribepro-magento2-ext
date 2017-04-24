@@ -8,7 +8,7 @@ class PaymentAction implements \Magento\Framework\Option\ArrayInterface
     const AUTHORIZE_CAPTURE = 'authorize_capture';
 
     /**
-     * @return array
+     * @return string[]
      */
     public function toOptionArray()
     {

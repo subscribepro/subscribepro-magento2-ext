@@ -38,7 +38,7 @@ class BundleProduct extends DefaultInspector implements InspectorInterface
 
     /**
      * @param \Magento\Catalog\Model\Product $product
-     * @return array
+     * @return string[]
      */
     protected function getSelectionsIds($product)
     {

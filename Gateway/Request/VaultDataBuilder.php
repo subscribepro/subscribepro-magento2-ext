@@ -27,7 +27,7 @@ class VaultDataBuilder implements BuilderInterface
 
     /**
      * @param array $buildSubject
-     * @return array
+     * @return string[]
      * @throws Exception
      * @throws \InvalidArgumentException
      */

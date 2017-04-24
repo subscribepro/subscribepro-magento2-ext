@@ -47,7 +47,7 @@ interface ProductInterface extends \SubscribePro\Service\Product\ProductInterfac
     public function setImageUrl($imageUrl);
 
     /**
-     * @return array
+     * @return string[]
      */
     public function getOptionList();
 

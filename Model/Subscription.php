@@ -29,7 +29,7 @@ class Subscription extends PlatformSubscription implements SubscriptionInterface
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     public function getProductOption()
     {

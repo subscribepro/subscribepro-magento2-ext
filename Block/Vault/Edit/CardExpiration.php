@@ -14,7 +14,7 @@ class CardExpiration extends \Swarming\SubscribePro\Block\Vault\CardRenderer
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     protected function updateJsLayout()
     {

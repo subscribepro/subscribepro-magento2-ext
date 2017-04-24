@@ -17,7 +17,7 @@ class Advanced extends General
 
     /**
      * @param string|null $websiteCode
-     * @return array
+     * @return string[]
      */
     public function getWebhookIpAddresses($websiteCode = null)
     {
@@ -46,7 +46,7 @@ class Advanced extends General
 
     /**
      * @param string $ips
-     * @return array
+     * @return string[]
      */
     protected function explodeIps($ips)
     {

@@ -30,7 +30,7 @@ interface SubscriptionInterface extends \SubscribePro\Service\Subscription\Subsc
     public function setProduct(ProductInterface $product);
 
     /**
-     * @return array
+     * @return string[]
      */
     public function getProductOption();
 

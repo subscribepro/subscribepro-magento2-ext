@@ -99,7 +99,7 @@ class Subscriptions extends \Magento\Framework\View\Element\Template
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     public function getCustomerData()
     {

@@ -103,7 +103,7 @@ class Subscription extends \Magento\Checkout\Block\Cart\Additional\Info
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     protected function generateJsLayout()
     {

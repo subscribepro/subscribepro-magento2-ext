@@ -66,7 +66,7 @@ class ConfigProvider
 
     /**
      * @param int|null $storeId
-     * @return array
+     * @return string[]
      */
     public function getConfig($storeId = null)
     {
@@ -93,7 +93,7 @@ class ConfigProvider
 
     /**
      * @param int|null $storeId
-     * @return array
+     * @return string[]
      */
     protected function getCcAvailableTypes($storeId = null)
     {

@@ -23,7 +23,7 @@ class CustomerDataBuilder implements BuilderInterface
 
     /**
      * @param array $buildSubject
-     * @return array
+     * @return string[]
      * @throws \InvalidArgumentException
      */
     public function build(array $buildSubject)
