@@ -66,7 +66,7 @@ class Subscription extends AbstractModifier
 
     /**
      * @param array $meta
-     * @return array
+     * @return string[]
      */
     protected function customizeSubscriptionField(array $meta)
     {

@@ -33,7 +33,7 @@ class Configuration
      * @param \Magento\Catalog\Helper\Product\Configuration $subject
      * @param \Closure $proceed
      * @param \Magento\Catalog\Model\Product\Configuration\Item\ItemInterface $item
-     * @return array
+     * @return string[]
      */
     public function aroundGetCustomOptions(
         \Magento\Catalog\Helper\Product\Configuration $subject,
@@ -50,7 +50,7 @@ class Configuration
 
     /**
      * @param \Magento\Catalog\Model\Product\Configuration\Item\ItemInterface $item
-     * @return array
+     * @return string[]
      */
     protected function getSubscriptionOptions($item)
     {
