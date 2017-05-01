@@ -48,7 +48,7 @@ class TransactionIdHandler implements HandlerInterface
 
     /**
      * @param \SubscribePro\Service\Transaction\TransactionInterface $transaction
-     * @return array
+     * @return string[]
      */
     protected function getTransactionDetails($transaction)
     {

@@ -30,7 +30,7 @@ class Config extends \Magento\Payment\Gateway\Config\Config
 
     /**
      * @param int|null $storeId
-     * @return array
+     * @return string[]
      */
     public function getAvailableCardTypes($storeId = null)
     {
@@ -41,7 +41,7 @@ class Config extends \Magento\Payment\Gateway\Config\Config
 
     /**
      * @param int|null $storeId
-     * @return array
+     * @return string[]
      */
     public function getCcTypesMapper($storeId = null)
     {

@@ -11,7 +11,7 @@ class CartRuleCombine implements \Magento\Framework\Option\ArrayInterface
     const TYPE_APPLY_SUBSCRIPTION = 'subscription';
 
     /**
-     * @return array
+     * @return string[]
      */
     public function toOptionArray()
     {

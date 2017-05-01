@@ -61,7 +61,7 @@ interface SubscriptionOptionInterface
     public function setSubscriptionId($subscriptionId);
 
     /**
-     * @return array
+     * @return mixed[]
      */
     public function __toArray();
 }

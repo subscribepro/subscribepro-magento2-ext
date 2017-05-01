@@ -27,7 +27,7 @@ class CaptureDataBuilder implements BuilderInterface
 
     /**
      * @param array $buildSubject
-     * @return array
+     * @return string[]
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \InvalidArgumentException
      */

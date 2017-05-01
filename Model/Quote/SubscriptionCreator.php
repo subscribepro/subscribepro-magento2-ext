@@ -61,7 +61,7 @@ class SubscriptionCreator
     /**
      * @param \Magento\Quote\Model\Quote $quote
      * @param \Magento\Sales\Api\Data\OrderInterface $order
-     * @return array
+     * @return string[]
      */
     public function createSubscriptions($quote, $order)
     {
