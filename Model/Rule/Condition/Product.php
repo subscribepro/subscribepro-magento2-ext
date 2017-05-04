@@ -4,6 +4,10 @@ namespace Swarming\SubscribePro\Model\Rule\Condition;
 
 class Product extends \Magento\SalesRule\Model\Rule\Condition\Product
 {
+    const SUBSCRIPTION_STATUS_ANY = 0;
+    const SUBSCRIPTION_STATUS_NEW = 1;
+    const SUBSCRIPTION_STATUS_REORDER = 2;
+
     /**
      * Add special attributes
      *
@@ -26,11 +30,22 @@ class Product extends \Magento\SalesRule\Model\Rule\Condition\Product
      */
     public function validate(\Magento\Framework\Model\AbstractModel $model)
     {
+        if ($model->getProductOption()
+            && $model->getProductOption()->getExtensionAttributes()
+            && $model->getProductOption()->getExtensionAttributes()->getSubscriptionOption()
+        ) {
+            $subscriptionOptions = $model->getProductOption()->getExtensionAttributes()->getSubscriptionOption();
+            $subscriptionInterval = isset($subscriptionOptions['interval']) ? $subscriptionOptions['interval'] : false;
+            $subscriptionFulfilling = isset($subscriptionOptions['is_fulfilling']) ? (bool) $subscriptionOptions['is_fulfilling'] : false;
+            $subscriptionReorderOrdinal = isset($subscriptionOptions['reorder_ordinal']) ? $subscriptionOptions['reorder_ordinal'] : false;
+            $itemCreatesNewSubscription = !$subscriptionFulfilling;
+        } else {
+            return false;
+        }
+
         switch ($this->getAttribute()) {
             case 'quote_item_part_of_subscription':
                 // Check quote item attributes
-                $itemFulfilsSubscription = $model->getData('item_fulfils_subscription');
-                $itemCreatesNewSubscription = $model->getData('create_new_subscription_at_checkout');
                 // Get value set on rule condition
                 $conditionValue = $this->getValueParsed();
                 // Get operator set on rule condition
@@ -38,7 +53,7 @@ class Product extends \Magento\SalesRule\Model\Rule\Condition\Product
                 // Handle different status types
                 switch ($conditionValue) {
                     case self::SUBSCRIPTION_STATUS_ANY:
-                        $matchResult = (bool) ($itemFulfilsSubscription || $itemCreatesNewSubscription);
+                        $matchResult = true;
                         break;
                     case self::SUBSCRIPTION_STATUS_NEW:
                         $matchResult = (bool) $itemCreatesNewSubscription;
@@ -59,28 +74,26 @@ class Product extends \Magento\SalesRule\Model\Rule\Condition\Product
                 return $matchResult;
             case 'quote_item_subscription_interval':
                 // Check quote item attributes
-                if ($model->getData('create_new_subscription_at_checkout') == '1') {
+                if ($itemCreatesNewSubscription) {
                     // This is a new subscription
-                    return parent::validateAttribute($model->getData('new_subscription_interval'));
+                    return parent::validateAttribute(0);
                 }
-                else if ($model->getData('item_fulfils_subscription') == '1') {
+                else if ($subscriptionFulfilling) {
                     // This is a recurring order on a subscription
-                    return parent::validateAttribute($model->getData('subscription_interval'));
+                    return parent::validateAttribute($subscriptionInterval);
                 }
                 else {
                     return false;
                 }
             case 'quote_item_subscription_reorder_ordinal':
                 // Check quote item attributes
-                if ($model->getData('create_new_subscription_at_checkout') == '1') {
+                if ($itemCreatesNewSubscription) {
                     // This is a new subscription
-                    $reorderOrdinal = 0;
-                    return parent::validateAttribute($reorderOrdinal);
+                    return parent::validateAttribute(0);
                 }
-                else if ($model->getData('item_fulfils_subscription') == '1') {
+                else if ($subscriptionFulfilling) {
                     // This is a recurring order on a subscription
-                    $reorderOrdinal = $model->getData('subscription_reorder_ordinal');
-                    return parent::validateAttribute($reorderOrdinal);
+                    return parent::validateAttribute($subscriptionReorderOrdinal);
                 }
                 else {
                     return false;

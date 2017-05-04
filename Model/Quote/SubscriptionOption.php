@@ -78,4 +78,21 @@ class SubscriptionOption extends AbstractSimpleObject implements SubscriptionOpt
     {
         return $this->setData(self::SUBSCRIPTION_ID, $subscriptionId);
     }
+
+    /**
+     * @return int|null
+     */
+    public function getReorderOrdinal()
+    {
+        return $this->_get(self::REORDER_ORDINAL);
+    }
+
+    /**
+     * @param string $reorderOrdinal
+     * @return $this
+     */
+    public function setReorderOrdinal($reorderOrdinal)
+    {
+        return $this->setData(self::REORDER_ORDINAL, $reorderOrdinal);
+    }
 }
