@@ -35,9 +35,9 @@ class Product extends \Magento\SalesRule\Model\Rule\Condition\Product
             && $model->getProductOption()->getExtensionAttributes()->getSubscriptionOption()
         ) {
             $subscriptionOptions = $model->getProductOption()->getExtensionAttributes()->getSubscriptionOption();
-            $subscriptionInterval = isset($subscriptionOptions['interval']) ? $subscriptionOptions['interval'] : false;
-            $subscriptionFulfilling = isset($subscriptionOptions['is_fulfilling']) ? (bool) $subscriptionOptions['is_fulfilling'] : false;
-            $subscriptionReorderOrdinal = isset($subscriptionOptions['reorder_ordinal']) ? $subscriptionOptions['reorder_ordinal'] : false;
+            $subscriptionInterval = $subscriptionOptions->getInterval();
+            $subscriptionFulfilling = $subscriptionOptions->getIsFulfilling();
+            $subscriptionReorderOrdinal = $subscriptionOptions->getReorderOrdinal();
             $itemCreatesNewSubscription = !$subscriptionFulfilling;
         } else {
             return false;
@@ -56,10 +56,10 @@ class Product extends \Magento\SalesRule\Model\Rule\Condition\Product
                         $matchResult = true;
                         break;
                     case self::SUBSCRIPTION_STATUS_NEW:
-                        $matchResult = (bool) $itemCreatesNewSubscription;
+                        $matchResult = $itemCreatesNewSubscription;
                         break;
                     case self::SUBSCRIPTION_STATUS_REORDER:
-                        $matchResult = (bool) ($itemFulfilsSubscription && !$itemCreatesNewSubscription);
+                        $matchResult = $subscriptionFulfilling;
                         break;
                     default:
                         $matchResult = false;
