@@ -84,8 +84,6 @@ class SubscriptionOption extends AbstractSimpleObject implements SubscriptionOpt
      */
     public function getReorderOrdinal()
     {
-        $string = "\n\n --------------- \n" . json_encode(['data' => $this->_data]) . "\n";
-        file_put_contents('/var/www/magento2/var/log/debugger.log', $string , FILE_APPEND | LOCK_EX);
         return $this->_get(self::REORDER_ORDINAL);
     }
 

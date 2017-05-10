@@ -2,6 +2,11 @@
 
 namespace Swarming\SubscribePro\Model\Rule\Condition;
 
+/**
+ * Class Product
+ * @package Swarming\SubscribePro\Model\Rule\Condition
+ * @method getAttribute()
+ */
 class Product extends \Magento\SalesRule\Model\Rule\Condition\Product
 {
     const SUBSCRIPTION_STATUS_ANY = 0;
@@ -57,7 +62,7 @@ class Product extends \Magento\SalesRule\Model\Rule\Condition\Product
                         $matchResult = false;
                         break;
                 }
-                // Only == or != operators supported
+                // Since this attribute is a select list only == and != operators are allowed
                 // In case of !=, do invert $matchResult
                 if($op != '==') {
                     $matchResult = !$matchResult;
@@ -148,11 +153,12 @@ class Product extends \Magento\SalesRule\Model\Rule\Condition\Product
      * Helper that retrieves the subscription options associated with the quote
      *
      * @param \Magento\Framework\Model\AbstractModel $model
-     * @return \Swarming\SubscribePro\Model\Quote\SubscriptionOption|null
+     * @return \Swarming\SubscribePro\Api\Data\SubscriptionOptionInterface|null
      */
-    protected function getSubscriptionOptions($model)
+    protected function getSubscriptionOptions(\Magento\Framework\Model\AbstractModel $model)
     {
-        if ($model->getProductOption()
+        if ($model instanceof \Magento\Quote\Model\Quote\Item\Interceptor
+            && $model->getProductOption()
             && $model->getProductOption()->getExtensionAttributes()
             && $model->getProductOption()->getExtensionAttributes()->getSubscriptionOption()
         ) {
