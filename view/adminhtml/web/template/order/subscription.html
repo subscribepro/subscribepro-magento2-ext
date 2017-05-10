@@ -1,0 +1,62 @@
+<!-- ko if: isProductLoaded() -->
+<div class="fieldset">
+    <!-- ko if: isSubscriptionMode(subscriptionOnlyMode)  -->
+    <input type="hidden"
+           data-bind="
+                     value: subscriptionOption,
+                     attr: {name: 'cart['+quoteItemId+'][subscription_option][option]'}">
+    <!-- /ko -->
+    <!-- ko if: isSubscriptionMode(subscriptionAndOneTimePurchaseMode) -->
+    <p>
+        <!-- ko i18n: 'Would you like to receive regular shipments of this item?' --><!-- /ko -->
+    </p>
+    <div class="field choice">
+        <input type="radio"
+               class="radio"
+               data-bind="
+                       checked: subscriptionOptionValue,
+                       value: oneTimePurchaseOption,
+                       attr: {
+                         name: 'cart['+quoteItemId+'][subscription_option][option]',
+                         id: quoteItemId+'_'+oneTimePurchaseOption,
+                       }" />
+        <label class="label" data-bind="attr: {for:quoteItemId+'_'+oneTimePurchaseOption}">
+            <!-- ko i18n: 'One Time Delivery' --><!-- /ko -->
+        </label>
+    </div>
+    <div class="field choice">
+        <input type="radio"
+               class="radio"
+               data-bind="
+                       checked: subscriptionOptionValue,
+                       value: subscriptionOption,
+                       attr: {
+                         name: 'cart['+quoteItemId+'][subscription_option][option]',
+                         id: quoteItemId+'_'+subscriptionOption
+                       }" />
+        <label class="label" data-bind="attr: {for:quoteItemId+'_'+subscriptionOption}">
+            <!-- ko i18n: 'Regular Delivery' --><!-- /ko -->
+        </label>
+    </div>
+    <!-- /ko -->
+    <div class="field">
+        <label class="label">
+            <!-- ko i18n: 'Delivery every' --><!-- /ko -->
+            <!-- ko text: ':' --><!-- /ko -->
+        </label>
+        <div class="control">
+            <select
+                    data-bind="
+                      options: product.intervals,
+                      checked: intervalValue,
+                      value: intervalValue,
+                      attr: {name: 'cart['+quoteItemId+'][subscription_option][interval]'}">
+            </select>
+        </div>
+    </div>
+</div>
+<!-- /ko -->
+
+<!-- ko foreach: getRegion('messages') -->
+<!-- ko template: getTemplate() --><!-- /ko -->
+<!--/ko-->
