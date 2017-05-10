@@ -16,6 +16,8 @@ interface SubscriptionOptionInterface
 
     const SUBSCRIPTION_ID = 'subscription_id';
 
+    const REORDER_ORDINAL = 'reorder_ordinal';
+
     /**
      * @return string|null
      */
@@ -59,6 +61,22 @@ interface SubscriptionOptionInterface
      * @return $this
      */
     public function setSubscriptionId($subscriptionId);
+
+    /**
+     * @return string
+     */
+    public function getReorderOrdinal();
+
+    /**
+     * @param string $reorderOrdinal
+     * @return $this
+     */
+    public function setReorderOrdinal($reorderOrdinal);
+
+    /**
+     * @return bool
+     */
+    public function getCreatesNewSubscription();
 
     /**
      * @return mixed[]

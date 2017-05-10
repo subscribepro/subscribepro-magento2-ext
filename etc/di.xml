@@ -5,6 +5,15 @@
     <preference for="Swarming\SubscribePro\Api\AddressManagementInterface" type="Swarming\SubscribePro\Service\AddressManagement" />
     <preference for="Swarming\SubscribePro\Api\Data\SubscriptionOptionInterface" type="Swarming\SubscribePro\Model\Quote\SubscriptionOption" />
     <preference for="Swarming\SubscribePro\Model\CatalogRule\InspectorInterface" type="Swarming\SubscribePro\Model\CatalogRule\Inspector" />
+    <preference for="Magento\SalesRule\Model\Rule\Condition\Product" type="Swarming\SubscribePro\Model\Rule\Condition\Product" />
+
+    <type name="Swarming\SubscribePro\Model\Rule\Condition\Product">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="form_name" xsi:type="string">sales_rule_form</item>
+            </argument>
+        </arguments>
+    </type>
 
     <type name="Swarming\SubscribePro\Platform\Platform">
         <arguments>
