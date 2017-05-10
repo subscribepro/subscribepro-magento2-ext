@@ -80,10 +80,12 @@ class SubscriptionOption extends AbstractSimpleObject implements SubscriptionOpt
     }
 
     /**
-     * @return int|null
+     * @return string|null
      */
     public function getReorderOrdinal()
     {
+        $string = "\n\n --------------- \n" . json_encode(['data' => $this->_data]) . "\n";
+        file_put_contents('/var/www/magento2/var/log/debugger.log', $string , FILE_APPEND | LOCK_EX);
         return $this->_get(self::REORDER_ORDINAL);
     }
 
@@ -94,5 +96,15 @@ class SubscriptionOption extends AbstractSimpleObject implements SubscriptionOpt
     public function setReorderOrdinal($reorderOrdinal)
     {
         return $this->setData(self::REORDER_ORDINAL, $reorderOrdinal);
+    }
+
+    /**
+     * This determines if a subscription was ordered from the frontend
+     *
+     * @return bool
+     */
+    public function getCreatesNewSubscription()
+    {
+        return (bool)($this->getOption() === 'subscription');
     }
 }
