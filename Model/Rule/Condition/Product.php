@@ -66,24 +66,20 @@ class Product extends \Magento\SalesRule\Model\Rule\Condition\Product
                 return $matchResult;
             case 'quote_item_subscription_interval':
                 // Check quote item attributes
-                if ($subscriptionOptions->getCreatesNewSubscription()) {
-                    // This is a new subscription
-                    return parent::validateAttribute(0);
-                } else if ($subscriptionOptions->getIsFulfilling()) {
-                    // This is a recurring order on a subscription
+                if ($subscriptionOptions->getCreatesNewSubscription() || $subscriptionOptions->getIsFulfilling()) {
                     return parent::validateAttribute($subscriptionOptions->getInterval());
                 } else {
                     return false;
                 }
             case 'quote_item_subscription_reorder_ordinal':
                 // Check quote item attributes
-                if ($itemCreatesNewSubscription) {
+                if ($subscriptionOptions->getCreatesNewSubscription()) {
                     // This is a new subscription
-                    return $this->validateOrdinal(0, $model);
+                    return $this->validateAttribute(0);
                 }
-                else if ($subscriptionFulfilling) {
+                else if ($subscriptionOptions->getIsFulfilling()) {
                     // This is a recurring order on a subscription
-                    return $this->validateOrdinal($subscriptionOptions->getReorderOrdinal(), $model);
+                    return $this->validateAttribute($subscriptionOptions->getReorderOrdinal());
                 }
                 else {
                     return false;
@@ -146,25 +142,6 @@ class Product extends \Magento\SalesRule\Model\Rule\Condition\Product
             default:
                 return parent::getValueSelectOptions();
         }
-    }
-
-    /**
-     * Validates the ordinal with the given comma delimited list
-     *
-     * @param string $ordinalValue
-     * @param \Magento\Framework\Model\AbstractModel $model
-     * @return bool
-     */
-    protected function validateOrdinal($ordinalValue, $model)
-    {
-        $ordinal = $this->getValueParsed();
-        $ordinalArray = explode(',', $ordinal);
-        foreach($ordinalArray as $value) {
-            if ($value === $ordinalValue) {
-                return true;
-            }
-        }
-        return parent::validate($model);
     }
 
     /**
