@@ -6,7 +6,7 @@ use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Exception\LocalizedException;
 
-class UpdateAdminCartAfter extends CheckoutCartAbstract implements ObserverInterface
+class UpdateQuantityOnQuoteAfter extends CheckoutCartAbstract implements ObserverInterface
 {
     /**
      * @var \Swarming\SubscribePro\Helper\QuoteItem
@@ -34,8 +34,7 @@ class UpdateAdminCartAfter extends CheckoutCartAbstract implements ObserverInter
         \Magento\Framework\App\State $appState,
         \Psr\Log\LoggerInterface $logger,
         \Swarming\SubscribePro\Helper\QuoteItem $quoteItemHelper
-    )
-    {
+    ) {
         $this->quoteItemHelper = $quoteItemHelper;
         parent::__construct(
             $generalConfig,
@@ -56,10 +55,12 @@ class UpdateAdminCartAfter extends CheckoutCartAbstract implements ObserverInter
      */
     public function execute(Observer $observer)
     {
-        /** @var array $items */
-        $request = $observer->getData('request');
+        if (!$this->generalConfig->isEnabled()) {
+            return;
+        }
 
-        print_r($request);die();
+        /** @var array $items */
+        $items = $observer->getData('items');
 
         foreach ($items as $quoteItem) {
             $subscriptionParams = $this->quoteItemHelper->getSubscriptionParams($quoteItem);

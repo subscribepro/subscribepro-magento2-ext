@@ -17,6 +17,9 @@ class CartUpdateItemsAfter extends CheckoutCartAbstract implements ObserverInter
      */
     public function execute(Observer $observer)
     {
+        $string = "\n --------------- \n" . json_encode(['data' => 'Im here man']) . "\n";
+        file_put_contents('/var/www/magento2/var/log/debugger.log', $string , FILE_APPEND | LOCK_EX);
+
         if (!$this->generalConfig->isEnabled()) {
             return;
         }

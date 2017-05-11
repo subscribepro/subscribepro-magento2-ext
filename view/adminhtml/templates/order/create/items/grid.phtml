@@ -166,17 +166,17 @@
                         <td colspan="4"></td>
                         <td colspan="4">
                             <p>
-                                <input type="radio" class="radio" name="item[<?php /* @escapeNotVerified */ echo $_item->getId() ?>][subscription_option]" id="item-<?php /* @escapeNotVerified */ echo $_item->getId() ?>-one-time-purchase" checked="checked" />
+                                <input type="radio" class="radio" name="item[<?php /* @escapeNotVerified */ echo $_item->getId() ?>][admin_subscription_option][option]" id="item-<?php /* @escapeNotVerified */ echo $_item->getId() ?>-one-time-purchase" checked="checked" value="onetime_purchase" />
                                 <label for="item-<?php /* @escapeNotVerified */ echo $_item->getId() ?>-one-time-purchase">One Time Purchase</label>
                             </p>
                             <p>
-                                <input type="radio" class="radio" name="item[<?php /* @escapeNotVerified */ echo $_item->getId() ?>][subscription_option]" id="item-<?php /* @escapeNotVerified */ echo $_item->getId() ?>-subscription-option" />
+                                <input type="radio" class="radio" name="item[<?php /* @escapeNotVerified */ echo $_item->getId() ?>][admin_subscription_option][option]" id="item-<?php /* @escapeNotVerified */ echo $_item->getId() ?>-subscription-option" value="subscription" />
                                 <label for="item-<?php /* @escapeNotVerified */ echo $_item->getId() ?>-subscription-option">Regular Delivery</label>
                             </p>
 
                             <p><b>Deliver Every:</b></p>
                             <p>
-                                <select class="admin__control-select" name="item[<?php /* @escapeNotVerified */ echo $_item->getId() ?>][subscription_option_value]">
+                                <select class="admin__control-select" name="item[<?php /* @escapeNotVerified */ echo $_item->getId() ?>][admin_subscription_option][interval]">
                                     <?php foreach($subscriptionProduct['intervals'] as $interval): ?>
                                         <option><?php echo $interval; ?></option>
                                     <?php endforeach; ?>
