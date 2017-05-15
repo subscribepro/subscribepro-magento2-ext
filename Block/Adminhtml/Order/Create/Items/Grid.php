@@ -72,6 +72,8 @@ class Grid extends \Magento\Sales\Block\Adminhtml\Order\Create\Items\Grid
     }
 
     /**
+     * Determines if a product has the subscription option enabled
+     *
      * @param $quoteItem
      * @return bool
      */
@@ -80,6 +82,8 @@ class Grid extends \Magento\Sales\Block\Adminhtml\Order\Create\Items\Grid
     }
 
     /**
+     * Returns the subscription options that are set in the subscribepro platform for this product
+     *
      * @param \Magento\Quote\Model\Quote\Item $quoteItem
      * @return array
      * @throws \Magento\Framework\Exception\NoSuchEntityException
@@ -99,6 +103,12 @@ class Grid extends \Magento\Sales\Block\Adminhtml\Order\Create\Items\Grid
         return $subscriptionProduct->toArray();
     }
 
+    /**
+     * Returns the current set subscription parameters of a quote item in array form
+     *
+     * @param Item $quoteItem
+     * @return array
+     */
     public function getSubscriptionParameters(Item $quoteItem)
     {
         return [
