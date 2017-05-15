@@ -2,9 +2,7 @@
 
 namespace Swarming\SubscribePro\Plugin\Quote;
 
-use Swarming\SubscribePro\Api\Data\SubscriptionOptionInterface;
 use Magento\Framework\App\State as AppState;
-use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Quote\Model\Quote\Item as QuoteItem;
@@ -47,6 +45,11 @@ class QuoteItemUpdater
     protected $logger;
 
     /**
+     * @var \Magento\Quote\Model\Quote\Item\Updater
+     */
+    protected $subject;
+
+    /**
      * @param \Swarming\SubscribePro\Platform\Manager\Product $platformProductManager
      * @param \Swarming\SubscribePro\Model\Quote\SubscriptionOption\Updater $subscriptionOptionUpdater
      * @param \Magento\Catalog\Api\ProductRepositoryInterface $productRepository
@@ -86,6 +89,7 @@ class QuoteItemUpdater
         \Magento\Quote\Model\Quote\Item $item,
         array $info
     ) {
+        $this->subject = $subject;
         $return = $proceed($item, $info);
         $this->updateAdminQuoteItem($item, $info);
         return $return;

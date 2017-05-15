@@ -80,7 +80,8 @@ class Grid extends \Magento\Sales\Block\Adminhtml\Order\Create\Items\Grid
     }
 
     /**
-     * @return \Swarming\SubscribePro\Api\Data\ProductInterface
+     * @param \Magento\Quote\Model\Quote\Item $quoteItem
+     * @return array
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getSubscriptionProduct(Item $quoteItem)
