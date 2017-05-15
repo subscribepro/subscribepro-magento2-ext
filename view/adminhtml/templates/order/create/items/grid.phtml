@@ -163,7 +163,7 @@
                 <?php if ($block->isSubscriptionProduct($_item)): ?>
                     <?php $subscriptionProduct = $block->getSubscriptionProduct($_item)->toArray(); ?>
                     <tr>
-                        <td colspan="4"></td>
+                        <td colspan="4"><?php echo print_r($subscriptionProduct, true);?></td>
                         <td colspan="4">
                             <p>
                                 <input type="radio" class="radio" name="item[<?php /* @escapeNotVerified */ echo $_item->getId() ?>][admin_subscription_option][option]" id="item-<?php /* @escapeNotVerified */ echo $_item->getId() ?>-one-time-purchase" checked="checked" value="onetime_purchase" />
