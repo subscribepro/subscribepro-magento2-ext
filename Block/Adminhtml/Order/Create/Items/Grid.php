@@ -1,15 +1,10 @@
 <?php
-/**
- * Copyright © 2016 Magento. All rights reserved.
- * See COPYING.txt for license details.
- */
+
 namespace Swarming\SubscribePro\Block\Adminhtml\Order\Create\Items;
 
-use Magento\Catalog\Model\Product\Attribute\Source\Status as ProductStatus;
 use Magento\CatalogInventory\Api\StockRegistryInterface;
 use Magento\CatalogInventory\Api\StockStateInterface;
 use Magento\Framework\Pricing\PriceCurrencyInterface;
-use Magento\Framework\Session\SessionManagerInterface;
 use Magento\Quote\Model\Quote\Item;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Swarming\SubscribePro\Api\Data\ProductInterface as PlatformProductInterface;
@@ -76,7 +71,11 @@ class Grid extends \Magento\Sales\Block\Adminhtml\Order\Create\Items\Grid
         parent::__construct($context, $sessionQuote, $orderCreate, $priceCurrency, $wishlistFactory, $giftMessageSave, $taxConfig, $taxData, $messageHelper, $stockRegistry, $stockState, $data);
     }
 
-    public function isSubscriptionProduct($quoteItem) {
+    /**
+     * @param $quoteItem
+     * @return bool
+     */
+    public function isSubscriptionProduct(Item $quoteItem) {
         return $this->productHelper->isSubscriptionEnabled($quoteItem->getProduct());
     }
 
@@ -84,7 +83,7 @@ class Grid extends \Magento\Sales\Block\Adminhtml\Order\Create\Items\Grid
      * @return \Swarming\SubscribePro\Api\Data\ProductInterface
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function getSubscriptionProduct($quoteItem)
+    public function getSubscriptionProduct(Item $quoteItem)
     {
         $sku = $quoteItem->getProduct()->getData(ProductInterface::SKU);
         $subscriptionProduct = $this->platformProductManager->getProduct($sku);
@@ -96,6 +95,14 @@ class Grid extends \Magento\Sales\Block\Adminhtml\Order\Create\Items\Grid
         $subscriptionOption = $this->quoteItemHelper->getSubscriptionOption($quoteItem) ?: PlatformProductInterface::SO_ONETIME_PURCHASE;
         $subscriptionProduct->setDefaultSubscriptionOption($subscriptionOption);
 
-        return $subscriptionProduct;
+        return $subscriptionProduct->toArray();
+    }
+
+    public function getSubscriptionParameters(Item $quoteItem)
+    {
+        return [
+            'option' => $this->quoteItemHelper->getSubscriptionOption($quoteItem),
+            'interval' => $this->quoteItemHelper->getSubscriptionInterval($quoteItem)
+        ];
     }
 }
