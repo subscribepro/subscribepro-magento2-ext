@@ -97,9 +97,6 @@ class QuoteItemUpdater
      */
     protected function updateAdminQuoteItem(QuoteItem $quoteItem, array $quoteItemParams)
     {
-        $string = "\n\n Updating Quote Item \n\n";
-        file_put_contents('/var/www/magento2/var/log/test.log', $string , FILE_APPEND | LOCK_EX);
-
         if (!$this->getSubscriptionOption($quoteItemParams) || !$this->getInterval($quoteItemParams)) {
             return;
         }
@@ -125,12 +122,7 @@ class QuoteItemUpdater
             $this->getInterval($quoteItemParams)
         );
 
-        $string = "\n\n Found a subscription! \n\n";
-        file_put_contents('/var/www/magento2/var/log/test.log', $string , FILE_APPEND | LOCK_EX);
-
         foreach ($warnings as $message) {
-            $string = "\n\n $message \n\n";
-            file_put_contents('/var/www/magento2/var/log/test.log', $string , FILE_APPEND | LOCK_EX);
             $this->messageManager->addWarningMessage($message);
         }
     }
