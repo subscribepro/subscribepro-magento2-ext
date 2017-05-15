@@ -2,6 +2,12 @@
 
 namespace Swarming\SubscribePro\Model\Rule\Condition;
 
+/**
+ * Class Product
+ * @package Swarming\SubscribePro\Model\Rule\Condition
+ * @method getAttribute()
+ */
+
 class Product extends \Magento\SalesRule\Model\Rule\Condition\Product
 {
     const SUBSCRIPTION_STATUS_ANY = 0;
@@ -30,17 +36,9 @@ class Product extends \Magento\SalesRule\Model\Rule\Condition\Product
      */
     public function validate(\Magento\Framework\Model\AbstractModel $model)
     {
-        if ($model->getProductOption()
-            && $model->getProductOption()->getExtensionAttributes()
-            && $model->getProductOption()->getExtensionAttributes()->getSubscriptionOption()
-        ) {
-            $subscriptionOptions = $model->getProductOption()->getExtensionAttributes()->getSubscriptionOption();
-            $subscriptionInterval = $subscriptionOptions->getInterval();
-            $subscriptionFulfilling = $subscriptionOptions->getIsFulfilling();
-            $subscriptionReorderOrdinal = $subscriptionOptions->getReorderOrdinal();
-            $itemCreatesNewSubscription = !$subscriptionFulfilling;
-        } else {
-            return false;
+        $subscriptionOptions = $this->getSubscriptionOptions($model);
+        if ($subscriptionOptions === null) {
+            return parent::validate($model);
         }
 
         switch ($this->getAttribute()) {
@@ -53,19 +51,19 @@ class Product extends \Magento\SalesRule\Model\Rule\Condition\Product
                 // Handle different status types
                 switch ($conditionValue) {
                     case self::SUBSCRIPTION_STATUS_ANY:
-                        $matchResult = true;
+                        $matchResult = ($subscriptionOptions->getCreatesNewSubscription() || $subscriptionOptions->getIsFulfilling());
                         break;
                     case self::SUBSCRIPTION_STATUS_NEW:
-                        $matchResult = $itemCreatesNewSubscription;
+                        $matchResult = $subscriptionOptions->getCreatesNewSubscription();
                         break;
                     case self::SUBSCRIPTION_STATUS_REORDER:
-                        $matchResult = $subscriptionFulfilling;
+                        $matchResult = $subscriptionOptions->getIsFulfilling();
                         break;
                     default:
                         $matchResult = false;
                         break;
                 }
-                // Only == or != operators supported
+                // Since this attribute is a select list only == and != operators are allowed
                 // In case of !=, do invert $matchResult
                 if($op != '==') {
                     $matchResult = !$matchResult;
@@ -74,26 +72,20 @@ class Product extends \Magento\SalesRule\Model\Rule\Condition\Product
                 return $matchResult;
             case 'quote_item_subscription_interval':
                 // Check quote item attributes
-                if ($itemCreatesNewSubscription) {
-                    // This is a new subscription
-                    return parent::validateAttribute(0);
-                }
-                else if ($subscriptionFulfilling) {
-                    // This is a recurring order on a subscription
-                    return parent::validateAttribute($subscriptionInterval);
-                }
-                else {
+                if ($subscriptionOptions->getCreatesNewSubscription() || $subscriptionOptions->getIsFulfilling()) {
+                    return parent::validateAttribute($subscriptionOptions->getInterval());
+                } else {
                     return false;
                 }
             case 'quote_item_subscription_reorder_ordinal':
                 // Check quote item attributes
-                if ($itemCreatesNewSubscription) {
+                if ($subscriptionOptions->getCreatesNewSubscription()) {
                     // This is a new subscription
-                    return parent::validateAttribute(0);
+                    return $this->validateAttribute(0);
                 }
-                else if ($subscriptionFulfilling) {
+                else if ($subscriptionOptions->getIsFulfilling()) {
                     // This is a recurring order on a subscription
-                    return parent::validateAttribute($subscriptionReorderOrdinal);
+                    return $this->validateAttribute($subscriptionOptions->getReorderOrdinal());
                 }
                 else {
                     return false;
@@ -139,6 +131,11 @@ class Product extends \Magento\SalesRule\Model\Rule\Condition\Product
         }
     }
 
+    /**
+     * Retrieve the select options for the subscription status
+     *
+     * @return array
+     */
     public function getValueSelectOptions()
     {
         switch ($this->getAttribute()) {
@@ -151,5 +148,23 @@ class Product extends \Magento\SalesRule\Model\Rule\Condition\Product
             default:
                 return parent::getValueSelectOptions();
         }
+    }
+
+    /**
+     * Helper that retrieves the subscription options associated with the quote
+     *
+     * @param \Magento\Framework\Model\AbstractModel $model
+     * @return \Swarming\SubscribePro\Api\Data\SubscriptionOptionInterface|null
+     */
+    protected function getSubscriptionOptions(\Magento\Framework\Model\AbstractModel $model)
+    {
+        if ($model instanceof \Magento\Quote\Model\Quote\Item\Interceptor
+            && $model->getProductOption()
+            && $model->getProductOption()->getExtensionAttributes()
+            && $model->getProductOption()->getExtensionAttributes()->getSubscriptionOption()
+        ) {
+            return $model->getProductOption()->getExtensionAttributes()->getSubscriptionOption();
+        }
+        return null;
     }
 }

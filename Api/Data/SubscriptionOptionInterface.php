@@ -74,6 +74,11 @@ interface SubscriptionOptionInterface
     public function setReorderOrdinal($reorderOrdinal);
 
     /**
+     * @return bool
+     */
+    public function getCreatesNewSubscription();
+
+    /**
      * @return mixed[]
      */
     public function __toArray();
