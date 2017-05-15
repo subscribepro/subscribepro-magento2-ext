@@ -7,7 +7,6 @@ namespace Swarming\SubscribePro\Model\Rule\Condition;
  * @package Swarming\SubscribePro\Model\Rule\Condition
  * @method getAttribute()
  */
-
 class Product extends \Magento\SalesRule\Model\Rule\Condition\Product
 {
     const SUBSCRIPTION_STATUS_ANY = 0;
