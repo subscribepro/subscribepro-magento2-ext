@@ -97,40 +97,26 @@ class QuoteItemUpdater
      */
     protected function updateAdminQuoteItem(QuoteItem $quoteItem, array $quoteItemParams)
     {
-        $string = "\n\n --------0------ \n\n";
-        file_put_contents('/var/www/magento2/var/log/debugger.log', $string , FILE_APPEND | LOCK_EX);
-        $string = "\n\n --------0------ \n" . json_encode($quoteItemParams['admin_subscription_option']) . "\n";
-        file_put_contents('/var/www/magento2/var/log/debugger.log', $string , FILE_APPEND | LOCK_EX);
+        $string = "\n\n Updating Quote Item \n\n";
+        file_put_contents('/var/www/magento2/var/log/test.log', $string , FILE_APPEND | LOCK_EX);
 
         if (!$this->getSubscriptionOption($quoteItemParams) || !$this->getInterval($quoteItemParams)) {
             return;
         }
-        $string = "\n\n --------1------ " . $this->getSubscriptionOption($quoteItemParams);
-        file_put_contents('/var/www/magento2/var/log/debugger.log', $string , FILE_APPEND | LOCK_EX);
-        $string = "\n\n --------1------ " . $this->getInterval($quoteItemParams);
-        file_put_contents('/var/www/magento2/var/log/debugger.log', $string , FILE_APPEND | LOCK_EX);
 
         $product = $quoteItem->getProduct();
         if ($quoteItem->getParentItem() && $quoteItem->getParentItem()->getProduct()) {
             $product = $quoteItem->getParentItem()->getProduct();
         }
-        $string = "\n\n --------2------ \n\n";
-        file_put_contents('/var/www/magento2/var/log/debugger.log', $string , FILE_APPEND | LOCK_EX);
 
         if (!$this->productHelper->isSubscriptionEnabled($product)) {
             return;
         }
 
-        $string = "\n\n --------3------ \n\n";
-        file_put_contents('/var/www/magento2/var/log/debugger.log', $string , FILE_APPEND | LOCK_EX);
-
         $platformProduct = $this->getPlatformProduct($product);
         if (!$platformProduct) {
             return;
         }
-
-        $string = "\n\n -------4------- \n\n";
-        file_put_contents('/var/www/magento2/var/log/debugger.log', $string , FILE_APPEND | LOCK_EX);
 
         $warnings = $this->subscriptionOptionUpdater->update(
             $quoteItem,
@@ -139,10 +125,12 @@ class QuoteItemUpdater
             $this->getInterval($quoteItemParams)
         );
 
-        $string = "\n\n -------5------- \n" . json_encode(['data' => $warnings]) . "\n";
-        file_put_contents('/var/www/magento2/var/log/debugger.log', $string , FILE_APPEND | LOCK_EX);
+        $string = "\n\n Found a subscription! \n\n";
+        file_put_contents('/var/www/magento2/var/log/test.log', $string , FILE_APPEND | LOCK_EX);
 
         foreach ($warnings as $message) {
+            $string = "\n\n $message \n\n";
+            file_put_contents('/var/www/magento2/var/log/test.log', $string , FILE_APPEND | LOCK_EX);
             $this->messageManager->addWarningMessage($message);
         }
     }

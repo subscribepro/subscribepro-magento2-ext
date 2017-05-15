@@ -80,26 +80,6 @@ class Grid extends \Magento\Sales\Block\Adminhtml\Order\Create\Items\Grid
         return $this->productHelper->isSubscriptionEnabled($quoteItem->getProduct());
     }
 
-    public function getSubscriptionJsLayout($quoteItem) {
-        $subscriptionContainerId = 'subscription-container-' . $quoteItem->getId();
-        $subscriptionContainerComponent = [
-            'config' => [
-                'oneTimePurchaseOption' => PlatformProductInterface::SO_ONETIME_PURCHASE,
-                'subscriptionOption' => PlatformProductInterface::SO_SUBSCRIPTION,
-                'subscriptionOnlyMode' => PlatformProductInterface::SOM_SUBSCRIPTION_ONLY,
-                'subscriptionAndOneTimePurchaseMode' => PlatformProductInterface::SOM_SUBSCRIPTION_AND_ONETIME_PURCHASE,
-                'product' => $this->getSubscriptionProduct($quoteItem)->toArray(),
-                'quoteItemId' => $quoteItem->getId(),
-            ]
-        ];
-        $subscriptionContainerComponent = array_merge_recursive($subscriptionContainerComponent, (array)$this->getData('subscription-container-component'));
-
-        $jsLayout = [
-            'components' => [$subscriptionContainerId => $subscriptionContainerComponent]
-        ];
-        return $jsLayout;
-    }
-
     /**
      * @return \Swarming\SubscribePro\Api\Data\ProductInterface
      * @throws \Magento\Framework\Exception\NoSuchEntityException
