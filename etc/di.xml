@@ -7,6 +7,7 @@
     <preference for="Swarming\SubscribePro\Model\CatalogRule\InspectorInterface" type="Swarming\SubscribePro\Model\CatalogRule\Inspector" />
     <preference for="Magento\Sales\Block\Adminhtml\Order\Create\Items\Grid" type="Swarming\SubscribePro\Block\Adminhtml\Order\Create\Items\Grid" />
     <preference for="Magento\SalesRule\Model\Rule\Condition\Product" type="Swarming\SubscribePro\Model\Rule\Condition\Product" />
+    <preference for="Magento\Sales\Block\Adminhtml\Order\Create\Billing\Method\Form" type="Swarming\SubscribePro\Block\Adminhtml\Order\Create\Billing\Method\Form" />
 
     <type name="Swarming\SubscribePro\Model\Rule\Condition\Product">
         <arguments>
