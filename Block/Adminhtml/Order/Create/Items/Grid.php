@@ -7,7 +7,6 @@ use Magento\CatalogInventory\Api\StockStateInterface;
 use Magento\Framework\Pricing\PriceCurrencyInterface;
 use Magento\Quote\Model\Quote\Item;
 use Magento\Catalog\Api\Data\ProductInterface;
-use Swarming\SubscribePro\Api\Data\ProductInterface as PlatformProductInterface;
 
 /**
  * Adminhtml sales order create items grid block
@@ -82,7 +81,7 @@ class Grid extends \Magento\Sales\Block\Adminhtml\Order\Create\Items\Grid
     }
 
     /**
-     * Returns the subscription options that are set in the subscribepro platform for this product
+     * Returns the subscription options that are set in the SubscribePro platform for this product
      *
      * @param \Magento\Quote\Model\Quote\Item $quoteItem
      * @return array
@@ -92,14 +91,6 @@ class Grid extends \Magento\Sales\Block\Adminhtml\Order\Create\Items\Grid
     {
         $sku = $quoteItem->getProduct()->getData(ProductInterface::SKU);
         $subscriptionProduct = $this->platformProductManager->getProduct($sku);
-
-        if ($intervalOption = $this->quoteItemHelper->getSubscriptionInterval($quoteItem)) {
-            $subscriptionProduct->setDefaultInterval($intervalOption);
-        }
-
-        $subscriptionOption = $this->quoteItemHelper->getSubscriptionOption($quoteItem) ?: PlatformProductInterface::SO_ONETIME_PURCHASE;
-        $subscriptionProduct->setDefaultSubscriptionOption($subscriptionOption);
-
         return $subscriptionProduct->toArray();
     }
 

@@ -162,27 +162,38 @@
 
                 <?php if ($block->isSubscriptionProduct($_item)): ?>
                     <?php
-                        $subscriptionProduct = $block->getSubscriptionProduct($_item);
-                        $subscriptionOptions = $block->getSubscriptionParameters($_item);
+                    $subscriptionProduct = $block->getSubscriptionProduct($_item);
+                    $subscriptionOptions = $block->getSubscriptionParameters($_item);
                     ?>
                     <tr>
-                        <td colspan="4"></td>
                         <td colspan="4">
+                            <?php echo print_r($subscriptionProduct, true); ?>
+                        </td>
+                        <td colspan="4">
+                            <?php if ($subscriptionProduct['subscription_option_mode'] == 'subscription_and_onetime_purchase'): ?>
+                                <p>
+                                    <input type="radio" class="radio" name="item[<?php /* @escapeNotVerified */ echo $_item->getId() ?>][admin_subscription_option][option]" id="item-<?php /* @escapeNotVerified */ echo $_item->getId() ?>-one-time-purchase" <?php if($subscriptionOptions['option'] == 'onetime_purchase') echo 'checked="checked"';?> value="onetime_purchase" />
+                                    <label for="item-<?php /* @escapeNotVerified */ echo $_item->getId() ?>-one-time-purchase">One Time Purchase</label>
+                                </p>
+                            <?php endif;?>
                             <p>
-                                <input type="radio" class="radio" name="item[<?php /* @escapeNotVerified */ echo $_item->getId() ?>][admin_subscription_option][option]" id="item-<?php /* @escapeNotVerified */ echo $_item->getId() ?>-one-time-purchase" <?php if($subscriptionOptions['option'] == 'onetime_purchase') echo 'checked="checked"';?> value="onetime_purchase" />
-                                <label for="item-<?php /* @escapeNotVerified */ echo $_item->getId() ?>-one-time-purchase">One Time Purchase</label>
-                            </p>
-                            <p>
-                                <input type="radio" class="radio" name="item[<?php /* @escapeNotVerified */ echo $_item->getId() ?>][admin_subscription_option][option]" id="item-<?php /* @escapeNotVerified */ echo $_item->getId() ?>-subscription-option" value="subscription" <?php if($subscriptionOptions['option'] == 'subscription') echo 'checked="checked"';?> />
+                                <input type="radio" class="radio" name="item[<?php /* @escapeNotVerified */ echo $_item->getId() ?>][admin_subscription_option][option]"
+                                       id="item-<?php /* @escapeNotVerified */ echo $_item->getId() ?>-subscription-option" value="subscription"
+                                    <?php if($subscriptionOptions['option'] == 'subscription' || $subscriptionProduct['subscription_option_mode'] == 'subscription_only') echo 'checked="checked"';?>
+                                />
                                 <label for="item-<?php /* @escapeNotVerified */ echo $_item->getId() ?>-subscription-option">Regular Delivery</label>
                             </p>
 
                             <p><b>Deliver Every:</b></p>
                             <p>
                                 <select class="admin__control-select" name="item[<?php /* @escapeNotVerified */ echo $_item->getId() ?>][admin_subscription_option][interval]">
+                                    <?php $intervalSet = false; ?>
                                     <?php foreach($subscriptionProduct['intervals'] as $interval): ?>
-                                        <option <?php if($interval == $subscriptionOptions['interval']) echo 'selected';?> ><?php echo $interval; ?></option>
+                                        <option <?php if($interval == $subscriptionProduct['default_interval']) { $intervalSet = true; echo 'selected'; }?> ><?php echo $interval; ?></option>
                                     <?php endforeach; ?>
+                                    <?php if (!$intervalSet):?>
+                                        <option selected><?php echo $subscriptionProduct['default_interval']; ?></option>
+                                    <?php endif; ?>
                                 </select>
                             </p>
                         </td>
