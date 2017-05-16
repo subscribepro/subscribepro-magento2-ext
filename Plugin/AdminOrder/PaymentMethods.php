@@ -5,12 +5,17 @@ namespace Swarming\SubscribePro\Plugin\AdminOrder;
 class PaymentMethods
 {
     /**
+     * @var Swarming\SubscribePro\Helper\QuoteItem
+     */
+    protected $quoteItemHelper;
+
+    /**
      * @param \Swarming\SubscribePro\Helper\OrderItem $orderItemHelper
      */
     public function __construct(
-        \Swarming\SubscribePro\Helper\OrderItem $orderItemHelper
+        \Swarming\SubscribePro\Helper\QuoteItem $quoteItemHelper
     ) {
-        $this->orderItemHelper = $orderItemHelper;
+        $this->quoteItemHelper = $quoteItemHelper;
     }
 
     /**
@@ -22,6 +27,34 @@ class PaymentMethods
         \Closure $proceed
     ) {
         $methods = $proceed();
+        if ($this->subscriptionIsPresent($subject->getQuote()->getItemsCollection())) {
+            return $this->filterOutMethods($methods);
+        }
+
         return $methods;
+    }
+
+    protected function subscriptionIsPresent($items)
+    {
+        if ($items == null) {
+            return false;
+        }
+        foreach($items as $item) {
+            if ($this->quoteItemHelper->hasSubscription($item)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    protected function filterOutMethods(array $methods)
+    {
+        $subscribeProMethods = [];
+        foreach($methods as $method) {
+            if ($method->getCode() == 'subscribe_pro' || $method->getCode() == 'subscribe_pro_vault') {
+                $subscribeProMethods[] = $method;
+            }
+        }
+        return $subscribeProMethods;
     }
 }
