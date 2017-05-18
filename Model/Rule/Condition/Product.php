@@ -68,81 +68,16 @@ class Product extends \Magento\SalesRule\Model\Rule\Condition\Product
      */
     public function validate(\Magento\Framework\Model\AbstractModel $model)
     {
+        // Subscription Options is an array that holds the subscription attributes of the quote item
         $subscriptionOptions = $this->getSubscriptionOptions($model);
-        if ($subscriptionOptions === null) {
-            // Subscription Options could be null if we are just viewing a cart before checkout
-            return $this->validateCartItem($model);
-        }
-
-        return $this->validateCheckoutItem($model, $subscriptionOptions);
-    }
-
-    /**
-     * Quote items that are contained within a cart before the checkout step are structured differently and need to be
-     * checked differently
-     *
-     * @param \Magento\Framework\Model\AbstractModel $model
-     */
-    protected function validateCartItem(\Magento\Framework\Model\AbstractModel $model)
-    {
-        $subscriptionOptions = $this->quoteItemHelper->getSubscriptionParams($model);
-        if (!$subscriptionOptions) {
+        if (
+            !$subscriptionOptions['new_subscription']
+            && !$subscriptionOptions['is_fulfilling']
+            && !$subscriptionOptions['reorder_ordinal']
+            && !$subscriptionOptions['interval']
+        ) {
             return parent::validate($model);
         }
-        switch($this->getAttribute()) {
-
-            case 'quote_item_part_of_subscription':
-                // Check quote item attributes
-                // Get value set on rule condition
-                $conditionValue = $this->getValueParsed();
-                // Get operator set on rule condition
-                $op = $this->getOperatorForValidate();
-                // Handle different status types
-                switch ($conditionValue) {
-                    case self::SUBSCRIPTION_STATUS_ANY:
-                    case self::SUBSCRIPTION_STATUS_NEW:
-                        $matchResult = ($subscriptionOptions['option'] == 'subscription');
-                        break;
-                    case self::SUBSCRIPTION_STATUS_REORDER:
-                        $matchResult = false;
-                        break;
-                    default:
-                        $matchResult = false;
-                        break;
-                }
-                // Since this attribute is a select list only == and != operators are allowed
-                // In case of !=, do invert $matchResult
-                if($op != '==') {
-                    $matchResult = !$matchResult;
-                }
-                // Return our result
-                return $matchResult;
-            case 'quote_item_subscription_interval':
-                if ($subscriptionOptions['option'] == 'subscription') {
-                    return parent::validateAttribute($subscriptionOptions['interval']);
-                } else {
-                    return false;
-                }
-            case 'quote_item_subscription_reorder_ordinal':
-                if ($subscriptionOptions['option'] == 'subscription') {
-                    return parent::validateAttribute(0);
-                } else {
-                    return false;
-                }
-            default:
-                return parent::validate($model);
-        }
-        return parent::validate($model);
-    }
-
-    /**
-     * Quote items during checkout have a different structure and need to be checked differently than before checkout
-     *
-     * @param \Magento\Framework\Model\AbstractModel $model
-     * @param $subscriptionOptions
-     */
-    protected function validateCheckoutItem(\Magento\Framework\Model\AbstractModel $model, $subscriptionOptions)
-    {
         switch ($this->getAttribute()) {
             case 'quote_item_part_of_subscription':
                 // Check quote item attributes
@@ -153,13 +88,13 @@ class Product extends \Magento\SalesRule\Model\Rule\Condition\Product
                 // Handle different status types
                 switch ($conditionValue) {
                     case self::SUBSCRIPTION_STATUS_ANY:
-                        $matchResult = ($subscriptionOptions->getCreatesNewSubscription() || $subscriptionOptions->getIsFulfilling());
+                        $matchResult = ($subscriptionOptions['new_subscription'] || $subscriptionOptions['is_fulfilling']);
                         break;
                     case self::SUBSCRIPTION_STATUS_NEW:
-                        $matchResult = $subscriptionOptions->getCreatesNewSubscription();
+                        $matchResult = $subscriptionOptions['new_subscription'];
                         break;
                     case self::SUBSCRIPTION_STATUS_REORDER:
-                        $matchResult = $subscriptionOptions->getIsFulfilling();
+                        $matchResult = $subscriptionOptions['is_fulfilling'];
                         break;
                     default:
                         $matchResult = false;
@@ -174,27 +109,24 @@ class Product extends \Magento\SalesRule\Model\Rule\Condition\Product
                 return $matchResult;
             case 'quote_item_subscription_interval':
                 // Check quote item attributes
-                if ($subscriptionOptions->getCreatesNewSubscription() || $subscriptionOptions->getIsFulfilling()) {
-                    return parent::validateAttribute($subscriptionOptions->getInterval());
+                if ($subscriptionOptions['new_subscription'] || $subscriptionOptions['is_fulfilling']) {
+                    return $this->validateAttribute($subscriptionOptions['interval']);
                 } else {
                     return false;
                 }
             case 'quote_item_subscription_reorder_ordinal':
                 // Check quote item attributes
-                if ($subscriptionOptions->getCreatesNewSubscription()) {
+                if ($subscriptionOptions['new_subscription'] || $subscriptionOptions['is_fulfilling']) {
                     // This is a new subscription
-                    return $this->validateAttribute(0);
-                }
-                else if ($subscriptionOptions->getIsFulfilling()) {
-                    // This is a recurring order on a subscription
-                    return $this->validateAttribute($subscriptionOptions->getReorderOrdinal());
-                }
-                else {
+                    return $this->validateAttribute($subscriptionOptions['reorder_ordinal']);
+                } else {
                     return false;
                 }
             default:
                 return parent::validate($model);
         }
+
+        return parent::validate($model);
     }
 
     /**
@@ -261,15 +193,38 @@ class Product extends \Magento\SalesRule\Model\Rule\Condition\Product
      */
     protected function getSubscriptionOptions(\Magento\Framework\Model\AbstractModel $model)
     {
-        file_put_contents('/var/www/magento2/var/log/test.log', '------Product------' . "\n", FILE_APPEND | LOCK_EX);
-        file_put_contents('/var/www/magento2/var/log/test.log',  print_r($this->quoteItemHelper->getSubscriptionParams($model), true) . "\n", FILE_APPEND | LOCK_EX);
+        // Initialize the return payload with default values
+        $return = [
+            'new_subscription' => false,
+            'is_fulfilling' => false,
+            'reorder_ordinal' => false,
+            'interval' => false,
+        ];
+
+        // First we check if the Subscription Options are set on the qoute item, this only
+        // happens when the quote items are in the checkout phase
         if ($model instanceof \Magento\Quote\Model\Quote\Item\Interceptor
             && $model->getProductOption()
             && $model->getProductOption()->getExtensionAttributes()
             && $model->getProductOption()->getExtensionAttributes()->getSubscriptionOption()
         ) {
-            return $model->getProductOption()->getExtensionAttributes()->getSubscriptionOption();
+            $subscriptionOptions = $model->getProductOption()->getExtensionAttributes()->getSubscriptionOption();
+            $return['new_subscription'] = $subscriptionOptions->getCreatesNewSubscription();
+            $return['is_fulfilling'] = $subscriptionOptions->getIsFulfilling();
+            $return['reorder_ordinal'] = $subscriptionOptions->getReorderOrdinal();
+            $return['interval'] = $subscriptionOptions->getInterval();
+            return $return;
         }
-        return null;
+
+        // If the quote item is not in the checkout phase we have to check the raw
+        // subscription parameters
+        $params = $this->quoteItemHelper->getSubscriptionParams($model);
+        if (isset($params['option']) && $params['option'] == 'subscription') {
+            $return['new_subscription'] = true;
+            $return['is_fulfilling'] = false;
+            $return['reorder_ordinal'] = 0;
+            $return['interval'] = isset($params['interval']) ? $params['interval'] : false;
+        }
+        return $return;
     }
 }
