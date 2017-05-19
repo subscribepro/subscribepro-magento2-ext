@@ -125,8 +125,6 @@ class Product extends \Magento\SalesRule\Model\Rule\Condition\Product
             default:
                 return parent::validate($model);
         }
-
-        return parent::validate($model);
     }
 
     /**
@@ -203,7 +201,11 @@ class Product extends \Magento\SalesRule\Model\Rule\Condition\Product
 
         // First we check if the Subscription Options are set on the qoute item, this only
         // happens when the quote items are in the checkout phase
-        if ($model instanceof \Magento\Quote\Model\Quote\Item\Interceptor
+        if (
+            (
+                $model instanceof \Magento\Quote\Model\Quote\Item\Interceptor ||
+                $model instanceof \Magento\Quote\Model\Quote\Item
+            )
             && $model->getProductOption()
             && $model->getProductOption()->getExtensionAttributes()
             && $model->getProductOption()->getExtensionAttributes()->getSubscriptionOption()
@@ -212,6 +214,9 @@ class Product extends \Magento\SalesRule\Model\Rule\Condition\Product
             $return['new_subscription'] = $subscriptionOptions->getCreatesNewSubscription();
             $return['is_fulfilling'] = $subscriptionOptions->getIsFulfilling();
             $return['reorder_ordinal'] = $subscriptionOptions->getReorderOrdinal();
+            if ($return['reorder_ordinal'] == null && $return['new_subscription'] === true) {
+                $return['reorder_ordinal'] = 0;
+            }
             $return['interval'] = $subscriptionOptions->getInterval();
             return $return;
         }
