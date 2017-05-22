@@ -68,7 +68,7 @@ class Product extends \Magento\SalesRule\Model\Rule\Condition\Product
      */
     public function validate(\Magento\Framework\Model\AbstractModel $model)
     {
-        // Subscription Options is an array that holds the subscription attributes of the quote item
+        // $subscriptionOptions is an array that holds the subscription attributes of the quote item
         $subscriptionOptions = $this->getSubscriptionOptions($model);
         if (
             !$subscriptionOptions['new_subscription']
@@ -189,8 +189,16 @@ class Product extends \Magento\SalesRule\Model\Rule\Condition\Product
      * @param \Magento\Framework\Model\AbstractModel $model
      * @return \Swarming\SubscribePro\Api\Data\SubscriptionOptionInterface|null
      */
+    /**
+     * Helper that retrieves the subscription options associated with the quote
+     *
+     * @param \Magento\Framework\Model\AbstractModel $model
+     * @return array
+     */
     protected function getSubscriptionOptions(\Magento\Framework\Model\AbstractModel $model)
     {
+        $params = $this->quoteItemHelper->getSubscriptionParams($model);
+
         // Initialize the return payload with default values
         $return = [
             'new_subscription' => false,
@@ -199,37 +207,38 @@ class Product extends \Magento\SalesRule\Model\Rule\Condition\Product
             'interval' => false,
         ];
 
-        // First we check if the Subscription Options are set on the qoute item, this only
-        // happens when the quote items are in the checkout phase
+        // The first and second possibilities of four. Either the subscription parameters are empty, IE
+        // The product does not have a subscription option enabled, OR the user selected the one time purchase
+        // option on a subscription product. For both of these we return the false array. I want to explicitly catch
+        // this case to be clear what is happening.
         if (
-            (
-                $model instanceof \Magento\Quote\Model\Quote\Item\Interceptor ||
-                $model instanceof \Magento\Quote\Model\Quote\Item
-            )
-            && $model->getProductOption()
-            && $model->getProductOption()->getExtensionAttributes()
-            && $model->getProductOption()->getExtensionAttributes()->getSubscriptionOption()
+            empty($params)
+            || (isset($params['option']) && $params['option'] == 'onetime_purchase')
         ) {
-            $subscriptionOptions = $model->getProductOption()->getExtensionAttributes()->getSubscriptionOption();
-            $return['new_subscription'] = $subscriptionOptions->getCreatesNewSubscription();
-            $return['is_fulfilling'] = $subscriptionOptions->getIsFulfilling();
-            $return['reorder_ordinal'] = $subscriptionOptions->getReorderOrdinal();
-            if ($return['reorder_ordinal'] == null && $return['new_subscription'] === true) {
-                $return['reorder_ordinal'] = 0;
-            }
-            $return['interval'] = $subscriptionOptions->getInterval();
             return $return;
         }
 
-        // If the quote item is not in the checkout phase we have to check the raw
-        // subscription parameters
-        $params = $this->quoteItemHelper->getSubscriptionParams($model);
+        // The third of four possibilities: The cart item is a new subscription as denoted by the option
+        // parameter set to subscription. We then set the ordinal to 0, as it is the first order, and set
+        // the interval if it exists. (It really should exist here as a subscription without an interval
+        // makes no sense.
         if (isset($params['option']) && $params['option'] == 'subscription') {
             $return['new_subscription'] = true;
-            $return['is_fulfilling'] = false;
             $return['reorder_ordinal'] = 0;
             $return['interval'] = isset($params['interval']) ? $params['interval'] : false;
+            return $return;
         }
+
+        // The fourth of four possibilities: The cart item contains a subscription product that is being fulfilled
+        // We retrieve the ordinal and interval from the subscription parameters and set them if they exist.
+        if (isset($params['is_fulfilling']) && $params['is_fulfilling']) {
+            $return['is_fulfilling'] = true;
+            $return['reorder_ordinal'] = isset($params['reorder_ordinal']) ? $params['reorder_ordinal'] : false;
+            $return['interval'] = isset($params['interval']) ? $params['interval'] : false;
+            return $return;
+        }
+
+        // In case there is an unexpected parameter setup, just return the false array
         return $return;
     }
 }
