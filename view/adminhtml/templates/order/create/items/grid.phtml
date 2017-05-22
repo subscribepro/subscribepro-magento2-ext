@@ -160,7 +160,7 @@
                     </td>
                 </tr>
 
-                <!-- Subscribe Pro subscription widget -->
+                <?php // SUBSCRIBE PRO - Subscription Widget - Changes Start Here ?>
                 <?php if ($block->isSubscriptionProduct($_item)): ?>
                     <?php
                     $subscriptionProduct = $block->getSubscriptionProduct($_item);
@@ -198,7 +198,7 @@
                         </td>
                     </tr>
                 <?php endif; ?>
-                <!-- Subscribe Pro subscription widget end -->
+                <?php // SUBSCRIBE PRO - Subscription Widget - Changes End Here ?>
 
                 <?php $hasMessageError = false; ?>
                 <?php foreach ($_item->getMessage(false) as $messageError):?>

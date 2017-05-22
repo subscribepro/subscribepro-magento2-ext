@@ -2,6 +2,8 @@
 
 namespace Swarming\SubscribePro\Plugin\AdminOrder;
 
+use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
+
 class PaymentMethods
 {
     /**
@@ -25,11 +27,10 @@ class PaymentMethods
      * @param \Closure $proceed
      * @return array
      */
-    public function aroundGetMethods(
+    public function afterGetMethods(
         \Magento\Sales\Block\Adminhtml\Order\Create\Billing\Method\Form $subject,
-        \Closure $proceed
+        $methods
     ) {
-        $methods = $proceed();
         if ($this->subscriptionIsPresent($subject->getQuote()->getItemsCollection())) {
             return $this->filterOutMethods($methods);
         }
@@ -45,12 +46,11 @@ class PaymentMethods
      */
     protected function subscriptionIsPresent($items)
     {
-        if ($items == null) {
-            return false;
-        }
-        foreach($items as $item) {
-            if ($this->quoteItemHelper->hasSubscription($item)) {
-                return true;
+        if ($items instanceof AbstractCollection) {
+            foreach ($items as $item) {
+                if ($this->quoteItemHelper->hasSubscription($item)) {
+                    return true;
+                }
             }
         }
         return false;
@@ -66,7 +66,7 @@ class PaymentMethods
     {
         $subscribeProMethods = [];
         foreach($methods as $method) {
-            if ($method->getCode() == 'subscribe_pro' || $method->getCode() == 'subscribe_pro_vault') {
+            if ($method->getCode() == ConfigProvider::CODE || $method->getCode() == ConfigProvider::VAULT_CODE) {
                 $subscribeProMethods[] = $method;
             }
         }

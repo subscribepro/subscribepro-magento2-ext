@@ -45,11 +45,6 @@ class QuoteItemUpdater
     protected $logger;
 
     /**
-     * @var \Magento\Quote\Model\Quote\Item\Updater
-     */
-    protected $subject;
-
-    /**
      * @param \Swarming\SubscribePro\Platform\Manager\Product $platformProductManager
      * @param \Swarming\SubscribePro\Model\Quote\SubscriptionOption\Updater $subscriptionOptionUpdater
      * @param \Magento\Catalog\Api\ProductRepositoryInterface $productRepository
@@ -89,7 +84,6 @@ class QuoteItemUpdater
         \Magento\Quote\Model\Quote\Item $item,
         array $info
     ) {
-        $this->subject = $subject;
         $return = $proceed($item, $info);
         $this->updateAdminQuoteItem($item, $info);
         return $return;
@@ -153,9 +147,8 @@ class QuoteItemUpdater
     protected function getSubscriptionOption(array $quoteItemParams)
     {
         if (
-            !isset($quoteItemParams['admin_subscription_option'])
-            || !isset($quoteItemParams['admin_subscription_option']['option'])
-            || $quoteItemParams['admin_subscription_option']['option'] == ""
+            !isset($quoteItemParams['admin_subscription_option']['option'])
+            || !strlen($quoteItemParams['admin_subscription_option']['option'])
         ) {
             return 'onetime_purchase';
         }
@@ -165,10 +158,7 @@ class QuoteItemUpdater
     protected function getInterval(array $quoteItemParams)
     {
 
-        if (
-            !isset($quoteItemParams['admin_subscription_option'])
-            || !isset($quoteItemParams['admin_subscription_option']['interval'])
-        ) {
+        if (!isset($quoteItemParams['admin_subscription_option']['interval'])) {
             return false;
         }
         return $quoteItemParams['admin_subscription_option']['interval'];
