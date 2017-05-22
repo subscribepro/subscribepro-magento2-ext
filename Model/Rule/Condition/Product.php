@@ -16,7 +16,7 @@ class Product extends \Magento\SalesRule\Model\Rule\Condition\Product
     /**
      * @var \Swarming\SubscribePro\Helper\QuoteItem
      */
-    protected $quoteItemHelper;
+    public $quoteItemHelper;
 
     /**
      * @param \Magento\Rule\Model\Condition\Context $context

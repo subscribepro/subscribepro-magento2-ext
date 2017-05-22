@@ -91,6 +91,12 @@ class ProductConditionTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()->getMock();
         $this->quoteItemHelperMock = $this->getMockBuilder(QuoteItem::class)
             ->disableOriginalConstructor()->getMock();
+        $this->quoteItemHelperMock->expects($this->any())
+            ->method('getSubscriptionParams')
+            ->willReturn([
+                'option' => 'subscription',
+                'interval' => 'Monthly'
+            ]);
         $data = [];
 
         $this->productCondition = new ProductCondition(
@@ -109,23 +115,6 @@ class ProductConditionTest extends \PHPUnit_Framework_TestCase
 
     public function testGetSubscriptionOptions()
     {
-        // Test the fall through condition
-        $mockModel = $this->getMockBuilder(Item::class)
-            ->disableOriginalConstructor()->getMock();
-        $mockModel->method('getProductOption')
-            ->willReturn(false);
-        $this->quoteItemHelperMock->method('getSubscriptionParams')
-            ->willReturn(false);
-
-        $this->assertSame($this->productCondition->exposedGetSubscriptionOptions($mockModel),
-            [
-                'new_subscription' => false,
-                'is_fulfilling' => false,
-                'reorder_ordinal' => false,
-                'interval' => false,
-            ]
-        );
-
         $mockModel = $this->getProductModelMock(
             true,
             false,
@@ -161,11 +150,6 @@ class ProductConditionTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()->getMock();
         $mockModel->method('getProductOption')
             ->willReturn(false);
-        $this->quoteItemHelperMock->method('getSubscriptionParams')
-            ->willReturn([
-                'subscription' => true,
-                'interval' => 'Monthly'
-            ]);
 
         $this->assertSame($this->productCondition->exposedGetSubscriptionOptions($mockModel),
             [
