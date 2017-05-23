@@ -1,5 +1,8 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="sales_quote_product_add_after">
+        <observer name="subscribe_pro_quote_product_add_after" instance="Swarming\SubscribePro\Observer\CheckoutCart\AddProductToCartAfter" />
+    </event>
     <event name="controller_action_catalog_product_save_entity_after">
         <observer name="subscribe_pro_product_save_after" instance="Swarming\SubscribePro\Observer\Catalog\ProductSaveAfter" />
     </event>

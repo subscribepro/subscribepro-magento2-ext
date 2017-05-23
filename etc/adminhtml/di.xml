@@ -4,6 +4,14 @@
         <plugin name="subscribepro_options" type="Swarming\SubscribePro\Plugin\AdminOrder\Create"/>
     </type>
 
+    <type name="Magento\Quote\Model\Quote\Item\Updater">
+        <plugin name="subscribepro_quote_item_updater" type="Swarming\SubscribePro\Plugin\Quote\QuoteItemUpdater"/>
+    </type>
+
+    <type name="Magento\Sales\Block\Adminhtml\Order\Create\Billing\Method\Form">
+        <plugin name="subscribepro_subscription_payment_method" type="Swarming\SubscribePro\Plugin\AdminOrder\PaymentMethods"/>
+    </type>
+
     <type name="Swarming\SubscribePro\Block\Payment\Info">
         <arguments>
             <argument name="data" xsi:type="array">
