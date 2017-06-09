@@ -3,7 +3,7 @@
 namespace Swarming\SubscribePro\Test\Unit\Platform\Service;
 
 use SubscribePro\Service\Subscription\SubscriptionService;
-use Swarming\SubscribePro\Api\Data\SubscriptionInterface;
+use Swarming\SubscribePro\Model\Subscription as SubscriptionModel;
 use Swarming\SubscribePro\Platform\Service\Subscription;
 
 class SubscriptionTest extends AbstractService
@@ -181,6 +181,6 @@ class SubscriptionTest extends AbstractService
      */
     private function createSubscriptionMock()
     {
-        return $this->getMockBuilder(SubscriptionInterface::class)->getMock();
+        return $this->getMockBuilder(SubscriptionModel::class)->getMock();
     }
 }
