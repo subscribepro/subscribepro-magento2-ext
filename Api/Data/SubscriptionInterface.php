@@ -7,7 +7,7 @@ namespace Swarming\SubscribePro\Api\Data;
  *
  * @api
  */
-interface SubscriptionInterface extends \SubscribePro\Service\Subscription\SubscriptionInterface
+interface SubscriptionInterface
 {
     /**
      * Constants used as data array keys
@@ -19,12 +19,6 @@ interface SubscriptionInterface extends \SubscribePro\Service\Subscription\Subsc
     const PLATFORM_FIELD_KEY = 'magento2';
 
     /**
-     * @param array $data
-     * @return $this
-     */
-    public function importData(array $data = []);
-
-    /**
      * @return bool
      */
     public function isNew();
@@ -33,11 +27,6 @@ interface SubscriptionInterface extends \SubscribePro\Service\Subscription\Subsc
      * @return int|null
      */
     public function getId();
-
-    /**
-     * @return array
-     */
-    public function toArray();
 
     /**
      * @return \Swarming\SubscribePro\Api\Data\ProductInterface|null
@@ -60,11 +49,6 @@ interface SubscriptionInterface extends \SubscribePro\Service\Subscription\Subsc
      * @return $this
      */
     public function setProductOption(array $productOption);
-
-    /**
-     * @return mixed[]
-     */
-    public function getFormData();
 
     /**
      * @param int|null $id
