@@ -19,6 +19,27 @@ interface SubscriptionInterface extends \SubscribePro\Service\Subscription\Subsc
     const PLATFORM_FIELD_KEY = 'magento2';
 
     /**
+     * @param array $data
+     * @return $this
+     */
+    public function importData(array $data = []);
+
+    /**
+     * @return bool
+     */
+    public function isNew();
+
+    /**
+     * @return int|null
+     */
+    public function getId();
+
+    /**
+     * @return array
+     */
+    public function toArray();
+
+    /**
      * @return \Swarming\SubscribePro\Api\Data\ProductInterface|null
      */
     public function getProduct();
