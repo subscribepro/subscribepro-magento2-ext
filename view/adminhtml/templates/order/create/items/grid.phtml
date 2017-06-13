@@ -165,6 +165,7 @@
                     <?php
                     $subscriptionProduct = $block->getSubscriptionProduct($_item);
                     $subscriptionOptions = $block->getSubscriptionParameters($_item);
+
                     ?>
                     <tr>
                         <td colspan="4"></td>
@@ -185,15 +186,23 @@
 
                             <p><b>Deliver Every:</b></p>
                             <p>
-                                <select class="admin__control-select" name="item[<?php /* @escapeNotVerified */ echo $_item->getId() ?>][admin_subscription_option][interval]">
-                                    <?php $intervalSet = false; ?>
-                                    <?php foreach($subscriptionProduct['intervals'] as $interval): ?>
-                                        <option <?php if($interval == $subscriptionProduct['default_interval']) { $intervalSet = true; echo 'selected'; }?> ><?php echo $interval; ?></option>
-                                    <?php endforeach; ?>
-                                    <?php if (!$intervalSet):?>
-                                        <option selected><?php echo $subscriptionProduct['default_interval']; ?></option>
-                                    <?php endif; ?>
-                                </select>
+                                <?php if ($subscriptionOptions['interval'] !== ''): ?>
+                                    <select class="admin__control-select" name="item[<?php /* @escapeNotVerified */ echo $_item->getId() ?>][admin_subscription_option][interval]">
+                                        <?php foreach($subscriptionProduct['intervals'] as $interval): ?>
+                                            <option <?php if($interval == $subscriptionOptions['interval']) { echo 'selected'; }?> ><?php echo $interval; ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                <?php else: ?>
+                                    <select class="admin__control-select" name="item[<?php /* @escapeNotVerified */ echo $_item->getId() ?>][admin_subscription_option][interval]">
+                                        <?php $intervalSet = false; ?>
+                                        <?php foreach($subscriptionProduct['intervals'] as $interval): ?>
+                                            <option <?php if($interval == $subscriptionProduct['default_interval']) { $intervalSet = true; echo 'selected'; }?> ><?php echo $interval; ?></option>
+                                        <?php endforeach; ?>
+                                        <?php if (!$intervalSet):?>
+                                            <option selected><?php echo $subscriptionProduct['default_interval']; ?></option>
+                                        <?php endif; ?>
+                                    </select>
+                                <?php endif; ?>
                             </p>
                         </td>
                     </tr>

@@ -3,6 +3,7 @@
 namespace Swarming\SubscribePro\Plugin\AdminOrder;
 
 use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
+use Magento\Quote\Model\ResourceModel\Quote\Item\Collection;
 
 class PaymentMethods
 {
@@ -31,6 +32,7 @@ class PaymentMethods
         \Magento\Sales\Block\Adminhtml\Order\Create\Billing\Method\Form $subject,
         $methods
     ) {
+
         if ($this->subscriptionIsPresent($subject->getQuote()->getItemsCollection())) {
             return $this->filterOutMethods($methods);
         }
@@ -41,12 +43,12 @@ class PaymentMethods
     /**
      * Checks to see if a subscription is present in the quote items
      *
-     * @param \Magento\Eav\Model\Entity\Collection\AbstractCollection|null $items
+     * @param \Magento\Quote\Model\ResourceModel\Quote\Item\Collection
      * @return bool
      */
     protected function subscriptionIsPresent($items)
     {
-        if ($items instanceof AbstractCollection) {
+        if ($items instanceof Collection) {
             foreach ($items as $item) {
                 if ($this->quoteItemHelper->hasSubscription($item)) {
                     return true;

@@ -157,7 +157,6 @@ class QuoteItemUpdater
 
     protected function getInterval(array $quoteItemParams)
     {
-
         if (!isset($quoteItemParams['admin_subscription_option']['interval'])) {
             return false;
         }
