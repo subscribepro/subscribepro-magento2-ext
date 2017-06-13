@@ -65,7 +65,7 @@ class CustomerRepository
     protected function getPlatformCustomer($customer)
     {
         try {
-            $platformCustomer = $this->platformCustomerManager->getCustomerById($customer->getId(), true, $customer->getWebsiteId());
+            $platformCustomer = $this->platformCustomerManager->getCustomerById($customer->getId(), false, $customer->getWebsiteId());
         } catch (NoSuchEntityException $e) {
             $platformCustomer = null;
         } catch (\Exception $e) {
