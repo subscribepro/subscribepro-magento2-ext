@@ -36,7 +36,6 @@ define(
                 container: 'payment_form_subscribe_pro',
                 active: false,
                 spreedlyInitialized: false,
-                eventsInitialized: false,
                 isValidHostedFields: false,
                 isValidExpDate: false,
                 imports: {
@@ -61,10 +60,6 @@ define(
                     self.initSpreedly();
                 });
 
-                domObserver.remove('#' + this.container, function () {
-                    self.spreedlyInitialized = false;
-                });
-
                 this.$orderForm
                     .on('focusin', this.getSelector('expiration'), $.proxy(this.validationCreditCardExpMonth, this, true))
                     .on('focusout', this.getSelector('expiration'), $.proxy(this.validationCreditCardExpMonth, this, false))
@@ -79,7 +74,6 @@ define(
             },
 
             onActiveChange: function (isActive) {
-                // Clear off so we don't get multiple submissions
                 this.$orderForm.off('submitOrder.subscribe_pro');
                 if (!isActive) {
                     return;
@@ -121,6 +115,7 @@ define(
             },
 
             initSpreedly: function () {
+
                 if (!this.spreedlyInitialized) {
                     spreedly.init(
                         $.proxy(this.onFieldEvent, this),
@@ -129,7 +124,10 @@ define(
                         $.proxy(this.onErrors, this)
                     );
                     this.spreedlyInitialized = true;
+                } else {
+                    spreedly.reload();
                 }
+
             },
 
             onFieldEvent: function (name, event, activeElement, inputData) {

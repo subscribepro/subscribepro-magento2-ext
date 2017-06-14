@@ -24,6 +24,10 @@ define(
                 Spreedly.validate();
             },
 
+            reload: function() {
+                Spreedly.reload();
+            },
+
             tokenizeCreditCard: function (options) {
                 Spreedly.tokenizeCreditCard(options);
             },
