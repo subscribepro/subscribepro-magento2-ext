@@ -1,5 +1,6 @@
 /*browser:true*/
 /*global define*/
+
 define(
     [
         'ko',
@@ -57,7 +58,14 @@ define(
                     .on('changePaymentMethod.' + config.getCode(), this.changePaymentMethod.bind(this));
 
                 domObserver.get('#' + this.container, function () {
-                    self.initSpreedly();
+                    // This little hack checks to see if the config is ready yet, if not we wait half a second
+                    if (window.subscribeProPaymentConfig != undefined) {
+                        self.initSpreedly();
+                    } else {
+                        window.setTimeout(function () {
+                            self.initSpreedly();
+                        }, 500);
+                    }
                 });
 
                 this.$orderForm
@@ -84,8 +92,6 @@ define(
                 window.order.addExcludedPaymentMethod(config.getCode());
 
                 this.enableEventListeners();
-
-                this.initSpreedly();
             },
 
             disableEventListeners: function () {
@@ -115,8 +121,9 @@ define(
             },
 
             initSpreedly: function () {
-
+                console.log("initSpreedly called");
                 if (!this.spreedlyInitialized) {
+                    console.log("Running the spreedly initialization script");
                     spreedly.init(
                         $.proxy(this.onFieldEvent, this),
                         $.proxy(this.onPaymentMethod, this),
@@ -125,6 +132,7 @@ define(
                     );
                     this.spreedlyInitialized = true;
                 } else {
+                    console.log("Reloading the iframe");
                     spreedly.reload();
                 }
 

@@ -45,9 +45,9 @@ define(
 
             getConfig: function () {
                 var config = {};
-                if (window.checkoutConfig) {
+                if (window["checkoutConfig"] != undefined) {
                     config = window.checkoutConfig.payment[code];
-                } else if (window.subscribeProPaymentConfig) {
+                } else if (window["subscribeProPaymentConfig"] != undefined) {
                     config = window.subscribeProPaymentConfig;
                 }
                 return config;
