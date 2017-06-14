@@ -36,6 +36,7 @@ define(
                 container: 'payment_form_subscribe_pro',
                 active: false,
                 spreedlyInitialized: false,
+                eventsInitialized: false,
                 isValidHostedFields: false,
                 isValidExpDate: false,
                 imports: {
@@ -78,8 +79,9 @@ define(
             },
 
             onActiveChange: function (isActive) {
+                // Clear off so we don't get multiple submissions
+                this.$orderForm.off('submitOrder.subscribe_pro');
                 if (!isActive) {
-                    this.$orderForm.off('submitOrder.subscribe_pro');
                     return;
                 }
 
