@@ -121,9 +121,7 @@ define(
             },
 
             initSpreedly: function () {
-                console.log("initSpreedly called");
                 if (!this.spreedlyInitialized) {
-                    console.log("Running the spreedly initialization script");
                     spreedly.init(
                         $.proxy(this.onFieldEvent, this),
                         $.proxy(this.onPaymentMethod, this),
@@ -132,7 +130,6 @@ define(
                     );
                     this.spreedlyInitialized = true;
                 } else {
-                    console.log("Reloading the iframe");
                     spreedly.reload();
                 }
 

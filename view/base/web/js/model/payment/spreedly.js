@@ -9,7 +9,6 @@ define(
 
         return {
             init: function (onFieldEvent, onPaymentMethod, validationPaymentData, onErrors) {
-		console.log(config.getEnvironmentKey());
                 Spreedly.init(config.getEnvironmentKey(), {
                     'numberEl': config.getCode() + '_cc_number',
                     'cvvEl': config.getCode() + '_cc_cid'
@@ -25,8 +24,8 @@ define(
                 Spreedly.validate();
             },
 
-	    reload: function() {
-               Spreedly.reload();
+            reload: function() {
+                Spreedly.reload();
             },
 
             tokenizeCreditCard: function (options) {
