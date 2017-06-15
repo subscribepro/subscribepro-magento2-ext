@@ -33,7 +33,8 @@ define(
                 creditCardExpMonthFocus: null,
                 creditCardExpYearFocus: null,
                 paymentMethodToken: null,
-                selectedCardType: null
+                selectedCardType: null,
+                spreedlyInitialized: false
             },
 
             initObservable: function () {
@@ -63,12 +64,17 @@ define(
             },
 
             initSpreedly: function () {
-                spreedly.init(
-                    $.proxy(this.onFieldEvent, this),
-                    $.proxy(this.onPaymentMethod, this),
-                    $.proxy(this.validationPaymentData, this),
-                    $.proxy(this.onErrors, this)
-                );
+                if (!this.spreedlyInitialized) {
+                    spreedly.init(
+                        $.proxy(this.onFieldEvent, this),
+                        $.proxy(this.onPaymentMethod, this),
+                        $.proxy(this.validationPaymentData, this),
+                        $.proxy(this.onErrors, this)
+                    );
+                    this.spreedlyInitialized = true;
+                } else {
+                    spreedly.reload();
+                }
             },
 
             onFieldEvent: function (name, event, activeElement, inputData) {
