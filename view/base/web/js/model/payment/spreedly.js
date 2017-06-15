@@ -9,36 +9,36 @@ define(
 
         return {
             init: function (onFieldEvent, onPaymentMethod, validationPaymentData, onErrors) {
-
-                this.SpreedlyInstance = new SpreedlyPaymentFrame();
-                this.SpreedlyInstance.init(config.getEnvironmentKey(), {
+                window.SubscribeProSpreedlyIframe = new SpreedlyPaymentFrame();
+                window.SubscribeProSpreedlyIframe.init(config.getEnvironmentKey(), {
                     'numberEl': config.getCode() + '_cc_number',
                     'cvvEl': config.getCode() + '_cc_cid'
                 });
-                this.SpreedlyInstance.on('ready', this.styleIFrameFields);
-                this.SpreedlyInstance.on('fieldEvent', onFieldEvent);
-                this.SpreedlyInstance.on('paymentMethod', onPaymentMethod);
-                this.SpreedlyInstance.on('validation', validationPaymentData);
-                this.SpreedlyInstance.on('errors', onErrors);
+                window.SubscribeProSpreedlyIframe.on('ready', this.styleIFrameFields);
+                window.SubscribeProSpreedlyIframe.on('fieldEvent', onFieldEvent);
+                window.SubscribeProSpreedlyIframe.on('paymentMethod', onPaymentMethod);
+                window.SubscribeProSpreedlyIframe.on('validation', validationPaymentData);
+                window.SubscribeProSpreedlyIframe.on('errors', onErrors);
+                return window.SubscribeProSpreedlyIframe;
             },
 
             validate: function () {
-                this.SpreedlyInstance.validate();
+                window.SubscribeProSpreedlyIframe.validate();
             },
 
             reload: function() {
-                this.SpreedlyInstance.reload();
+                window.SubscribeProSpreedlyIframe.reload();
             },
 
             tokenizeCreditCard: function (options) {
-                this.SpreedlyInstance.tokenizeCreditCard(options);
+                window.SubscribeProSpreedlyIframe.tokenizeCreditCard(options);
             },
 
             styleIFrameFields: function () {
-                this.SpreedlyInstance.setFieldType('text');
-                this.SpreedlyInstance.setNumberFormat('prettyFormat');
-                this.SpreedlyInstance.setStyle('number','padding: .45em .35em; font-size: 91%;');
-                this.SpreedlyInstance.setStyle('cvv', 'padding: .45em .35em; font-size: 91%; width: 45px;');
+                window.SubscribeProSpreedlyIframe.setFieldType('text');
+                window.SubscribeProSpreedlyIframe.setNumberFormat('prettyFormat');
+                window.SubscribeProSpreedlyIframe.setStyle('number','padding: .45em .35em; font-size: 91%;');
+                window.SubscribeProSpreedlyIframe.setStyle('cvv', 'padding: .45em .35em; font-size: 91%; width: 45px;');
             }
         };
     }
