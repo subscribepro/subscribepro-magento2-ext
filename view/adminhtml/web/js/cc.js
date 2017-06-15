@@ -58,14 +58,7 @@ define(
                     .on('changePaymentMethod.' + config.getCode(), this.changePaymentMethod.bind(this));
 
                 domObserver.get('#' + this.container, function () {
-                    // This little hack checks to see if the config is ready yet, if not we wait half a second
-                    if (window.subscribeProPaymentConfig != undefined) {
-                        self.initSpreedly();
-                    } else {
-                        window.setTimeout(function () {
-                            self.initSpreedly();
-                        }, 500);
-                    }
+                    self.initSpreedly();
                 });
 
                 this.$orderForm
