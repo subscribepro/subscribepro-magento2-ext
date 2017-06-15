@@ -114,18 +114,12 @@ define(
             },
 
             initSpreedly: function () {
-                if (!this.spreedlyInitialized) {
-                    spreedly.init(
-                        $.proxy(this.onFieldEvent, this),
-                        $.proxy(this.onPaymentMethod, this),
-                        $.proxy(this.validationPaymentData, this),
-                        $.proxy(this.onErrors, this)
-                    );
-                    this.spreedlyInitialized = true;
-                } else {
-                    spreedly.reload();
-                }
-
+                spreedly.init(
+                    $.proxy(this.onFieldEvent, this),
+                    $.proxy(this.onPaymentMethod, this),
+                    $.proxy(this.validationPaymentData, this),
+                    $.proxy(this.onErrors, this)
+                );
             },
 
             onFieldEvent: function (name, event, activeElement, inputData) {
