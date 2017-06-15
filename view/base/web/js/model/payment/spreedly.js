@@ -9,34 +9,36 @@ define(
 
         return {
             init: function (onFieldEvent, onPaymentMethod, validationPaymentData, onErrors) {
-                Spreedly.init(config.getEnvironmentKey(), {
+
+                this.SpreedlyInstance = new SpreedlyPaymentFrame();
+                this.SpreedlyInstance.init(config.getEnvironmentKey(), {
                     'numberEl': config.getCode() + '_cc_number',
                     'cvvEl': config.getCode() + '_cc_cid'
                 });
-                Spreedly.on('ready', this.styleIFrameFields);
-                Spreedly.on('fieldEvent', onFieldEvent);
-                Spreedly.on('paymentMethod', onPaymentMethod);
-                Spreedly.on('validation', validationPaymentData);
-                Spreedly.on('errors', onErrors);
+                this.SpreedlyInstance.on('ready', this.styleIFrameFields);
+                this.SpreedlyInstance.on('fieldEvent', onFieldEvent);
+                this.SpreedlyInstance.on('paymentMethod', onPaymentMethod);
+                this.SpreedlyInstance.on('validation', validationPaymentData);
+                this.SpreedlyInstance.on('errors', onErrors);
             },
 
             validate: function () {
-                Spreedly.validate();
+                this.SpreedlyInstance.validate();
             },
 
             reload: function() {
-                Spreedly.reload();
+                this.SpreedlyInstance.reload();
             },
 
             tokenizeCreditCard: function (options) {
-                Spreedly.tokenizeCreditCard(options);
+                this.SpreedlyInstance.tokenizeCreditCard(options);
             },
 
             styleIFrameFields: function () {
-                Spreedly.setFieldType('text');
-                Spreedly.setNumberFormat('prettyFormat');
-                Spreedly.setStyle('number','padding: .45em .35em; font-size: 91%;');
-                Spreedly.setStyle('cvv', 'padding: .45em .35em; font-size: 91%; width: 45px;');
+                this.SpreedlyInstance.setFieldType('text');
+                this.SpreedlyInstance.setNumberFormat('prettyFormat');
+                this.SpreedlyInstance.setStyle('number','padding: .45em .35em; font-size: 91%;');
+                this.SpreedlyInstance.setStyle('cvv', 'padding: .45em .35em; font-size: 91%; width: 45px;');
             }
         };
     }
