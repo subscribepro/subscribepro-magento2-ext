@@ -6,11 +6,6 @@
 
 $code = $block->escapeHtml($block->getMethodCode());
 ?>
-<script>
-    //<![CDATA[
-    window.subscribeProPaymentConfig = <?php echo $block->getPaymentConfig(); ?>;
-    //]]>
-</script>
 <fieldset class="admin__fieldset payment-method" id="payment_form_<?php echo $code; ?>" style="display:none">
     <div class="admin__field _required">
         <label class="label admin__field-label">

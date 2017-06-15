@@ -6,6 +6,7 @@ use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
 ?>
 <script>
     //<![CDATA[
+    window.subscribeProPaymentConfig = <?php echo $block->getPaymentConfig(); ?>;
     require(
         [
             'Swarming_SubscribePro/js/cc',

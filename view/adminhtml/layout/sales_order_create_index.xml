@@ -12,7 +12,7 @@
             </action>
         </referenceBlock>
         <referenceBlock name="content">
-            <block class="Magento\Framework\View\Element\Template" name="subscribe_pro_script" template="Swarming_SubscribePro::payment/script.phtml" after="billing_method"/>
+            <block class="Swarming\SubscribePro\Block\Adminhtml\System\Config\Config" name="subscribe_pro_script" template="Swarming_SubscribePro::payment/script.phtml" after="billing_method"/>
         </referenceBlock>
     </body>
 </page>
