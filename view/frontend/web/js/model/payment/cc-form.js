@@ -51,9 +51,6 @@ define(
 
             initialize: function () {
                 this._super();
-                if (window.spreedlyInitialized == undefined) {
-                    window.spreedlyInitialized = false;
-                }
                 this.creditCardExpMonthFocus.subscribe($.proxy(this.validationCreditCardExpMonth, this));
                 this.creditCardExpYearFocus.subscribe($.proxy(this.validationCreditCardExpYear, this));
             },
@@ -65,17 +62,12 @@ define(
             },
 
             initSpreedly: function () {
-                if (!window.spreedlyInitialized) {
-                    spreedly.init(
-                        $.proxy(this.onFieldEvent, this),
-                        $.proxy(this.onPaymentMethod, this),
-                        $.proxy(this.validationPaymentData, this),
-                        $.proxy(this.onErrors, this)
-                    );
-                    window.spreedlyInitialized = true;
-                } else {
-                    spreedly.reload();
-                }
+                spreedly.init(
+                    $.proxy(this.onFieldEvent, this),
+                    $.proxy(this.onPaymentMethod, this),
+                    $.proxy(this.validationPaymentData, this),
+                    $.proxy(this.onErrors, this)
+                );
             },
 
             onFieldEvent: function (name, event, activeElement, inputData) {
