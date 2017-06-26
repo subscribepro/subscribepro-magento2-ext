@@ -36,14 +36,27 @@ class Item
     {
         $subscriptionOption1 = isset($options1['info_buyRequest']) ? $this->getParam($options1['info_buyRequest'], SubscriptionOptionInterface::OPTION) : null;
         $subscriptionOption2 = isset($options2['info_buyRequest']) ? $this->getParam($options2['info_buyRequest'], SubscriptionOptionInterface::OPTION) : null;
+
+        // If neither quote item has a subscription flag (non-subscribable product)
         if (empty($subscriptionOption1) && empty($subscriptionOption2)) {
             return true;
         }
 
+        // If one quote item is a subscription and one is a non-subscription
         if ($subscriptionOption1 != $subscriptionOption2) {
             return false;
         }
 
+        // The previous two conditions have identified that both quote items have a
+        // subscription option value and that they are the same.
+        // If the quote items are both set as one-time purchases, we don't need to
+        // care about the intervals
+        if ($subscriptionOption1 == 'onetime_purchase' && $subscriptionOption2 == 'onetime_purchase') {
+            return true;
+        }
+
+        // Otherwise, we know that both quote items are subscriptions
+        // so we have to compare the selected intervals.
         $subscriptionInterval1 = $this->getParam($options1['info_buyRequest'], SubscriptionOptionInterface::INTERVAL);
         $subscriptionInterval2 = $this->getParam($options2['info_buyRequest'], SubscriptionOptionInterface::INTERVAL);
 
