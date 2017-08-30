@@ -44,7 +44,7 @@ class Product extends \SubscribePro\Service\Product\Product implements ProductIn
     }
 
     /**
-     * @return string[]
+     * @return mixed
      */
     public function getOptionList()
     {

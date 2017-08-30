@@ -40,7 +40,7 @@ interface SubscriptionInterface
     public function setProduct(ProductInterface $product);
 
     /**
-     * @return string[]
+     * @return mixed
      */
     public function getProductOption();
 
