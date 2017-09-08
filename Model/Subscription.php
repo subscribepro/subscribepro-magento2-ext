@@ -29,7 +29,7 @@ class Subscription extends PlatformSubscription implements SubscriptionInterface
     }
 
     /**
-     * @return mixed
+     * @return mixed[]
      */
     public function getProductOption()
     {
