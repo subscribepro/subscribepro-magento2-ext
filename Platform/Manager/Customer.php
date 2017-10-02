@@ -42,6 +42,8 @@ class Customer
     public function getCustomerById($customerId, $createIfNotExist = false, $websiteId = null)
     {
         $customer = $this->customerRepository->getById($customerId);
+        // If $websiteId is null, use the customer's websiteId as a fallback
+        $websiteId = $websiteId !== null ? $websiteId : $customer->getWebsiteId();
         return $this->getCustomer($customer->getEmail(), $createIfNotExist, $websiteId);
     }
 

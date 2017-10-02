@@ -15,7 +15,6 @@ class SdkFactory
         $config = isset($data['config']) && is_array($data['config'])
             ? $data['config']
             : [];
-
         return new Sdk($config);
     }
 }

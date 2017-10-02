@@ -114,7 +114,7 @@ class ItemSubscriptionDiscount
     protected function getPlatformProduct(QuoteItem $item)
     {
         $sku = $item->getProduct()->getData(ProductInterface::SKU);
-        return $this->platformProductManager->getProduct($sku);
+        return $this->platformProductManager->getProduct($sku, $item->getQuote()->getStore()->getWebsiteId());
     }
 
     /**

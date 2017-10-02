@@ -108,7 +108,7 @@ class QuoteItemUpdater
             return;
         }
 
-        $platformProduct = $this->getPlatformProduct($product);
+        $platformProduct = $this->getPlatformProduct($product, $quoteItem->getQuote()->getStore()->getWebsiteId());
         if (!$platformProduct) {
             return;
         }
@@ -127,13 +127,14 @@ class QuoteItemUpdater
 
     /**
      * @param \Magento\Catalog\Model\Product $product
+     * @param int|null $websiteId
      * @return \Swarming\SubscribePro\Api\Data\ProductInterface|null
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    protected function getPlatformProduct($product)
+    protected function getPlatformProduct($product, $websiteId = null)
     {
         try {
-            $platformProduct = $this->platformProductManager->getProduct($product->getData(ProductInterface::SKU));
+            $platformProduct = $this->platformProductManager->getProduct($product->getData(ProductInterface::SKU), $websiteId);
         } catch (NoSuchEntityException $e) {
             if ($this->appState->getMode() === AppState::MODE_DEVELOPER) {
                 throw $e;
