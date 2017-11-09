@@ -25,7 +25,8 @@ class Quote
     public function hasSubscription($quote)
     {
         $hasSubscription = false;
-        $items = (array)$quote->getItems();
+        // getItems() was returning null so I switched to getItemsCollection(), now it works perfectly
+        $items = $quote->getItemsCollection(false);
         foreach ($items as $item) {
             if ($this->quoteItemHelper->hasSubscription($item)) {
                 $hasSubscription = true;
