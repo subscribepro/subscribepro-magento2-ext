@@ -108,7 +108,7 @@ class QuoteItem
     public function getSubscriptionParams($item)
     {
         $buyRequest = $item->getOptionByCode('info_buyRequest');
-        $buyRequest = $buyRequest ? unserialize($buyRequest->getValue()) : [];
+        $buyRequest = $buyRequest ? json_decode($buyRequest->getValue(), true) : [];
         return isset($buyRequest[OptionProcessor::KEY_SUBSCRIPTION_OPTION]) ? $buyRequest[OptionProcessor::KEY_SUBSCRIPTION_OPTION] : [];
     }
 
@@ -123,11 +123,11 @@ class QuoteItem
             ? $item->getOptionByCode('info_buyRequest')
             : $this->itemOptionFactory->create()->setProduct($item->getProduct())->setCode('info_buyRequest');
 
-        $buyRequest = $buyRequestOption->getValue() ? unserialize($buyRequestOption->getValue()) : [];
+        $buyRequest = $buyRequestOption->getValue() ? json_decode($buyRequestOption->getValue(), true) : [];
 
         $buyRequest[OptionProcessor::KEY_SUBSCRIPTION_OPTION] = $params;
 
-        $buyRequestOption->setValue(serialize($buyRequest));
+        $buyRequestOption->setValue(json_encode($buyRequest));
         $item->addOption($buyRequestOption);
     }
 

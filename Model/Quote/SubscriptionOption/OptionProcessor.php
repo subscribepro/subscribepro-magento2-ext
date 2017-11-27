@@ -99,7 +99,7 @@ class OptionProcessor implements CartItemProcessorInterface
     protected function getOptions(CartItemInterface $cartItem)
     {
         $buyRequest = !empty($cartItem->getOptionByCode('info_buyRequest'))
-            ? unserialize($cartItem->getOptionByCode('info_buyRequest')->getValue())
+            ? json_decode($cartItem->getOptionByCode('info_buyRequest')->getValue(), true)
             : null;
 
         if (!is_array($buyRequest)
