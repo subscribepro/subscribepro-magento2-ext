@@ -120,7 +120,13 @@ class SubscriptionManagement implements SubscriptionManagementInterface
     protected function getSubscriptionByCustomerId($customerId)
     {
         $platformCustomer = $this->platformCustomerManager->getCustomerById($customerId);
-        $subscriptions = $this->platformSubscriptionService->loadSubscriptionsByCustomer($platformCustomer->getId());
+        $allSubscriptions = $this->platformSubscriptionService->loadSubscriptionsByCustomer($platformCustomer->getId());
+        $subscriptions = [];
+        foreach ($allSubscriptions as $subscription) {
+            if ($subscription->getStatus() != 'Cancelled') {
+                $subscriptions[] = $subscription;
+            }
+        }
         return $subscriptions;
     }
 
@@ -363,7 +369,7 @@ class SubscriptionManagement implements SubscriptionManagementInterface
         }
         return true;
     }
-    
+
     /**
      * @param int $customerId
      * @param int $subscriptionId
