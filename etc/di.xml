@@ -333,4 +333,22 @@
             <argument name="cache" xsi:type="object">Swarming\SubscribePro\Platform\Cache\Type\Config</argument>
         </arguments>
     </type>
+
+    <!-- Mark client ID and client Secret keys as sensitive -->
+    <type name="Magento\Config\Model\Config\TypePool">
+       <arguments>
+          <argument name="sensitive" xsi:type="array">
+             <item name="swarming_subscribepro/platform/client_id" xsi:type="string">1</item>
+          </argument>
+       </arguments>
+    </type>
+
+    <type name="Magento\Config\Model\Config\TypePool">
+       <arguments>
+          <argument name="sensitive" xsi:type="array">
+             <item name="swarming_subscribepro/platform/client_secret" xsi:type="string">1</item>
+          </argument>
+       </arguments>
+    </type>
+
 </config>
