@@ -58,6 +58,7 @@ class SubscriptionManagement implements SubscriptionManagementInterface
      * @param \Swarming\SubscribePro\Platform\Manager\Address $platformAddressManager
      * @param \Swarming\SubscribePro\Helper\SubscriptionProduct $subscriptionProductHelper
      * @param \Swarming\SubscribePro\Model\Config\SubscriptionOptions $subscriptionOptionConfig
+     * @param \SubscribePro\Utils\SubscriptionUtils $subscriptionUtils
      * @param \Magento\Framework\View\DesignInterface $design
      * @param \Psr\Log\LoggerInterface $logger
      */
@@ -68,6 +69,7 @@ class SubscriptionManagement implements SubscriptionManagementInterface
         \Swarming\SubscribePro\Platform\Manager\Address $platformAddressManager,
         \Swarming\SubscribePro\Helper\SubscriptionProduct $subscriptionProductHelper,
         \Swarming\SubscribePro\Model\Config\SubscriptionOptions $subscriptionOptionConfig,
+        \SubscribePro\Utils\SubscriptionUtils $subscriptionUtils,
         \Magento\Framework\View\DesignInterface $design,
         \Psr\Log\LoggerInterface $logger
     ) {
@@ -77,6 +79,7 @@ class SubscriptionManagement implements SubscriptionManagementInterface
         $this->platformAddressManager = $platformAddressManager;
         $this->subscriptionProductHelper = $subscriptionProductHelper;
         $this->subscriptionOptionConfig = $subscriptionOptionConfig;
+        $this->subscriptionUtils = $subscriptionUtils;
         $this->design = $design;
         $this->logger = $logger;
     }
@@ -121,6 +124,8 @@ class SubscriptionManagement implements SubscriptionManagementInterface
     {
         $platformCustomer = $this->platformCustomerManager->getCustomerById($customerId);
         $subscriptions = $this->platformSubscriptionService->loadSubscriptionsByCustomer($platformCustomer->getId());
+        $subscriptions = $this->subscriptionUtils->filterAndSortSubscriptionListForDisplay($subscriptions);
+
         return $subscriptions;
     }
 
@@ -363,7 +368,7 @@ class SubscriptionManagement implements SubscriptionManagementInterface
         }
         return true;
     }
-    
+
     /**
      * @param int $customerId
      * @param int $subscriptionId
