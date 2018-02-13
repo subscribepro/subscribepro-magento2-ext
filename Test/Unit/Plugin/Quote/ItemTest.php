@@ -57,10 +57,10 @@ class ItemTest extends \PHPUnit_Framework_TestCase
         $subjectMock = $this->createQuoteItemMock();
 
         $buyRequestMock1 = $this->createQuoteItemOptionMock();
-        $buyRequestMock1->expects($this->any())->method('getValue')->willReturn(serialize($buyRequestParams1));
+        $buyRequestMock1->expects($this->any())->method('getValue')->willReturn(json_encode($buyRequestParams1));
 
         $buyRequestMock2 = $this->createQuoteItemOptionMock();
-        $buyRequestMock2->expects($this->any())->method('getValue')->willReturn(serialize($buyRequestParams2));
+        $buyRequestMock2->expects($this->any())->method('getValue')->willReturn(json_encode($buyRequestParams2));
 
         $options1 = ['info_buyRequest' => $buyRequestMock1];
         $options2 = ['info_buyRequest' => $buyRequestMock2];

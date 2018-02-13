@@ -227,13 +227,13 @@ class OptionProcessorTest extends \PHPUnit_Framework_TestCase
                 'buyRequestValue' => '',
             ],
             'BuyRequest value is empty array' => [
-                'buyRequestValue' => serialize([]),
+                'buyRequestValue' => json_encode([]),
             ],
             'BuyRequest value without subscription option' => [
-                'buyRequestValue' => serialize(['key' => 'value']),
+                'buyRequestValue' => json_encode(['key' => 'value']),
             ],
             'Subscription option not array' => [
-                'buyRequestValue' => serialize([
+                'buyRequestValue' => json_encode([
                     'key' => 'value',
                     OptionProcessor::KEY_SUBSCRIPTION_OPTION => 'string'
                 ]),
@@ -244,7 +244,7 @@ class OptionProcessorTest extends \PHPUnit_Framework_TestCase
     public function testProcessOptionsIfNoProductOption()
     {
         $subscriptionOptions = ['options'];
-        $buyRequestValue = serialize([
+        $buyRequestValue = json_encode([
             'key' => 'value',
             OptionProcessor::KEY_SUBSCRIPTION_OPTION => $subscriptionOptions
         ]);
@@ -292,7 +292,7 @@ class OptionProcessorTest extends \PHPUnit_Framework_TestCase
     public function testProcessOptionsIfNoExtensionAttributes()
     {
         $subscriptionOptions = ['options'];
-        $buyRequestValue = serialize([
+        $buyRequestValue = json_encode([
             'key' => 'value',
             OptionProcessor::KEY_SUBSCRIPTION_OPTION => $subscriptionOptions
         ]);
@@ -344,7 +344,7 @@ class OptionProcessorTest extends \PHPUnit_Framework_TestCase
     public function testProcessOptions()
     {
         $subscriptionOptions = ['options'];
-        $buyRequestValue = serialize([
+        $buyRequestValue = json_encode([
             'key' => 'value',
             OptionProcessor::KEY_SUBSCRIPTION_OPTION => $subscriptionOptions
         ]);
