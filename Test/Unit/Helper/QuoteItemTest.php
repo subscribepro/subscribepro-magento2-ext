@@ -80,13 +80,13 @@ class QuoteItemTest extends \PHPUnit_Framework_TestCase
     {
         return [
             'Without subscription params' => [
-                'buyRequestValue' => serialize([
+                'buyRequestValue' => json_encode([
                     'key' => 'value'
                 ]),
                 'subscriptionParams' => []
             ],
             'With subscription params' => [
-                'buyRequestValue' => serialize([
+                'buyRequestValue' => json_encode([
                     'key' => 'value',
                     OptionProcessor::KEY_SUBSCRIPTION_OPTION => ['params']
                 ]),
@@ -111,7 +111,7 @@ class QuoteItemTest extends \PHPUnit_Framework_TestCase
             ->with('info_buyRequest')
             ->willReturnSelf();
         $buyRequestMock->expects($this->once())->method('getValue')->willReturn(null);
-        $buyRequestMock->expects($this->once())->method('setValue')->with(serialize($buyRequestParams));
+        $buyRequestMock->expects($this->once())->method('setValue')->with(json_encode($buyRequestParams));
 
         $quoteItemMock = $this->createQuoteItemMock();
         $quoteItemMock->expects($this->any())
@@ -146,7 +146,7 @@ class QuoteItemTest extends \PHPUnit_Framework_TestCase
             ->with('info_buyRequest')
             ->willReturnSelf();
         $buyRequestMock->expects($this->once())->method('getValue')->willReturn(null);
-        $buyRequestMock->expects($this->once())->method('setValue')->with(serialize($buyRequestParams));
+        $buyRequestMock->expects($this->once())->method('setValue')->with(json_encode($buyRequestParams));
 
         $quoteItemMock = $this->createQuoteItemMock();
         $quoteItemMock->expects($this->any())
@@ -189,8 +189,8 @@ class QuoteItemTest extends \PHPUnit_Framework_TestCase
         ];
 
         $buyRequestMock = $this->createOptionMock();
-        $buyRequestMock->expects($this->any())->method('getValue')->willReturn(serialize($buyRequestParams));
-        $buyRequestMock->expects($this->once())->method('setValue')->with(serialize($updatedBuyRequestParams));
+        $buyRequestMock->expects($this->any())->method('getValue')->willReturn(json_encode($buyRequestParams));
+        $buyRequestMock->expects($this->once())->method('setValue')->with(json_encode($updatedBuyRequestParams));
 
         $quoteItemMock = $this->createQuoteItemMock();
         $quoteItemMock->expects($this->any())
@@ -230,18 +230,18 @@ class QuoteItemTest extends \PHPUnit_Framework_TestCase
     {
         return [
             'Without subscription params' => [
-                'buyRequestValue' => serialize([]),
+                'buyRequestValue' => json_encode([]),
                 'interval' => null
             ],
             'Without interval' => [
-                'buyRequestValue' => serialize([
+                'buyRequestValue' => json_encode([
                     'key' => 'value',
                     OptionProcessor::KEY_SUBSCRIPTION_OPTION => ['params']
                 ]),
                 'interval' => null
             ],
             'With interval' => [
-                'buyRequestValue' => serialize([
+                'buyRequestValue' => json_encode([
                     OptionProcessor::KEY_SUBSCRIPTION_OPTION => [
                         SubscriptionOptionInterface::INTERVAL => 'monthly'
                     ]
@@ -279,20 +279,20 @@ class QuoteItemTest extends \PHPUnit_Framework_TestCase
     {
         return [
             'Without subscription params' => [
-                'buyRequestValue' => serialize([
+                'buyRequestValue' => json_encode([
                     'key' => 'value'
                 ]),
                 'subscriptionOption' => null
             ],
             'Without subscription option' => [
-                'buyRequestValue' => serialize([
+                'buyRequestValue' => json_encode([
                     'some_key' => [],
                     OptionProcessor::KEY_SUBSCRIPTION_OPTION => ['params']
                 ]),
                 'subscriptionOption' => null
             ],
             'With subscription option' => [
-                'buyRequestValue' => serialize([
+                'buyRequestValue' => json_encode([
                     OptionProcessor::KEY_SUBSCRIPTION_OPTION => [
                         SubscriptionOptionInterface::OPTION => 'subscribe'
                     ]
@@ -330,20 +330,20 @@ class QuoteItemTest extends \PHPUnit_Framework_TestCase
     {
         return [
             'Without subscription params' => [
-                'buyRequestValue' => serialize([
+                'buyRequestValue' => json_encode([
                     'key' => 'value'
                 ]),
                 'isFulfilsSubscription' => false
             ],
             'Without fulfils subscription' => [
-                'buyRequestValue' => serialize([
+                'buyRequestValue' => json_encode([
                     'some_key' => [],
                     OptionProcessor::KEY_SUBSCRIPTION_OPTION => ['params']
                 ]),
                 'isFulfilsSubscription' => false
             ],
             'With fulfils subscription: false' => [
-                'buyRequestValue' => serialize([
+                'buyRequestValue' => json_encode([
                     OptionProcessor::KEY_SUBSCRIPTION_OPTION => [
                         SubscriptionOptionInterface::IS_FULFILLING => 0
                     ]
@@ -351,7 +351,7 @@ class QuoteItemTest extends \PHPUnit_Framework_TestCase
                 'isFulfilsSubscription' => false
             ],
             'With fulfils subscription: true' => [
-                'buyRequestValue' => serialize([
+                'buyRequestValue' => json_encode([
                     OptionProcessor::KEY_SUBSCRIPTION_OPTION => [
                         SubscriptionOptionInterface::IS_FULFILLING => 1
                     ]
@@ -367,7 +367,7 @@ class QuoteItemTest extends \PHPUnit_Framework_TestCase
      * @dataProvider isSubscriptionEnabledDataProvider
      */
     public function testIsSubscriptionEnabled($subscriptionOption, $isSubscriptionEnabled) {
-        $buyRequestValue = serialize([
+        $buyRequestValue = json_encode([
             OptionProcessor::KEY_SUBSCRIPTION_OPTION => [
                 SubscriptionOptionInterface::OPTION => $subscriptionOption
             ]
@@ -412,7 +412,7 @@ class QuoteItemTest extends \PHPUnit_Framework_TestCase
      * @dataProvider hasSubscriptionDataProvider
      */
     public function testHasSubscription($subscriptionOption, $isFulfilsSubscription, $hasSubscription) {
-        $buyRequestValue = serialize([
+        $buyRequestValue = json_encode([
             OptionProcessor::KEY_SUBSCRIPTION_OPTION => [
                 SubscriptionOptionInterface::OPTION => $subscriptionOption,
                 SubscriptionOptionInterface::IS_FULFILLING => $isFulfilsSubscription,
