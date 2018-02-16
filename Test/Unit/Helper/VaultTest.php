@@ -72,6 +72,7 @@ class VaultTest extends \PHPUnit\Framework\TestCase
         $customerId,
         $cardType,
         $ccType,
+        $paymentToken,
         $lastDigits,
         $year,
         $month,
@@ -88,6 +89,7 @@ class VaultTest extends \PHPUnit\Framework\TestCase
         $profileMock->expects($this->once())->method('getCreditcardLastDigits')->willReturn($lastDigits);
         $profileMock->expects($this->any())->method('getCreditcardMonth')->willReturn($month);
         $profileMock->expects($this->any())->method('getCreditcardYear')->willReturn($year);
+        $profileMock->expects($this->once())->method('getPaymentToken')->willReturn($paymentToken);
 
         $tokenMock = $this->createPaymentTokenMock();
         $tokenMock->expects($this->once())->method('setPaymentMethodCode')->with(ConfigProvider::CODE);
@@ -143,6 +145,7 @@ class VaultTest extends \PHPUnit\Framework\TestCase
                 'customerId' => null,
                 'cardType' => 'visa',
                 'ccType' => 'cc_type',
+                'paymentToken' => 'abc123xyz',
                 'lastDigits' => 55412,
                 'year' => '2020',
                 'month' => '12',
@@ -151,12 +154,14 @@ class VaultTest extends \PHPUnit\Framework\TestCase
                 'tokenDetails' => json_encode([
                     'type' => 'cc_type',
                     'maskedCC' => 55412,
-                    'expirationDate' => '12/2020'
+                    'expirationDate' => '12/2020',
+                    'paymentToken' => 'abc123xyz',
                 ]),
                 'hashKey' => 'gateway_tokenbraintreetoken_type' . json_encode([
                     'type' => 'cc_type',
                     'maskedCC' => 55412,
-                    'expirationDate' => '12/2020'
+                    'expirationDate' => '12/2020',
+                    'paymentToken' => 'abc123xyz',
                 ]),
                 'enctyptedHash' => 'encr_hash'
             ],
@@ -168,6 +173,7 @@ class VaultTest extends \PHPUnit\Framework\TestCase
                 'customerId' => 5551,
                 'cardType' => 'mastercard',
                 'ccType' => 'master_type',
+                'paymentToken' => 'abc123xyz',
                 'lastDigits' => 4444,
                 'year' => '2025',
                 'month' => '04',
@@ -176,13 +182,15 @@ class VaultTest extends \PHPUnit\Framework\TestCase
                 'tokenDetails' => json_encode([
                     'type' => 'master_type',
                     'maskedCC' => 4444,
-                    'expirationDate' => '04/2025'
+                    'expirationDate' => '04/2025',
+                    'paymentToken' => 'abc123xyz',
                 ]),
                 'hashKey' => '5551some_methodtype_credit' . json_encode([
-                        'type' => 'master_type',
-                        'maskedCC' => 4444,
-                        'expirationDate' => '04/2025'
-                    ]),
+                    'type' => 'master_type',
+                    'maskedCC' => 4444,
+                    'expirationDate' => '04/2025',
+                    'paymentToken' => 'abc123xyz',
+                ]),
                 'enctyptedHash' => 'protected_hash'
             ]
         ];
@@ -224,12 +232,14 @@ class VaultTest extends \PHPUnit\Framework\TestCase
         $tokenDetails = [
             'type' => 'master_type',
             'maskedCC' => 4444,
-            'expirationDate' => '04/2025'
+            'expirationDate' => '04/2025',
+            'paymentToken' => 'abc123xyz',
         ];
         $updatedTokenDetails = [
             'type' => 'master_type',
             'maskedCC' => 4444,
-            'expirationDate' => "{$month}/{$year}"
+            'expirationDate' => "{$month}/{$year}",
+            'paymentToken' => 'abc123xyz',
         ];
         $expirationDate = '2025-05-01 00:00:00';
 
@@ -263,10 +273,12 @@ class VaultTest extends \PHPUnit\Framework\TestCase
         $cardType = 'card_type';
         $ccType = 'cc_type';
         $lastDigits = 1111;
+        $paymentToken = 'abc123xyz';
         $tokenDetails = [
             'type' => $ccType,
             'maskedCC' => $lastDigits,
-            'expirationDate' => "{$month}/{$year}"
+            'expirationDate' => "{$month}/{$year}",
+            'paymentToken' => $paymentToken,
         ];
 
         $this->gatewayConfigMock->expects($this->once())
@@ -276,7 +288,7 @@ class VaultTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals(
             json_encode($tokenDetails),
-            $this->vaultHelper->getTokenDetails($cardType, $lastDigits, $month, $year)
+            $this->vaultHelper->getTokenDetails($cardType, $lastDigits, $month, $year, $paymentToken)
         );
     }
 

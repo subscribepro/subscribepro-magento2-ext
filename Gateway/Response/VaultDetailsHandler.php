@@ -90,7 +90,8 @@ class VaultDetailsHandler implements HandlerInterface
             $transaction->getCreditcardType(),
             $transaction->getCreditcardLastDigits(),
             $transaction->getCreditcardMonth(),
-            $transaction->getCreditcardYear()
+            $transaction->getCreditcardYear(),
+            $transaction->getToken()
         ));
 
         return $paymentToken;

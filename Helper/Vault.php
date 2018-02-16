@@ -54,7 +54,8 @@ class Vault
             $profile->getCreditcardType(),
             $profile->getCreditcardLastDigits(),
             $profile->getCreditcardMonth(),
-            $profile->getCreditcardYear()
+            $profile->getCreditcardYear(),
+            $profile->getPaymentToken()
         ));
         $token->setExpiresAt($this->getExpirationDate($profile->getCreditcardYear(), $profile->getCreditcardMonth()));
         $token->setPublicHash($this->generatePublicHash($token));
@@ -82,12 +83,13 @@ class Vault
      * @param string $year
      * @return string
      */
-    public function getTokenDetails($cardType, $lastDigits, $month, $year)
+    public function getTokenDetails($cardType, $lastDigits, $month, $year, $paymentToken)
     {
         $tokenDetails = [
             'type' => $this->gatewayConfig->getMappedCcType($cardType),
             'maskedCC' => $lastDigits,
-            'expirationDate' => $month . '/' . $year
+            'expirationDate' => $month . '/' . $year,
+            'paymentToken' => $paymentToken,
         ];
         return $this->encodeDetails($tokenDetails);
     }
