@@ -9,7 +9,7 @@ use Swarming\SubscribePro\Platform\Platform;
 use Swarming\SubscribePro\Model\Config\Platform as PlatformConfig;
 use SubscribePro\Sdk as SubscribeProSdk;
 
-class PlatformTest extends \PHPUnit_Framework_TestCase
+class PlatformTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Platform\Platform

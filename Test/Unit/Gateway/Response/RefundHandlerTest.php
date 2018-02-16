@@ -11,7 +11,7 @@ use SubscribePro\Service\Transaction\TransactionInterface;
 use Swarming\SubscribePro\Gateway\Helper\SubjectReader;
 use Swarming\SubscribePro\Gateway\Response\RefundHandler;
 
-class RefundHandlerTest extends \PHPUnit_Framework_TestCase
+class RefundHandlerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Gateway\Response\RefundHandler

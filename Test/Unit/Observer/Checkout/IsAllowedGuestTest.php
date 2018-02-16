@@ -11,7 +11,7 @@ use Swarming\SubscribePro\Observer\Checkout\IsAllowedGuest;
 use Swarming\SubscribePro\Model\Config\General as GeneralConfig;
 use Swarming\SubscribePro\Helper\Quote as QuoteHelper;
 
-class IsAllowedGuestTest extends \PHPUnit_Framework_TestCase
+class IsAllowedGuestTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Observer\Checkout\IsAllowedGuest

@@ -11,7 +11,7 @@ use Swarming\SubscribePro\Plugin\Vault\TokenRepository;
 use Swarming\SubscribePro\Platform\Service\PaymentProfile as PaymentProfileService;
 use SubscribePro\Service\PaymentProfile\PaymentProfileInterface;
 
-class TokenRepositoryTest extends \PHPUnit_Framework_TestCase
+class TokenRepositoryTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Plugin\Vault\TokenRepository

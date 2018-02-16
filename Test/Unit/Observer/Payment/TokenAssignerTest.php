@@ -19,7 +19,7 @@ use Magento\Quote\Model\Quote\Payment as QuotePayment;
 use Swarming\SubscribePro\Observer\Payment\TokenAssigner as PaymentTokenAssigner;
 use Magento\Payment\Model\InfoInterface as PaymentInfoInterface;
 
-class TokenAssignerTest extends \PHPUnit_Framework_TestCase
+class TokenAssignerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Observer\Payment\TokenAssigner

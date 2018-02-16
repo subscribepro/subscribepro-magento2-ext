@@ -7,7 +7,7 @@ use Swarming\SubscribePro\Platform\Manager\Address;
 use Swarming\SubscribePro\Platform\Service\Address as AddressService;
 use Magento\Quote\Model\Quote\Address as QuoteAddress;
 
-class AddressTest extends \PHPUnit_Framework_TestCase
+class AddressTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Platform\Manager\Address

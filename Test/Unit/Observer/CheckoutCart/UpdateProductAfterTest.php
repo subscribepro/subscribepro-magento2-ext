@@ -22,7 +22,7 @@ use Swarming\SubscribePro\Helper\Product as ProductHelper;
 use Swarming\SubscribePro\Helper\QuoteItem as QuoteItemHelper;
 use Magento\Quote\Model\Quote\Item as QuoteItem;
 
-class UpdateProductAfterTest extends \PHPUnit_Framework_TestCase
+class UpdateProductAfterTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Observer\CheckoutCart\UpdateProductAfter

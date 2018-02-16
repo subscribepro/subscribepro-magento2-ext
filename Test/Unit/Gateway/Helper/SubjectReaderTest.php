@@ -5,7 +5,7 @@ namespace Swarming\SubscribePro\Test\Unit\Gateway\Helper;
 use SubscribePro\Service\Transaction\TransactionInterface;
 use Swarming\SubscribePro\Gateway\Helper\SubjectReader;
 
-class SubjectReaderTest extends \PHPUnit_Framework_TestCase
+class SubjectReaderTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Gateway\Helper\SubjectReader

@@ -7,7 +7,7 @@ use Magento\Framework\App\Filesystem\DirectoryList;
 use Swarming\SubscribePro\Model\Config\Platform;
 use Magento\Store\Model\ScopeInterface;
 
-class PlatformTest extends \PHPUnit_Framework_TestCase
+class PlatformTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Model\Config\Platform

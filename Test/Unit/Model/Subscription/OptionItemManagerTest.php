@@ -16,7 +16,7 @@ use Magento\Framework\DataObject\Factory as DataObjectFactory;
 use Swarming\SubscribePro\Model\Subscription\OptionItem as SubscriptionOptionItem;
 use Magento\Catalog\Model\Product\Type\AbstractType as ProductTypeInstance;
 
-class OptionItemManagerTest extends \PHPUnit_Framework_TestCase
+class OptionItemManagerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Model\Subscription\OptionItemManager

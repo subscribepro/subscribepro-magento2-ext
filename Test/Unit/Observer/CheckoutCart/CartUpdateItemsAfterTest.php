@@ -23,7 +23,7 @@ use Magento\Catalog\Api\ProductRepositoryInterface;
 use Swarming\SubscribePro\Helper\Product as ProductHelper;
 use Magento\Quote\Model\Quote\Item as QuoteItem;
 
-class CartUpdateItemsAfterTest extends \PHPUnit_Framework_TestCase
+class CartUpdateItemsAfterTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Observer\CheckoutCart\CartUpdateItemsAfter

@@ -7,7 +7,7 @@ use Magento\Framework\Controller\ResultFactory;
 use Swarming\SubscribePro\Controller\Cards\NewAction;
 use Magento\Framework\Controller\Result\Forward as ResultForward;
 
-class NewActionTest extends \PHPUnit_Framework_TestCase
+class NewActionTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Controller\Cards\NewAction

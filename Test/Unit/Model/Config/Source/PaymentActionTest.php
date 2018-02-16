@@ -4,7 +4,7 @@ namespace Swarming\SubscribePro\Test\Unit\Model\Config\Source;
 
 use Swarming\SubscribePro\Model\Config\Source\PaymentAction;
 
-class PaymentActionTest extends \PHPUnit_Framework_TestCase
+class PaymentActionTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Model\Config\Source\PaymentAction

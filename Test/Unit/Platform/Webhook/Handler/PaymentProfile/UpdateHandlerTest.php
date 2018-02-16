@@ -15,7 +15,7 @@ use SubscribePro\Service\Customer\CustomerInterface as PlatformCustomerInterface
 use Swarming\SubscribePro\Platform\Service\PaymentProfile as PaymentProfileService;
 use Swarming\SubscribePro\Helper\Vault as VaultHelper;
 
-class UpdateHandlerTest extends \PHPUnit_Framework_TestCase
+class UpdateHandlerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Platform\Webhook\Handler\PaymentProfile\UpdateHandler

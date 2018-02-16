@@ -8,7 +8,7 @@ use Swarming\SubscribePro\Model\Config\SubscriptionDiscount as SubscriptionDisco
 use Swarming\SubscribePro\Helper\Product as ProductHelper;
 use Magento\Catalog\Block\Product\View as ProductView;
 
-class SubscriptionTest extends \PHPUnit_Framework_TestCase
+class SubscriptionTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Plugin\Product\Subscription

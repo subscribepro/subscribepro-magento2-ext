@@ -9,7 +9,7 @@ use Swarming\SubscribePro\Api\Data\AddressInterface;
 use Swarming\SubscribePro\Model\Vault\Validator;
 use Magento\Directory\Helper\Data as DirectoryDataHelper;
 
-class ValidatorTest extends \PHPUnit_Framework_TestCase
+class ValidatorTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Model\Vault\Validator

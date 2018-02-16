@@ -10,7 +10,7 @@ use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
 use Swarming\SubscribePro\Helper\Vault;
 use Swarming\SubscribePro\Gateway\Config\Config as GatewayConfig;
 
-class VaultTest extends \PHPUnit_Framework_TestCase
+class VaultTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Helper\Vault

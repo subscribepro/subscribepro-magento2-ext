@@ -13,7 +13,7 @@ use Magento\Framework\View\Page\Config as PageConfig;
 use Magento\Framework\View\Page\Title as PageTitle;
 use Magento\Framework\View\Element\Html\Links as NavigationBlock;
 
-class EditTest extends \PHPUnit_Framework_TestCase
+class EditTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Controller\Cards\Edit

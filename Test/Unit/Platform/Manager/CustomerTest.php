@@ -8,7 +8,7 @@ use Magento\Customer\Api\Data\CustomerInterface;
 use Swarming\SubscribePro\Platform\Manager\Customer;
 use Swarming\SubscribePro\Platform\Service\Customer as CustomerService;
 
-class CustomerTest extends \PHPUnit_Framework_TestCase
+class CustomerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Platform\Manager\Customer

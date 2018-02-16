@@ -8,7 +8,7 @@ use Swarming\SubscribePro\Plugin\Quote\CartItemOptionsProcessor;
 use Swarming\SubscribePro\Model\Quote\SubscriptionOption\OptionProcessor as SubscriptionOptionProcessor;
 use Magento\Quote\Model\Quote\Item\CartItemOptionsProcessor as QuoteCartItemOptionsProcessor;
 
-class CartItemOptionsProcessorTest extends \PHPUnit_Framework_TestCase
+class CartItemOptionsProcessorTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Plugin\Quote\CartItemOptionsProcessor

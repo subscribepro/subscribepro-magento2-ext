@@ -16,7 +16,7 @@ use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\Data\Form\FormKey\Validator as FormKeyValidator;
 use Swarming\SubscribePro\Model\Vault\Form as VaultForm;
 
-class SaveTest extends \PHPUnit_Framework_TestCase
+class SaveTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Controller\Cards\Save

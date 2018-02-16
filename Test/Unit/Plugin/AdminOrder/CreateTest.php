@@ -7,7 +7,7 @@ use Swarming\SubscribePro\Helper\OrderItem as OrderItemHelper;
 use Magento\Sales\Model\AdminOrder\Create as AdminOrderCreate;
 use Magento\Sales\Model\Order\Item as OrderItem;
 
-class CreateTest extends \PHPUnit_Framework_TestCase
+class CreateTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Plugin\AdminOrder\Create

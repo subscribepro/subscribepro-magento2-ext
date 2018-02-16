@@ -5,7 +5,7 @@ namespace Swarming\SubscribePro\Test\Unit\Model\Config\Source;
 use Swarming\SubscribePro\Model\Config\Source\CcType;
 use Magento\Payment\Model\Config as PaymentConfig;
 
-class CcTypeTest extends \PHPUnit_Framework_TestCase
+class CcTypeTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Model\Config\Source\CcType

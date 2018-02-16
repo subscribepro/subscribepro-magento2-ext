@@ -12,7 +12,7 @@ use Swarming\SubscribePro\Model\Config\General as GeneralConfig;
 use Swarming\SubscribePro\Gateway\Config\Config as GatewayConfig;
 use Swarming\SubscribePro\Platform\Tool\Config as PlatformConfigTool;
 
-class ConfigProviderTest extends \PHPUnit_Framework_TestCase
+class ConfigProviderTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Gateway\Config\ConfigProvider

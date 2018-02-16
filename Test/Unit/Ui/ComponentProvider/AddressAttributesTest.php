@@ -9,7 +9,7 @@ use Magento\Ui\Component\Form\AttributeMapper;
 use Swarming\SubscribePro\Ui\ComponentProvider\AddressAttributes;
 use Magento\Customer\Model\Options as CustomerOptions;
 
-class AddressAttributesTest extends \PHPUnit_Framework_TestCase
+class AddressAttributesTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Ui\ComponentProvider\AddressAttributes

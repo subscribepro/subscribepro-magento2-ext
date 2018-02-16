@@ -15,7 +15,7 @@ use Swarming\SubscribePro\Gateway\Response\VaultDetailsHandler;
 use Swarming\SubscribePro\Helper\Vault as SubscribeProVaultHelper;
 use Swarming\SubscribePro\Gateway\Config\Config as GatewayConfig;
 
-class VaultDetailsHandlerTest extends \PHPUnit_Framework_TestCase
+class VaultDetailsHandlerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Gateway\Response\VaultDetailsHandler

@@ -8,7 +8,7 @@ use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Swarming\SubscribePro\Gateway\Command\CaptureStrategyCommand;
 use Swarming\SubscribePro\Gateway\Helper\SubjectReader;
 
-class CaptureStrategyCommandTest extends \PHPUnit_Framework_TestCase
+class CaptureStrategyCommandTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Gateway\Command\CaptureStrategyCommand

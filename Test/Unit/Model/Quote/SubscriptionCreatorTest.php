@@ -16,7 +16,7 @@ use Magento\Quote\Model\Quote\Address as QuoteAddress;
 use Swarming\SubscribePro\Platform\Manager\Customer as CustomerManager;
 use Swarming\SubscribePro\Model\Quote\QuoteItem\SubscriptionCreator as QuoteItemSubscriptionCreator;
 
-class SubscriptionCreatorTest extends \PHPUnit_Framework_TestCase
+class SubscriptionCreatorTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Model\Quote\SubscriptionCreator

@@ -8,7 +8,7 @@ use SubscribePro\Service\Transaction\TransactionInterface;
 use Swarming\SubscribePro\Gateway\Helper\SubjectReader;
 use Swarming\SubscribePro\Gateway\Response\PaymentDetailsHandler;
 
-class PaymentDetailsHandlerTest extends \PHPUnit_Framework_TestCase
+class PaymentDetailsHandlerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Gateway\Response\PaymentDetailsHandler

@@ -15,7 +15,7 @@ use Swarming\SubscribePro\Observer\Checkout\SubmitAllAfter;
 use Swarming\SubscribePro\Model\Config\General as GeneralConfig;
 use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
 
-class SubmitAllAfterTest extends \PHPUnit_Framework_TestCase
+class SubmitAllAfterTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Observer\Checkout\SubmitAllAfter

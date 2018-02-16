@@ -4,7 +4,7 @@ namespace Swarming\SubscribePro\Test\Unit\Platform\Service;
 
 use Swarming\SubscribePro\Platform\Platform;
 
-class AbstractService extends \PHPUnit_Framework_TestCase
+class AbstractService extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject|\Swarming\SubscribePro\Platform\Platform

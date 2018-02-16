@@ -9,7 +9,7 @@ use SubscribePro\Service\Transaction\TransactionInterface;
 use Swarming\SubscribePro\Gateway\Helper\SubjectReader;
 use Swarming\SubscribePro\Gateway\Response\VoidHandler;
 
-class VoidHandlerTest extends \PHPUnit_Framework_TestCase
+class VoidHandlerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Gateway\Response\VoidHandler

@@ -10,7 +10,7 @@ use Swarming\SubscribePro\Gateway\Helper\SubjectReader;
 use Swarming\SubscribePro\Gateway\Request\VaultDataBuilder;
 use SubscribePro\Service\Transaction\TransactionInterface;
 
-class VaultDataBuilderTest extends \PHPUnit_Framework_TestCase
+class VaultDataBuilderTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject|\Swarming\SubscribePro\Gateway\Helper\SubjectReader

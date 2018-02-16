@@ -7,7 +7,7 @@ use Swarming\SubscribePro\Helper\OrderItem as OrderItemHelper;
 use Magento\Checkout\Model\Cart as CheckoutCart;
 use Magento\Sales\Model\Order\Item as OrderItem;
 
-class CartTest extends \PHPUnit_Framework_TestCase
+class CartTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Plugin\Checkout\Cart

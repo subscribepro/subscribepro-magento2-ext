@@ -12,7 +12,7 @@ use Swarming\SubscribePro\Controller\Adminhtml\Config\TestConnection;
 use Swarming\SubscribePro\Model\Config\Platform as PlatformConfig;
 use Magento\Framework\Controller\Result\Json as ResultJson;
 
-class TestConnectionTest extends \PHPUnit_Framework_TestCase
+class TestConnectionTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Controller\Adminhtml\Config\TestConnection

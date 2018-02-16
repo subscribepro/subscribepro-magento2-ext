@@ -5,7 +5,7 @@ namespace Swarming\SubscribePro\Test\Unit\Platform\Webhook;
 use Swarming\SubscribePro\Platform\Webhook\HandlerInterface;
 use Swarming\SubscribePro\Platform\Webhook\HandlerPool;
 
-class HandlerPoolTest extends \PHPUnit_Framework_TestCase
+class HandlerPoolTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @param array $handlers

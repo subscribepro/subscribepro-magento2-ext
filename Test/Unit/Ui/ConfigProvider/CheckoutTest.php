@@ -5,7 +5,7 @@ namespace Swarming\SubscribePro\Test\Unit\Ui\ConfigProvider;
 use Swarming\SubscribePro\Ui\ConfigProvider\Checkout;
 use Swarming\SubscribePro\Gateway\Config\ConfigProvider as GatewayConfigProvider;
 
-class CheckoutTest extends \PHPUnit_Framework_TestCase
+class CheckoutTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Ui\ConfigProvider\Checkout

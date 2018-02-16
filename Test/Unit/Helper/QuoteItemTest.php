@@ -13,7 +13,7 @@ use Swarming\SubscribePro\Helper\QuoteItem;
 use Swarming\SubscribePro\Model\Quote\SubscriptionOption\OptionProcessor;
 use Swarming\SubscribePro\Api\Data\ProductInterface as PlatformProductInterface;
 
-class QuoteItemTest extends \PHPUnit_Framework_TestCase
+class QuoteItemTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Helper\QuoteItem

@@ -11,7 +11,7 @@ use Magento\Catalog\Model\Product;
 use DateTime;
 use Magento\Catalog\Model\Product\Type\Price as PriceModel;
 
-abstract class AbstractInspector extends \PHPUnit_Framework_TestCase
+abstract class AbstractInspector extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Magento\Customer\Model\Session|\PHPUnit_Framework_MockObject_MockObject

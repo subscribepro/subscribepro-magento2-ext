@@ -7,7 +7,7 @@ use Magento\Framework\Api\AttributeInterface;
 use Swarming\SubscribePro\Helper\Product as ProductHelper;
 use Swarming\SubscribePro\Ui\DataProvider\Product\Modifier\Subscription as SubscriptionModifier;
 
-class ProductTest extends \PHPUnit_Framework_TestCase
+class ProductTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Helper\Product
