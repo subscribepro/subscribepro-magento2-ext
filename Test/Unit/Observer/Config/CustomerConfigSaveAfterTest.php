@@ -11,7 +11,7 @@ use Magento\Store\Model\ScopeInterface;
 use Magento\Customer\Model\Config\Share;
 use Magento\Config\Model\Config\Factory as ConfigFactory;
 
-class CustomerConfigSaveAfterTest extends \PHPUnit_Framework_TestCase
+class CustomerConfigSaveAfterTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Observer\Config\CustomerConfigSaveAfter

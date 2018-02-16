@@ -9,7 +9,7 @@ use Magento\Vault\Model\Ui\TokenUiComponentProviderInterface;
 use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
 use Swarming\SubscribePro\Ui\ComponentProvider\VaultToken;
 
-class VaultTokenTest extends \PHPUnit_Framework_TestCase
+class VaultTokenTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Ui\ComponentProvider\VaultToken

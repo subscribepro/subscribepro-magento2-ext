@@ -13,7 +13,7 @@ use Magento\Vault\Api\Data\PaymentTokenSearchResultsInterface;
 use Magento\Vault\Api\PaymentTokenRepositoryInterface;
 use Swarming\SubscribePro\Service\PaymentTokenManagement;
 
-class PaymentTokenManagementTest extends \PHPUnit_Framework_TestCase
+class PaymentTokenManagementTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Service\PaymentTokenManagement

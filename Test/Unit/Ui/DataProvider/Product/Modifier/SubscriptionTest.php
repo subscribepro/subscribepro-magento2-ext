@@ -9,7 +9,7 @@ use Magento\Framework\Stdlib\ArrayManager;
 use Swarming\SubscribePro\Ui\DataProvider\Product\Modifier\Subscription;
 use Magento\Ui\Component\Form;
 
-class SubscriptionTest extends \PHPUnit_Framework_TestCase
+class SubscriptionTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Ui\DataProvider\Product\Modifier\Subscription

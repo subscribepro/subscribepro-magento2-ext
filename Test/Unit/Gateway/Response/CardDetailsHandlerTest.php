@@ -10,7 +10,7 @@ use Swarming\SubscribePro\Gateway\Response\CardDetailsHandler;
 use Swarming\SubscribePro\Gateway\Config\Config as GatewayConfig;
 use Magento\Payment\Model\InfoInterface as PaymentInfoInterface;
 
-class CardDetailsHandlerTest extends \PHPUnit_Framework_TestCase
+class CardDetailsHandlerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Gateway\Response\CardDetailsHandler

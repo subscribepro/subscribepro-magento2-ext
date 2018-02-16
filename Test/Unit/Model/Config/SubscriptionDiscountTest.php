@@ -6,7 +6,7 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 use Swarming\SubscribePro\Model\Config\SubscriptionDiscount;
 use Magento\Store\Model\ScopeInterface;
 
-class SubscriptionDiscountTest extends \PHPUnit_Framework_TestCase
+class SubscriptionDiscountTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Model\Config\SubscriptionDiscount

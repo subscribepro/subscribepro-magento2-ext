@@ -8,7 +8,7 @@ use Swarming\SubscribePro\Model\Config\SubscriptionOptions;
 use Swarming\SubscribePro\Ui\ConfigProvider\SubscriptionConfig;
 use Swarming\SubscribePro\Model\Config\SubscriptionOptions as SubscriptionOptionsConfig;
 
-class SubscriptionConfigTest extends \PHPUnit_Framework_TestCase
+class SubscriptionConfigTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Ui\ConfigProvider\SubscriptionConfig

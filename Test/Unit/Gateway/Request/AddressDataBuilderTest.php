@@ -10,7 +10,7 @@ use Swarming\SubscribePro\Api\Data\AddressInterface;
 use Swarming\SubscribePro\Gateway\Helper\SubjectReader;
 use Swarming\SubscribePro\Gateway\Request\AddressDataBuilder;
 
-class AddressDataReaderTest extends \PHPUnit_Framework_TestCase
+class AddressDataReaderTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject|\Swarming\SubscribePro\Gateway\Helper\SubjectReader

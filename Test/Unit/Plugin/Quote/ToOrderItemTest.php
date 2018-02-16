@@ -8,7 +8,7 @@ use Swarming\SubscribePro\Helper\OrderItem as OrderItemHelper;
 use Magento\Sales\Model\Order\Item as OrderItem;
 use Magento\Quote\Model\Quote\Item\ToOrderItem as QuoteToOrderItem;
 
-class ToOrderItemTest extends \PHPUnit_Framework_TestCase
+class ToOrderItemTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Plugin\Quote\ToOrderItem

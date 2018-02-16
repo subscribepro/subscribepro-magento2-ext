@@ -7,7 +7,7 @@ use Swarming\SubscribePro\Model\CatalogRule\InspectorRepository;
 use Magento\Framework\ObjectManagerInterface;
 use stdClass;
 
-class InspectorRepositoryTest extends \PHPUnit_Framework_TestCase
+class InspectorRepositoryTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Model\CatalogRule\InspectorRepository

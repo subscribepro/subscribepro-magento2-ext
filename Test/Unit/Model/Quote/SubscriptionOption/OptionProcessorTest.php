@@ -13,7 +13,7 @@ use Swarming\SubscribePro\Api\Data\SubscriptionOptionInterfaceFactory;
 use Swarming\SubscribePro\Model\Quote\SubscriptionOption\OptionProcessor;
 use Magento\Framework\DataObject\Factory as DataObjectFactory;
 
-class OptionProcessorTest extends \PHPUnit_Framework_TestCase
+class OptionProcessorTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Model\Quote\SubscriptionOption\OptionProcessor

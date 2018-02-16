@@ -12,7 +12,7 @@ use Swarming\SubscribePro\Service\AddressManagement;
 use Magento\Quote\Model\Quote\Address as QuoteAddress;
 use Magento\Customer\Block\Address\Renderer\RendererInterface as AddressRendererInterface;
 
-class AddressManagementTest extends \PHPUnit_Framework_TestCase
+class AddressManagementTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Service\AddressManagement

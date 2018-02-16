@@ -17,7 +17,7 @@ use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Store\Api\Data\StoreInterface;
 
-class AbstractCommand extends \PHPUnit_Framework_TestCase
+class AbstractCommand extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Payment\Gateway\Request\BuilderInterface

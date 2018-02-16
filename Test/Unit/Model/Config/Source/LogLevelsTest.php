@@ -4,7 +4,7 @@ namespace Swarming\SubscribePro\Test\Unit\Model\Config\Source;
 
 use Swarming\SubscribePro\Model\Config\Source\LogLevels;
 
-class LogLevelsTest extends \PHPUnit_Framework_TestCase
+class LogLevelsTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Model\Config\Source\LogLevels

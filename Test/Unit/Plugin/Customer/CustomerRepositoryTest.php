@@ -11,7 +11,7 @@ use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Psr\Log\LoggerInterface;
 
-class CustomerRepositoryTest extends \PHPUnit_Framework_TestCase
+class CustomerRepositoryTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Platform\Manager\Customer|\PHPUnit_Framework_MockObject_MockObject

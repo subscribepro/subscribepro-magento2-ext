@@ -9,7 +9,7 @@ use SubscribePro\Service\Transaction\TransactionInterface;
 use Swarming\SubscribePro\Gateway\Helper\SubjectReader;
 use Swarming\SubscribePro\Gateway\Request\CaptureDataBuilder;
 
-class CaptureDataBuilderTest extends \PHPUnit_Framework_TestCase
+class CaptureDataBuilderTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject|\Swarming\SubscribePro\Gateway\Helper\SubjectReader

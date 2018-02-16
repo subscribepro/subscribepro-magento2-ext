@@ -15,7 +15,7 @@ use Swarming\SubscribePro\Model\Vault\Validator as VaultValidator;
 use SubscribePro\Service\Customer\CustomerInterface as PlatformCustomerInterface;
 use Swarming\SubscribePro\Helper\DebugLogger;
 
-class FormTest extends \PHPUnit_Framework_TestCase
+class FormTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Model\Vault\Form

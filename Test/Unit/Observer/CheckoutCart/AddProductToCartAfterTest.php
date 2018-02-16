@@ -20,7 +20,7 @@ use Swarming\SubscribePro\Helper\Product as ProductHelper;
 use Magento\Quote\Model\Quote\Item as QuoteItem;
 use Swarming\SubscribePro\Helper\QuoteItem as QuoteItemHelper;
 
-class AddProductToCartAfterTest extends \PHPUnit_Framework_TestCase
+class AddProductToCartAfterTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Observer\CheckoutCart\AddProductToCartAfter

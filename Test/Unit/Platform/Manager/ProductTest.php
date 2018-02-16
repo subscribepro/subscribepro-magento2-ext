@@ -8,7 +8,7 @@ use Swarming\SubscribePro\Platform\Service\Product as ProductService;
 use Swarming\SubscribePro\Platform\Storage\Product as ProductStorage;
 use Magento\Catalog\Api\Data\ProductInterface;
 
-class ProductTest extends \PHPUnit_Framework_TestCase
+class ProductTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Platform\Manager\Product

@@ -11,7 +11,7 @@ use Magento\Framework\View\Page\Config as PageConfig;
 use Magento\Framework\View\Page\Title as PageTitle;
 use Swarming\SubscribePro\Model\Config\General as GeneralConfig;
 
-class SubscriptionsTest extends \PHPUnit_Framework_TestCase
+class SubscriptionsTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Controller\Customer\Subscriptions

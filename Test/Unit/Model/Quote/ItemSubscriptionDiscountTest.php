@@ -15,7 +15,7 @@ use Swarming\SubscribePro\Model\Config\SubscriptionDiscount as SubscriptionDisco
 use Magento\Quote\Model\Quote\Item as QuoteItem;
 use Magento\Quote\Model\Quote\Address as QuoteAddress;
 
-class ItemSubscriptionDiscountTest extends \PHPUnit_Framework_TestCase
+class ItemSubscriptionDiscountTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Model\Quote\ItemSubscriptionDiscount

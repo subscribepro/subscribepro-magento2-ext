@@ -12,7 +12,7 @@ use Magento\Quote\Model\Quote\Item as QuoteItem;
 use Magento\Quote\Model\Quote\Address as QuoteAddress;
 use Swarming\SubscribePro\Model\Quote\SubscriptionOption\Updater;
 
-class UpdaterTest extends \PHPUnit_Framework_TestCase
+class UpdaterTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Model\Quote\SubscriptionOption\Updater

@@ -7,7 +7,7 @@ use Magento\GroupedProduct\Model\Product\Type\Grouped as TypeGroupedSubject;
 use Magento\Catalog\Model\ResourceModel\Product\Link\Product\Collection as ProductCollection;
 use Swarming\SubscribePro\Ui\DataProvider\Product\Modifier\Subscription as SubscriptionModifier;
 
-class TypeGroupedTest extends \PHPUnit_Framework_TestCase
+class TypeGroupedTest extends \PHPUnit\Framework\TestCase
 {
     public function testAroundCompareOptionsIfSubjectResultIsFalse()
     {

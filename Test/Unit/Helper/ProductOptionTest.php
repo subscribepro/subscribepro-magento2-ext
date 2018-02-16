@@ -13,7 +13,7 @@ use Swarming\SubscribePro\Helper\ProductOption;
 use Magento\Quote\Model\Quote\Item as QuoteItem;
 use Swarming\SubscribePro\Model\Quote\SubscriptionOption\OptionProcessor;
 
-class ProductOptionTest extends \PHPUnit_Framework_TestCase
+class ProductOptionTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Helper\ProductOption

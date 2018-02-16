@@ -7,7 +7,7 @@ use Magento\Framework\Intl\DateTimeFactory;
 use Swarming\SubscribePro\Model\Config\SubscriptionOptions;
 use Magento\Store\Model\ScopeInterface;
 
-class SubscriptionOptionsTest extends \PHPUnit_Framework_TestCase
+class SubscriptionOptionsTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Model\Config\SubscriptionOptions

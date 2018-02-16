@@ -10,7 +10,7 @@ use Magento\Catalog\Model\Product\Configuration\Item\ItemInterface as Configurat
 use Magento\Catalog\Helper\Product\Configuration as ProductConfiguration;
 use SubscribePro\Service\Product\ProductInterface as PlatformProductInterface;
 
-class ConfigurationTest extends \PHPUnit_Framework_TestCase
+class ConfigurationTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Plugin\Product\Configuration

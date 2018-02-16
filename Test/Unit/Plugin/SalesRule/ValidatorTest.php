@@ -14,7 +14,7 @@ use Magento\Quote\Model\Quote\Item\AbstractItem as QuoteItem;
 use Magento\Quote\Model\Quote\Address as QuoteAddress;
 use Swarming\SubscribePro\Model\CatalogRule\InspectorInterface as CatalogRuleInspectorInterface;
 
-class ValidatorTest extends \PHPUnit_Framework_TestCase
+class ValidatorTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Plugin\SalesRule\Validator

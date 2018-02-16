@@ -23,7 +23,7 @@ use Swarming\SubscribePro\Helper\SubscriptionProduct as SubscriptionProductsHelp
 use Magento\Quote\Model\Quote\Address as QuoteAddress;
 use Swarming\SubscribePro\Model\Config\SubscriptionOptions as SubscriptionOptionsConfig;
 
-class SubscriptionManagementTest extends \PHPUnit_Framework_TestCase
+class SubscriptionManagementTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Service\SubscriptionManagement

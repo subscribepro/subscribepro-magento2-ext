@@ -19,7 +19,7 @@ use Swarming\SubscribePro\Platform\Service\Subscription as SubscriptionService;
 use Swarming\SubscribePro\Helper\ProductOption as QuoteItemProductOption;
 use Magento\Framework\Event\ManagerInterface as EventManagerInterface;
 
-class SubscriptionCreatorTest extends \PHPUnit_Framework_TestCase
+class SubscriptionCreatorTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Model\Quote\QuoteItem\SubscriptionCreator

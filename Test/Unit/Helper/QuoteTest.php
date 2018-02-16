@@ -7,7 +7,7 @@ use Magento\Quote\Model\Quote\Item as QuoteItem;
 use Swarming\SubscribePro\Helper\Quote;
 use Swarming\SubscribePro\Helper\QuoteItem as QuoteItemHelper;
 
-class QuoteTest extends \PHPUnit_Framework_TestCase
+class QuoteTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Helper\Quote

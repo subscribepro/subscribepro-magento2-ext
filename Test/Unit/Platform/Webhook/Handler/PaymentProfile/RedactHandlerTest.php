@@ -13,7 +13,7 @@ use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
 use Swarming\SubscribePro\Platform\Webhook\Handler\PaymentProfile\RedactHandler;
 use SubscribePro\Service\Customer\CustomerInterface as PlatformCustomerInterface;
 
-class RedactHandlerTest extends \PHPUnit_Framework_TestCase
+class RedactHandlerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Platform\Webhook\Handler\PaymentProfile\RedactHandler

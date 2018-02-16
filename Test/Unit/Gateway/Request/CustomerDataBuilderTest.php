@@ -9,7 +9,7 @@ use SubscribePro\Service\PaymentProfile\PaymentProfileInterface;
 use Swarming\SubscribePro\Gateway\Helper\SubjectReader;
 use Swarming\SubscribePro\Gateway\Request\CustomerDataBuilder;
 
-class CustomerDataBuilderTest extends \PHPUnit_Framework_TestCase
+class CustomerDataBuilderTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject|\Swarming\SubscribePro\Gateway\Helper\SubjectReader

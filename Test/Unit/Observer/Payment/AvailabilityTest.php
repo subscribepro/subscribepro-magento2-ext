@@ -12,7 +12,7 @@ use Swarming\SubscribePro\Observer\Payment\Availability as PaymentAvailability;
 use Magento\Checkout\Model\Session as CheckoutSession;
 use Swarming\SubscribePro\Helper\Quote as QuoteHelper;
 
-class Availability extends \PHPUnit_Framework_TestCase
+class Availability extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Observer\Payment\Availability

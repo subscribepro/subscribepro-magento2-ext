@@ -10,7 +10,7 @@ use Magento\Framework\Cache\FrontendInterface as CacheFrontendInterface;
 use Magento\Framework\App\Cache\StateInterface as CacheStateInterface;
 use Swarming\SubscribePro\Model\Config\Advanced as CacheConfig;
 
-class ProductTest extends \PHPUnit_Framework_TestCase
+class ProductTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Platform\Storage\Product

@@ -14,7 +14,7 @@ use \Magento\Quote\Model\Quote\Item;
 use \Swarming\SubscribePro\Helper\QuoteItem;
 use Swarming\SubscribePro\Model\Rule\Condition\Product as ProductCondition;
 
-class ProductConditionTest extends \PHPUnit_Framework_TestCase
+class ProductConditionTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetSubscriptionOptions()
     {

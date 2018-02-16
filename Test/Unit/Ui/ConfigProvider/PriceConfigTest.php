@@ -7,7 +7,7 @@ use Swarming\SubscribePro\Model\Config\SubscriptionDiscount as SubscriptionDisco
 use Magento\Tax\Model\Config as TaxConfig;
 use Magento\Framework\Locale\FormatInterface as LocaleFormatInterface;
 
-class PriceConfigTest extends \PHPUnit_Framework_TestCase
+class PriceConfigTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Ui\ConfigProvider\PriceConfig

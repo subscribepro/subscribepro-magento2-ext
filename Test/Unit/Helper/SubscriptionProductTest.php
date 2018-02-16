@@ -20,7 +20,7 @@ use Swarming\SubscribePro\Model\Subscription\OptionItem as SubscriptionOptionIte
 use Magento\Catalog\Helper\Product\Configuration\ConfigurationInterface as ProductConfigurationInterface;
 use Swarming\SubscribePro\Model\CatalogRule\InspectorInterface as CatalogRuleInspectorInterface;
 
-class SubscriptionProductTest extends \PHPUnit_Framework_TestCase
+class SubscriptionProductTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Helper\SubscriptionProduct

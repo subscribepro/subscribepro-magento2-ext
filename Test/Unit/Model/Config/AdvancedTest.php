@@ -6,7 +6,7 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 use Swarming\SubscribePro\Model\Config\Advanced;
 use Magento\Store\Model\ScopeInterface;
 
-class AdvancedTest extends \PHPUnit_Framework_TestCase
+class AdvancedTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Model\Config\Advanced

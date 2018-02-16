@@ -11,7 +11,7 @@ use Swarming\SubscribePro\Platform\Webhook\Processor as WebhookProcessor;
 use Swarming\SubscribePro\Model\Config\Advanced as AdvancedConfig;
 use Swarming\SubscribePro\Platform\Service\Webhook as WebhookService;
 
-class IndexTest extends \PHPUnit_Framework_TestCase
+class IndexTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Controller\Webhook\Index

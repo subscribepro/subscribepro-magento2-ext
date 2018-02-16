@@ -7,7 +7,7 @@ use Swarming\SubscribePro\Platform\Webhook\HandlerPool;
 use Swarming\SubscribePro\Platform\Webhook\Processor;
 use SubscribePro\Service\Webhook\EventInterface as WebhookEventInterface;
 
-class ProcessorTest extends \PHPUnit_Framework_TestCase
+class ProcessorTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Platform\Webhook\Processor

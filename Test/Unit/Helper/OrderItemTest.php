@@ -11,7 +11,7 @@ use Swarming\SubscribePro\Helper\OrderItem as OrderItemHelper;
 use Swarming\SubscribePro\Model\Quote\SubscriptionOption\OptionProcessor;
 use Swarming\SubscribePro\Api\Data\ProductInterface as PlatformProductInterface;
 
-class OrderItemTest extends \PHPUnit_Framework_TestCase
+class OrderItemTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Helper\OrderItem

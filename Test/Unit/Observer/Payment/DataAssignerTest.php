@@ -11,7 +11,7 @@ use Swarming\SubscribePro\Gateway\Request\PaymentDataBuilder;
 use Swarming\SubscribePro\Observer\Payment\DataAssigner as PaymentDataAssigner;
 use Magento\Payment\Model\InfoInterface as PaymentInfoInterface;
 
-class DataAssignerTest extends \PHPUnit_Framework_TestCase
+class DataAssignerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Observer\Payment\DataAssigner

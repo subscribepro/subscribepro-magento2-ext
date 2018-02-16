@@ -6,7 +6,7 @@ use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\Product\Configuration\Item\Option\OptionInterface;
 use Swarming\SubscribePro\Model\Subscription\OptionItem;
 
-class OptionItemTest extends \PHPUnit_Framework_TestCase
+class OptionItemTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Model\Subscription\OptionItem

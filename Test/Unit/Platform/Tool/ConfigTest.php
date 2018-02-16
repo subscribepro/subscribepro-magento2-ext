@@ -7,7 +7,7 @@ use SubscribePro\Tools\Config as ConfigTool;
 use Swarming\SubscribePro\Platform\Storage\Config as ConfigStorage;
 use Swarming\SubscribePro\Platform\Tool\Config;
 
-class ConfigTest extends \PHPUnit_Framework_TestCase
+class ConfigTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Platform\Tool\Config

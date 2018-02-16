@@ -16,7 +16,7 @@ use Swarming\SubscribePro\Model\Config\General as GeneralConfig;
 use Swarming\SubscribePro\Platform\Manager\Product as ProductManager;
 use Swarming\SubscribePro\Helper\Product as ProductHelper;
 
-class ProductSaveAfterTest extends \PHPUnit_Framework_TestCase
+class ProductSaveAfterTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Observer\Catalog\ProductSaveAfter
