@@ -164,7 +164,7 @@ class BundleProductTest extends AbstractInspector
             ->getMock();
         $option->expects($this->atLeastOnce())
             ->method('getValue')
-            ->willReturn(serialize($selectionIds));
+            ->willReturn(json_encode($selectionIds));
 
         $sections = [];
         foreach (array_keys($selectionIds) as $selectionKey) {
@@ -266,7 +266,7 @@ class BundleProductTest extends AbstractInspector
             ->getMock();
         $option->expects($this->atLeastOnce())
             ->method('getValue')
-            ->willReturn(serialize([$selection1Id, $selection2Id]));
+            ->willReturn(json_encode([$selection1Id, $selection2Id]));
 
         $product = $this->prepareProductMock($parentPrice, $parentProductId, $customerGroupId, $storeId);
         $product->expects($this->exactly(2))
