@@ -45,7 +45,7 @@ class BundleProduct extends DefaultInspector implements InspectorInterface
         /** @var \Magento\Catalog\Model\Product\Configuration\Item\Option $customOption */
         $customOption = $product->getCustomOption('bundle_selection_ids');
         return $customOption
-            ? unserialize($customOption->getValue())
+            ? json_decode($customOption->getValue())
             : [];
     }
 }
