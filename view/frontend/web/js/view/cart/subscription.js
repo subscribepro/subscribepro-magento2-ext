@@ -78,11 +78,11 @@ define(
                 }
             },
 
-            isSubscriptionMode: function(optionMode) {
+            isSubscriptionMode: function (optionMode) {
                 return this.product.subscription_option_mode == optionMode;
             },
 
-            isSubscriptionOption: function(optionValue) {
+            isSubscriptionOption: function (optionValue) {
                 return this.product.default_subscription_option == optionValue;
             },
 

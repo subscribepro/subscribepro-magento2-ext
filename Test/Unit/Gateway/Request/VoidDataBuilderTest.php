@@ -28,7 +28,8 @@ class VoidDataBuilderTest extends \PHPUnit\Framework\TestCase
         $this->voidDataBuilder = new VoidDataBuilder($this->subjectReaderMock);
     }
 
-    public function testBuild() {
+    public function testBuild()
+    {
         $subject = ['subject'];
         $result = [TransactionInterface::REF_TRANSACTION_ID => 123];
 

@@ -194,7 +194,8 @@ class OptionItemManagerTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    public function testGetSubscriptionOptionItemIfBuyRequestIsObject() {
+    public function testGetSubscriptionOptionItemIfBuyRequestIsObject()
+    {
         $sku = 'product-sku';
         $productTypeId = 'virtual';
         $subscriptionItemOptions = ['options'];

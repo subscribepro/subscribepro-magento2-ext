@@ -23,7 +23,8 @@ class SubjectReaderTest extends \PHPUnit\Framework\TestCase
      * @param array $subject
      * @dataProvider failToReadNotObjectTransactionDataProvider
      */
-    public function testFailToReadNotObjectTransaction($subject) {
+    public function testFailToReadNotObjectTransaction($subject)
+    {
         $this->subjectReader->readTransaction($subject);
     }
 
@@ -46,12 +47,14 @@ class SubjectReaderTest extends \PHPUnit\Framework\TestCase
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage The object is not a class \SubscribePro\Service\Transaction\TransactionInterface.
      */
-    public function testFailToReadNotTransactionInterfaceInstance() {
+    public function testFailToReadNotTransactionInterfaceInstance()
+    {
         $subject = ['transaction' => new \ArrayObject()];
         $this->subjectReader->readTransaction($subject);
     }
     
-    public function testReadTransaction() {
+    public function testReadTransaction()
+    {
         $transactionMock = $this->getMockBuilder(TransactionInterface::class)->getMock();
         $subject = ['transaction' => $transactionMock];
         

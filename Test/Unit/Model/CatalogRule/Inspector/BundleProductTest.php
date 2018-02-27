@@ -24,7 +24,8 @@ class BundleProductTest extends AbstractInspector
         );
     }
 
-    public function testIsAppliedIfHasSpecialPrice() {
+    public function testIsAppliedIfHasSpecialPrice()
+    {
         $price = 100;
         $basePrice = 110;
 
@@ -233,7 +234,8 @@ class BundleProductTest extends AbstractInspector
         ];
     }
 
-    public function testIsAppliedWithChildProductsIfOneHasSpecialPrice() {
+    public function testIsAppliedWithChildProductsIfOneHasSpecialPrice()
+    {
         $dateString = 'y-m-d';
         $storeId = 321;
         $websiteId = 554;

@@ -4,7 +4,7 @@ define(
         'Swarming_SubscribePro/js/model/payment/config',
         'spreedly'
     ],
-    function(config) {
+    function (config) {
         'use strict';
 
         return {
@@ -26,7 +26,7 @@ define(
                 window.SubscribeProSpreedlyIframe.validate();
             },
 
-            reload: function() {
+            reload: function () {
                 window.SubscribeProSpreedlyIframe.reload();
             },
 

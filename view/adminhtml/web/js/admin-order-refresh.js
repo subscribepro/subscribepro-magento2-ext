@@ -1,9 +1,9 @@
-define(['mage/utils/wrapper', "Swarming_SubscribePro/js/model/payment/config"], function(wrapper, config){
+define(['mage/utils/wrapper', "Swarming_SubscribePro/js/model/payment/config"], function (wrapper, config) {
     'use strict';
 
-    return function() {
+    return function () {
         var setStoreId = window.order.setStoreId;
-        var setStoreId = wrapper.wrap(setStoreId, function(original, id) {
+        var setStoreId = wrapper.wrap(setStoreId, function (original, id) {
             original(id);
             // The store ID is set when the page loads as store 1.
             // The SP configuration is pulled based on that store ID and is
@@ -20,3 +20,4 @@ define(['mage/utils/wrapper', "Swarming_SubscribePro/js/model/payment/config"], 
         return window.order;
     }
 });
+

@@ -4,10 +4,11 @@ define(
         'Swarming_SubscribePro/js/model/payment/credit-card-validation/expiration-fields',
         'Swarming_SubscribePro/js/model/payment/credit-card-validation/expiration-date-validator'
     ],
-    function(expirationFields, expirationDateValidator) {
+    function (expirationFields, expirationDateValidator) {
         'use strict';
 
-        function validate(field, month, year) {
+        function validate(field, month, year)
+        {
             expirationFields.removeClass(field, 'focused');
 
             var expirationDate = expirationDateValidator(month + '/' + year);
@@ -40,7 +41,7 @@ define(
             return expirationDate.isValid;
         }
 
-        return function(isFocused, field, month, year) {
+        return function (isFocused, field, month, year) {
             var isValid = false;
             if (isFocused) {
                 expirationFields.removeClass(field, 'invalid');

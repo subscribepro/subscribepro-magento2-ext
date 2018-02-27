@@ -45,7 +45,8 @@ class ResponseValidatorTest extends \PHPUnit\Framework\TestCase
      * @param bool $isValid
      * @dataProvider validateDataProvider
      */
-    public function testValidate($validationSubject, $transactionState, $isValid) {
+    public function testValidate($validationSubject, $transactionState, $isValid)
+    {
         $transactionMock = $this->getMockBuilder(TransactionInterface::class)->getMock();
         $transactionMock->expects($this->once())->method('getState')->willReturn($transactionState);
         

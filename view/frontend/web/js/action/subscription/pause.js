@@ -15,12 +15,14 @@ define(
                 title: $t('Pause subscription'),
                 content: $t('Are you sure you want to pause subscription?'),
                 actions: {
-                    confirm: function() {pause(subscriptionId, deferred)}
+                    confirm: function () {
+    pause(subscriptionId, deferred)}
                 }
             });
         };
 
-        function pause(subscriptionId, deferred) {
+        function pause(subscriptionId, deferred)
+        {
             subscriptionLoader.isLoading(true);
 
             deferred = deferred || $.Deferred();

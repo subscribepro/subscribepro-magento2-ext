@@ -44,7 +44,7 @@ class PaymentProfileTest extends AbstractService
             ->willReturn($profileMock);
         
         $this->assertSame(
-            $profileMock, 
+            $profileMock,
             $this->paymentProfileService->createProfile(['profile data'], $websiteId)
         );
     }
@@ -79,7 +79,8 @@ class PaymentProfileTest extends AbstractService
             ->willReturn($profileMock);
 
         $this->assertSame(
-            $profileMock, $this->paymentProfileService->loadProfile($paymentProfileId, $websiteId)
+            $profileMock,
+            $this->paymentProfileService->loadProfile($paymentProfileId, $websiteId)
         );
     }
 
@@ -95,7 +96,8 @@ class PaymentProfileTest extends AbstractService
             ->willReturn($profileMock);
 
         $this->assertSame(
-            $profileMock, $this->paymentProfileService->saveProfile($profileMock, $websiteId)
+            $profileMock,
+            $this->paymentProfileService->saveProfile($profileMock, $websiteId)
         );
     }
     
@@ -112,7 +114,8 @@ class PaymentProfileTest extends AbstractService
             ->willReturn($profileMock);
 
         $this->assertSame(
-            $profileMock, $this->paymentProfileService->redactProfile($paymentProfileId, $websiteId)
+            $profileMock,
+            $this->paymentProfileService->redactProfile($paymentProfileId, $websiteId)
         );
     }
 
@@ -129,7 +132,8 @@ class PaymentProfileTest extends AbstractService
             ->willReturn($paymentProfilesMock);
 
         $this->assertEquals(
-            $paymentProfilesMock, $this->paymentProfileService->loadProfiles($filters, $websiteId)
+            $paymentProfilesMock,
+            $this->paymentProfileService->loadProfiles($filters, $websiteId)
         );
     }
 
@@ -145,7 +149,8 @@ class PaymentProfileTest extends AbstractService
             ->willReturn($profileMock);
 
         $this->assertSame(
-            $profileMock, $this->paymentProfileService->saveProfile($profileMock, $websiteId)
+            $profileMock,
+            $this->paymentProfileService->saveProfile($profileMock, $websiteId)
         );
     }
 
@@ -162,7 +167,7 @@ class PaymentProfileTest extends AbstractService
             ->willReturn($profileMock);
 
         $this->assertSame(
-            $profileMock, 
+            $profileMock,
             $this->paymentProfileService->saveToken($token, $profileMock, $websiteId)
         );
     }
@@ -180,7 +185,7 @@ class PaymentProfileTest extends AbstractService
             ->willReturn($profileMock);
 
         $this->assertSame(
-            $profileMock, 
+            $profileMock,
             $this->paymentProfileService->verifyAndSaveToken($token, $profileMock, $websiteId)
         );
     }
@@ -198,7 +203,7 @@ class PaymentProfileTest extends AbstractService
             ->willReturn($profileMock);
 
         $this->assertSame(
-            $profileMock, 
+            $profileMock,
             $this->paymentProfileService->loadProfileByToken($token, $websiteId)
         );
     }

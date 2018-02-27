@@ -17,7 +17,8 @@ define(
                             'payments': paymentInfoComponentFactory.create(subscription, config),
                             'shipping-address': shippingAddressComponentFactory.create(subscription, config)
                         }
-                    }, {
+                    },
+                    {
                         name: 'subscription-' + subscription.id,
                         parentName: config.name
                     }

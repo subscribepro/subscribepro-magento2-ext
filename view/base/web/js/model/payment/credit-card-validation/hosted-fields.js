@@ -4,7 +4,7 @@ define(
         'jquery',
         'Swarming_SubscribePro/js/model/payment/config'
     ],
-    function($, config) {
+    function ($, config) {
         'use strict';
 
         var classes = {

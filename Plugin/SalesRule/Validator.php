@@ -105,5 +105,4 @@ class Validator
             $item->getAddress()->setDiscountDescriptionArray($discountDescriptions);
         };
     }
-
 }

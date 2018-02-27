@@ -19,7 +19,8 @@ define(
                         component: config.paymentInfoOptions.component,
                         children: childrenConfig,
                         displayArea: config.paymentInfoOptions.displayArea
-                    }, {
+                    },
+                    {
                         name: 'subscription-payments-' + subscription.id,
                         parentName: config.name
                     }

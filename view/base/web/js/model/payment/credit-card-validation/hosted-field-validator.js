@@ -5,7 +5,7 @@ define(
         'Swarming_SubscribePro/js/model/payment/config',
         'Swarming_SubscribePro/js/model/payment/credit-card-validation/hosted-fields'
     ],
-    function(_, config, hostedFields) {
+    function (_, config, hostedFields) {
         'use strict';
 
         var isValidCardNumber = true;
@@ -82,7 +82,7 @@ define(
             input: inputProcessor
         };
 
-        return function(name, event, inputData) {
+        return function (name, event, inputData) {
 
             if (_.isFunction(evenProcessor[event])) {
                 evenProcessor[event](name, inputData)

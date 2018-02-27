@@ -56,7 +56,7 @@ class Availability implements ObserverInterface
 
         if ($this->quoteHelper->hasSubscription($quote)) {
             $isAvailable = ConfigProvider::CODE == $methodCode && $isAvailable;
-        } else if (ConfigProvider::CODE == $methodCode && !$isActiveNonSubscription) {
+        } elseif (ConfigProvider::CODE == $methodCode && !$isActiveNonSubscription) {
             $isAvailable = false;
         }
 

@@ -40,7 +40,8 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
      * @param bool $result
      * @dataProvider isActiveDataProvider
      */
-    public function testIsActive($isActiveValue, $result) {
+    public function testIsActive($isActiveValue, $result)
+    {
         $this->scopeConfigMock->expects($this->once())
             ->method('getValue')
             ->with($this->configPath . '/' . Config::KEY_ACTIVE, ScopeInterface::SCOPE_STORE)
@@ -75,7 +76,8 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
      * @param bool $result
      * @dataProvider hasVerificationDataProvider
      */
-    public function testHasVerification($hasVerification, $result) {
+    public function testHasVerification($hasVerification, $result)
+    {
         $this->scopeConfigMock->expects($this->once())
             ->method('getValue')
             ->with($this->configPath . '/' . Config::KEY_CC_USE_CCV, ScopeInterface::SCOPE_STORE)
@@ -106,7 +108,8 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
      * @param array $result
      * @dataProvider getAvailableCardTypesDataProvider
      */
-    public function testGetAvailableCardTypes($ccTypes, $result) {
+    public function testGetAvailableCardTypes($ccTypes, $result)
+    {
         $this->scopeConfigMock->expects($this->once())
             ->method('getValue')
             ->with($this->configPath . '/' . Config::KEY_CC_TYPES, ScopeInterface::SCOPE_STORE)
@@ -137,7 +140,8 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
      * @param array $result
      * @dataProvider getCcTypesMapperDataProvider
      */
-    public function testGetCcTypesMapper($ccTypesMapper, $result) {
+    public function testGetCcTypesMapper($ccTypesMapper, $result)
+    {
         $this->scopeConfigMock->expects($this->once())
             ->method('getValue')
             ->with($this->configPath . '/' . Config::KEY_CC_TYPES_MAPPER, ScopeInterface::SCOPE_STORE)
@@ -169,7 +173,8 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
      * @param string $result
      * @dataProvider getMappedCcTypeDataProvider
      */
-    public function testGetMappedCcType($cardType, $ccTypesMapper, $result) {
+    public function testGetMappedCcType($cardType, $ccTypesMapper, $result)
+    {
         $this->scopeConfigMock->expects($this->once())
             ->method('getValue')
             ->with($this->configPath . '/' . Config::KEY_CC_TYPES_MAPPER, ScopeInterface::SCOPE_STORE)

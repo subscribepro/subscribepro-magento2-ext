@@ -173,7 +173,7 @@ define(
             },
 
             onErrors: function (errors) {
-                for(var i = 0; i < errors.length; i++) {
+                for (var i = 0; i < errors.length; i++) {
                     if (errors[i]['attribute'] == 'number' || errors[i]['attribute'] == 'cvv') {
                         hostedFields.addClass(errors[i]['attribute'], 'invalid');
                     }

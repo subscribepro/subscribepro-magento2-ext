@@ -95,7 +95,7 @@ class CustomerTest extends \PHPUnit\Framework\TestCase
             ->willReturn($customerMock);
 
         $this->assertSame(
-            $platformCustomerMock, 
+            $platformCustomerMock,
             $this->customerManager->getCustomer($email, true, $websiteId)
         );
     }
@@ -116,7 +116,7 @@ class CustomerTest extends \PHPUnit\Framework\TestCase
         $this->customerRepositoryMock->expects($this->never())->method('get');
 
         $this->assertSame(
-            $platformCustomerMock, 
+            $platformCustomerMock,
             $this->customerManager->getCustomer($email, false, $websiteId)
         );
     }
@@ -146,7 +146,7 @@ class CustomerTest extends \PHPUnit\Framework\TestCase
         $this->customerRepositoryMock->expects($this->never())->method('get');
 
         $this->assertSame(
-            $platformCustomerMock, 
+            $platformCustomerMock,
             $this->customerManager->getCustomerById($magentoCustomerId, false, $websiteId)
         );
     }

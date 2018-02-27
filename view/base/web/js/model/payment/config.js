@@ -1,7 +1,7 @@
 
 define(
     ['underscore'],
-    function(_) {
+    function (_) {
         'use strict';
 
         var code = 'subscribe_pro';

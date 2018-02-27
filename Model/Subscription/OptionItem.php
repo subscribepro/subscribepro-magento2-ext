@@ -7,7 +7,7 @@ use Magento\Catalog\Model\Product\Configuration\Item\Option\OptionInterface;
 use Magento\Framework\DataObject;
 use Magento\Catalog\Api\Data\ProductInterface;
 
-class OptionItem extends DataObject  implements ItemInterface
+class OptionItem extends DataObject implements ItemInterface
 {
     const PRODUCT = 'product';
 
