@@ -15,12 +15,14 @@ define(
                 title: $t('Restart subscription'),
                 content: $t('Are you sure you want to restart subscription?'),
                 actions: {
-                    confirm: function() {restart(subscriptionId, deferred)}
+                    confirm: function () {
+    restart(subscriptionId, deferred)}
                 }
             });
         };
 
-        function restart(subscriptionId, deferred) {
+        function restart(subscriptionId, deferred)
+        {
             subscriptionLoader.isLoading(true);
 
             deferred = deferred || $.Deferred();

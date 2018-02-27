@@ -80,7 +80,8 @@ class AddressTest extends \PHPUnit\Framework\TestCase
             ->with($platformAddressMock, $websiteId);
         
         $this->assertSame(
-            $platformAddressMock, $this->addressManager->findOrSaveAddress($addressMock, $platformCustomerId, $websiteId)
+            $platformAddressMock,
+            $this->addressManager->findOrSaveAddress($addressMock, $platformCustomerId, $websiteId)
         );
     }
 }

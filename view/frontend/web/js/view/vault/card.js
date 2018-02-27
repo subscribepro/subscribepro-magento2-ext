@@ -19,7 +19,7 @@ define(
                 this._super();
 
                 var self = this;
-                $(self.formSubmitSelector).click(function() {
+                $(self.formSubmitSelector).click(function () {
                     if ($(self.formSelector).valid()) {
                         self.startPlaceOrder();
                     }

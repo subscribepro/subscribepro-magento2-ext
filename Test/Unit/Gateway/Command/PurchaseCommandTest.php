@@ -70,7 +70,7 @@ class PurchaseCommandTest extends AbstractProfileCreatorCommand
     {
         $exception = new LocalizedException(__('Cannot create payment profile.'));
         $requestData = [
-            VaultConfigProvider::IS_ACTIVE_CODE => true, 
+            VaultConfigProvider::IS_ACTIVE_CODE => true,
             PaymentDataBuilder::PAYMENT_METHOD_TOKEN => 'token'
         ];
         $this->executeSetPlatformWebsite($this->subjectReaderMock, $this->storeManagerMock, $this->platformMock);
@@ -81,7 +81,7 @@ class PurchaseCommandTest extends AbstractProfileCreatorCommand
     public function testExecuteIfIsActiveCode()
     {
         $requestData = [
-            VaultConfigProvider::IS_ACTIVE_CODE => true, 
+            VaultConfigProvider::IS_ACTIVE_CODE => true,
             PaymentDataBuilder::PAYMENT_METHOD_TOKEN => 'token',
             PaymentProfileInterface::MAGENTO_CUSTOMER_ID => 123
         ];

@@ -1,11 +1,11 @@
 define([
     'underscore',
-    'uiComponent', 
+    'uiComponent',
     'uiLayout',
     'Swarming_SubscribePro/js/model/subscription/loader',
     'Swarming_SubscribePro/js/model/subscription/subscription-component-factory',
     'Swarming_SubscribePro/js/action/subscription/load-list'
-], function(_, Component, layout, subscriptionLoader, subscriptionComponentFactory, loadSubscriptions) {
+], function (_, Component, layout, subscriptionLoader, subscriptionComponentFactory, loadSubscriptions) {
     'use strict';
 
     return Component.extend({

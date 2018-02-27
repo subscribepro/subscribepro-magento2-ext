@@ -17,7 +17,8 @@ define(
                 title: $t('Cancel subscription'),
                 content: cancelContent,
                 actions: {
-                    confirm: function() {cancel(subscriptionId, deferred)}
+                    confirm: function () {
+    cancel(subscriptionId, deferred)}
                 }
             };
             if (!isCancelAllowed) {
@@ -26,7 +27,8 @@ define(
             confirmation(confirmationConfig);
         };
         
-        function cancel(subscriptionId, deferred) {
+        function cancel(subscriptionId, deferred)
+        {
             subscriptionLoader.isLoading(true);
 
             deferred = deferred || $.Deferred();
@@ -51,7 +53,8 @@ define(
             );
         }
 
-        function getConfirmationButtons() {
+        function getConfirmationButtons()
+        {
             return [
                 {
                     text: $.mage.__('Close'),

@@ -66,7 +66,7 @@ class ItemSubscriptionDiscount
             $rollbackCallback($item);
             $this->setSubscriptionDiscount($item, $subscriptionDiscount, $baseSubscriptionDiscount);
             $this->addDiscountDescription($item);
-        } else if ($this->isCombineDiscounts($storeId)) {
+        } elseif ($this->isCombineDiscounts($storeId)) {
             $this->addSubscriptionDiscount($item, $subscriptionDiscount, $baseSubscriptionDiscount);
             $this->addDiscountDescription($item);
         }
@@ -125,7 +125,7 @@ class ItemSubscriptionDiscount
      */
     protected function getBaseSubscriptionDiscount($platformProduct, $itemBasePrice, $qty)
     {
-        if($platformProduct->getIsDiscountPercentage()) {
+        if ($platformProduct->getIsDiscountPercentage()) {
             $subscriptionDiscount = $platformProduct->getDiscount() * $itemBasePrice * $qty;
         } else {
             $subscriptionDiscount = $platformProduct->getDiscount() * $qty;
@@ -143,19 +143,19 @@ class ItemSubscriptionDiscount
     protected function isOnlySubscriptionDiscount($baseSubscriptionDiscount, $baseCartDiscount, $storeId)
     {
         $result = false;
-        switch($this->subscriptionDiscountConfig->getCartRuleCombineType($storeId)) {
+        switch ($this->subscriptionDiscountConfig->getCartRuleCombineType($storeId)) {
             case CartRuleCombine::TYPE_APPLY_GREATEST:
-                if($baseSubscriptionDiscount >= $baseCartDiscount) {
+                if ($baseSubscriptionDiscount >= $baseCartDiscount) {
                     $result = true;
                 }
                 break;
             case CartRuleCombine::TYPE_APPLY_LEAST:
-                if($baseSubscriptionDiscount <= $baseCartDiscount) {
+                if ($baseSubscriptionDiscount <= $baseCartDiscount) {
                     $result = true;
                 }
                 break;
             case CartRuleCombine::TYPE_APPLY_CART_DISCOUNT: /* Only If no cart rules applied */
-                if($baseCartDiscount == 0) {
+                if ($baseCartDiscount == 0) {
                     $result = true;
                 }
                 break;

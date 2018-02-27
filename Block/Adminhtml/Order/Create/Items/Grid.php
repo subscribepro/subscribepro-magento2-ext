@@ -77,7 +77,8 @@ class Grid extends \Magento\Sales\Block\Adminhtml\Order\Create\Items\Grid
      * @param $quoteItem
      * @return bool
      */
-    public function isSubscriptionProduct(Item $quoteItem) {
+    public function isSubscriptionProduct(Item $quoteItem)
+    {
         return $this->productHelper->isSubscriptionEnabled($quoteItem->getProduct());
     }
 

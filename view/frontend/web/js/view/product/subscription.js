@@ -58,7 +58,7 @@ define(
             },
 
             getPriceBoxElement: function () {
-                var priceBoxElement = _.find($(this.priceBoxSelector), function(el) {
+                var priceBoxElement = _.find($(this.priceBoxSelector), function (el) {
                     return el && $(el).data('mage-priceBox');
                 });
                 return $(priceBoxElement);

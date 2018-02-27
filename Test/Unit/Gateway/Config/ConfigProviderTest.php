@@ -124,14 +124,14 @@ class ConfigProviderTest extends \PHPUnit\Framework\TestCase
      * @dataProvider getConfigDataProvider
      */
     public function testGetConfig(
-        $isActive, 
-        $environmentKey, 
+        $isActive,
+        $environmentKey,
         $availableCardTypes,
         $ccAvailableTypes,
-        $ccTypesMapper, 
-        $hasVerification, 
-        $cvvImageUrl, 
-        $icons, 
+        $ccTypesMapper,
+        $hasVerification,
+        $cvvImageUrl,
+        $icons,
         $result
     ) {
         $storeMock = $this->getMockBuilder(StoreInterface::class)->getMock();

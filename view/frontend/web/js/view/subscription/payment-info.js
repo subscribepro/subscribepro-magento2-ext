@@ -133,7 +133,7 @@ define(
 
             initPayments: function (response) {
                 var self = this;
-                $.each(response, function() {
+                $.each(response, function () {
                     self.payments.push(this);
                 });
 

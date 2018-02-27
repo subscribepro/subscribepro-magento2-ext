@@ -36,7 +36,8 @@ class VaultDataBuilderTest extends \PHPUnit\Framework\TestCase
      * @dataProvider failToBuildWithEmptyVaultDataProvider
      * @param null|\PHPUnit_Framework_MockObject_MockObject $extensionAttributes
      */
-    public function testFailToBuildWithEmptyVault($extensionAttributes) {
+    public function testFailToBuildWithEmptyVault($extensionAttributes)
+    {
         $subject = ['subject'];
 
         $paymentInfoMock = $this->getMockBuilder(Payment::class)
@@ -73,7 +74,8 @@ class VaultDataBuilderTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    public function testBuild() {
+    public function testBuild()
+    {
         $profileId = 'token';
         $uniqueId = 'unique_id';
         $orderToken = 'orderToken1234';
@@ -119,7 +121,8 @@ class VaultDataBuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($result, $this->vaultDataBuilder->build($subject));
     }
 
-    public function testBuildWithoutUniqueId() {
+    public function testBuildWithoutUniqueId()
+    {
         $profileId = 'token';
         $orderToken = 'orderToken4567';
         $subject = ['subject'];

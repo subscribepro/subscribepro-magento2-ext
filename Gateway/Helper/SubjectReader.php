@@ -46,5 +46,4 @@ class SubjectReader
 
         return $subject['transaction'];
     }
-
 }

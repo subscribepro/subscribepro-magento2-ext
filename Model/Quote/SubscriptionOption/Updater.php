@@ -65,7 +65,7 @@ class Updater
     {
         if ($platformProduct->getSubscriptionOptionMode() == PlatformProductInterface::SOM_SUBSCRIPTION_ONLY) {
             $subscriptionOption = PlatformProductInterface::SO_SUBSCRIPTION;
-        } else if (!$this->validateIntervals($platformProduct, true)) {
+        } elseif (!$this->validateIntervals($platformProduct, true)) {
             $subscriptionOption = PlatformProductInterface::SO_ONETIME_PURCHASE;
         }
         return $subscriptionOption ?: $platformProduct->getDefaultSubscriptionOption();
@@ -81,7 +81,7 @@ class Updater
     {
         if (!empty($platformProduct->getIntervals())) {
             return true;
-        } else if ($graceful) {
+        } elseif ($graceful) {
             return false;
         }
         throw new LocalizedException(__('The product is not configured properly, please contact customer support.'));
@@ -162,7 +162,7 @@ class Updater
                 $platformProduct->getMinQty()
             );
             $qty = $platformProduct->getMinQty();
-        } else if ($platformProduct->getMaxQty() && $quoteItem->getQty() > $platformProduct->getMaxQty()) {
+        } elseif ($platformProduct->getMaxQty() && $quoteItem->getQty() > $platformProduct->getMaxQty()) {
             $this->warnings[] = __(
                 'Product "%1" allows maximum quantity of %2 for subscription.',
                 $quoteItem->getProduct()->getName(),

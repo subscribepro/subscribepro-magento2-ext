@@ -15,12 +15,14 @@ define(
                 title: $t('Skip subscription'),
                 content: $t('Are you sure you want to skip subscription?'),
                 actions: {
-                    confirm: function() {skip(subscriptionId, deferred)}
+                    confirm: function () {
+    skip(subscriptionId, deferred)}
                 }
             });
         };
 
-        function skip(subscriptionId, deferred) {
+        function skip(subscriptionId, deferred)
+        {
             subscriptionLoader.isLoading(true);
 
             deferred = deferred || $.Deferred();

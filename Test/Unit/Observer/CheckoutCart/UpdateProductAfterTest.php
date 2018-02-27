@@ -412,7 +412,9 @@ class UpdateProductAfterTest extends \PHPUnit\Framework\TestCase
             ->with($quoteItemMock, $platformProductMock, $subscriptionOption, $subscriptionInterval)
             ->willReturn($warnings);
 
-        $warningsMap = array_map(function($warning) {return [$warning];}, $warnings);
+        $warningsMap = array_map(function ($warning) {
+            return [$warning];
+        }, $warnings);
         $this->messageManagerMock->expects($this->exactly(count($warnings)))
             ->method('addWarningMessage')
             ->willReturnMap($warningsMap);

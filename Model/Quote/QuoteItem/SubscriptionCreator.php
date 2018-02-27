@@ -113,8 +113,9 @@ class SubscriptionCreator
 
             $this->eventManager->dispatch(
                 'subscribe_pro_after_create_subscription_from_quote_item',
-                ['subscription' => $subscription, 'quote_item' => $quoteItem]);
-        } catch(\Exception $e) {
+                ['subscription' => $subscription, 'quote_item' => $quoteItem]
+            );
+        } catch (\Exception $e) {
             $this->logger->critical($e);
             return false;
         }

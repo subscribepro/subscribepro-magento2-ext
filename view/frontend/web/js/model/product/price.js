@@ -19,7 +19,7 @@ define(
                 productPrice.price = ko.observable(product.price);
                 productPrice.hasSpecialPrice = ko.observable(product.is_catalog_rule_applied);
 
-                productPrice.priceWithDiscountText = ko.pureComputed(function() {
+                productPrice.priceWithDiscountText = ko.pureComputed(function () {
                     var discount = productPrice.discountValue();
                     var price = parseFloat(productPrice.priceToDisplay()) - discount;
                     if (product.tax_rate && priceConfig.applyTaxAfterDiscount && displayPriceIncludingTax && !priceConfig.priceIncludesTax) {
@@ -45,7 +45,7 @@ define(
                         .replace('%discount_text', productPrice.discountText());
                 });
 
-                productPrice.discountValue = ko.pureComputed(function() {
+                productPrice.discountValue = ko.pureComputed(function () {
                     var discount = parseFloat(productPrice.discount);
                     if (productPrice.is_discount_percentage) {
                         var price = priceConfig.discountTax ? productPrice.priceInclTax() : productPrice.priceExclTax();
@@ -54,15 +54,15 @@ define(
                     return round(discount);
                 });
 
-                productPrice.formattedPrice = ko.pureComputed(function() {
+                productPrice.formattedPrice = ko.pureComputed(function () {
                     return getFormattedPrice(productPrice.priceToDisplay());
                 });
 
-                productPrice.priceToDisplay = ko.pureComputed(function() {
+                productPrice.priceToDisplay = ko.pureComputed(function () {
                     return displayPriceIncludingTax ? productPrice.priceInclTax() : productPrice.priceExclTax();
                 });
 
-                productPrice.priceInclTax = ko.pureComputed(function() {
+                productPrice.priceInclTax = ko.pureComputed(function () {
                     var price = productPrice.price();
                     if (!product.tax_rate || priceConfig.priceIncludesTax) {
                         return price;
@@ -72,7 +72,7 @@ define(
                     return round(price + tax);
                 });
 
-                productPrice.priceExclTax = ko.pureComputed(function() {
+                productPrice.priceExclTax = ko.pureComputed(function () {
                     var price = productPrice.price();
                     if (product.tax_rate && priceConfig.priceIncludesTax) {
                         price = parseFloat(price)/(1 + parseFloat(product.tax_rate)/100);
@@ -81,25 +81,28 @@ define(
                     return round(price);
                 });
 
-                productPrice.discountText = ko.pureComputed(function() {
+                productPrice.discountText = ko.pureComputed(function () {
                     return productPrice.is_discount_percentage
                         ? round(100*parseFloat(productPrice.discount)) + '%'
                         : getFormattedPrice(productPrice.discount);
                 });
 
-                productPrice.setFrontendPrice = function(frontendPrice) {
+                productPrice.setFrontendPrice = function (frontendPrice) {
                     productPrice.price(getPriceFromFrontendPrice(frontendPrice));
                 };
 
-                function getFormattedPrice(price) {
+                function getFormattedPrice(price)
+                {
                     return priceUtils.formatPrice(price, priceConfig.priceFormat);
                 }
 
-                function round(num) {
+                function round(num)
+                {
                     return +(Math.round(num + 'e+2')  + 'e-2');
                 }
 
-                function getPriceFromFrontendPrice(price) {
+                function getPriceFromFrontendPrice(price)
+                {
                     if (!product.tax_rate) {
                         return price;
                     }
@@ -115,7 +118,7 @@ define(
                 }
 
                 return productPrice;
-            }    
+            }
         };
     }
 );

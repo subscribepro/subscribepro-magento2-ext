@@ -349,7 +349,8 @@ class ItemSubscriptionDiscountTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    public function testProcessSubscriptionDiscountIfCombineDiscounts() {
+    public function testProcessSubscriptionDiscountIfCombineDiscounts()
+    {
         $storeId = 54231;
         $productSku = 'productSku';
         $itemBasePrice = 100;

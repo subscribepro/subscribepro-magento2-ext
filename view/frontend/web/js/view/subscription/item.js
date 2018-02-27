@@ -59,7 +59,7 @@ define(
                 this.productPrice = productPriceModel.create(this.subscription.product, this.priceConfig);
 
                 var self = this;
-                this.canChangeNextOrderDate = ko.pureComputed(function() {
+                this.canChangeNextOrderDate = ko.pureComputed(function () {
                     var nextOrderDate = new Date(self.nextOrderDate());
                     var dateToCompare = new Date();
                     dateToCompare.setDate(dateToCompare.getDate() + self.subscriptionConfig.minDaysToNextOrder);
@@ -116,7 +116,7 @@ define(
                 return !($.inArray(this.status(), statuses) == -1);
             },
 
-            toggleShowDetails: function() {
+            toggleShowDetails: function () {
                 this.showDetails(!this.showDetails());
             },
 

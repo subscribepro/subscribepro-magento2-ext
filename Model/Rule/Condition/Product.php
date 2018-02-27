@@ -70,8 +70,7 @@ class Product extends \Magento\SalesRule\Model\Rule\Condition\Product
     {
         // $subscriptionOptions is an array that holds the subscription attributes of the quote item
         $subscriptionOptions = $this->getSubscriptionOptions($model);
-        if (
-            !$subscriptionOptions['new_subscription']
+        if (!$subscriptionOptions['new_subscription']
             && !$subscriptionOptions['is_fulfilling']
             && !$subscriptionOptions['reorder_ordinal']
             && !$subscriptionOptions['interval']
@@ -102,7 +101,7 @@ class Product extends \Magento\SalesRule\Model\Rule\Condition\Product
                 }
                 // Since this attribute is a select list only == and != operators are allowed
                 // In case of !=, do invert $matchResult
-                if($op != '==') {
+                if ($op != '==') {
                     $matchResult = !$matchResult;
                 }
                 // Return our result
@@ -173,11 +172,11 @@ class Product extends \Magento\SalesRule\Model\Rule\Condition\Product
     {
         switch ($this->getAttribute()) {
             case 'quote_item_part_of_subscription':
-                return array(
-                    array('value' => self::SUBSCRIPTION_STATUS_ANY, 'label' => __('Part of Subscription (New or Re-order)')),
-                    array('value' => self::SUBSCRIPTION_STATUS_NEW, 'label' => __('Part of New Subscription Order')),
-                    array('value' => self::SUBSCRIPTION_STATUS_REORDER, 'label' => __('Part of Subscription Re-order')),
-                );
+                return [
+                    ['value' => self::SUBSCRIPTION_STATUS_ANY, 'label' => __('Part of Subscription (New or Re-order)')],
+                    ['value' => self::SUBSCRIPTION_STATUS_NEW, 'label' => __('Part of New Subscription Order')],
+                    ['value' => self::SUBSCRIPTION_STATUS_REORDER, 'label' => __('Part of Subscription Re-order')],
+                ];
             default:
                 return parent::getValueSelectOptions();
         }
@@ -211,8 +210,7 @@ class Product extends \Magento\SalesRule\Model\Rule\Condition\Product
         // The product does not have a subscription option enabled, OR the user selected the one time purchase
         // option on a subscription product. For both of these we return the false array. I want to explicitly catch
         // this case to be clear what is happening.
-        if (
-            empty($params)
+        if (empty($params)
             || (isset($params['option']) && $params['option'] == 'onetime_purchase')
         ) {
             return $return;

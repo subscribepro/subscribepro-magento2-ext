@@ -53,21 +53,23 @@ define(
 
                 var self = this;
 
-                this.cityRegionPostcodeText = ko.pureComputed(function() {
+                this.cityRegionPostcodeText = ko.pureComputed(function () {
                     var cityRegionText = [self.shippingAddress().city, self.shippingAddress().region]
-                        .filter(function (val) {return val;})
+                        .filter(function (val) {
+    return val;})
                         .join(', ');
 
                     return [cityRegionText, self.shippingAddress().postcode]
-                        .filter(function (val) {return val;})
+                        .filter(function (val) {
+    return val;})
                         .join(' ');
                 });
 
-                this.customerHasAddresses = ko.pureComputed(function() {
+                this.customerHasAddresses = ko.pureComputed(function () {
                     return self.addressOptions().length > 1;
                 });
 
-                this.selectedAddress.subscribe(function(address) {
+                this.selectedAddress.subscribe(function (address) {
                     self.isAddressFormVisible(addressOptionsHelper.isNewAddressOption(address));
                 });
 

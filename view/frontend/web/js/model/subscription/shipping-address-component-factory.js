@@ -14,7 +14,7 @@ define(
                 var childrenConfig = config.shippingAddressOptions.children;
                 childrenConfig.messages.messageContainer = messageContainer;
 
-                $.each(childrenConfig['shipping-address-fieldset'].children, function(name, child) {
+                $.each(childrenConfig['shipping-address-fieldset'].children, function (name, child) {
                     if (child.config && child.config.customScope) {
                         child.config.customScope = componentName;
                     }
@@ -38,7 +38,8 @@ define(
                         dataScopePrefix: componentName,
                         provider: config.shippingAddressOptions.provider,
                         deps: config.shippingAddressOptions.deps
-                    }, {
+                    },
+                    {
                         name: componentName,
                         parentName: config.name
                     }

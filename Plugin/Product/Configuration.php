@@ -61,7 +61,7 @@ class Configuration
                 'label' => (string)__('Delivery'),
                 'value' => (string)__('One Time')
             ];
-        } else if (ProductInterface::SO_SUBSCRIPTION == $subscriptionOption) {
+        } elseif (ProductInterface::SO_SUBSCRIPTION == $subscriptionOption) {
             $subscriptionInterval = $this->quoteItemHelper->getSubscriptionInterval($item);
             $options[] = [
                 'label' => (string)__('Regular Delivery'),
