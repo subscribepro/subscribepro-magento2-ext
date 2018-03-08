@@ -82,7 +82,13 @@ define(
                 var self = this;
                 $.when(deferred)
                     .done(function (response) {
-                        self.initPayments(response);
+                        var customerPayments = [];
+                        for (var i in response) {
+                            if (response[i].customer_id == parseInt(window.customerData.id)) {
+                                customerPayments.push(response[i]);
+                            }
+                        }
+                        self.initPayments(customerPayments);
                     })
                     .always(function () {
                         self.isLoading(false);
