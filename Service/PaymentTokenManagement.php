@@ -4,6 +4,8 @@ namespace Swarming\SubscribePro\Service;
 
 use Magento\Vault\Api\Data\PaymentTokenInterface;
 use Swarming\SubscribePro\Api\PaymentTokenManagementInterface;
+use Magento\Framework\Api\Search\FilterGroupBuilder;
+
 
 class PaymentTokenManagement implements PaymentTokenManagementInterface
 {
@@ -16,6 +18,11 @@ class PaymentTokenManagement implements PaymentTokenManagementInterface
      * @var \Magento\Framework\Api\FilterBuilder
      */
     protected $filterBuilder;
+
+    /**
+     * @var \Magento\Framework\Api\Search\FilterGroupBuilder
+     */
+    protected $filterGroupBuilder;
 
     /**
      * @var \Magento\Framework\Api\SearchCriteriaBuilder
@@ -36,11 +43,13 @@ class PaymentTokenManagement implements PaymentTokenManagementInterface
     public function __construct(
         \Magento\Vault\Api\PaymentTokenRepositoryInterface $paymentTokenRepository,
         \Magento\Framework\Api\FilterBuilder $filterBuilder,
+        \Magento\Framework\Api\Search\FilterGroupBuilder $filterGroupBuilder,
         \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder,
         \Magento\Framework\Intl\DateTimeFactory $dateTimeFactory
     ) {
         $this->paymentTokenRepository = $paymentTokenRepository;
         $this->filterBuilder = $filterBuilder;
+        $this->filterGroupBuilder = $filterGroupBuilder;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->dateTimeFactory = $dateTimeFactory;
     }
@@ -51,16 +60,27 @@ class PaymentTokenManagement implements PaymentTokenManagementInterface
      */
     public function getSubscribeProTokensByCustomerId($customerId)
     {
-        $filters[] = $this->filterBuilder->setField(PaymentTokenInterface::CUSTOMER_ID)
+        $filterGroups = array();
+
+        $customerIdFilter = $this->filterBuilder->setField(PaymentTokenInterface::CUSTOMER_ID)
             ->setValue($customerId)
             ->create();
-        $filters[] = $this->filterBuilder->setField(PaymentTokenInterface::IS_VISIBLE)
+        $filterGroups[] = $this->filterGroupBuilder->addFilter($customerIdFilter)
+            ->create();
+
+        $paymentTokenVisibilityFilter = $this->filterBuilder->setField(PaymentTokenInterface::IS_VISIBLE)
             ->setValue(1)
             ->create();
-        $filters[] = $this->filterBuilder->setField(PaymentTokenInterface::IS_ACTIVE)
+        $filterGroups[] = $this->filterGroupBuilder->addFilter($paymentTokenVisibilityFilter)
+            ->create();
+
+        $paymentTokenActiveFilter = $this->filterBuilder->setField(PaymentTokenInterface::IS_ACTIVE)
             ->setValue(1)
             ->create();
-        $filters[] = $this->filterBuilder->setField(PaymentTokenInterface::EXPIRES_AT)
+        $filterGroups[] = $this->filterGroupBuilder->addFilter($paymentTokenActiveFilter)
+            ->create();
+
+        $paymentTokenExpirationFilter = $this->filterBuilder->setField(PaymentTokenInterface::EXPIRES_AT)
             ->setConditionType('gt')
             ->setValue(
                 $this->dateTimeFactory->create(
@@ -69,7 +89,10 @@ class PaymentTokenManagement implements PaymentTokenManagementInterface
                 )->format('Y-m-d 00:00:00')
             )
             ->create();
-        $searchCriteria = $this->searchCriteriaBuilder->addFilters($filters)
+        $filterGroups[] = $this->filterGroupBuilder->addFilter($paymentTokenExpirationFilter)
+            ->create();
+
+        $searchCriteria = $this->searchCriteriaBuilder->setFilterGroups($filterGroups)
             ->create();
 
         return $this->paymentTokenRepository->getList($searchCriteria)->getItems();
