@@ -58,6 +58,16 @@ class Subscriptions extends \Magento\Framework\View\Element\Template
     protected $attributeMerger;
 
     /**
+     * @var \Magento\Framework\Serialize\Serializer\Json $serializer
+     */
+    protected $serializer;
+
+    /**
+     * @var array $layoutProcessors
+     */
+    protected $layoutProcessors;
+
+    /**
      * @param \Magento\Framework\View\Element\Template\Context $context
      * @param \Magento\Customer\Api\CustomerRepositoryInterface $customerRepository
      * @param \Magento\Customer\Model\Session $customerSession
@@ -69,6 +79,8 @@ class Subscriptions extends \Magento\Framework\View\Element\Template
      * @param \Swarming\SubscribePro\Ui\ConfigProvider\SubscriptionConfig $subscriptionConfig
      * @param \Swarming\SubscribePro\Ui\ComponentProvider\AddressAttributes $addressAttributes
      * @param \Magento\Checkout\Block\Checkout\AttributeMerger $attributeMerger
+     * @param \Magento\Framework\Serialize\Serializer\Json $serializer
+     * @param array $layoutProcessors
      * @param array $data
      */
     public function __construct(
@@ -83,6 +95,8 @@ class Subscriptions extends \Magento\Framework\View\Element\Template
         \Swarming\SubscribePro\Ui\ConfigProvider\SubscriptionConfig $subscriptionConfig,
         \Swarming\SubscribePro\Ui\ComponentProvider\AddressAttributes $addressAttributes,
         \Magento\Checkout\Block\Checkout\AttributeMerger $attributeMerger,
+        \Magento\Framework\Serialize\Serializer\Json $serializer = null,
+        array $layoutProcessors = [],
         array $data = []
     ) {
         parent::__construct($context, $data);
@@ -96,6 +110,20 @@ class Subscriptions extends \Magento\Framework\View\Element\Template
         $this->subscriptionConfig = $subscriptionConfig;
         $this->addressAttributes = $addressAttributes;
         $this->attributeMerger = $attributeMerger;
+        $this->layoutProcessors = $layoutProcessors;
+        $this->serializer = $serializer ?: \Magento\Framework\App\ObjectManager::getInstance()
+            ->get(\Magento\Framework\Serialize\Serializer\Json::class);
+    }
+
+    /**
+     * @return string
+     */
+    public function getJsLayout()
+    {
+        foreach ($this->layoutProcessors as $processor) {
+            $this->jsLayout = $processor->process($this->jsLayout);
+        }
+        return $this->serializer->serialize($this->jsLayout);
     }
 
     /**

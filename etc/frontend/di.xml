@@ -44,4 +44,12 @@
             </argument>
         </arguments>
     </type>
+
+    <type name="Swarming\SubscribePro\Block\Customer\Subscriptions">
+        <arguments>
+            <argument name="layoutProcessors" xsi:type="array">
+                <item name="subscriptionsDirectoryDataDataProcessor" xsi:type="object">Swarming\SubscribePro\Block\Customer\SubscriptionsDirectoryDataProcessor</item>
+            </argument>
+        </arguments>
+    </type>
 </config>
