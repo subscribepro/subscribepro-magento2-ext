@@ -107,6 +107,11 @@ define(
                 if (!selectedAddress || addressOptionsHelper.isNewAddressOption(selectedAddress)) {
                     isValid = this.isValidNewAddress();
                     addressData = this.getNewAddressData();
+                    // The Address object expects region_id to be a child of the region property
+                    // But our form sends it as a top level parameter
+                    if (addressData['region_id'] && addressData['region_id'] !== '0') {
+                        addressData['region']['region_id'] = addressData['region_id'] + '';
+                    }
                     selectedAddress = new Address(addressData);
                 }
 
