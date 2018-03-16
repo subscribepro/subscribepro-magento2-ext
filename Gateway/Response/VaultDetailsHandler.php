@@ -35,24 +35,32 @@ class VaultDetailsHandler implements HandlerInterface
     protected $subjectReader;
 
     /**
+     * @var \Swarming\SubscribePro\Platform\Service\PaymentProfile
+     */
+    protected $paymentProfileService;
+
+    /**
      * @param \Magento\Vault\Model\CreditCardTokenFactory $paymentTokenFactory
      * @param \Magento\Sales\Api\Data\OrderPaymentExtensionInterfaceFactory $paymentExtensionFactory
      * @param \Swarming\SubscribePro\Helper\Vault $vaultHelper
      * @param \Swarming\SubscribePro\Gateway\Config\Config $gatewayConfig
      * @param \Swarming\SubscribePro\Gateway\Helper\SubjectReader $subjectReader
+     * @param \Swarming\SubscribePro\Platform\Service\PaymentProfile $paymentProfileService
      */
     public function __construct(
         \Magento\Vault\Model\CreditCardTokenFactory $paymentTokenFactory,
         \Magento\Sales\Api\Data\OrderPaymentExtensionInterfaceFactory $paymentExtensionFactory,
         \Swarming\SubscribePro\Helper\Vault $vaultHelper,
         \Swarming\SubscribePro\Gateway\Config\Config $gatewayConfig,
-        \Swarming\SubscribePro\Gateway\Helper\SubjectReader $subjectReader
+        \Swarming\SubscribePro\Gateway\Helper\SubjectReader $subjectReader,
+        \Swarming\SubscribePro\Platform\Service\PaymentProfile $paymentProfileService
     ) {
         $this->paymentTokenFactory = $paymentTokenFactory;
         $this->paymentExtensionFactory = $paymentExtensionFactory;
         $this->vaultHelper = $vaultHelper;
         $this->gatewayConfig = $gatewayConfig;
         $this->subjectReader = $subjectReader;
+        $this->paymentProfileService = $paymentProfileService;
     }
 
     /**
@@ -86,12 +94,16 @@ class VaultDetailsHandler implements HandlerInterface
             $transaction->getCreditcardMonth()
         ));
 
+        /** @var \Swarming\SubscribePro\Platform\Service\PaymentProfile */
+        $paymentProfile = $this->paymentProfileService->loadProfile($transaction->getRefPaymentProfileId());
+        $vaultPaymentToken = $paymentProfile->getPaymentToken();
+
         $paymentToken->setTokenDetails($this->vaultHelper->getTokenDetails(
             $transaction->getCreditcardType(),
             $transaction->getCreditcardLastDigits(),
             $transaction->getCreditcardMonth(),
             $transaction->getCreditcardYear(),
-            $transaction->getToken()
+            $vaultPaymentToken
         ));
 
         return $paymentToken;
