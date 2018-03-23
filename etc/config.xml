@@ -61,6 +61,12 @@
                 <model>SubscribeProVaultAdapter</model>
                 <title>Stored Cards (SubscribePro)</title>
                 <active>1</active>
+                <instant_purchase>
+                    <supported>1</supported>
+                    <available>Swarming\SubscribePro\Model\InstantPurchase\AvailabilityChecker</available>
+                    <tokenFormat>Swarming\SubscribePro\Model\InstantPurchase\PaymentTokenFormatter</tokenFormat>
+                    <additionalInformation>Swarming\SubscribePro\Model\InstantPurchase\PaymentAdditionalInformationProvider</additionalInformation>
+                </instant_purchase>
             </subscribe_pro_vault>
         </payment>
     </default>
