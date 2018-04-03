@@ -8,6 +8,7 @@
     <preference for="Magento\Sales\Block\Adminhtml\Order\Create\Items\Grid" type="Swarming\SubscribePro\Block\Adminhtml\Order\Create\Items\Grid" />
     <preference for="Magento\SalesRule\Model\Rule\Condition\Product" type="Swarming\SubscribePro\Model\Rule\Condition\Product" />
     <preference for="Magento\Vault\Model\PaymentTokenManagement" type="Swarming\SubscribePro\Model\Vault\PaymentTokenManagement" />
+    <preference for="Magento\Checkout\Model\ShippingInformationManagement" type="Swarming\SubscribePro\Model\Quote\ShippingInformationManagement" />
 
     <type name="Swarming\SubscribePro\Platform\Platform">
         <arguments>
