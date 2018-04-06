@@ -24,15 +24,24 @@ class Quote
      */
     public function hasSubscription($quote)
     {
-        $hasSubscription = false;
-        // getItems() was returning null so I switched to getItemsCollection(), now it works perfectly
+        return !empty($this->getSubscriptionItems($quote));
+    }
+
+    /**
+     * @param \Magento\Quote\Api\Data\CartInterface $quote
+     * @return bool
+     */
+    public function getSubscriptionItems($quote)
+    {
+        $subscriptions = [];
+
         $items = $quote->getItemsCollection(false);
         foreach ($items as $item) {
             if ($this->quoteItemHelper->hasSubscription($item)) {
-                $hasSubscription = true;
-                break;
+                $subscriptions[] = $item;
             }
         }
-        return $hasSubscription;
+
+        return $subscriptions;
     }
 }
