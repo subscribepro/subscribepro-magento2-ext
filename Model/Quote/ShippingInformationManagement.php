@@ -88,18 +88,12 @@ class ShippingInformationManagement extends \Magento\Checkout\Model\ShippingInfo
         \Magento\Checkout\Api\Data\ShippingInformationInterface $addressInformation
     ) {
         $shippingAddress = $addressInformation->getShippingAddress();
-        $this->logger->info('SUBSCRIBEPRO Region ID Patch');
-        $this->logger->info('Checking Current Region ID... ' . $shippingAddress->getRegionId());
-
         $regionId = $shippingAddress->getRegionId();
+
         if (!$regionId) {
-            $this->logger->info('No region ID set, loading from database...');
             // Get Region ID from Database if not present
             $region = $this->regionFactory->create();
             $regionId = $region->loadByCode($shippingAddress->getRegionCode(), $shippingAddress->getCountryId())->getId();
-
-            $this->logger->info('Loaded region with ID ' . $regionId . ' using region code: ' . $shippingAddress->getRegionCode());
-            $this->logger->info('Setting region ID on shipping address');
             $shippingAddress->setRegionId($regionId);
             $addressInformation->setShippingAddress($shippingAddress);
         }
