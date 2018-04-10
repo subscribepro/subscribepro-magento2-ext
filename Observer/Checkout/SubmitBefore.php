@@ -81,21 +81,17 @@ class SubmitBefore implements ObserverInterface
         /** @var \Magento\Quote\Model\Quote $quote */
         $quote = $observer->getData('quote');
 
-        $this->logger->info('Checking that Subscribe Pro is enabled');
         $websiteCode = $quote->getStore()->getWebsite()->getCode();
         if (!$this->generalConfig->isEnabled($websiteCode)) {
             return;
         }
 
-        $this->logger->info('Subscribe Pro is enabled, checking that the quote has subscription item(s)');
         // Make sure the subscription is a recurring subscription order
         $subscriptionItems = $this->quoteHelper->getSubscriptionItems($quote);
         if (empty($subscriptionItems)) {
             return;
         }
 
-        $this->logger->info('Subscription items are present, now we need to see if they have a subscription ID.');
-        $this->logger->info('If so, we should run our event.');
         $recurringOrder = false;
         foreach ($subscriptionItems as $subscriptionItem) {
             // A subscription ID will only exist on a quote item before an order if the subscription already exists
@@ -111,7 +107,6 @@ class SubmitBefore implements ObserverInterface
         }
 
         try {
-            $this->logger->info('Running subscribe_pro_before_subscription_reorder_place');
             $this->eventManager->dispatch(
                 'subscribe_pro_before_subscription_reorder_place',
                 [
@@ -119,7 +114,6 @@ class SubmitBefore implements ObserverInterface
                     'quote' => $quote,
                 ]
             );
-            $this->logger->info('Finished running subscribe_pro_before_subscription_reorder_place');
         } catch (\Exception $e) {
             $this->logger->critical($e);
         }
