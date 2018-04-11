@@ -77,6 +77,15 @@ class QuoteItem
 
     /**
      * @param \Magento\Quote\Model\Quote\Item $item
+     * @return null|string
+     */
+    public function getSubscriptionId($item)
+    {
+        return $this->getParam($item, SubscriptionOptionInterface::SUBSCRIPTION_ID);
+    }
+
+    /**
+     * @param \Magento\Quote\Model\Quote\Item $item
      * @param string $paramKey
      * @return mixed|null
      */

@@ -9,6 +9,9 @@
     <event name="payment_method_assign_data_vault_subscribe_pro">
         <observer name="subscribe_pro_gateway_data_assign" instance="Swarming\SubscribePro\Observer\Payment\TokenAssigner" />
     </event>
+    <event name="checkout_submit_before">
+        <observer name="subscribe_pro_before_order" instance="Swarming\SubscribePro\Observer\Checkout\SubmitBefore" />
+    </event>
     <event name="checkout_submit_all_after">
         <observer name="subscribe_pro" instance="Swarming\SubscribePro\Observer\Checkout\SubmitAllAfter"/>
     </event>
