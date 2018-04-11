@@ -49,4 +49,9 @@ class Subscription extends PlatformSubscription implements SubscriptionInterface
         $platformSpecificFields[self::PLATFORM_FIELD_KEY][self::PRODUCT_OPTION] = $productOptions;
         return $this->setPlatformSpecificFields($platformSpecificFields);
     }
+
+    public function getUserDefinedFields()
+    {
+       return json_encode(parent::getUserDefinedFields());
+    }
 }
