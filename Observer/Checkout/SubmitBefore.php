@@ -106,16 +106,13 @@ class SubmitBefore implements ObserverInterface
             return;
         }
 
-        try {
-            $this->eventManager->dispatch(
-                'subscribe_pro_before_subscription_reorder_place',
-                [
-                    'quote_id' => $quote->getId(),
-                    'quote' => $quote,
-                ]
-            );
-        } catch (\Exception $e) {
-            $this->logger->critical($e);
-        }
+        $this->eventManager->dispatch(
+            'subscribe_pro_before_subscription_reorder_place',
+            [
+                'quote_id' => $quote->getId(),
+                'quote' => $quote,
+            ]
+        );
+
     }
 }
