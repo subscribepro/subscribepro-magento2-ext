@@ -99,10 +99,13 @@ class Base extends \Magento\Rule\Model\Condition\AbstractCondition
         return $return;
     }
 
-    protected function subscriptionOptionsAreFalse($model)
+    /**
+     * @param array $subscriptionOptions
+     * @return bool
+     */
+    protected function subscriptionOptionsAreFalse($subscriptionOptions)
     {
         // $subscriptionOptions is an array that holds the subscription attributes of the quote item
-        $subscriptionOptions = $this->getSubscriptionOptions($model);
         return !$subscriptionOptions['new_subscription']
             && !$subscriptionOptions['is_fulfilling']
             && !$subscriptionOptions['reorder_ordinal']
