@@ -27,9 +27,12 @@ class ReorderOrdinal extends Base
      */
     public function validate(\Magento\Framework\Model\AbstractModel $model)
     {
-        if ($this->subscriptionOptionsAreFalse($model)) {
+        $subscriptionOptions = $this->getSubscriptionOptions($model);
+
+        if ($this->subscriptionOptionsAreFalse($subscriptionOptions)) {
             return parent::validate($model);
         }
+
         // Check quote item attributes
         if ($subscriptionOptions['new_subscription'] || $subscriptionOptions['is_fulfilling']) {
             // This is a new subscription

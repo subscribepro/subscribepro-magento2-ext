@@ -66,7 +66,9 @@ class Status extends Base
      */
     public function validate(\Magento\Framework\Model\AbstractModel $model)
     {
-        if ($this->subscriptionOptionsAreFalse($model)) {
+        $subscriptionOptions = $this->getSubscriptionOptions($model);
+
+        if ($this->subscriptionOptionsAreFalse($subscriptionOptions)) {
             return parent::validate($model);
         }
 
