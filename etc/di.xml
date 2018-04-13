@@ -6,7 +6,6 @@
     <preference for="Swarming\SubscribePro\Api\Data\SubscriptionOptionInterface" type="Swarming\SubscribePro\Model\Quote\SubscriptionOption" />
     <preference for="Swarming\SubscribePro\Model\CatalogRule\InspectorInterface" type="Swarming\SubscribePro\Model\CatalogRule\Inspector" />
     <preference for="Magento\Sales\Block\Adminhtml\Order\Create\Items\Grid" type="Swarming\SubscribePro\Block\Adminhtml\Order\Create\Items\Grid" />
-    <preference for="Magento\SalesRule\Model\Rule\Condition\Product" type="Swarming\SubscribePro\Model\Rule\Condition\Product" />
     <preference for="Magento\Vault\Model\PaymentTokenManagement" type="Swarming\SubscribePro\Model\Vault\PaymentTokenManagement" />
 
     <type name="Swarming\SubscribePro\Platform\Platform">
@@ -76,12 +75,36 @@
         </arguments>
     </type>
 
-    <type name="Magento\Customer\Api\CustomerRepositoryInterface">
-        <plugin name="subscribepro_customer" type="Swarming\SubscribePro\Plugin\Customer\CustomerRepository" />
+    <type name="Swarming\SubscribePro\Model\Rule\Condition\Status">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="form_name" xsi:type="string">sales_rule_form</item>
+            </argument>
+        </arguments>
     </type>
 
-    <type name="Magento\SalesRule\Model\Validator">
-        <plugin name="subscribepro_discount" type="Swarming\SubscribePro\Plugin\SalesRule\Validator" sortOrder="50" />
+    <type name="Swarming\SubscribePro\Model\Rule\Condition\Interval">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="form_name" xsi:type="string">sales_rule_form</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Swarming\SubscribePro\Model\Rule\Condition\ReorderOrdinal">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="form_name" xsi:type="string">sales_rule_form</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\SalesRule\Model\Rule\Condition\Product\Combine">
+        <plugin name="subscribepro_salesrule_conditions" type="Swarming\SubscribePro\Plugin\SalesRule\Conditions" />
+    </type>
+
+    <type name="Magento\Customer\Api\CustomerRepositoryInterface">
+        <plugin name="subscribepro_customer" type="Swarming\SubscribePro\Plugin\Customer\CustomerRepository" />
     </type>
 
     <type name="Magento\Quote\Model\Quote\Item\CartItemOptionsProcessor">
