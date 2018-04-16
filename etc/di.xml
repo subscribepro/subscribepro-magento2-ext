@@ -103,6 +103,10 @@
         <plugin name="subscribepro_salesrule_conditions" type="Swarming\SubscribePro\Plugin\SalesRule\Conditions" />
     </type>
 
+    <type name="Magento\SalesRule\Model\Validator">
+        <plugin name="subscribepro_discount" type="Swarming\SubscribePro\Plugin\SalesRule\Validator" sortOrder="50" />
+    </type>
+
     <type name="Magento\Customer\Api\CustomerRepositoryInterface">
         <plugin name="subscribepro_customer" type="Swarming\SubscribePro\Plugin\Customer\CustomerRepository" />
     </type>
