@@ -6,7 +6,6 @@
     <preference for="Swarming\SubscribePro\Api\Data\SubscriptionOptionInterface" type="Swarming\SubscribePro\Model\Quote\SubscriptionOption" />
     <preference for="Swarming\SubscribePro\Model\CatalogRule\InspectorInterface" type="Swarming\SubscribePro\Model\CatalogRule\Inspector" />
     <preference for="Magento\Sales\Block\Adminhtml\Order\Create\Items\Grid" type="Swarming\SubscribePro\Block\Adminhtml\Order\Create\Items\Grid" />
-    <preference for="Magento\Vault\Model\PaymentTokenManagement" type="Swarming\SubscribePro\Model\Vault\PaymentTokenManagement" />
 
     <type name="Swarming\SubscribePro\Platform\Platform">
         <arguments>
