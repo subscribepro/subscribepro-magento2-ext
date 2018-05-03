@@ -30,7 +30,7 @@ class ReorderOrdinal extends Base
         $subscriptionOptions = $this->getSubscriptionOptions($model);
 
         if ($this->subscriptionOptionsAreFalse($subscriptionOptions)) {
-            return parent::validate($model);
+            return false;
         }
 
         // Check quote item attributes
