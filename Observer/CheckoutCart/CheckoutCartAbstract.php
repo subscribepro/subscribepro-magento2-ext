@@ -8,6 +8,7 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Quote\Model\Quote\Item as QuoteItem;
 use Swarming\SubscribePro\Api\Data\SubscriptionOptionInterface;
+use SubscribePro\Service\Product\ProductInterface as SubscribeProProductInterface;
 
 abstract class CheckoutCartAbstract implements ObserverInterface
 {
@@ -102,6 +103,7 @@ abstract class CheckoutCartAbstract implements ObserverInterface
         }
 
         if ($platformProduct->getIsTrialProduct()) {
+            $quoteItemParams[SubscriptionOptionInterface::OPTION] = SubscribeProProductInterface::SO_SUBSCRIPTION;
             $quoteItem->setOriginalCustomPrice($platformProduct->getTrialPrice());
             $quoteItem->setCustomPrice($platformProduct->getTrialPrice());
         }
