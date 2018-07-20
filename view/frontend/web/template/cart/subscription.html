@@ -1,12 +1,12 @@
 <!-- ko if: isProductLoaded() -->
     <div class="fieldset">
-        <!-- ko if: isSubscriptionMode(subscriptionOnlyMode)  -->
+        <!-- ko if: isSubscriptionMode(subscriptionOnlyMode) || isTrialMode()  -->
               <input type="hidden"
                      data-bind="
                      value: subscriptionOption,
                      attr: {name: 'cart['+quoteItemId+'][subscription_option][option]'}">
         <!-- /ko -->
-        <!-- ko if: isSubscriptionMode(subscriptionAndOneTimePurchaseMode) -->
+        <!-- ko if: isSubscriptionMode(subscriptionAndOneTimePurchaseMode) && !isTrialMode() -->
             <p>
                 <!-- ko i18n: 'Would you like to receive regular shipments of this item?' --><!-- /ko -->
             </p>

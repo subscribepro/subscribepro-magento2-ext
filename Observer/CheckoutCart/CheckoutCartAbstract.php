@@ -101,6 +101,11 @@ abstract class CheckoutCartAbstract implements ObserverInterface
             return;
         }
 
+        if ($platformProduct->getIsTrialProduct()) {
+            $quoteItem->setOriginalCustomPrice($platformProduct->getTrialPrice());
+            $quoteItem->setCustomPrice($platformProduct->getTrialPrice());
+        }
+
         $warnings = $this->subscriptionOptionUpdater->update(
             $quoteItem,
             $platformProduct,

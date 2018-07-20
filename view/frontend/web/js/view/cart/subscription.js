@@ -86,6 +86,10 @@ define(
                 return this.product.default_subscription_option == optionValue;
             },
 
+            isTrialMode: function() {
+                return this.product.is_trial_product;
+            },
+
             onQtyFieldChanged: function () {
                 if (this.subscriptionOptionValue() == this.oneTimePurchaseOption) {
                     return;

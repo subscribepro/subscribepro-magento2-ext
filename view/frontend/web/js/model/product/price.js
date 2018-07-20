@@ -15,6 +15,7 @@ define(
 
                 productPrice.discount = product.discount;
                 productPrice.is_discount_percentage = product.is_discount_percentage;
+                productPrice.trialPrice = product.trial_price;
 
                 productPrice.price = ko.observable(product.price);
                 productPrice.hasSpecialPrice = ko.observable(product.is_catalog_rule_applied);
@@ -89,6 +90,10 @@ define(
 
                 productPrice.setFrontendPrice = function(frontendPrice) {
                     productPrice.price(getPriceFromFrontendPrice(frontendPrice));
+                };
+
+                productPrice.getTrialPrice = function() {
+                    return getFormattedPrice(productPrice.trialPrice);
                 };
 
                 function getFormattedPrice(price) {
