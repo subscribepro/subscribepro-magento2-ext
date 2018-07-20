@@ -5,6 +5,11 @@
                      data-bind="
                      value: subscriptionOption,
                      attr: {name: 'cart['+quoteItemId+'][subscription_option][option]'}">
+            <!-- ko if: isTrialMode() -->
+                <div class="field">
+                    <!-- ko i18n: 'Trial Subscription' --><!-- /ko -->
+                </div>
+            <!-- /ko -->
         <!-- /ko -->
         <!-- ko if: isSubscriptionMode(subscriptionAndOneTimePurchaseMode) && !isTrialMode() -->
             <p>
