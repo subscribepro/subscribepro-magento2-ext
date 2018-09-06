@@ -51,8 +51,8 @@ class Config extends \Magento\Framework\View\Element\Template
         try {
             $config = $this->gatewayConfigProvider->getConfig($storeId);
         } catch (InvalidArgumentException $e) {
-            $config = [];
-            $this->logger->debug('Cannog retrieve Subscribe Pro payment config: ' . $e->getMessage());
+            $config = null;
+            $this->logger->debug('Cannot retrieve Subscribe Pro payment config: ' . $e->getMessage());
         }
 
         return json_encode($config);
