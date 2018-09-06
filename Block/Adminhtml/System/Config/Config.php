@@ -2,6 +2,8 @@
 
 namespace Swarming\SubscribePro\Block\Adminhtml\System\Config;
 
+use SubscribePro\Exception\InvalidArgumentException;
+
 class Config extends \Magento\Framework\View\Element\Template
 {
     /**
@@ -15,19 +17,27 @@ class Config extends \Magento\Framework\View\Element\Template
     protected $quoteSession;
 
     /**
+     * @var \Psr\Log\LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * @param \Magento\Framework\View\Element\Template\Context $context
      * @param \Swarming\SubscribePro\Gateway\Config\ConfigProvider $gatewayConfigProvider
      * @param \Magento\Backend\Model\Session\Quote $quoteSession
+     * @param \Psr\Log\LoggerInterface $logger
      * @param array $data
      */
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
         \Swarming\SubscribePro\Gateway\Config\ConfigProvider $gatewayConfigProvider,
         \Magento\Backend\Model\Session\Quote $quoteSession,
+        \Psr\Log\LoggerInterface $logger,
         array $data = []
     ) {
         $this->gatewayConfigProvider = $gatewayConfigProvider;
         $this->quoteSession = $quoteSession;
+        $this->logger = $logger;
         parent::__construct($context, $data);
     }
 
@@ -37,6 +47,14 @@ class Config extends \Magento\Framework\View\Element\Template
     public function getPaymentConfig()
     {
         $storeId = $this->quoteSession->getStoreId();
-        return json_encode($this->gatewayConfigProvider->getConfig($storeId));
+
+        try {
+            $config = $this->gatewayConfigProvider->getConfig($storeId);
+        } catch (InvalidArgumentException $e) {
+            $config = [];
+            $this->logger->debug('Cannog retrieve Subscribe Pro payment config: ' . $e->getMessage());
+        }
+
+        return json_encode($config);
     }
 }
