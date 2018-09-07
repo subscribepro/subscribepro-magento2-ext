@@ -98,6 +98,10 @@
         </arguments>
     </type>
 
+    <type name="Magento\Sales\Api\OrderItemRepositoryInterface">
+        <plugin name="subscribepro_add_order_item_extension_attribute" type="Swarming\SubscribePro\Plugin\OrderItem\RepositoryPlugin" />
+    </type>
+
     <type name="Magento\SalesRule\Model\Rule\Condition\Product\Combine">
         <plugin name="subscribepro_salesrule_conditions" type="Swarming\SubscribePro\Plugin\SalesRule\Conditions" />
     </type>
