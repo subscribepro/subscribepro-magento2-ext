@@ -6,23 +6,29 @@ use Magento\Sales\Api\Data\OrderItemExtensionFactory;
 use Magento\Sales\Api\Data\OrderItemInterface;
 use Magento\Sales\Api\OrderItemRepositoryInterface;
 use Magento\Sales\Api\Data\OrderItemSearchResultInterface;
-use Swarming\SubscribePro\Helper\OrderItem as OrderItemHelper;
 
 class RepositoryPlugin
 {
     /**
-     * Order Item Extension Attributes Factory
-     *
      * @var OrderItemExtensionFactory
      */
     protected $extensionFactory;
 
+    /**
+     * @var \Psr\Log\LoggerInterface
+     */
     protected $logger;
+
+    /**
+     * @var \Swarming\SubscribePro\Api\Data\SubscriptionOptionInterfaceFactory
+     */
     protected $subscriptionOptionFactory;
 
     /**
      * RepositoryPlugin constructor.
-     * @param OrderItemHelper $itemHelper
+     * @param OrderItemExtensionFactory $extensionFactory
+     * @param \Psr\Log\LoggerInterface $logger
+     * @param \Swarming\SubscribePro\Api\Data\SubscriptionOptionInterfaceFactory $subscriptionOptionFactory
      */
     public function __construct(
         OrderItemExtensionFactory $extensionFactory,
@@ -51,6 +57,11 @@ class RepositoryPlugin
         return $item;
     }
 
+    /**
+     * @param OrderItemRepositoryInterface $subject
+     * @param OrderItemSearchResultInterface $searchResult
+     * @return OrderItemSearchResultInterface
+     */
     public function afterGetList(OrderItemRepositoryInterface $subject, OrderItemSearchResultInterface $searchResult)
     {
         $orderItems = $searchResult->getItems();
@@ -61,6 +72,10 @@ class RepositoryPlugin
         return $searchResult;
     }
 
+    /**
+     * @param OrderItemInterface $item
+     * @return Swarming\SubscribePro\Model\Quote\SubscriptionOption
+     */
     protected function getSubscriptionDataFromOrderItem(OrderItemInterface $item) {
         // Subscription data is two different places in the product options depending on frontend vs recurring order
         // 1) For the recurring order, it is in the subscription_option section of the buyRequest
