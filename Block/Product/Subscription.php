@@ -6,6 +6,7 @@ use Magento\Catalog\Pricing\Price\FinalPrice;
 use Magento\Catalog\Pricing\Price\RegularPrice;
 use Magento\Tax\Model\Config as TaxConfig;
 use Swarming\SubscribePro\Api\Data\ProductInterface;
+use SubscribePro\Exception\InvalidArgumentException;
 
 class Subscription extends \Magento\Catalog\Block\Product\AbstractProduct
 {
@@ -52,6 +53,11 @@ class Subscription extends \Magento\Catalog\Block\Product\AbstractProduct
     protected $quoteItemHelper;
 
     /**
+     * @var \Psr\Log\LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * @param \Magento\Catalog\Block\Product\Context $context
      * @param \Swarming\SubscribePro\Model\Config\SubscriptionDiscount $subscriptionDiscountConfig
      * @param \Swarming\SubscribePro\Platform\Manager\Product $platformProductManager
@@ -62,6 +68,7 @@ class Subscription extends \Magento\Catalog\Block\Product\AbstractProduct
      * @param \Swarming\SubscribePro\Helper\Product $productHelper
      * @param \Magento\Checkout\Model\Cart $cart
      * @param \Swarming\SubscribePro\Helper\QuoteItem $quoteItemHelper
+     * @param \Psr\Log\LoggerInterface $logger
      * @param array $data
      */
     public function __construct(
@@ -75,6 +82,7 @@ class Subscription extends \Magento\Catalog\Block\Product\AbstractProduct
         \Swarming\SubscribePro\Helper\Product $productHelper,
         \Magento\Checkout\Model\Cart $cart,
         \Swarming\SubscribePro\Helper\QuoteItem $quoteItemHelper,
+        \Psr\Log\LoggerInterface $logger,
         array $data = []
     ) {
         $this->subscriptionDiscountConfig = $subscriptionDiscountConfig;
@@ -85,6 +93,7 @@ class Subscription extends \Magento\Catalog\Block\Product\AbstractProduct
         $this->productHelper = $productHelper;
         $this->cart = $cart;
         $this->quoteItemHelper = $quoteItemHelper;
+        $this->logger = $logger;
         parent::__construct($context, $data);
     }
 
@@ -115,6 +124,14 @@ class Subscription extends \Magento\Catalog\Block\Product\AbstractProduct
      */
     protected function initJsLayout()
     {
+        try {
+            $platformProduct = $this->getPlatformProduct()->toArray();
+        } catch (InvalidArgumentException $e) {
+            $this->logger->debug('Could not load product from platform.');
+            $this->logger->info($e->getMessage());
+            $platformProduct = [];
+        }
+
         $data = [
             'components' => [
                 'subscription-container' => [
@@ -123,7 +140,7 @@ class Subscription extends \Magento\Catalog\Block\Product\AbstractProduct
                         'subscriptionOption' => ProductInterface::SO_SUBSCRIPTION,
                         'subscriptionOnlyMode' => ProductInterface::SOM_SUBSCRIPTION_ONLY,
                         'subscriptionAndOneTimePurchaseMode' => ProductInterface::SOM_SUBSCRIPTION_AND_ONETIME_PURCHASE,
-                        'product' => $this->getPlatformProduct()->toArray(),
+                        'product' => $platformProduct,
                         'priceConfig' => $this->priceConfigProvider->getConfig()
                     ]
                 ]
