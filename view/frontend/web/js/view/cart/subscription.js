@@ -27,7 +27,7 @@ define(
             initialize: function () {
                 this._super();
                 this.initMessageComponent();
-                if (this.product.length > 0) {
+                if (typeof this.product.id !== 'undefined') {
                     this.isProductLoaded(true);
                 }
             },
