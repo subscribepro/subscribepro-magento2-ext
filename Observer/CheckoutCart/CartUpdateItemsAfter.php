@@ -7,6 +7,7 @@ use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Quote\Model\Quote\Item as QuoteItem;
 use Swarming\SubscribePro\Model\Quote\SubscriptionOption\OptionProcessor as SubscriptionOptionProcessor;
+use SubscribePro\Exception\InvalidArgumentException;
 
 class CartUpdateItemsAfter extends CheckoutCartAbstract implements ObserverInterface
 {
@@ -29,12 +30,15 @@ class CartUpdateItemsAfter extends CheckoutCartAbstract implements ObserverInter
         $infoDataObject = $observer->getData('info');
 
         foreach ($quote->getAllItems() as $quoteItem) {
-            $subscriptionParams = $this->getSubscriptionParams($quoteItem, $infoDataObject);
             try {
+                $subscriptionParams = $this->getSubscriptionParams($quoteItem, $infoDataObject);
                 $this->updateQuoteItem($quoteItem, $subscriptionParams);
             } catch (LocalizedException $e) {
                 $quoteItem->isDeleted(true);
                 $this->messageManager->addErrorMessage($e->getMessage());
+            } catch (InvalidArgumentException $e) {
+                $this->logger->debug('Cannot update product in cart.');
+                $this->logger->info($e->getMessage());
             }
         }
     }
