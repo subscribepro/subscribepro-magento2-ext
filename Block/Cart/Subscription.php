@@ -7,6 +7,7 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Swarming\SubscribePro\Api\Data\ProductInterface as PlatformProductInterface;
 use SubscribePro\Exception\InvalidArgumentException;
+use SubscribePro\Exception\HttpException;
 
 class Subscription extends \Magento\Checkout\Block\Cart\Additional\Info
 {
@@ -120,6 +121,10 @@ class Subscription extends \Magento\Checkout\Block\Cart\Additional\Info
         try {
             $subscriptionProduct = $this->getSubscriptionProduct()->toArray();
         } catch (InvalidArgumentException $e) {
+            $this->logger->debug('Cannot load product from Subscribe Pro platform.');
+            $this->logger->info($e->getMessage());
+            $subscriptionProduct = [];
+        } catch (HttpException $e) {
             $this->logger->debug('Cannot load product from Subscribe Pro platform.');
             $this->logger->info($e->getMessage());
             $subscriptionProduct = [];

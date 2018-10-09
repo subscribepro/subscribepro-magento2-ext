@@ -5,6 +5,7 @@ namespace Swarming\SubscribePro\Ui\ConfigProvider;
 use Magento\Checkout\Model\ConfigProviderInterface;
 use Swarming\SubscribePro\Gateway\Config\ConfigProvider as GatewayConfigProvider;
 use SubscribePro\Exception\InvalidArgumentException;
+use SubscribePro\Exception\HttpException;
 
 final class Checkout implements ConfigProviderInterface
 {
@@ -39,6 +40,10 @@ final class Checkout implements ConfigProviderInterface
         try {
             $config = $this->gatewayConfigProvider->getConfig();
         } catch (InvalidArgumentException $e) {
+            $this->logger->debug('Cannot load configuration from Subscribe Pro platform.');
+            $this->logger->info($e->getMessage());
+            $config = [];
+        } catch (HttpException $e) {
             $this->logger->debug('Cannot load configuration from Subscribe Pro platform.');
             $this->logger->info($e->getMessage());
             $config = [];
