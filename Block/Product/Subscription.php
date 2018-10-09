@@ -7,6 +7,7 @@ use Magento\Catalog\Pricing\Price\RegularPrice;
 use Magento\Tax\Model\Config as TaxConfig;
 use Swarming\SubscribePro\Api\Data\ProductInterface;
 use SubscribePro\Exception\InvalidArgumentException;
+use SubscribePro\Exception\HttpException;
 
 class Subscription extends \Magento\Catalog\Block\Product\AbstractProduct
 {
@@ -127,7 +128,11 @@ class Subscription extends \Magento\Catalog\Block\Product\AbstractProduct
         try {
             $platformProduct = $this->getPlatformProduct()->toArray();
         } catch (InvalidArgumentException $e) {
-            $this->logger->debug('Could not load product from platform.');
+            $this->logger->debug('Could not load product from Subscribe Pro platform.');
+            $this->logger->info($e->getMessage());
+            $platformProduct = [];
+        } catch (HttpException $e) {
+            $this->logger->debug('Could not load product from Subscribe Pro platform.');
             $this->logger->info($e->getMessage());
             $platformProduct = [];
         }
