@@ -8,6 +8,7 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Quote\Model\Quote\Item as QuoteItem;
 use Swarming\SubscribePro\Model\Quote\SubscriptionOption\OptionProcessor as SubscriptionOptionProcessor;
 use SubscribePro\Exception\InvalidArgumentException;
+use SubscribePro\Exception\HttpException;
 
 class CartUpdateItemsAfter extends CheckoutCartAbstract implements ObserverInterface
 {
@@ -37,6 +38,9 @@ class CartUpdateItemsAfter extends CheckoutCartAbstract implements ObserverInter
                 $quoteItem->isDeleted(true);
                 $this->messageManager->addErrorMessage($e->getMessage());
             } catch (InvalidArgumentException $e) {
+                $this->logger->debug('Cannot update product in cart.');
+                $this->logger->info($e->getMessage());
+            } catch (HttpException $e) {
                 $this->logger->debug('Cannot update product in cart.');
                 $this->logger->info($e->getMessage());
             }
