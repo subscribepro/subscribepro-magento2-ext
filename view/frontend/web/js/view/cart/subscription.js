@@ -27,7 +27,9 @@ define(
             initialize: function () {
                 this._super();
                 this.initMessageComponent();
-                this.isProductLoaded(true);
+                if (this.product.length > 0) {
+                    this.isProductLoaded(true);
+                }
             },
 
             initObservable: function () {
