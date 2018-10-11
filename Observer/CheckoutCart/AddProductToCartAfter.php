@@ -5,6 +5,8 @@ namespace Swarming\SubscribePro\Observer\CheckoutCart;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Exception\LocalizedException;
+use SubscribePro\Exception\InvalidArgumentException;
+use SubscribePro\Exception\HttpException;
 
 class AddProductToCartAfter extends CheckoutCartAbstract implements ObserverInterface
 {
@@ -63,12 +65,18 @@ class AddProductToCartAfter extends CheckoutCartAbstract implements ObserverInte
         $items = $observer->getData('items');
 
         foreach ($items as $quoteItem) {
-            $subscriptionParams = $this->quoteItemHelper->getSubscriptionParams($quoteItem);
             try {
+                $subscriptionParams = $this->quoteItemHelper->getSubscriptionParams($quoteItem);
                 $this->updateQuoteItem($quoteItem, $subscriptionParams);
             } catch (LocalizedException $e) {
                 $quoteItem->isDeleted(true);
                 $this->messageManager->addErrorMessage($e->getMessage());
+            } catch (InvalidArgumentException $e) {
+                $this->logger->info('Could not add product to cart.');
+                $this->logger->info($e->getMessage());
+            } catch (HttpException $e) {
+                $this->logger->info('Could not add product to cart.');
+                $this->logger->info($e->getMessage());
             }
         }
     }
