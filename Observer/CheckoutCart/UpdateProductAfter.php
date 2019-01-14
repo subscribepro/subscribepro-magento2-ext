@@ -5,6 +5,8 @@ namespace Swarming\SubscribePro\Observer\CheckoutCart;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Swarming\SubscribePro\Model\Quote\SubscriptionOption\OptionProcessor;
+use SubscribePro\Exception\InvalidArgumentException;
+use SubscribePro\Exception\HttpException;
 
 class UpdateProductAfter extends CheckoutCartAbstract implements ObserverInterface
 {
@@ -59,11 +61,19 @@ class UpdateProductAfter extends CheckoutCartAbstract implements ObserverInterfa
             return;
         }
 
-        /** @var \Magento\Quote\Model\Quote\Item $quoteItem */
-        $quoteItem = $observer->getData('quote_item');
+        try {
+            /** @var \Magento\Quote\Model\Quote\Item $quoteItem */
+            $quoteItem = $observer->getData('quote_item');
 
-        $subscriptionParams = (array)$this->request->getParam(OptionProcessor::KEY_SUBSCRIPTION_OPTION);
+            $subscriptionParams = (array)$this->request->getParam(OptionProcessor::KEY_SUBSCRIPTION_OPTION);
 
-        $this->updateQuoteItem($quoteItem, $subscriptionParams);
+            $this->updateQuoteItem($quoteItem, $subscriptionParams);
+        } catch (InvalidArgumentException $e) {
+            $this->logger->debug('Cannot update subscription option on cart product.');
+            $this->logger->info($e->getMessage());
+        } catch (HttpException $e) {
+            $this->logger->debug('Cannot update subscription option on cart product.');
+            $this->logger->info($e->getMessage());
+        }
     }
 }

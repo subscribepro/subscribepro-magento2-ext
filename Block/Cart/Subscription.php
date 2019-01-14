@@ -6,6 +6,8 @@ use Magento\Framework\App\State as AppState;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Swarming\SubscribePro\Api\Data\ProductInterface as PlatformProductInterface;
+use SubscribePro\Exception\InvalidArgumentException;
+use SubscribePro\Exception\HttpException;
 
 class Subscription extends \Magento\Checkout\Block\Cart\Additional\Info
 {
@@ -40,6 +42,11 @@ class Subscription extends \Magento\Checkout\Block\Cart\Additional\Info
     protected $canRender = false;
 
     /**
+     * @var /Psr/Log/LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * @param \Magento\Catalog\Block\Product\Context $context
      * @param \Swarming\SubscribePro\Model\Config\General $generalConfig
      * @param \Swarming\SubscribePro\Platform\Manager\Product $platformProductManager
@@ -53,12 +60,14 @@ class Subscription extends \Magento\Checkout\Block\Cart\Additional\Info
         \Swarming\SubscribePro\Platform\Manager\Product $platformProductManager,
         \Swarming\SubscribePro\Helper\QuoteItem $quoteItemHelper,
         \Swarming\SubscribePro\Helper\Product $productHelper,
+        \Psr\Log\LoggerInterface $logger,
         array $data = []
     ) {
         $this->generalConfig = $generalConfig;
         $this->platformProductManager = $platformProductManager;
         $this->quoteItemHelper = $quoteItemHelper;
         $this->productHelper = $productHelper;
+        $this->logger = $logger;
         parent::__construct($context, $data);
     }
 
@@ -108,13 +117,25 @@ class Subscription extends \Magento\Checkout\Block\Cart\Additional\Info
     protected function generateJsLayout()
     {
         $subscriptionContainerId = 'subscription-container-' . $this->getItem()->getId();
+
+        try {
+            $subscriptionProduct = $this->getSubscriptionProduct()->toArray();
+        } catch (InvalidArgumentException $e) {
+            $this->logger->debug('Cannot load product from Subscribe Pro platform.');
+            $this->logger->info($e->getMessage());
+            $subscriptionProduct = [];
+        } catch (HttpException $e) {
+            $this->logger->debug('Cannot load product from Subscribe Pro platform.');
+            $this->logger->info($e->getMessage());
+            $subscriptionProduct = [];
+        }
         $subscriptionContainerComponent = [
             'config' => [
                 'oneTimePurchaseOption' => PlatformProductInterface::SO_ONETIME_PURCHASE,
                 'subscriptionOption' => PlatformProductInterface::SO_SUBSCRIPTION,
                 'subscriptionOnlyMode' => PlatformProductInterface::SOM_SUBSCRIPTION_ONLY,
                 'subscriptionAndOneTimePurchaseMode' => PlatformProductInterface::SOM_SUBSCRIPTION_AND_ONETIME_PURCHASE,
-                'product' => $this->getSubscriptionProduct()->toArray(),
+                'product' => $subscriptionProduct,
                 'quoteItemId' => $this->getItem()->getId(),
                 'qtyFieldSelector' => '#cart-' . $this->getItem()->getId() . '-qty'
             ]
