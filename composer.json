@@ -3,7 +3,7 @@
   "description": "Subscribe Pro Magento 2 Integration Extension",
   "type": "magento2-module",
   "license": [ "MIT" ],
-  "version": "1.1.4",
+  "version": "1.1.5",
   "authors": [
     {
       "name": "Swarming Technology",
@@ -15,17 +15,17 @@
     }
   ],
   "require": {
-    "magento/module-customer": "^101.0.0",
-    "magento/module-checkout": "^100.2.0",
-    "magento/module-sales": "^101.0.0",
-    "magento/module-quote": "^101.0.0",
-    "magento/module-payment": "^100.2.0",
-    "magento/module-vault": "^101.0.0",
-    "magento/module-store": "^100.2.0",
-    "magento/module-backend": "^100.2.0",
-    "magento/module-theme": "^100.2.0",
-    "magento/module-ui": "^101.0.0",
-    "magento/framework": "^101.0.0",
+    "magento/module-customer": "^101.0.0|^102.0.0",
+    "magento/module-checkout": "^100.2.0|^100.3.0",
+    "magento/module-sales": "^101.0.0|^102.0.0",
+    "magento/module-quote": "^101.0.0|^101.1.0",
+    "magento/module-payment": "^100.2.0|^100.3.0",
+    "magento/module-vault": "^101.0.0|^101.1.0",
+    "magento/module-store": "^100.2.0|^101.0.0",
+    "magento/module-backend": "^100.2.0|^101.0.0",
+    "magento/module-theme": "100.2.0|^101.0.0",
+    "magento/module-ui": "^101.0.0|^101.1.0",
+    "magento/framework": "^101.0.0|^102.0.0",
     "subscribepro/subscribepro-php": "~1.0.13"
   },
   "require-dev": {
