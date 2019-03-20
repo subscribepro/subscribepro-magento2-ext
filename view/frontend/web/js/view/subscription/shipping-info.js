@@ -37,6 +37,8 @@ define(
                 isAddressFormVisible: false
             },
 
+            isFormInline: false,
+
             addressOptions: null,
 
             initObservable: function () {
