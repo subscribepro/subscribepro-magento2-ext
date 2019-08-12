@@ -103,7 +103,7 @@ class ProductOption
      */
     protected function processProductOptions($quoteItem)
     {
-        switch ($productType->getProductType()) {
+        switch ($quoteItem->getProductType()) {
             case \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE:
                 $this->configurableProductCartItemProcessor->processOptions($quoteItem);
                 break;
