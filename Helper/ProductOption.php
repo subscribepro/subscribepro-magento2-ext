@@ -18,17 +18,49 @@ class ProductOption
      * @var \Magento\Framework\Webapi\ServiceInputProcessor
      */
     protected $inputProcessor;
+    
+    /**
+     * @var \Magento\ConfigurableProduct\Model\Quote\Item\CartItemProcessor
+     */
+    protected $configurableProductCartItemProcessor;
+
+    /**
+     * @var \Magento\Bundle\Model\CartItemProcessor
+     */
+    protected $bundleProductCartItemProcessor;
+
+    /**
+     * @var \Psr\Log\LoggerInterface
+     */
+    protected $logger;
+
+    /**
+     * @var \Magento\Catalog\Mode\CustomOptions\CustomOptionProcessor
+     */
+    protected $customOptionProcessor;
 
     /**
      * @param \Magento\Framework\Reflection\DataObjectProcessor $reflectionObjectProcessor
      * @param \Magento\Framework\Webapi\ServiceInputProcessor $inputProcessor
+     * @param \Magento\ConfigurableProduct\Model\Quote\Item\CartItemProcessor $configurableProductCartItemProcessor
+     * @param \Magento\Bundle\Model\CartItemProcessor $bundleProductCartItemProcessor
+     * @param \Magento\Catalog\Model\CustomOptions\CustomOptionProcessor $customOptionProcessor
+     * @param \Psr\Log\LoggerInterface $logger
      */
     public function __construct(
         \Magento\Framework\Reflection\DataObjectProcessor $reflectionObjectProcessor,
-        \Magento\Framework\Webapi\ServiceInputProcessor $inputProcessor
+        \Magento\Framework\Webapi\ServiceInputProcessor $inputProcessor,
+        \Magento\ConfigurableProduct\Model\Quote\Item\CartItemProcessor $configurableProductCartItemProcessor,
+        \Magento\Bundle\Model\CartItemProcessor $bundleProductCartItemProcessor,
+        \Magento\Catalog\Model\CustomOptions\CustomOptionProcessor $customOptionProcessor,
+        \Psr\Log\LoggerInterface $logger
     ) {
         $this->reflectionObjectProcessor = $reflectionObjectProcessor;
         $this->inputProcessor = $inputProcessor;
+        $this->configurableProductCartItemProcessor = $configurableProductCartItemProcessor;
+        $this->bundleProductCartItemProcessor = $bundleProductCartItemProcessor;
+        $this->customOptionProcessor = $customOptionProcessor;
+        $this->logger = $logger;
     }
 
     /**
@@ -52,8 +84,9 @@ class ProductOption
      * @param \Magento\Quote\Api\Data\CartItemInterface $quoteItem
      * @return array
      */
-    public function getProductOption($quoteItem)
+    public function getProductOption(CartItemInterface $quoteItem)
     {
+        $this->processProductOptions($quoteItem);
         $productOptions = $quoteItem->getProductOption();
         if ($productOptions) {
             $productOptions = $this->reflectionObjectProcessor->buildOutputDataArray($productOptions, ProductOptionInterface::class);
@@ -62,6 +95,27 @@ class ProductOption
             $productOptions = [];
         }
         return $productOptions;
+    }
+
+    /**
+     * @param \Magento\Quote\Api\Data\CartItemInterface $quoteItem
+     * @return null
+     */
+    protected function processProductOptions($quoteItem)
+    {
+        switch ($quoteItem->getProductType()) {
+            case \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE:
+                $this->configurableProductCartItemProcessor->processOptions($quoteItem);
+                break;
+            
+            case \Magento\Bundle\Model\Product\Type::TYPE_CODE:
+                $this->bundleProductCartItemProcessor->processOptions($quoteItem);
+                break;
+
+            default:
+                $this->customOptionProcessor->processOptions($quoteItem);
+                break;
+        }
     }
 
     /**
