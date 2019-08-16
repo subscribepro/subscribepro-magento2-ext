@@ -113,9 +113,11 @@ class ProductOption
                 break;
 
             default:
-                $this->customOptionProcessor->processOptions($quoteItem);
                 break;
         }
+
+        // Process custom options for any product type
+        $this->customOptionProcessor->processOptions($quoteItem);
     }
 
     /**
