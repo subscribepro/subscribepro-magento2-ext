@@ -11,6 +11,7 @@
                 <argument name="template" xsi:type="string">Magento_Vault::form/vault.phtml</argument>
             </action>
         </referenceBlock>
+        <referenceBlock name="items_grid" template="Swarming_SubscribePro::order/create/items/grid.phtml"/>
         <referenceBlock name="content">
             <block class="Swarming\SubscribePro\Block\Adminhtml\System\Config\Config" name="subscribe_pro_script" template="Swarming_SubscribePro::payment/script.phtml" after="billing_method"/>
         </referenceBlock>
