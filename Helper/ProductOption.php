@@ -65,18 +65,20 @@ class ProductOption
 
     /**
      * @param \Swarming\SubscribePro\Api\Data\SubscriptionInterface $subscription
+     * @param \Magento\Catalog\Api\Data\ProductInterface|\Magento\Catalog\Model\Product $product
      * @return \Magento\Quote\Api\Data\CartItemInterface
      */
-    public function getCartItem($subscription)
+    public function getCartItem($subscription, $product)
     {
         $cartItemData = [
             CartItemInterface::KEY_SKU => $subscription->getProductSku(),
-            CartItemInterface::KEY_QTY => $subscription->getQty(),
-            CartItemInterface::KEY_PRODUCT_OPTION => $subscription->getProductOption()
+            CartItemInterface::KEY_PRODUCT_OPTION => $subscription->getProductOption(),
         ];
 
-        /** @var \Magento\Quote\Api\Data\CartItemInterface $cartItem */
+        /** @var \Magento\Quote\Api\Data\CartItemInterface|\Magento\Quote\Model\Quote\Item $cartItem */
         $cartItem = $this->inputProcessor->convertValue($cartItemData, CartItemInterface::class);
+        $cartItem->setProduct($product);
+        $cartItem->setQty($subscription->getQty());
         return $cartItem;
     }
 

@@ -70,7 +70,7 @@ class OptionItemManager
 
         $subscriptionItem->setProduct($product);
 
-        $cartItem = $this->productOptionHelper->getCartItem($subscription);
+        $cartItem = $this->productOptionHelper->getCartItem($subscription, $product);
         $subscriptionItem->setOptions($this->getOptions($product, $cartItem));
 
         return $subscriptionItem;
