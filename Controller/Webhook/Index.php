@@ -3,8 +3,11 @@
 namespace Swarming\SubscribePro\Controller\Webhook;
 
 use Magento\Framework\App\Action\Action;
+use Magento\Framework\App\CsrfAwareActionInterface;
+use Magento\Framework\App\RequestInterface;
+use Magento\Framework\App\Request\InvalidRequestException;
 
-class Index extends Action
+class Index extends Action implements CsrfAwareActionInterface
 {
     /**
      * @var \Swarming\SubscribePro\Platform\Webhook\Processor
@@ -73,5 +76,13 @@ class Index extends Action
         } catch (\Exception $e) {
             $this->logger->critical($e);
         }
+    }
+
+    public function createCsrfValidationException(RequestInterface $request): ?InvalidRequestException {
+        return null;
+    }
+
+    public function validateForCsrf(RequestInterface $request): ?bool {
+        return true;
     }
 }
