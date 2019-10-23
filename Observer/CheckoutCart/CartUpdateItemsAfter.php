@@ -33,7 +33,9 @@ class CartUpdateItemsAfter extends CheckoutCartAbstract implements ObserverInter
         foreach ($quote->getAllItems() as $quoteItem) {
             try {
                 $subscriptionParams = $this->getSubscriptionParams($quoteItem, $infoDataObject);
-                $this->updateQuoteItem($quoteItem, $subscriptionParams);
+                if (!empty($subscriptionParams)) {
+                    $this->updateQuoteItem($quoteItem, $subscriptionParams);
+                }
             } catch (LocalizedException $e) {
                 $quoteItem->isDeleted(true);
                 $this->messageManager->addErrorMessage($e->getMessage());
