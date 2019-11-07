@@ -75,7 +75,7 @@ class OrderItem
             $this->setSubscriptionParams($orderItem, []);
         } elseif (!empty($subscriptionParams)) {
             unset($subscriptionParams[SubscriptionOptionInterface::IS_FULFILLING]);
-            unset($subscriptionParams[SubscriptionOptionInterface::SUBSCRIPTION_ID]);
+            unset($subscriptionParams[SubscriptionOptionInterface::OPTION]);
             $this->setSubscriptionParams($orderItem, $subscriptionParams);
         }
     }

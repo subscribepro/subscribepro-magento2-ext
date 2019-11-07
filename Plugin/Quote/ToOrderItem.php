@@ -34,6 +34,7 @@ class ToOrderItem
         $orderItem = $proceed($item, $data);
 
         $this->orderItemHelper->updateAdditionalOptions($orderItem);
+        $this->orderItemHelper->cleanSubscriptionParams($orderItem);
         return $orderItem;
     }
 }
