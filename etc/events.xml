@@ -13,6 +13,9 @@
         <observer name="subscribe_pro_before_order" instance="Swarming\SubscribePro\Observer\Checkout\SubmitBefore" />
     </event>
     <event name="checkout_submit_all_after">
-        <observer name="subscribe_pro" instance="Swarming\SubscribePro\Observer\Checkout\SubmitAllAfter"/>
+        <observer name="subscribe_pro" instance="Swarming\SubscribePro\Observer\Checkout\SubmitAllAfter" />
+    </event>
+    <event name="sales_quote_item_set_product">
+        <observer name="subscribe_pro_sales_quote_item_set_product" instance="Swarming\SubscribePro\Observer\QuoteItem\SetProduct" />
     </event>
 </config>
