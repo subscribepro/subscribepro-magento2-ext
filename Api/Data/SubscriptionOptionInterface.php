@@ -12,22 +12,17 @@ interface SubscriptionOptionInterface
 
     const INTERVAL = 'interval';
 
-    const IS_FULFILLING = 'is_fulfilling';
+    const ITEM_FULFILLS_SUBSCRIPTION = 'item_fulfills_subscription';
 
     const SUBSCRIPTION_ID = 'subscription_id';
 
     const REORDER_ORDINAL = 'reorder_ordinal';
 
-    /**
-     * @return string|null
-     */
-    public function getOption();
+    const CREATE_NEW_SUBSCRIPTION_AT_CHECKOUT = 'create_new_subscription_at_checkout';
 
-    /**
-     * @param string $option
-     * @return $this
-     */
-    public function setOption($option);
+    const NEXT_ORDER_DATE = 'next_order_date';
+
+    const FIXED_PRICE = 'fixed_price';
 
     /**
      * @return string|null
@@ -43,13 +38,13 @@ interface SubscriptionOptionInterface
     /**
      * @return bool
      */
-    public function getIsFulfilling();
+    public function getItemFulfillsSubscription();
 
     /**
-     * @param bool $isFulfilling
+     * @param bool $itemFulfillsSubscription
      * @return $this
      */
-    public function setIsFulfilling($isFulfilling);
+    public function setItemFulfillsSubscription($itemFulfillsSubscription);
 
     /**
      * @return int|null
@@ -74,9 +69,37 @@ interface SubscriptionOptionInterface
     public function setReorderOrdinal($reorderOrdinal);
 
     /**
+     * @param bool $createNewSubscriptionAtCheckout
+     * @return $this
+     */
+    public function setCreateNewSubscriptionAtCheckout($createNewSubscriptionAtCheckout);
+
+    /**
      * @return bool
      */
-    public function getCreatesNewSubscription();
+    public function getCreateNewSubscriptionAtCheckout();
+
+    /**
+     * @param bool $nextOrderDate
+     * @return $this
+     */
+    public function setNextOrderDate($nextOrderDate);
+
+    /**
+     * @return string
+     */
+    public function getNextOrderDate();
+
+    /**
+     * @param double $fixedPrice
+     * @return $this
+     */
+    public function setFixedPrice($fixedPrice);
+
+    /**
+     * @return double|null
+     */
+    public function getFixedPrice();
 
     /**
      * @return mixed[]

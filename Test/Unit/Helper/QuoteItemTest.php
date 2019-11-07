@@ -304,10 +304,10 @@ class QuoteItemTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @param string $buyRequestValue
-     * @param bool $isFulfilsSubscription
-     * @dataProvider isFulfilsSubscriptionDataProvider
+     * @param bool $isItemFulfilsSubscription
+     * @dataProvider isItemFulfilsSubscriptionDataProvider
      */
-    public function testIsFulfilsSubscription($buyRequestValue, $isFulfilsSubscription) {
+    public function testIsItemFulfilsSubscription($buyRequestValue, $isItemFulfilsSubscription) {
         $buyRequestMock = $this->createOptionMock();
         $buyRequestMock->expects($this->once())->method('getValue')->willReturn($buyRequestValue);
 
@@ -318,29 +318,29 @@ class QuoteItemTest extends \PHPUnit\Framework\TestCase
             ->willReturn($buyRequestMock);
 
         $this->assertEquals(
-            $isFulfilsSubscription,
-            $this->quoteItemHelper->isFulfilsSubscription($quoteItemMock)
+            $isItemFulfilsSubscription,
+            $this->quoteItemHelper->isItemFulfillsSubscription($quoteItemMock)
         );
     }
 
     /**
      * @return array
      */
-    public function isFulfilsSubscriptionDataProvider()
+    public function isItemFulfilsSubscriptionDataProvider()
     {
         return [
             'Without subscription params' => [
                 'buyRequestValue' => json_encode([
                     'key' => 'value'
                 ]),
-                'isFulfilsSubscription' => false
+                'isItemFulfilsSubscription' => false
             ],
             'Without fulfils subscription' => [
                 'buyRequestValue' => json_encode([
                     'some_key' => [],
                     OptionProcessor::KEY_SUBSCRIPTION_OPTION => ['params']
                 ]),
-                'isFulfilsSubscription' => false
+                'isItemFulfilsSubscription' => false
             ],
             'With fulfils subscription: false' => [
                 'buyRequestValue' => json_encode([
@@ -348,7 +348,7 @@ class QuoteItemTest extends \PHPUnit\Framework\TestCase
                         SubscriptionOptionInterface::IS_FULFILLING => 0
                     ]
                 ]),
-                'isFulfilsSubscription' => false
+                'isItemFulfilsSubscription' => false
             ],
             'With fulfils subscription: true' => [
                 'buyRequestValue' => json_encode([
@@ -356,7 +356,7 @@ class QuoteItemTest extends \PHPUnit\Framework\TestCase
                         SubscriptionOptionInterface::IS_FULFILLING => 1
                     ]
                 ]),
-                'isFulfilsSubscription' => true
+                'isItemFulfilsSubscription' => true
             ]
         ];
     }
@@ -369,7 +369,7 @@ class QuoteItemTest extends \PHPUnit\Framework\TestCase
     public function testIsSubscriptionEnabled($subscriptionOption, $isSubscriptionEnabled) {
         $buyRequestValue = json_encode([
             OptionProcessor::KEY_SUBSCRIPTION_OPTION => [
-                SubscriptionOptionInterface::OPTION => $subscriptionOption
+                SubscriptionOptionInterface::CREATE_NEW_SUBSCRIPTION_AT_CHECKOUT => $subscriptionOption == PlatformProductInterface::SO_SUBSCRIPTION
             ]
         ]);
 
@@ -384,7 +384,7 @@ class QuoteItemTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals(
             $isSubscriptionEnabled,
-            $this->quoteItemHelper->isSubscriptionEnabled($quoteItemMock)
+            $this->quoteItemHelper->isCreateNewSubscriptionAtCheckout($quoteItemMock)
         );
     }
 
@@ -407,15 +407,15 @@ class QuoteItemTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @param string $subscriptionOption
-     * @param bool $isFulfilsSubscription
+     * @param bool $isItemFulfilsSubscription
      * @param bool $hasSubscription
      * @dataProvider hasSubscriptionDataProvider
      */
-    public function testHasSubscription($subscriptionOption, $isFulfilsSubscription, $hasSubscription) {
+    public function testHasSubscription($subscriptionOption, $isItemFulfilsSubscription, $hasSubscription) {
         $buyRequestValue = json_encode([
             OptionProcessor::KEY_SUBSCRIPTION_OPTION => [
                 SubscriptionOptionInterface::OPTION => $subscriptionOption,
-                SubscriptionOptionInterface::IS_FULFILLING => $isFulfilsSubscription,
+                SubscriptionOptionInterface::IS_FULFILLING => $isItemFulfilsSubscription,
             ]
         ]);
 
@@ -442,22 +442,22 @@ class QuoteItemTest extends \PHPUnit\Framework\TestCase
         return [
             'No subscription option: no fulfils subscription: no subscription' => [
                 'subscriptionOption' => PlatformProductInterface::SO_ONETIME_PURCHASE,
-                'isFulfilsSubscription' => false,
+                'isItemFulfilsSubscription' => false,
                 'hasSubscription' => false
             ],
             'Subscription option: no fulfils subscription: has subscription' => [
                 'subscriptionOption' => PlatformProductInterface::SO_SUBSCRIPTION,
-                'isFulfilsSubscription' => false,
+                'isItemFulfilsSubscription' => false,
                 'hasSubscription' => true
             ],
             'No subscription option: fulfils subscription: has subscription' => [
                 'subscriptionOption' => PlatformProductInterface::SO_ONETIME_PURCHASE,
-                'isFulfilsSubscription' => true,
+                'isItemFulfilsSubscription' => true,
                 'hasSubscription' => true
             ],
             'Subscription option: fulfils subscription: has subscription' => [
                 'subscriptionOption' => PlatformProductInterface::SO_SUBSCRIPTION,
-                'isFulfilsSubscription' => true,
+                'isItemFulfilsSubscription' => true,
                 'hasSubscription' => true
             ],
         ];

@@ -66,9 +66,7 @@ class Status extends Base
      */
     public function validate(\Magento\Framework\Model\AbstractModel $model)
     {
-        $subscriptionOptions = $this->getSubscriptionOptions($model);
-
-        if ($this->subscriptionOptionsAreFalse($subscriptionOptions)) {
+        if ($this->subscriptionOptionsAreFalse($model)) {
             return false;
         }
 
@@ -81,13 +79,13 @@ class Status extends Base
         // Handle different status types
         switch ($conditionValue) {
             case self::SUBSCRIPTION_STATUS_ANY:
-                $matchResult = ($subscriptionOptions['new_subscription'] || $subscriptionOptions['is_fulfilling']);
+                $matchResult = $this->isItemNewOrFulfillingSubscription($model);
                 break;
             case self::SUBSCRIPTION_STATUS_NEW:
-                $matchResult = $subscriptionOptions['new_subscription'];
+                $matchResult = $this->isNewSubscription($model);
                 break;
             case self::SUBSCRIPTION_STATUS_REORDER:
-                $matchResult = $subscriptionOptions['is_fulfilling'];
+                $matchResult = $this->isItemFulfillsSubscription($model);
                 break;
             default:
                 $matchResult = false;

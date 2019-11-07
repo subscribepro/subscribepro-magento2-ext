@@ -68,7 +68,7 @@ class ShipperMapperPlugin
      */
     private function determineSubscriptionCode($item)
     {
-        if ($this->quoteItemHelper->isFulfilsSubscription($item)) {
+        if ($this->quoteItemHelper->isItemFulfillsSubscription($item)) {
             return $this->shipperHQConfig->getRecurringOrderGroup();
         }
         if ($this->quoteItemHelper->hasSubscription($item)) {

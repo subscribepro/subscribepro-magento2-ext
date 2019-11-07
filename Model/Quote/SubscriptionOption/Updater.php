@@ -39,18 +39,16 @@ class Updater
      */
     public function update($quoteItem, $platformProduct, $subscriptionOption, $subscriptionInterval)
     {
-        $subscriptionOption = $this->getSubscriptionOption($platformProduct, $subscriptionOption);
-        if ($subscriptionOption == PlatformProductInterface::SO_SUBSCRIPTION) {
+        $createNewSubscriptionAtCheckout = false;
+        $subscriptionInterval = null;
+        if (PlatformProductInterface::SO_SUBSCRIPTION == $this->getSubscriptionOption($platformProduct, $subscriptionOption)) {
             $this->validateIntervals($platformProduct);
             $this->validateQuantity($quoteItem, $platformProduct);
             $subscriptionInterval = $this->getSubscriptionInterval($quoteItem, $platformProduct, $subscriptionInterval);
-            $subscriptionOption = PlatformProductInterface::SO_SUBSCRIPTION;
-        } else {
-            $subscriptionOption = PlatformProductInterface::SO_ONETIME_PURCHASE;
-            $subscriptionInterval = null;
+            $createNewSubscriptionAtCheckout = true;
         }
 
-        $this->quoteItemHelper->setSubscriptionParam($quoteItem, SubscriptionOptionInterface::OPTION, $subscriptionOption);
+        $this->quoteItemHelper->setSubscriptionParam($quoteItem, SubscriptionOptionInterface::CREATE_NEW_SUBSCRIPTION_AT_CHECKOUT, $createNewSubscriptionAtCheckout);
         $this->quoteItemHelper->setSubscriptionParam($quoteItem, SubscriptionOptionInterface::INTERVAL, $subscriptionInterval);
 
         return $this->getWarnings();
@@ -64,9 +62,9 @@ class Updater
     protected function getSubscriptionOption(PlatformProductInterface $platformProduct, $subscriptionOption = null)
     {
         if ($platformProduct->getSubscriptionOptionMode() == PlatformProductInterface::SOM_SUBSCRIPTION_ONLY) {
-            $subscriptionOption = PlatformProductInterface::SO_SUBSCRIPTION;
+            return PlatformProductInterface::SO_SUBSCRIPTION;
         } else if (!$this->validateIntervals($platformProduct, true)) {
-            $subscriptionOption = PlatformProductInterface::SO_ONETIME_PURCHASE;
+            return PlatformProductInterface::SO_ONETIME_PURCHASE;
         }
         return $subscriptionOption ?: $platformProduct->getDefaultSubscriptionOption();
     }

@@ -155,10 +155,10 @@ class SubscriptionCreatorTest extends \PHPUnit\Framework\TestCase
     /**
      * @param bool $isVirtual
      * @param bool $isSubscriptionEnabled
-     * @param bool $isFulfilsSubscription
+     * @param bool $isItemFulfilsSubscription
      * @dataProvider createSubscriptionsIfNotSubscriptionItemDataProvider
      */
-    public function testCreateSubscriptionsIfNoSubscriptionShippingItems($isVirtual, $isSubscriptionEnabled, $isFulfilsSubscription) {
+    public function testCreateSubscriptionsIfNoSubscriptionShippingItems($isVirtual, $isSubscriptionEnabled, $isItemFulfilsSubscription) {
         $customerId = 233;
         $paymentEntityId = 1235;
         $paymentProfileId = 1232;
@@ -216,9 +216,9 @@ class SubscriptionCreatorTest extends \PHPUnit\Framework\TestCase
             ->willReturn($isSubscriptionEnabled);
 
         $this->quoteItemHelperMock->expects($this->any())
-            ->method('isFulfilsSubscription')
+            ->method('isItemFulfilsSubscription')
             ->with($quoteItemMock)
-            ->willReturn($isFulfilsSubscription);
+            ->willReturn($isItemFulfilsSubscription);
 
         $this->quoteItemSubscriptionCreatorMock->expects($this->never())->method('create');
 
@@ -237,17 +237,17 @@ class SubscriptionCreatorTest extends \PHPUnit\Framework\TestCase
             'Virtual product' => [
                 'isVirtual' => true,
                 'isSubscriptionEnabled' => false,
-                'isFulfilsSubscription' => false
+                'isItemFulfilsSubscription' => false
             ],
             'Subscription not enabled' => [
                 'isVirtual' => false,
                 'isSubscriptionEnabled' => false,
-                'isFulfilsSubscription' => false
+                'isItemFulfilsSubscription' => false
             ],
             'Quote item fulfils subscription' => [
                 'isVirtual' => false,
                 'isSubscriptionEnabled' => true,
-                'isFulfilsSubscription' => true
+                'isItemFulfilsSubscription' => true
             ],
         ];
     }
@@ -326,7 +326,7 @@ class SubscriptionCreatorTest extends \PHPUnit\Framework\TestCase
             ->willReturnMap(array_map(function($quoteItem) {return [$quoteItem, true];}, $quoteItems));
 
         $this->quoteItemHelperMock->expects($this->exactly(count($quoteItems)))
-            ->method('isFulfilsSubscription')
+            ->method('isItemFulfilsSubscription')
             ->willReturnMap(array_map(function($quoteItem) {return [$quoteItem, false];}, $quoteItems));
 
         $this->quoteItemSubscriptionCreatorMock->expects($this->exactly(count($quoteItems)))
@@ -467,8 +467,8 @@ class SubscriptionCreatorTest extends \PHPUnit\Framework\TestCase
         $isSubscriptionEnabledMap = array_map(function($quoteItem) {return [$quoteItem, true];}, $quoteItems);
         $isSubscriptionEnabledMap[] = [$virtualQuoteItemMock, true];
 
-        $isFulfilsSubscriptionMap = array_map(function($quoteItem) {return [$quoteItem, false];}, $quoteItems);
-        $isFulfilsSubscriptionMap[] = [$virtualQuoteItemMock, false];
+        $isItemFulfilsSubscriptionMap = array_map(function($quoteItem) {return [$quoteItem, false];}, $quoteItems);
+        $isItemFulfilsSubscriptionMap[] = [$virtualQuoteItemMock, false];
 
         $this->platformCustomerManagerMock->expects($this->once())
             ->method('getCustomerById')
@@ -479,9 +479,9 @@ class SubscriptionCreatorTest extends \PHPUnit\Framework\TestCase
             ->method('isSubscriptionEnabled')
             ->willReturnMap($isSubscriptionEnabledMap);
 
-        $this->quoteItemHelperMock->expects($this->exactly(count($isFulfilsSubscriptionMap)))
-            ->method('isFulfilsSubscription')
-            ->willReturnMap($isFulfilsSubscriptionMap);
+        $this->quoteItemHelperMock->expects($this->exactly(count($isItemFulfilsSubscriptionMap)))
+            ->method('isItemFulfilsSubscription')
+            ->willReturnMap($isItemFulfilsSubscriptionMap);
 
         $this->quoteItemSubscriptionCreatorMock->expects($this->exactly(count($subscriptionMap)))
             ->method('create')

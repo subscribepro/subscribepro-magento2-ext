@@ -52,6 +52,71 @@ class Base extends \Magento\Rule\Model\Condition\AbstractCondition
     }
 
     /**
+     * Is the quote item going to create a new subscription?
+     *
+     * @param \Magento\Framework\Model\AbstractModel $model
+     * @return bool
+     */
+    protected function isNewSubscription(\Magento\Framework\Model\AbstractModel $model) {
+        $params = $this->quoteItemHelper->getSubscriptionParams($model);
+        return isset($params['create_new_subscription_at_checkout']) ? $params['create_new_subscription_at_checkout'] : false;
+    }
+
+    /**
+     * Is the quote item fulfilling an existing subscription
+     *
+     * @param \Magento\Framework\Model\AbstractModel $model
+     * @return bool
+     */
+    protected function isItemFulfillsSubscription(\Magento\Framework\Model\AbstractModel $model) {
+        $params = $this->quoteItemHelper->getSubscriptionParams($model);
+        return isset($params['item_fulfills_subscription']) ? $params['item_fulfills_subscription'] : false;
+    }
+
+    /**
+     * Is the quote item a new subscription or fulfilling an existing subscription
+     *
+     * @param \Magento\Framework\Model\AbstractModel $model
+     * @return bool
+     */
+    protected function isItemNewOrFulfillingSubscription(\Magento\Framework\Model\AbstractModel $model) {
+        return $this->isNewSubscription($model) || $this->isItemFulfillsSubscription($model);
+    }
+
+    /**
+     * Does the quote item have a reorder ordinal?
+     *
+     * @param \Magento\Framework\Model\AbstractModel $model
+     * @return bool
+     */
+    protected function hasReorderOrdinal(\Magento\Framework\Model\AbstractModel $model) {
+        $params = $this->quoteItemHelper->getSubscriptionParams($model);
+        return isset($params['reorder_ordinal']);
+    }
+
+    /**
+     * Does the quote item have a reorder ordinal?
+     *
+     * @param \Magento\Framework\Model\AbstractModel $model
+     * @return string|null
+     */
+    protected function getReorderOrdinal(\Magento\Framework\Model\AbstractModel $model) {
+        $params = $this->quoteItemHelper->getSubscriptionParams($model);
+        return $this->hasReorderOrdinal($model) ? $params['reorder_ordinal'] : null;
+    }
+
+    /**
+     * Get the quote item interval
+     *
+     * @param \Magento\Framework\Model\AbstractModel $model
+     * @return string|null
+     */
+    protected function getInterval(\Magento\Framework\Model\AbstractModel $model) {
+        $params = $this->quoteItemHelper->getSubscriptionParams($model);
+        return isset($params['interval']) ? $params['interval'] : null;
+    }
+
+    /**
      * Helper that retrieves the subscription options associated with the quote
      *
      * @param \Magento\Framework\Model\AbstractModel $model
@@ -100,15 +165,14 @@ class Base extends \Magento\Rule\Model\Condition\AbstractCondition
     }
 
     /**
-     * @param array $subscriptionOptions
+     * @param \Magento\Framework\Model\AbstractModel $model
      * @return bool
      */
-    protected function subscriptionOptionsAreFalse($subscriptionOptions)
+    protected function subscriptionOptionsAreFalse(\Magento\Framework\Model\AbstractModel $model)
     {
-        // $subscriptionOptions is an array that holds the subscription attributes of the quote item
-        return !$subscriptionOptions['new_subscription']
-            && !$subscriptionOptions['is_fulfilling']
-            && !$subscriptionOptions['reorder_ordinal']
-            && !$subscriptionOptions['interval'];
+        return !$this->isNewSubscription($model)
+            && !$this->isItemFulfillsSubscription($model)
+            && !$this->hasReorderOrdinal($model)
+            && !$this->getInterval($model);
     }
 }

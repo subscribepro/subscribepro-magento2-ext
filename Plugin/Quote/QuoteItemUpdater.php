@@ -6,6 +6,7 @@ use Magento\Framework\App\State as AppState;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Quote\Model\Quote\Item as QuoteItem;
+use SubscribePro\Service\Product\ProductInterface as PlatformProductInterface;
 
 class QuoteItemUpdater
 {
@@ -151,9 +152,9 @@ class QuoteItemUpdater
             !isset($quoteItemParams['admin_subscription_option']['option'])
             || !strlen($quoteItemParams['admin_subscription_option']['option'])
         ) {
-            return 'onetime_purchase';
+            return false;
         }
-        return $quoteItemParams['admin_subscription_option']['option'];
+        return $quoteItemParams['admin_subscription_option']['option'] == PlatformProductInterface::SO_SUBSCRIPTION;
     }
 
     protected function getInterval(array $quoteItemParams)

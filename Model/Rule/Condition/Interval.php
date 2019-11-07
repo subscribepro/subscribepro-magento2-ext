@@ -21,23 +21,20 @@ class Interval extends Base
     }
 
     /**
-     * Validate Customer First Order Rule Condition
+     * Validate Interval Condition
      * @param \Magento\Framework\Model\AbstractModel $model
      * @return bool
      */
     public function validate(\Magento\Framework\Model\AbstractModel $model)
     {
-        $subscriptionOptions = $this->getSubscriptionOptions($model);
-
-        if ($this->subscriptionOptionsAreFalse($subscriptionOptions)) {
-            return false;
-        }
-
-        // Check quote item attributes
-        if ($subscriptionOptions['new_subscription'] || $subscriptionOptions['is_fulfilling']) {
-            return $this->validateAttribute($subscriptionOptions['interval']);
-        } else {
-            return false;
-        }
+        // If the subscription parameters are not given
+        // or if the item is not a new or recurring subscription order
+        // or if there is no valid interval set, then return false;
+        // otherwise, return the interval
+        return !$this->subscriptionOptionsAreFalse($model)
+            && $this->isItemNewOrFulfillingSubscription($model)
+            && ($interval = $this->validateAttribute($this->getInterval($model)))
+        ? $interval
+        : false;
     }
 }

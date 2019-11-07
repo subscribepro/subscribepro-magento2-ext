@@ -40,25 +40,21 @@ class OrderItem
      */
     public function updateAdditionalOptions($orderItem, $subscriptionId = null)
     {
-        $subscriptionOption = $this->getSubscriptionParam($orderItem, SubscriptionOptionInterface::OPTION);
-        if (empty($subscriptionOption)) {
-            return;
-        }
-
+        $createNewSubscriptionAtCheckout = $this->getSubscriptionParam($orderItem, SubscriptionOptionInterface::CREATE_NEW_SUBSCRIPTION_AT_CHECKOUT);
+        $itemFulfillsSubscription = $this->getSubscriptionParam($orderItem, SubscriptionOptionInterface::ITEM_FULFILLS_SUBSCRIPTION);
+        $subscriptionId = $subscriptionId ?: $this->getSubscriptionParam($orderItem, SubscriptionOptionInterface::SUBSCRIPTION_ID);
+        
         $additionalOptions = $this->getAdditionalOptions($orderItem);
-
-        if (PlatformProductInterface::SO_ONETIME_PURCHASE == $subscriptionOption) {
+        if (!$createNewSubscriptionAtCheckout && !$itemFulfillsSubscription) {
             $additionalOptions[] = [
                 'label' => (string)__('Delivery'),
                 'value' => (string)__('One Time')
             ];
-        } else if ($subscriptionId || $this->getSubscriptionParam($orderItem, SubscriptionOptionInterface::SUBSCRIPTION_ID)) {
-            $subscriptionInterval = $this->getSubscriptionParam($orderItem, SubscriptionOptionInterface::INTERVAL);
+        } else if ($subscriptionId) {
             $additionalOptions[] = [
                 'label' => (string)__('Regular Delivery'),
-                'value' => (string)__($subscriptionInterval)
+                'value' => (string)__($this->getSubscriptionParam($orderItem, SubscriptionOptionInterface::INTERVAL))
             ];
-            $subscriptionId = $subscriptionId ?: $this->getSubscriptionParam($orderItem, SubscriptionOptionInterface::SUBSCRIPTION_ID);
             $additionalOptions[] = [
                 'label' => (string)__('Subscription Id'),
                 'value' => $subscriptionId,

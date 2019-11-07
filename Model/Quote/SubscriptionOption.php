@@ -13,23 +13,6 @@ class SubscriptionOption extends AbstractSimpleObject implements SubscriptionOpt
     /**
      * @return string|null
      */
-    public function getOption()
-    {
-        return $this->_get(self::OPTION);
-    }
-
-    /**
-     * @param string $option
-     * @return $this
-     */
-    public function setOption($option)
-    {
-        return $this->setData(self::OPTION, $option);
-    }
-
-    /**
-     * @return string|null
-     */
     public function getInterval()
     {
         return $this->_get(self::INTERVAL);
@@ -47,18 +30,18 @@ class SubscriptionOption extends AbstractSimpleObject implements SubscriptionOpt
     /**
      * @return bool
      */
-    public function getIsFulfilling()
+    public function getItemFulfillsSubscription()
     {
-        return (bool)$this->_get(self::IS_FULFILLING);
+        return (bool)$this->_get(self::ITEM_FULFILLS_SUBSCRIPTION);
     }
 
     /**
-     * @param bool $isFulfilling
+     * @param bool $itemFulfillsSubscription
      * @return $this
      */
-    public function setIsFulfilling($isFulfilling)
+    public function setItemFulfillsSubscription($itemFulfillsSubscription)
     {
-        $this->setData(self::IS_FULFILLING, $isFulfilling);
+        $this->setData(self::ITEM_FULFILLS_SUBSCRIPTION, $itemFulfillsSubscription);
         return $this;
     }
 
@@ -97,12 +80,53 @@ class SubscriptionOption extends AbstractSimpleObject implements SubscriptionOpt
     }
 
     /**
-     * This determines if a subscription was ordered from the frontend
-     *
+     * @param bool $createNewSubscriptionAtCheckout
+     * @return $this
+     */
+    public function setCreateNewSubscriptionAtCheckout($createNewSubscriptionAtCheckout)
+    {
+        return $this->setData(self::CREATE_NEW_SUBSCRIPTION_AT_CHECKOUT, $createNewSubscriptionAtCheckout);
+    }
+
+    /**
      * @return bool
      */
-    public function getCreatesNewSubscription()
+    public function getCreateNewSubscriptionAtCheckout()
     {
-        return (bool)($this->getOption() === 'subscription');
+        return $this->_get(self::CREATE_NEW_SUBSCRIPTION_AT_CHECKOUT);
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getNextOrderDate()
+    {
+        return $this->_get(self::NEXT_ORDER_DATE);
+    }
+
+    /**
+     * @param string $nextOrderDate
+     * @return $this
+     */
+    public function setNextOrderDate($nextOrderDate)
+    {
+        return $this->setData(self::NEXT_ORDER_DATE, $nextOrderDate);
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getFixedPrice()
+    {
+        return $this->_get(self::FIXED_PRICE);
+    }
+
+    /**
+     * @param string $fixedPrice
+     * @return $this
+     */
+    public function setFixedPrice($fixedPrice)
+    {
+        return $this->setData(self::FIXED_PRICE, $fixedPrice);
     }
 }

@@ -36,34 +36,25 @@ class QuoteItem
      */
     public function hasSubscription($item)
     {
-        return $this->isSubscriptionEnabled($item) || $this->isFulfilsSubscription($item);
+        return $this->getCreateNewSubscriptionAtCheckout($item) || $this->isItemFulfillsSubscription($item);
     }
 
     /**
      * @param \Magento\Quote\Model\Quote\Item $item
      * @return bool
      */
-    public function isSubscriptionEnabled($item)
+    public function isItemFulfillsSubscription($item)
     {
-        return $this->getSubscriptionOption($item) == PlatformProductInterface::SO_SUBSCRIPTION;
-    }
-
-    /**
-     * @param \Magento\Quote\Model\Quote\Item $item
-     * @return bool
-     */
-    public function isFulfilsSubscription($item)
-    {
-        return (bool)$this->getParam($item, SubscriptionOptionInterface::IS_FULFILLING);
+        return (bool) $this->getParam($item, SubscriptionOptionInterface::ITEM_FULFILLS_SUBSCRIPTION);
     }
 
     /**
      * @param \Magento\Quote\Model\Quote\Item $item
      * @return null|string
      */
-    public function getSubscriptionOption($item)
+    public function getCreateNewSubscriptionAtCheckout($item)
     {
-        return $this->getParam($item, SubscriptionOptionInterface::OPTION);
+        return $this->getParam($item, SubscriptionOptionInterface::CREATE_NEW_SUBSCRIPTION_AT_CHECKOUT);
     }
 
     /**
@@ -73,6 +64,24 @@ class QuoteItem
     public function getSubscriptionInterval($item)
     {
         return $this->getParam($item, SubscriptionOptionInterface::INTERVAL);
+    }
+
+    /**
+     * @param \Magento\Quote\Model\Quote\Item $item
+     * @return null|string
+     */
+    public function getNextOrderDate($item)
+    {
+        return $this->getParam($item, SubscriptionOptionInterface::NEXT_ORDER_DATE);
+    }
+
+    /**
+     * @param \Magento\Quote\Model\Quote\Item $item
+     * @return null|string
+     */
+    public function getFixedPrice($item)
+    {
+        return $this->getParam($item, SubscriptionOptionInterface::FIXED_PRICE);
     }
 
     /**

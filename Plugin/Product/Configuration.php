@@ -55,13 +55,13 @@ class Configuration
     protected function getSubscriptionOptions($item)
     {
         $options = [];
-        $subscriptionOption = $this->quoteItemHelper->getSubscriptionOption($item);
-        if (ProductInterface::SO_ONETIME_PURCHASE == $subscriptionOption) {
+        $createNewSubscriptionAtCheckout = $this->quoteItemHelper->getCreateNewSubscriptionAtCheckout($item);
+        if (!$createNewSubscriptionAtCheckout) {
             $options[] = [
                 'label' => (string)__('Delivery'),
                 'value' => (string)__('One Time')
             ];
-        } else if (ProductInterface::SO_SUBSCRIPTION == $subscriptionOption) {
+        } else {
             $subscriptionInterval = $this->quoteItemHelper->getSubscriptionInterval($item);
             $options[] = [
                 'label' => (string)__('Regular Delivery'),

@@ -126,8 +126,8 @@ class SubscriptionCreator
      */
     protected function canCreateSubscription($quoteItem)
     {
-        return $this->quoteItemHelper->isSubscriptionEnabled($quoteItem)
-            && !$this->quoteItemHelper->isFulfilsSubscription($quoteItem);
+        return $this->quoteItemHelper->getCreateNewSubscriptionAtCheckout($quoteItem)
+            && !$this->quoteItemHelper->isItemFulfillsSubscription($quoteItem);
     }
 
     /**

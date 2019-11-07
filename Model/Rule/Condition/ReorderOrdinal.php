@@ -21,24 +21,20 @@ class ReorderOrdinal extends Base
     }
 
     /**
-     * Validate Customer First Order Rule Condition
+     * Validate Reorder Ordinal Condition
      * @param \Magento\Framework\Model\AbstractModel $model
      * @return bool
      */
     public function validate(\Magento\Framework\Model\AbstractModel $model)
     {
-        $subscriptionOptions = $this->getSubscriptionOptions($model);
-
-        if ($this->subscriptionOptionsAreFalse($subscriptionOptions)) {
-            return false;
-        }
-
-        // Check quote item attributes
-        if ($subscriptionOptions['new_subscription'] || $subscriptionOptions['is_fulfilling']) {
-            // This is a new subscription
-            return $this->validateAttribute($subscriptionOptions['reorder_ordinal']);
-        } else {
-            return false;
-        }
+        // If the subscription parameters are not given
+        // or if the item is not a new or recurring subscription order
+        // or if there is no valid interval set, then return false;
+        // otherwise, return the interval
+        return !$this->subscriptionOptionsAreFalse($model)
+            && $this->isItemNewOrFulfillingSubscription($model)
+            && ($reorder_ordinal = $this->validateAttribute($this->getReorderOrdinal($model)))
+        ? $reorder_ordinal
+        : false;
     }
 }
