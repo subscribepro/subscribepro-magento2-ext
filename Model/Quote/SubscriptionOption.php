@@ -97,6 +97,23 @@ class SubscriptionOption extends AbstractSimpleObject implements SubscriptionOpt
     }
 
     /**
+     * @param bool $itemAddedBySubscribePro
+     * @return $this
+     */
+    public function setItemAddedBySubscribePro($itemAddedBySubscribePro)
+    {
+        return $this->setData(self::ITEM_ADDED_BY_SUBSCRIBE_PRO, $itemAddedBySubscribePro);
+    }
+
+    /**
+     * @return bool
+     */
+    public function getItemAddedBySubscribePro()
+    {
+        return $this->_get(self::ITEM_ADDED_BY_SUBSCRIBE_PRO);
+    }
+
+    /**
      * @return string|null
      */
     public function getNextOrderDate()

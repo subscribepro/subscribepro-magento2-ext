@@ -20,6 +20,8 @@ interface SubscriptionOptionInterface
 
     const CREATE_NEW_SUBSCRIPTION_AT_CHECKOUT = 'create_new_subscription_at_checkout';
 
+    const ITEM_ADDED_BY_SUBSCRIBE_PRO = 'item_added_by_subscribe_pro';
+
     const NEXT_ORDER_DATE = 'next_order_date';
 
     const FIXED_PRICE = 'fixed_price';
@@ -45,6 +47,17 @@ interface SubscriptionOptionInterface
      * @return $this
      */
     public function setItemFulfillsSubscription($itemFulfillsSubscription);
+
+    /**
+     * @return bool
+     */
+    public function getItemAddedBySubscribePro();
+
+    /**
+     * @param bool $itemAddedBySubscribePro
+     * @return $this
+     */
+    public function setItemAddedBySubscribePro($itemAddedBySubscribePro);
 
     /**
      * @return int|null

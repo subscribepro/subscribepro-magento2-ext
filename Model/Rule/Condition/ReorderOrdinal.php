@@ -29,8 +29,8 @@ class ReorderOrdinal extends Base
     {
         // If the subscription parameters are not given
         // or if the item is not a new or recurring subscription order
-        // or if there is no valid interval set, then return false;
-        // otherwise, return the interval
+        // or if there is no valid reorder ordinal set, then return false;
+        // otherwise, return the reorder ordinal
         return !$this->subscriptionOptionsAreFalse($model)
             && $this->isItemNewOrFulfillingSubscription($model)
             && ($reorder_ordinal = $this->validateAttribute($this->getReorderOrdinal($model)))

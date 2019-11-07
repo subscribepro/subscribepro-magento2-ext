@@ -5,12 +5,12 @@ namespace Swarming\SubscribePro\Test\Unit\Model\Rule;
 // Mock helper class
 class SubscriptionOption
 {
-    public function getCreatesNewSubscription()
+    public function getCreateNewSubscriptionAtCheckout()
     {
         return false;
     }
 
-    public function getIsFulfilling()
+    public function getItemFulfillsSubscription()
     {
         return false;
     }
@@ -21,6 +21,16 @@ class SubscriptionOption
     }
 
     public function getInterval()
+    {
+        return false;
+    }
+
+    public function getNextOrderDate()
+    {
+        return false;
+    }
+
+    public function getFixedPrice()
     {
         return false;
     }

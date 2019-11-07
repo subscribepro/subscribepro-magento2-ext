@@ -50,11 +50,20 @@ class QuoteItem
 
     /**
      * @param \Magento\Quote\Model\Quote\Item $item
-     * @return null|string
+     * @return bool
      */
     public function getCreateNewSubscriptionAtCheckout($item)
     {
         return $this->getParam($item, SubscriptionOptionInterface::CREATE_NEW_SUBSCRIPTION_AT_CHECKOUT);
+    }
+
+    /**
+     * @param \Magento\Quote\Model\Quote\Item $item
+     * @return bool
+     */
+    public function getItemAddedBySubscribePro($item)
+    {
+        return $this->getParam($item, SubscriptionOptionInterface::ITEM_ADDED_BY_SUBSCRIBE_PRO);
     }
 
     /**
