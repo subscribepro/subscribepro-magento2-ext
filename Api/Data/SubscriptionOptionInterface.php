@@ -14,6 +14,8 @@ interface SubscriptionOptionInterface
 
     const ITEM_FULFILLS_SUBSCRIPTION = 'item_fulfills_subscription';
 
+    const IS_FULFILLING = 'is_fulfilling';
+
     const SUBSCRIPTION_ID = 'subscription_id';
 
     const REORDER_ORDINAL = 'reorder_ordinal';
@@ -36,6 +38,17 @@ interface SubscriptionOptionInterface
      * @return $this
      */
     public function setInterval($interval);
+
+    /**
+     * @return bool
+     */
+    public function getIsFulfilling();
+
+    /**
+     * @param bool $isFulfilling
+     * @return $this
+     */
+    public function setIsFulfilling($isFulfilling);
 
     /**
      * @return bool
