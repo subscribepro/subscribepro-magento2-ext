@@ -68,9 +68,9 @@ class Base extends \Magento\Rule\Model\Condition\AbstractCondition
      * @param \Magento\Framework\Model\AbstractModel $model
      * @return bool
      */
-    protected function isItemFulfillsSubscription(\Magento\Framework\Model\AbstractModel $model) {
+    protected function isItemFulfilsSubscription(\Magento\Framework\Model\AbstractModel $model) {
         $params = $this->quoteItemHelper->getSubscriptionParams($model);
-        return isset($params['item_fulfills_subscription']) ? $params['item_fulfills_subscription'] : false;
+        return isset($params['item_fulfils_subscription']) ? $params['item_fulfils_subscription'] : false;
     }
 
     /**
@@ -80,7 +80,7 @@ class Base extends \Magento\Rule\Model\Condition\AbstractCondition
      * @return bool
      */
     protected function isItemNewOrFulfillingSubscription(\Magento\Framework\Model\AbstractModel $model) {
-        return $this->isNewSubscription($model) || $this->isItemFulfillsSubscription($model);
+        return $this->isNewSubscription($model) || $this->isItemFulfilsSubscription($model);
     }
 
     /**
@@ -171,7 +171,7 @@ class Base extends \Magento\Rule\Model\Condition\AbstractCondition
     protected function subscriptionOptionsAreFalse(\Magento\Framework\Model\AbstractModel $model)
     {
         return !$this->isNewSubscription($model)
-            && !$this->isItemFulfillsSubscription($model)
+            && !$this->isItemFulfilsSubscription($model)
             && !$this->hasReorderOrdinal($model)
             && !$this->getInterval($model);
     }

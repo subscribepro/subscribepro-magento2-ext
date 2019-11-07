@@ -10,7 +10,7 @@ class SubscriptionOption
         return false;
     }
 
-    public function getItemFulfillsSubscription()
+    public function getItemFulfilsSubscription()
     {
         return false;
     }

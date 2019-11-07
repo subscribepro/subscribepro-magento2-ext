@@ -12,7 +12,7 @@ interface SubscriptionOptionInterface
 
     const INTERVAL = 'interval';
 
-    const ITEM_FULFILLS_SUBSCRIPTION = 'item_fulfills_subscription';
+    const ITEM_FULFILS_SUBSCRIPTION = 'item_fulfils_subscription';
 
     const IS_FULFILLING = 'is_fulfilling';
 
@@ -53,13 +53,13 @@ interface SubscriptionOptionInterface
     /**
      * @return bool
      */
-    public function getItemFulfillsSubscription();
+    public function getItemFulfilsSubscription();
 
     /**
-     * @param bool $itemFulfillsSubscription
+     * @param bool $itemFulfilsSubscription
      * @return $this
      */
-    public function setItemFulfillsSubscription($itemFulfillsSubscription);
+    public function setItemFulfilsSubscription($itemFulfilsSubscription);
 
     /**
      * @return bool

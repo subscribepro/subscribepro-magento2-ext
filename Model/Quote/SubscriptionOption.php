@@ -48,18 +48,18 @@ class SubscriptionOption extends AbstractSimpleObject implements SubscriptionOpt
     /**
      * @return bool
      */
-    public function getItemFulfillsSubscription()
+    public function getItemFulfilsSubscription()
     {
-        return (bool)$this->_get(self::ITEM_FULFILLS_SUBSCRIPTION);
+        return (bool)$this->_get(self::ITEM_FULFILS_SUBSCRIPTION);
     }
 
     /**
-     * @param bool $itemFulfillsSubscription
+     * @param bool $itemFulfilsSubscription
      * @return $this
      */
-    public function setItemFulfillsSubscription($itemFulfillsSubscription)
+    public function setItemFulfilsSubscription($itemFulfilsSubscription)
     {
-        $this->setData(self::ITEM_FULFILLS_SUBSCRIPTION, $itemFulfillsSubscription);
+        $this->setData(self::ITEM_FULFILS_SUBSCRIPTION, $itemFulfilsSubscription);
         return $this;
     }
 

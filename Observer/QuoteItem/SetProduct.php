@@ -50,9 +50,9 @@ class SetProduct implements ObserverInterface
 
         /** @var \Magento\Quote\Model\Quote\Item */
         $item = $observer->getEvent()->getData('quote_item');
-        $itemFulfillsSubscriptions = $this->quoteItemHelper->isItemFulfillsSubscription($item);
+        $itemFulfilsSubscriptions = $this->quoteItemHelper->isItemFulfilsSubscription($item);
         $fixedPrice = $this->quoteItemHelper->getFixedPrice($item);
-        if ($itemFulfillsSubscriptions && $fixedPrice) {
+        if ($itemFulfilsSubscriptions && $fixedPrice) {
             $item = ($item->getParentItem() ? $item->getParentItem() : $item);
             $item->setCustomPrice($fixedPrice);
             $item->setOriginalCustomPrice($fixedPrice);

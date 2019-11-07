@@ -85,7 +85,7 @@ class Status extends Base
                 $matchResult = $this->isNewSubscription($model);
                 break;
             case self::SUBSCRIPTION_STATUS_REORDER:
-                $matchResult = $this->isItemFulfillsSubscription($model);
+                $matchResult = $this->isItemFulfilsSubscription($model);
                 break;
             default:
                 $matchResult = false;

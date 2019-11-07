@@ -36,16 +36,16 @@ class QuoteItem
      */
     public function hasSubscription($item)
     {
-        return $this->getCreateNewSubscriptionAtCheckout($item) || $this->isItemFulfillsSubscription($item);
+        return $this->getCreateNewSubscriptionAtCheckout($item) || $this->isItemFulfilsSubscription($item);
     }
 
     /**
      * @param \Magento\Quote\Model\Quote\Item $item
      * @return bool
      */
-    public function isItemFulfillsSubscription($item)
+    public function isItemFulfilsSubscription($item)
     {
-        return (bool) $this->getParam($item, SubscriptionOptionInterface::ITEM_FULFILLS_SUBSCRIPTION);
+        return (bool) $this->getParam($item, SubscriptionOptionInterface::ITEM_FULFILS_SUBSCRIPTION);
     }
 
     /**

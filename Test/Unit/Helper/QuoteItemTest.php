@@ -319,7 +319,7 @@ class QuoteItemTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals(
             $isItemFulfilsSubscription,
-            $this->quoteItemHelper->isItemFulfillsSubscription($quoteItemMock)
+            $this->quoteItemHelper->isItemFulfilsSubscription($quoteItemMock)
         );
     }
 

@@ -41,11 +41,11 @@ class OrderItem
     public function updateAdditionalOptions($orderItem, $subscriptionId = null)
     {
         $createNewSubscriptionAtCheckout = $this->getSubscriptionParam($orderItem, SubscriptionOptionInterface::CREATE_NEW_SUBSCRIPTION_AT_CHECKOUT);
-        $itemFulfillsSubscription = $this->getSubscriptionParam($orderItem, SubscriptionOptionInterface::ITEM_FULFILLS_SUBSCRIPTION);
+        $itemFulfilsSubscription = $this->getSubscriptionParam($orderItem, SubscriptionOptionInterface::ITEM_FULFILS_SUBSCRIPTION);
         $subscriptionId = $subscriptionId ?: $this->getSubscriptionParam($orderItem, SubscriptionOptionInterface::SUBSCRIPTION_ID);
         
         $additionalOptions = $this->getAdditionalOptions($orderItem);
-        if (!$createNewSubscriptionAtCheckout && !$itemFulfillsSubscription) {
+        if (!$createNewSubscriptionAtCheckout && !$itemFulfilsSubscription) {
             $additionalOptions[] = [
                 'label' => (string)__('Delivery'),
                 'value' => (string)__('One Time')
