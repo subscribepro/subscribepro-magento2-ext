@@ -38,7 +38,8 @@ class Subscriptions extends \Magento\Framework\View\Element\Template
      */
     public function getCountSubscriptions()
     {
-        return count($this->checkoutSession->getData(SubscriptionCreator::CREATED_SUBSCRIPTION_IDS));
+        $createdSubscriptionIds = $this->checkoutSession->getData(SubscriptionCreator::CREATED_SUBSCRIPTION_IDS);
+        return !empty($createdSubscriptionIds) ? count($createdSubscriptionIds) : 0;
     }
 
     /**
