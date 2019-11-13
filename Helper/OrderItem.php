@@ -43,7 +43,17 @@ class OrderItem
         $createNewSubscriptionAtCheckout = $this->getSubscriptionParam($orderItem, SubscriptionOptionInterface::CREATE_NEW_SUBSCRIPTION_AT_CHECKOUT);
         $itemFulfilsSubscription = $this->getSubscriptionParam($orderItem, SubscriptionOptionInterface::ITEM_FULFILS_SUBSCRIPTION);
         $subscriptionId = $subscriptionId ?: $this->getSubscriptionParam($orderItem, SubscriptionOptionInterface::SUBSCRIPTION_ID);
-        
+
+        // getSubscriptionParam() returns null if the parameter isn't set, which would be the case for all of these for non-subscription product
+        // Whereas a subscription product that isn't selected for subscription would contain a false value for subscription-related parameters
+        // And a subscription product that is selected for subscription would contain non-false values for subscription-related parameters
+        if ($createNewSubscriptionAtCheckout === null
+            && $itemFulfilsSubscription === null
+            && $subscriptionId === null
+        ) {
+            return;
+        }
+
         $additionalOptions = $this->getAdditionalOptions($orderItem);
         if (!$createNewSubscriptionAtCheckout && !$itemFulfilsSubscription) {
             $additionalOptions[] = [
