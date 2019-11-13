@@ -43,6 +43,15 @@ class QuoteItem
      * @param \Magento\Quote\Model\Quote\Item $item
      * @return bool
      */
+    public function isSubscriptionEnabled($item)
+    {
+        return $this->getSubscriptionOption($item) == PlatformProductInterface::SO_SUBSCRIPTION;
+    }
+
+    /**
+     * @param \Magento\Quote\Model\Quote\Item $item
+     * @return bool
+     */
     public function isItemFulfilsSubscription($item)
     {
         return (bool) $this->getParam($item, SubscriptionOptionInterface::ITEM_FULFILS_SUBSCRIPTION);
