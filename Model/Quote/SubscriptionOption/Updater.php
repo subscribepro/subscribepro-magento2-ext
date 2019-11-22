@@ -40,12 +40,15 @@ class Updater
     public function update($quoteItem, $platformProduct, $subscriptionOption, $subscriptionInterval)
     {
         $createNewSubscriptionAtCheckout = false;
-        $subscriptionInterval = null;
         if (PlatformProductInterface::SO_SUBSCRIPTION == $this->getSubscriptionOption($platformProduct, $subscriptionOption)) {
             $this->validateIntervals($platformProduct);
             $this->validateQuantity($quoteItem, $platformProduct);
             $subscriptionInterval = $this->getSubscriptionInterval($quoteItem, $platformProduct, $subscriptionInterval);
             $createNewSubscriptionAtCheckout = true;
+        }
+
+        if (!$createNewSubscriptionAtCheckout) {
+            $subscriptionInterval = null;
         }
 
         $this->quoteItemHelper->setSubscriptionParam($quoteItem, SubscriptionOptionInterface::CREATE_NEW_SUBSCRIPTION_AT_CHECKOUT, $createNewSubscriptionAtCheckout);
