@@ -50,6 +50,15 @@ class QuoteItem
 
     /**
      * @param \Magento\Quote\Model\Quote\Item $item
+     * @return null|string
+     */
+    public function getSubscriptionOption($item)
+    {
+        return $this->getParam($item, SubscriptionOptionInterface::OPTION);
+    }
+
+    /**
+     * @param \Magento\Quote\Model\Quote\Item $item
      * @return bool
      */
     public function isItemFulfilsSubscription($item)
