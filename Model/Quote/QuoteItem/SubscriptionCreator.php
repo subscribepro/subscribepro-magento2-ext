@@ -98,6 +98,8 @@ class SubscriptionCreator
             if ($address) {
                 $this->importShippingAddress($subscription, $address);
                 $subscription->setMagentoShippingMethodCode($address->getShippingMethod());
+            } else {
+                $subscription->setShippingAddress(null);
             }
 
             if ($this->subscriptionOptionsConfig->isAllowedCoupon($store->getCode())) {
