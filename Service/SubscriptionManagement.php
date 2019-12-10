@@ -102,7 +102,8 @@ class SubscriptionManagement implements SubscriptionManagementInterface
         $this->enableFrontendDesignArea();
 
         try {
-            $subscriptions = $this->getSubscriptionByCustomerId($customerId);
+            $count = $this->subscriptionOptionConfig->getMySubscriptionsLoadCount() ?: 25;
+            $subscriptions = $this->getSubscriptionByCustomerId($customerId, $count);
             if ($subscriptions) {
                 $this->subscriptionProductHelper->linkProducts($subscriptions);
             }
@@ -118,12 +119,13 @@ class SubscriptionManagement implements SubscriptionManagementInterface
 
     /**
      * @param int $customerId
+     * @param int $count
      * @return \Swarming\SubscribePro\Api\Data\SubscriptionInterface[]
      */
-    protected function getSubscriptionByCustomerId($customerId)
+    protected function getSubscriptionByCustomerId($customerId, $count = 25)
     {
         $platformCustomer = $this->platformCustomerManager->getCustomerById($customerId);
-        $subscriptions = $this->platformSubscriptionService->loadSubscriptionsByCustomer($platformCustomer->getId());
+        $subscriptions = $this->platformSubscriptionService->loadSubscriptionsByCustomer($platformCustomer->getId(), null, $count);
         $subscriptions = $this->subscriptionUtils->filterAndSortSubscriptionListForDisplay($subscriptions);
 
         return $subscriptions;

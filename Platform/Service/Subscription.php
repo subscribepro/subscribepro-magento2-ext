@@ -45,12 +45,13 @@ class Subscription extends AbstractService
     /**
      * @param int $customerId
      * @param int|null $websiteId
+     * @param int $count
      * @return \Swarming\SubscribePro\Api\Data\SubscriptionInterface[]
      * @throws \SubscribePro\Exception\HttpException
      */
-    public function loadSubscriptionsByCustomer($customerId, $websiteId = null)
+    public function loadSubscriptionsByCustomer($customerId, $websiteId = null, $count = 25)
     {
-        return $this->getService($websiteId)->loadSubscriptions($customerId);
+        return $this->getService($websiteId)->loadSubscriptions($customerId, $count);
     }
 
     /**

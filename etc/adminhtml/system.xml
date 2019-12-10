@@ -93,6 +93,15 @@
                         <field id="swarming_subscribepro/general/enabled">1</field>
                     </depends>
                 </field>
+
+                <field id="my_subscriptions_count" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                    <label>My Subscriptions Count</label>
+                    <comment>Enter the maximum number of subscriptions to load on the My Subscriptions page.</comment>
+                    <depends>
+                        <field id="swarming_subscribepro/general/enabled">1</field>
+                    </depends>
+                    <validate>validate-number validate-greater-than-zero</validate>
+                </field>
             </group>
             <group id="subscription_discount" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Subscription Discount</label>

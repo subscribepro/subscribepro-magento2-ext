@@ -60,4 +60,13 @@ class SubscriptionOptions extends General
             ->create('+' . self::QTY_MIN_DAYS_TO_NEXT_ORDER . ' days')
             ->format('Y-m-d');
     }
+
+    /**
+     * @param string|null $websiteCode
+     * @return string
+     */
+    public function getMySubscriptionsLoadCount($websiteCode = null)
+    {
+        return (int) $this->scopeConfig->getValue('swarming_subscribepro/subscription_options/my_subscriptions_count', ScopeInterface::SCOPE_WEBSITE, $websiteCode);
+    }
 }

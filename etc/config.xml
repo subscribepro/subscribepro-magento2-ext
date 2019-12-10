@@ -14,6 +14,7 @@
             <subscription_options>
                 <allow_coupon>0</allow_coupon>
                 <allow_cancel>1</allow_cancel>
+                <my_subscriptions_count>25</my_subscriptions_count>
             </subscription_options>
             <subscription_discount>
                 <apply_discount_to_catalog_price>0</apply_discount_to_catalog_price>
