@@ -51,6 +51,17 @@ interface SubscriptionInterface
     public function setProductOption(array $productOption);
 
     /**
+     * @return mixed[]
+     */
+    public function getUserDefinedFields();
+
+    /**
+     * @param array
+     * @return $this
+     */
+    public function setUserDefinedFields(array $userDefinedFields);
+
+    /**
      * @param int|null $id
      * @return $this
      */

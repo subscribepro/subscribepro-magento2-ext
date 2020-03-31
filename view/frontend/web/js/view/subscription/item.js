@@ -108,6 +108,11 @@ define(
                 return this.productPrice.priceWithDiscountText();
             },
 
+            getUserDefinedFields: function() {
+                var userDefinedFields = $.parseJSON(this.subscription.user_defined_fields);
+                return userDefinedFields;
+            },
+
             isShippingRequired: function () {
                 return this.subscription.requires_shipping;
             },
