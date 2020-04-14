@@ -1,0 +1,69 @@
+version: '2'
+services:
+  magento:
+    build:
+        context: ./
+        dockerfile: ./Dockerfile
+    ports:
+      - "8000:80" # web
+    expose:
+      - "80"
+    volumes:
+      # Set LOCAL_M2_INSTALL_DIR in .env
+      - ${LOCAL_M2_INSTALL_DIR}:/var/www/html
+    environment:
+      PHP_IDE_CONFIG: "serverName=Docker"
+    depends_on:
+      - db
+    links:
+      - db
+    networks:
+      - local-m2-network
+
+  db:
+    image: mariadb
+    ports:
+     - 3300:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=magento
+      - MYSQL_USER=magento
+      - MYSQL_PASSWORD=magento
+    volumes:
+      - dbdata:/var/lib/mysql
+    networks:
+      - local-m2-network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+     - PMA_HOST=db
+     - PMA_USER=root
+     - PMA_PASSWORD=root
+     - MYSQL_ROOT_PASSWORD=root
+    ports:
+     - 8080:80
+    networks:
+      - local-m2-network
+
+  redis:
+    image: redis
+    ports:
+     - 6379
+    networks:
+      - local-m2-network
+
+  redis-session:
+    image: redis
+    ports:
+     - 6379
+    networks:
+      - local-m2-network
+
+networks:
+  local-m2-network:
+    driver: bridge
+
+volumes:
+  dbdata:
+    driver: local
