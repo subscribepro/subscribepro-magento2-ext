@@ -161,6 +161,31 @@
                         <field id="swarming_subscribepro/general/enabled">1</field>
                     </depends>
                 </field>
+
+                <field id="enable_hosted_my_subscriptions" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                    <label>Enable Hosted My Subscriptions Page</label>
+                    <comment>This enables the the hosted version of the My Subscriptions page, instead of the one packaged with the extension.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="swarming_subscribepro/general/enabled">1</field>
+                    </depends>
+                </field>
+
+                <field id="hosted_my_subscriptions_url" translate="label comment" type="textarea" sortOrder="41" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                    <label>Hosted My Subscriptions Page Widget Source URL</label>
+                    <comment>Enter the hosted widget source URL provided by Subscribe Pro Support.</comment>
+                    <depends>
+                        <field id="swarming_subscribepro/advanced/enable_hosted_my_subscriptions">1</field>
+                    </depends>
+                </field>
+
+                <field id="custom_json_hosted_my_subscriptions" translate="label comment" type="textarea" sortOrder="41" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                    <label>Hosted My Subscriptions Page Custom JSON Configuration</label>
+                    <comment>Enter custom JSON configuration, provided by Subscribe Pro Support, to set the style and functionality of the Hosted My Subscriptions page.</comment>
+                    <depends>
+                        <field id="swarming_subscribepro/advanced/enable_hosted_my_subscriptions">1</field>
+                    </depends>
+                </field>
             </group>
 
             <group id="shipperhq" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0">

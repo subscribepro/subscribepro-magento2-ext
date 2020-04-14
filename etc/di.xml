@@ -63,6 +63,11 @@
             <argument name="name" xsi:type="const">SubscribePro\Tools\Config::NAME</argument>
         </arguments>
     </type>
+    <type name="Swarming\SubscribePro\Platform\Tool\Oauth">
+        <arguments>
+            <argument name="name" xsi:type="const">SubscribePro\Tools\Oauth::NAME</argument>
+        </arguments>
+    </type>
 
     <type name="Swarming\SubscribePro\Model\CatalogRule\InspectorRepository">
         <arguments>

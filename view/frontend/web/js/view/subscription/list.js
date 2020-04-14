@@ -1,6 +1,6 @@
 define([
     'underscore',
-    'uiComponent', 
+    'uiComponent',
     'uiLayout',
     'Swarming_SubscribePro/js/model/subscription/loader',
     'Swarming_SubscribePro/js/model/subscription/subscription-component-factory',
