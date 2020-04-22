@@ -3,6 +3,10 @@
 namespace Swarming\SubscribePro\Block\Customer;
 
 use Magento\Customer\Model\Address\Config as AddressConfig;
+use Swarming\SubscribePro\Platform\Manager\Customer;
+use Swarming\SubscribePro\Platform\Tool\Oauth;
+use Swarming\SubscribePro\Model\Config\Advanced;
+use Swarming\SubscribePro\Model\Config\Platform;
 use Swarming\SubscribePro\Model\Config\SubscriptionOptions;
 
 class Subscriptions extends \Magento\Framework\View\Element\Template
@@ -28,6 +32,26 @@ class Subscriptions extends \Magento\Framework\View\Element\Template
     protected $ccConfigProvider;
 
     /**
+     * @var Advanced
+     */
+    protected $spAdvancedConfig;
+
+    /**
+     * @var Platform
+     */
+    protected $spPlatformConfig;
+
+    /**
+     * @var Oauth
+     */
+    protected $oauthTool;
+
+    /**
+     * @var Customer
+     */
+    protected $platformCustomerManager;
+
+    /**
      * @var \Swarming\SubscribePro\Gateway\Config\Config
      */
     protected $gatewayConfig;
@@ -46,7 +70,7 @@ class Subscriptions extends \Magento\Framework\View\Element\Template
      * @var \Swarming\SubscribePro\Ui\ConfigProvider\SubscriptionConfig
      */
     protected $subscriptionConfig;
-    
+
     /**
      * @var \Swarming\SubscribePro\Ui\ComponentProvider\AddressAttributes
      */
@@ -73,6 +97,10 @@ class Subscriptions extends \Magento\Framework\View\Element\Template
      * @param \Magento\Customer\Model\Session $customerSession
      * @param \Swarming\SubscribePro\Ui\ConfigProvider\PriceConfig $priceConfigProvider
      * @param \Magento\Payment\Model\CcConfigProvider $ccConfigProvider
+     * @param Advanced $spAdvancedConfig
+     * @param Platform $spPlatformConfig
+     * @param Oauth $oauthTool
+     * @param Customer $platformCustomerManager
      * @param \Swarming\SubscribePro\Gateway\Config\Config $gatewayConfig
      * @param \Magento\Customer\Model\Address\Mapper $addressMapper
      * @param \Magento\Customer\Model\Address\Config $addressConfig
@@ -89,6 +117,10 @@ class Subscriptions extends \Magento\Framework\View\Element\Template
         \Magento\Customer\Model\Session $customerSession,
         \Swarming\SubscribePro\Ui\ConfigProvider\PriceConfig $priceConfigProvider,
         \Magento\Payment\Model\CcConfigProvider $ccConfigProvider,
+        Advanced $spAdvancedConfig,
+        Platform $spPlatformConfig,
+        Oauth $oauthTool,
+        Customer $platformCustomerManager,
         \Swarming\SubscribePro\Gateway\Config\Config $gatewayConfig,
         \Magento\Customer\Model\Address\Mapper $addressMapper,
         \Magento\Customer\Model\Address\Config $addressConfig,
@@ -104,6 +136,10 @@ class Subscriptions extends \Magento\Framework\View\Element\Template
         $this->customerSession = $customerSession;
         $this->priceConfigProvider = $priceConfigProvider;
         $this->ccConfigProvider = $ccConfigProvider;
+        $this->spAdvancedConfig = $spAdvancedConfig;
+        $this->spPlatformConfig = $spPlatformConfig;
+        $this->oauthTool = $oauthTool;
+        $this->platformCustomerManager = $platformCustomerManager;
         $this->gatewayConfig = $gatewayConfig;
         $this->addressMapper = $addressMapper;
         $this->addressConfig = $addressConfig;
@@ -138,6 +174,61 @@ class Subscriptions extends \Magento\Framework\View\Element\Template
         }
 
         return $customerData;
+    }
+
+    public function getCustomerId()
+    {
+        return $this->customerSession->getCustomerId();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isHostedWidgetEnabled()
+    {
+        return $this->spAdvancedConfig->isHostedMySubscriptionsPageEnabled();
+    }
+
+    /**
+     * @return string
+     */
+    public function getHostedWidgetConfig()
+    {
+        return $this->isHostedWidgetEnabled() ? $this->spAdvancedConfig->getHostedMySubscriptionWidgetConfig() : '{}';
+    }
+
+    /**
+     * @return string
+     */
+    public function getHostedWidgetUrl()
+    {
+        return $this->isHostedWidgetEnabled() ? $this->spAdvancedConfig->getHostedMySubscriptionWidgetUrl() : '';
+    }
+
+    /**
+     * @return string
+     */
+    public function getSubscribeProBaseApiUrl()
+    {
+        return $this->spPlatformConfig->getBaseUrl();
+    }
+
+    /**
+     * @return array
+     */
+    public function getWidgetAccessTokenForCurrentCustomer()
+    {
+        $accessToken = $this->oauthTool->getWidgetAccessTokenByCustomerId($this->getPlatformCustomerId());
+        return $accessToken['access_token'];
+    }
+
+    public function getPlatformCustomerId()
+    {
+        return $this->platformCustomerManager->getCustomerById(
+            $this->getCustomerId(),
+            false,
+            $this->customerSession->getCustomer()->getWebsiteId()
+        )->getId();
     }
 
     protected function _beforeToHtml()
@@ -241,7 +332,6 @@ class Subscriptions extends \Magento\Framework\View\Element\Template
                 ]
             ]
         ];
-        
         $this->jsLayout = array_merge_recursive($this->jsLayout, $data);
     }
 }

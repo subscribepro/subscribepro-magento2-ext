@@ -4,9 +4,44 @@
  */
 ?>
 
-<div id="subscriptions-container" data-bind="scope: 'subscriptions-container'">
-    <!-- ko template: getTemplate() --><!-- /ko -->
-</div>
+<?php
+if ($block->isHostedWidgetEnabled()) {
+    ?>
+    <div id="sp-my-subscriptions" class="sp-my-subscriptions"></div>
+    <script src="<?php echo $block->getHostedWidgetUrl(); ?>"></script>
+    <script>
+        // Start with override-able defaults
+        let finalWidgetConfig = {
+            themeName: "base",
+            element: "sp-my-subscriptions"
+        };
+        // Merge in custom configuration
+        let customWidgetConfig = <?php echo $block->getHostedWidgetConfig(); ?>;
+        for (let key in customWidgetConfig) {
+            finalWidgetConfig[key] = customWidgetConfig[key];
+        }
+
+        // Don't override the required widget config
+        let originalWidgetConfig = {
+            apiBaseUrl: "<?php echo $block->getSubscribeProBaseApiUrl(); ?>",
+            apiAccessToken: "<?php echo $block->getWidgetAccessTokenForCurrentCustomer(); ?>",
+            customerId: <?php echo $block->getPlatformCustomerId(); ?>
+        };
+        for (let key in originalWidgetConfig) {
+            finalWidgetConfig[key] = originalWidgetConfig[key];
+        }
+
+        MySubscriptions.init(finalWidgetConfig);
+    </script>
+<?php
+} else {
+        ?>
+    <div id="subscriptions-container" data-bind="scope: 'subscriptions-container'">
+        <!-- ko template: getTemplate() --><!-- /ko -->
+    </div>
+    <?php
+    }
+?>
 
 <script type="text/x-magento-init">
     {
