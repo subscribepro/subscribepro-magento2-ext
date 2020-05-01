@@ -35,7 +35,7 @@ class Quote
     {
         $subscriptions = [];
 
-        $items = $quote->getItemsCollection(false);
+        $items = $quote->getItemsCollection();
         foreach ($items as $item) {
             if ($this->quoteItemHelper->hasSubscription($item)) {
                 $subscriptions[] = $item;
