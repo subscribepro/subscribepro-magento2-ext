@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-redis-cli -h redis-session flushall
-redis-cli -h redis flushall
