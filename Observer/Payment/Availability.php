@@ -54,7 +54,12 @@ class Availability implements ObserverInterface
         $isAvailable = $result->getData('is_available');
         $isActiveNonSubscription = $methodInstance->getConfigData(Config::KEY_ACTIVE_NON_SUBSCRIPTION);
 
-        if ($this->quoteHelper->hasSubscription($quote)) {
+        $grandTotal = $quote->getGrandTotal();
+
+        // Only show the SP payment method when a subscription is in the cart
+        // and it's not a free order. For free orders we will use the 'free'
+        // payment method available in magento.
+        if ($this->quoteHelper->hasSubscription($quote) && $grandTotal > 0) {
             $isAvailable = ConfigProvider::CODE == $methodCode && $isAvailable;
         } else if (ConfigProvider::CODE == $methodCode && !$isActiveNonSubscription) {
             $isAvailable = false;
