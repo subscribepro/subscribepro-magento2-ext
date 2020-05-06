@@ -182,6 +182,7 @@
                 <field id="custom_json_hosted_my_subscriptions" translate="label comment" type="textarea" sortOrder="41" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
                     <label>Hosted My Subscriptions Page Custom JSON Configuration</label>
                     <comment>Enter custom JSON configuration, provided by Subscribe Pro Support, to set the style and functionality of the Hosted My Subscriptions page.</comment>
+                    <backend_model>Swarming\SubscribePro\Model\Config\Backend\ValidJson</backend_model>
                     <depends>
                         <field id="swarming_subscribepro/advanced/enable_hosted_my_subscriptions">1</field>
                     </depends>
