@@ -2,24 +2,26 @@
 
 namespace Swarming\SubscribePro\Helper;
 
+use Magento\Quote\Api\Data\CartInterface;
+
 class Quote
 {
     /**
-     * @var \Swarming\SubscribePro\Helper\QuoteItem
+     * @var QuoteItem
      */
     protected $quoteItemHelper;
 
     /**
-     * @param \Swarming\SubscribePro\Helper\QuoteItem $quoteItemHelper
+     * @param QuoteItem $quoteItemHelper
      */
     public function __construct(
-        \Swarming\SubscribePro\Helper\QuoteItem $quoteItemHelper
+        QuoteItem $quoteItemHelper
     ) {
         $this->quoteItemHelper = $quoteItemHelper;
     }
 
     /**
-     * @param \Magento\Quote\Api\Data\CartInterface $quote
+     * @param CartInterface $quote
      * @return bool
      */
     public function hasSubscription($quote)
@@ -28,8 +30,8 @@ class Quote
     }
 
     /**
-     * @param \Magento\Quote\Api\Data\CartInterface $quote
-     * @return bool
+     * @param CartInterface $quote
+     * @return array
      */
     public function getSubscriptionItems($quote)
     {
@@ -43,5 +45,28 @@ class Quote
         }
 
         return $subscriptions;
+    }
+
+    /**
+     * Whether or not the quote has been built by Subscribe Pro's recurring order placement system
+     * Depends on the item_added_by_subscribe_pro attribute on the line item.
+     *
+     * @param CartInterface $quote
+     * @return bool
+     */
+    public function isRecurringQuote($quote)
+    {
+        $subscriptions = $this->getSubscriptionItems($quote);
+        if (empty($subscriptions)) {
+            return false;
+        }
+
+        foreach ($subscriptions as $subscription) {
+            if ($this->quoteItemHelper->getItemAddedBySubscribePro($subscription)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

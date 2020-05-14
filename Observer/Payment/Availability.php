@@ -2,38 +2,45 @@
 
 namespace Swarming\SubscribePro\Observer\Payment;
 
+use Magento\Checkout\Model\Session;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
-use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Payment\Model\Method\Free;
 use Swarming\SubscribePro\Gateway\Config\Config;
+use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
+use Swarming\SubscribePro\Helper\Quote;
 
 class Availability implements ObserverInterface
 {
     /**
-     * @var \Magento\Checkout\Model\Session
+     * @var Session
      */
     protected $checkoutSession;
 
     /**
-     * @var \Swarming\SubscribePro\Helper\Quote
+     * @var Quote
      */
     protected $quoteHelper;
 
     /**
-     * @param \Magento\Checkout\Model\Session $checkoutSession
-     * @param \Swarming\SubscribePro\Helper\Quote $quoteHelper
+     * @param Session $checkoutSession
+     * @param Quote $quoteHelper
      */
     public function __construct(
-        \Magento\Checkout\Model\Session $checkoutSession,
-        \Swarming\SubscribePro\Helper\Quote $quoteHelper
+        Session $checkoutSession,
+        Quote $quoteHelper
     ) {
         $this->checkoutSession = $checkoutSession;
         $this->quoteHelper = $quoteHelper;
     }
 
     /**
-     * @param \Magento\Framework\Event\Observer $observer
+     * @param Observer $observer
      * @return void
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
     public function execute(Observer $observer)
     {
@@ -52,14 +59,28 @@ class Availability implements ObserverInterface
 
         $methodCode = $methodInstance->getCode();
         $isAvailable = $result->getData('is_available');
-        $isActiveNonSubscription = $methodInstance->getConfigData(Config::KEY_ACTIVE_NON_SUBSCRIPTION);
 
-        if ($this->quoteHelper->hasSubscription($quote)) {
-            $isAvailable = ConfigProvider::CODE == $methodCode && $isAvailable;
-        } else if (ConfigProvider::CODE == $methodCode && !$isActiveNonSubscription) {
-            $isAvailable = false;
+        if ($isAvailable) {
+            $isActiveNonSubscription = $methodInstance->getConfigData(Config::KEY_ACTIVE_NON_SUBSCRIPTION);
+
+            // For a subscription order, we filter out all payment methods except the Subscribe Pro and (sometimes) free methods
+            if ($this->quoteHelper->hasSubscription($quote)) {
+                switch ($methodCode) {
+                    case Free::PAYMENT_METHOD_FREE_CODE:
+                        $isAvailable = $this->quoteHelper->isRecurringQuote($quote);
+                        break;
+                    case ConfigProvider::CODE:
+                        $isAvailable = true;
+                        break;
+                    default:
+                        $isAvailable = false;
+                        break;
+                }
+            } elseif (ConfigProvider::CODE == $methodCode && !$isActiveNonSubscription) {
+                $isAvailable = false;
+            }
+
+            $result->setData('is_available', $isAvailable);
         }
-
-        $result->setData('is_available', $isAvailable);
     }
 }
