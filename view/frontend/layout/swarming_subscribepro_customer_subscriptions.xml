@@ -3,6 +3,7 @@
     <update handle="customer_account"/>
     <body>
         <referenceContainer name="content">
+            <block template="Swarming_SubscribePro::customer/invalidate_cache.phtml" name="swarming_subscribepro_invalidate_cache" after="-" cacheable="false"></block>
             <block class="Swarming\SubscribePro\Block\Customer\Subscriptions" template="Swarming_SubscribePro::customer/subscriptions.phtml" cacheable="false">
                 <arguments>
                     <argument name="jsLayout" xsi:type="array">
