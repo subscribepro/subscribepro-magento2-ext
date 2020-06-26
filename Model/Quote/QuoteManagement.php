@@ -70,17 +70,14 @@ class QuoteManagement implements CartManagementInterface
      */
     public function createEmptyCartForCustomer($customerId)
     {
-        $this->logger->info('Creating empty quote for customer ' . $customerId);
         $storeId = $this->storeManager->getStore()->getStoreId();
         $quote = $this->createCustomerCart($customerId, $storeId);
 
         try {
-            $this->logger->info('Persisting new quote');
             $this->quoteRepository->save($quote);
         } catch (\Exception $e) {
             throw new CouldNotSaveException(__("The quote can't be created. " . $e->getMessage()));
         }
-        $this->logger->info("Created quote " . $quote->getId());
         return (int)$quote->getId();
     }
 
@@ -110,13 +107,9 @@ class QuoteManagement implements CartManagementInterface
      */
     public function deactivateCustomerCart($cartId)
     {
-        $this->logger->info('Deactivating quote ' . $cartId);
         $quote = $this->quoteRepository->get($cartId);
         $quote->setIsActive(false);
         try {
-//            $this->logger->info('Saving quote with $quote->save()');
-//            $quote->save();
-            $this->logger->info('Persisting changed quote in quote repository');
             $this->quoteRepository->save($quote);
         } catch (\Exception $e) {
             $this->logger->info($e->getMessage());
