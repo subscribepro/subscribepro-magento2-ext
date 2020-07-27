@@ -157,6 +157,8 @@ class SubscriptionManagement implements SubscriptionManagementInterface
             }
 
             $subscription->setQty($qty);
+            $subscription->setSendCustomerNotificationEmail(true);
+
             $this->platformSubscriptionService->saveSubscription($subscription);
         } catch (NoSuchEntityException $e) {
             throw new LocalizedException(__('The subscription is not found.'));
@@ -182,6 +184,7 @@ class SubscriptionManagement implements SubscriptionManagementInterface
             $this->checkSubscriptionOwner($subscription, $customerId);
 
             $subscription->setInterval($interval);
+            $subscription->setSendCustomerNotificationEmail(true);
             $this->platformSubscriptionService->saveSubscription($subscription);
         } catch (NoSuchEntityException $e) {
             throw new LocalizedException(__('The subscription is not found.'));
@@ -213,6 +216,7 @@ class SubscriptionManagement implements SubscriptionManagementInterface
             $this->checkSubscriptionOwner($subscription, $customerId);
 
             $subscription->setNextOrderDate($nextOrderDate);
+            $subscription->setSendCustomerNotificationEmail(true);
             $this->platformSubscriptionService->saveSubscription($subscription);
         } catch (NoSuchEntityException $e) {
             throw new LocalizedException(__('The subscription is not found.'));
@@ -266,6 +270,7 @@ class SubscriptionManagement implements SubscriptionManagementInterface
     protected function setPaymentProfileProfile($subscription, $paymentProfileId)
     {
         $subscription->setPaymentProfileId($paymentProfileId);
+        $subscription->setSendCustomerNotificationEmail(true);
         $this->platformSubscriptionService->saveSubscription($subscription);
     }
 
@@ -286,6 +291,7 @@ class SubscriptionManagement implements SubscriptionManagementInterface
 
             $platformAddress = $this->platformAddressManager->findOrSaveAddress($address, $platformCustomer->getId());
             $subscription->setShippingAddressId($platformAddress->getId());
+            $subscription->setSendCustomerNotificationEmail(true);
             $this->platformSubscriptionService->saveSubscription($subscription);
         } catch (NoSuchEntityException $e) {
             throw new LocalizedException(__('The subscription is not found.'));
