@@ -51,6 +51,15 @@ class Subscriptions extends \Magento\Framework\View\Element\Template
     }
 
     /**
+     * @return null
+     */
+    public function clearSubscriptionSessionData()
+    {
+        $this->checkoutSession->setData(SubscriptionCreator::CREATED_SUBSCRIPTION_IDS, []);
+        $this->checkoutSession->setData(SubscriptionCreator::FAILED_SUBSCRIPTION_COUNT, 0);
+    }
+
+    /**
      * @return string
      */
     protected function _toHtml()

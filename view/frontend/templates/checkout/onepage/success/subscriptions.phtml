@@ -13,3 +13,7 @@
         <?php echo __('Click here to <a href="%1">manage your product subscriptions</a>.', $block->getUrl('swarming_subscribepro/customer/subscriptions')) ?>
     </p>
 <?php endif; ?>
+<?php
+if ($block->hasFailedSubscriptions() || $block->getCountSubscriptions()) {
+    $block->clearSubscriptionSessionData();
+}
