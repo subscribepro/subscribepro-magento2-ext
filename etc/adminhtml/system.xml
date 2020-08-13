@@ -145,9 +145,9 @@
                     <validate>validate-number validate-zero-or-greater</validate>
                 </field>
 
-                <field id="webhook_ipaddresses" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
-                    <label>Allowed Webhook IP Address</label>
-                    <comment>The IP Addresses from which webhooks are allowed. Enter comma separated. Leave empty for disabling webhooks.</comment>
+                <field id="webhook_secret" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                    <label>Webhook Secret Key</label>
+                    <comment>This secret key will be used to hash webhook request data and validate the source of incoming webhook requests for security.</comment>
                     <depends>
                         <field id="swarming_subscribepro/general/enabled">1</field>
                     </depends>

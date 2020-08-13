@@ -23,7 +23,7 @@
             </subscription_discount>
             <advanced>
                 <cache_lifetime>3600</cache_lifetime>
-                <webhook_ipaddresses>52.87.63.105,52.205.106.230,52.207.125.59,52.206.240.107</webhook_ipaddresses>
+                <webhook_secret></webhook_secret>
                 <enable_debugging>0</enable_debugging>
                 <enable_hosted_my_subscriptions>0</enable_hosted_my_subscriptions>
                 <hosted_my_subscriptions_url>https://hosted.subscribepro.com/my-subscriptions/widget-my-subscriptions-1.1.1.js</hosted_my_subscriptions_url>

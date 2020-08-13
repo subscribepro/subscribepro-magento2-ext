@@ -2,6 +2,7 @@
 
 namespace Swarming\SubscribePro\Platform\Webhook\Handler\PaymentProfile;
 
+use Magento\Framework\Exception\NoSuchEntityException;
 use SubscribePro\Service\Webhook\EventInterface;
 use Swarming\SubscribePro\Platform\Webhook\HandlerInterface;
 use Swarming\SubscribePro\Platform\Webhook\Handler\PaymentProfile\AbstractHandler;
@@ -47,16 +48,22 @@ class CreateHandler extends AbstractHandler implements HandlerInterface
 
     /**
      * @param \SubscribePro\Service\Webhook\EventInterface $event
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function execute(EventInterface $event)
     {
-        $paymentToken = $this->paymentTokenFactory->create();
-        $profile = $this->platformPaymentProfileService->createProfile((array)$event->getEventData('payment_profile'));
-        if (!$profile->getMagentoCustomerId()) {
-            $profile->setMagentoCustomerId($this->getCustomerId($event));
+        // First make sure we don't already have this payment profile saved
+        // This can happen if the customer creates the card record in Magento
+        // since Subscribe Pro still sends a payment_profile.created webhook
+        try {
+            $this->getPaymentToken($event);
+        } catch (NoSuchEntityException $e) {
+            $paymentToken = $this->paymentTokenFactory->create();
+            $profile = $this->platformPaymentProfileService->createProfile((array)$event->getEventData('payment_profile'));
+            if (!$profile->getMagentoCustomerId()) {
+                $profile->setMagentoCustomerId($this->getCustomerId($event));
+            }
+            $this->vaultHelper->initVault($paymentToken, $profile);
+            $this->paymentTokenRepository->save($paymentToken);
         }
-        $this->vaultHelper->initVault($paymentToken, $profile);
-        $this->paymentTokenRepository->save($paymentToken);
     }
 }
