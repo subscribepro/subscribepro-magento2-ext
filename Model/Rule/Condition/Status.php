@@ -61,44 +61,34 @@ class Status extends Base
 
     /**
      * Validate Customer First Order Rule Condition
-     * @param \Magento\Framework\Model\AbstractModel $model
+     * @param \Magento\Framework\Model\AbstractModel $quoteItem
      * @return bool
      */
-    public function validate(\Magento\Framework\Model\AbstractModel $model)
+    public function validate(\Magento\Framework\Model\AbstractModel $quoteItem)
     {
-        if ($this->subscriptionOptionsAreFalse($model)) {
-            return false;
+        $this->logger->info('Validating status condition for subscription');
+        $subscriptionParams = $this->quoteItemHelper->getSubscriptionParams($quoteItem);
+
+        try {
+            $this->logger->info('Attempting to match the status in the cart with the status needed for the coupon');
+            $this->logger->info('Subscription params: ' . json_encode($subscriptionParams));
+            $this->logger->info('Value to match on: ' . $this->getValueParsed());
+            $this->logger->info('Operation: ' . $this->getOperatorForValidate());
+            $matchResult = $this->discountRuleHelper->validateStatus(
+                $subscriptionParams,
+                // Get value set on rule condition
+                // new & reorder, new, or reorder
+                $this->getValueParsed(),
+                // == or !=
+                $this->getOperatorForValidate()
+            );
+            $this->logger->info('Status: ' . ($matchResult ? 'matched' : 'not matched'));
+        } catch (\Exception $e) {
+            $this->logger->info('Could not validate status condition due to error.');
+            $this->logger->error($e->getMessage());
+            $matchResult = false;
         }
 
-        // Check quote item attributes
-        // Get value set on rule condition
-        $conditionValue = $this->getValueParsed();
-        // Get operator set on rule condition
-        $op = $this->getOperatorForValidate();
-
-        // Handle different status types
-        switch ($conditionValue) {
-            case self::SUBSCRIPTION_STATUS_ANY:
-                $matchResult = $this->isItemNewOrFulfillingSubscription($model);
-                break;
-            case self::SUBSCRIPTION_STATUS_NEW:
-                $matchResult = $this->isNewSubscription($model);
-                break;
-            case self::SUBSCRIPTION_STATUS_REORDER:
-                $matchResult = $this->isItemFulfilsSubscription($model);
-                break;
-            default:
-                $matchResult = false;
-                break;
-        }
-
-        // Since this attribute is a select list only == and != operators are allowed
-        // In case of !=, do invert $matchResult
-        if($op != '==') {
-            $matchResult = !$matchResult;
-        }
-
-        // Return our result
         return $matchResult;
     }
 }

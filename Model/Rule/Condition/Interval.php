@@ -27,14 +27,7 @@ class Interval extends Base
      */
     public function validate(\Magento\Framework\Model\AbstractModel $model)
     {
-        // If the subscription parameters are not given
-        // or if the item is not a new or recurring subscription order
-        // or if there is no valid interval set, then return false;
-        // otherwise, return the interval
-        return !$this->subscriptionOptionsAreFalse($model)
-            && $this->isItemNewOrFulfillingSubscription($model)
-            && ($interval = $this->validateAttribute($this->getInterval($model)))
-        ? $interval
-        : false;
+        $interval = $this->discountRuleHelper->validateInterval($this->quoteItemHelper->getSubscriptionParams($model));
+        return false === $interval ? false : $this->validateAttribute($interval);
     }
 }
