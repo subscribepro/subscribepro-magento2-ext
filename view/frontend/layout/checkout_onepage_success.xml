@@ -2,7 +2,7 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
         <referenceContainer name="order.success.additional.info">
-            <block class="Swarming\SubscribePro\Block\Checkout\Onepage\Success\Subscriptions" name="onepage.success.subscriptions" template="checkout/onepage/success/subscriptions.phtml"/>
+            <block class="Swarming\SubscribePro\Block\Checkout\Onepage\Success\Subscriptions" name="onepage.success.subscriptions" template="Swarming_SubscribePro::checkout/onepage/success/subscriptions.phtml"/>
         </referenceContainer>
     </body>
 </page>
