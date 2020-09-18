@@ -27,14 +27,7 @@ class ReorderOrdinal extends Base
      */
     public function validate(\Magento\Framework\Model\AbstractModel $model)
     {
-        // If the subscription parameters are not given
-        // or if the item is not a new or recurring subscription order
-        // or if there is no valid reorder ordinal set, then return false;
-        // otherwise, return the reorder ordinal
-        return !$this->subscriptionOptionsAreFalse($model)
-            && $this->isItemNewOrFulfillingSubscription($model)
-            && ($reorder_ordinal = $this->validateAttribute($this->getReorderOrdinal($model)))
-        ? $reorder_ordinal
-        : false;
+        $reorder_ordinal = $this->discountRuleHelper->validateReorderOrdinal($this->quoteItemHelper->getSubscriptionParams($model));
+        return false === $reorder_ordinal ? false : $this->validateAttribute($reorder_ordinal);
     }
 }

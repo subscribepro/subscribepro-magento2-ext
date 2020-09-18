@@ -2,9 +2,9 @@
 
 namespace Swarming\SubscribePro\Model\Quote;
 
+use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Quote\Model\Quote\Item\AbstractItem as QuoteItem;
 use Swarming\SubscribePro\Model\Config\Source\CartRuleCombine;
-use Magento\Catalog\Api\Data\ProductInterface;
 
 class ItemSubscriptionDiscount
 {
@@ -31,21 +31,29 @@ class ItemSubscriptionDiscount
     protected $priceCurrency;
 
     /**
+     * @var \Swarming\SubscribePro\Helper\SalesRuleValidator
+     */
+    protected $salesRuleValidatorHelper;
+
+    /**
      * @param \Swarming\SubscribePro\Model\Config\SubscriptionDiscount $subscriptionDiscountConfig
      * @param \Swarming\SubscribePro\Platform\Manager\Product $platformProductManager
      * @param \Swarming\SubscribePro\Helper\QuoteItem $quoteItemHelper
      * @param \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency
+     * @param \Swarming\SubscribePro\Helper\SalesRuleValidator $salesRuleValidatorHelper
      */
     public function __construct(
         \Swarming\SubscribePro\Model\Config\SubscriptionDiscount $subscriptionDiscountConfig,
         \Swarming\SubscribePro\Platform\Manager\Product $platformProductManager,
         \Swarming\SubscribePro\Helper\QuoteItem $quoteItemHelper,
-        \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency
+        \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency,
+        \Swarming\SubscribePro\Helper\SalesRuleValidator $salesRuleValidatorHelper
     ) {
         $this->subscriptionDiscountConfig = $subscriptionDiscountConfig;
         $this->platformProductManager = $platformProductManager;
         $this->quoteItemHelper = $quoteItemHelper;
         $this->priceCurrency = $priceCurrency;
+        $this->salesRuleValidatorHelper = $salesRuleValidatorHelper;
     }
 
     /**
@@ -65,7 +73,7 @@ class ItemSubscriptionDiscount
             $rollbackCallback($item);
             $this->setSubscriptionDiscount($item, $subscriptionDiscount, $baseSubscriptionDiscount);
             $this->addDiscountDescription($item);
-        } else if ($this->isCombineDiscounts($storeId)) {
+        } elseif ($this->isCombineDiscounts($storeId)) {
             $this->addSubscriptionDiscount($item, $subscriptionDiscount, $baseSubscriptionDiscount);
             $this->addDiscountDescription($item);
         }
@@ -124,13 +132,12 @@ class ItemSubscriptionDiscount
      */
     protected function getBaseSubscriptionDiscount($platformProduct, $itemBasePrice, $qty)
     {
-        if($platformProduct->getIsDiscountPercentage()) {
-            $subscriptionDiscount = $platformProduct->getDiscount() * $itemBasePrice * $qty;
-        } else {
-            $subscriptionDiscount = $platformProduct->getDiscount() * $qty;
-        }
-
-        return $subscriptionDiscount;
+        return $this->salesRuleValidatorHelper->getBaseSubscriptionDiscount(
+            $platformProduct->getIsDiscountPercentage(),
+            $platformProduct->getDiscount(),
+            $itemBasePrice,
+            $qty
+        );
     }
 
     /**
@@ -141,31 +148,11 @@ class ItemSubscriptionDiscount
      */
     protected function isOnlySubscriptionDiscount($baseSubscriptionDiscount, $baseCartDiscount, $storeId)
     {
-        $result = false;
-        switch($this->subscriptionDiscountConfig->getCartRuleCombineType($storeId)) {
-            case CartRuleCombine::TYPE_APPLY_GREATEST:
-                if($baseSubscriptionDiscount >= $baseCartDiscount) {
-                    $result = true;
-                }
-                break;
-            case CartRuleCombine::TYPE_APPLY_LEAST:
-                if($baseSubscriptionDiscount <= $baseCartDiscount) {
-                    $result = true;
-                }
-                break;
-            case CartRuleCombine::TYPE_APPLY_CART_DISCOUNT: /* Only If no cart rules applied */
-                if($baseCartDiscount == 0) {
-                    $result = true;
-                }
-                break;
-            case CartRuleCombine::TYPE_APPLY_SUBSCRIPTION:
-                $result = true;
-                break;
-            default:
-                $result = false;
-                break;
-        }
-        return $result;
+        return $this->salesRuleValidatorHelper->isOnlySubscriptionDiscount(
+            $baseSubscriptionDiscount,
+            $baseCartDiscount,
+            $this->subscriptionDiscountConfig->getCartRuleCombineType($storeId)
+        );
     }
 
     /**
@@ -174,7 +161,8 @@ class ItemSubscriptionDiscount
      */
     protected function isCombineDiscounts($storeId)
     {
-        return $this->subscriptionDiscountConfig->getCartRuleCombineType($storeId)
-            == CartRuleCombine::TYPE_COMBINE_SUBSCRIPTION;
+        return $this->salesRuleValidatorHelper->isCombineDiscounts(
+            $this->subscriptionDiscountConfig->getCartRuleCombineType($storeId)
+        );
     }
 }
