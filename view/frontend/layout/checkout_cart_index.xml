@@ -2,7 +2,7 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
         <referenceBlock name="additional.product.info">
-            <block class="Swarming\SubscribePro\Block\Cart\Subscription" name="cart.product.subscription" after="-" template="cart/subscription.phtml">
+            <block class="Swarming\SubscribePro\Block\Cart\Subscription" name="cart.product.subscription" after="-" template="Swarming_SubscribePro::cart/subscription.phtml">
                 <arguments>
                     <argument name="subscription-container-component" xsi:type="array">
                         <item name="component" xsi:type="string">Swarming_SubscribePro/js/view/cart/subscription</item>
