@@ -25,17 +25,25 @@ class CustomerRepository
     protected $logger;
 
     /**
+     * @var \Swarming\SubscribePro\Model\Config\General
+     */
+    protected $generalConfig;
+
+    /**
      * @param \Swarming\SubscribePro\Platform\Manager\Customer $platformCustomerManager
      * @param \Swarming\SubscribePro\Platform\Service\Customer $platformCustomerService
+     * @param \Swarming\SubscribePro\Model\Config\General $generalConfig
      * @param \Psr\Log\LoggerInterface $logger
      */
     public function __construct(
         \Swarming\SubscribePro\Platform\Manager\Customer $platformCustomerManager,
         \Swarming\SubscribePro\Platform\Service\Customer $platformCustomerService,
+        \Swarming\SubscribePro\Model\Config\General $generalConfig,
         \Psr\Log\LoggerInterface $logger
     ) {
         $this->platformCustomerManager = $platformCustomerManager;
         $this->platformCustomerService = $platformCustomerService;
+        $this->generalConfig = $generalConfig;
         $this->logger = $logger;
     }
 
@@ -43,18 +51,21 @@ class CustomerRepository
      * @param \Magento\Customer\Api\CustomerRepositoryInterface $subject
      * @param \Closure $proceed
      * @param \Magento\Customer\Api\Data\CustomerInterface $customer
-     * @param string $passwordHash
+     * @param string|null $passwordHash
      * @return \Magento\Customer\Api\Data\CustomerInterface
      */
     public function aroundSave(CustomerRepositoryInterface $subject, \Closure $proceed, CustomerInterface $customer, $passwordHash = null)
     {
-        $platformCustomer = $this->getPlatformCustomer($customer);
-
         $customer = $proceed($customer, $passwordHash);
 
-        if ($platformCustomer) {
-            $this->updatePlatformCustomer($customer, $platformCustomer);
+        if ($this->generalConfig->isEnabled()) {
+            $platformCustomer = $this->getPlatformCustomer($customer);
+
+            if ($platformCustomer) {
+                $this->updatePlatformCustomer($customer, $platformCustomer);
+            }
         }
+
         return $customer;
     }
 
