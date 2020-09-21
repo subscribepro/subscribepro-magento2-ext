@@ -13,11 +13,6 @@
             <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
                 <label>General</label>
 
-                <field id="last_update" translate="label" type="label" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Installed Version</label>
-                    <frontend_model>Swarming\SubscribePro\Block\Adminhtml\System\Config\InstalledVersion</frontend_model>
-                </field>
-
                 <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
                     <label>Enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
