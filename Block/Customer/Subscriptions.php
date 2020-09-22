@@ -3,6 +3,7 @@
 namespace Swarming\SubscribePro\Block\Customer;
 
 use Magento\Customer\Model\Address\Config as AddressConfig;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Swarming\SubscribePro\Platform\Manager\Customer;
 use Swarming\SubscribePro\Platform\Tool\Oauth;
 use Swarming\SubscribePro\Model\Config\Advanced;
@@ -224,11 +225,15 @@ class Subscriptions extends \Magento\Framework\View\Element\Template
 
     public function getPlatformCustomerId()
     {
-        return $this->platformCustomerManager->getCustomerById(
-            $this->getCustomerId(),
-            false,
-            $this->customerSession->getCustomer()->getWebsiteId()
-        )->getId();
+        try {
+            return $this->platformCustomerManager->getCustomerById(
+                $this->getCustomerId(),
+                false,
+                $this->customerSession->getCustomer()->getWebsiteId()
+            )->getId();
+        } catch (NoSuchEntityException $e) {
+            return false;
+        }
     }
 
     protected function _beforeToHtml()

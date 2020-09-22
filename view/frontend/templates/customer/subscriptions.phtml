@@ -5,7 +5,7 @@
 ?>
 
 <?php
-if ($block->isHostedWidgetEnabled()) {
+if ($block->isHostedWidgetEnabled() && false !== $block->getPlatformCustomerId()) {
     ?>
     <div id="sp-my-subscriptions" class="sp-my-subscriptions"></div>
     <script src="<?php echo $block->getHostedWidgetUrl(); ?>"></script>
