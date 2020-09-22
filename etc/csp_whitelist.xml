@@ -1,15 +1,21 @@
 <?xml version="1.0"?>
 <csp_whitelist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Csp:etc/csp_whitelist.xsd">
     <policies>
+        <policy id="style-src">
+            <values>
+                <value id="static-subscribepro-css" type="host">static.subscribepro.com</value>
+            </values>
+        </policy>
         <policy id="script-src">
             <values>
-                <value id="core-spreedly" type="host">https://core.spreedly.com</value>
-                <value id="hosted-subscribepro" type="host">https://hosted.subscribepro.com</value>
+                <value id="core-spreedly" type="host">core.spreedly.com</value>
+                <value id="hosted-subscribepro-js" type="host">hosted.subscribepro.com</value>
+                <value id="static-subscribepro-js" type="host">static.subscribepro.com</value>
             </values>
         </policy>
         <policy id="frame-src">
             <values>
-                <value id="core-spreedly-iframe" type="host">https://core.spreedly.com</value>
+                <value id="core-spreedly-iframe" type="host">core.spreedly.com</value>
             </values>
         </policy>
     </policies>
