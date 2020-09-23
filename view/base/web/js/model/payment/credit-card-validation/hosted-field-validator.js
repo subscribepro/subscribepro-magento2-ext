@@ -9,6 +9,7 @@ define(
         'use strict';
 
         var isValidCardNumber = true;
+        var isValidCardType = true;
         var isValidCvv = true;
 
         var focusProcessor = function (name) {
@@ -18,7 +19,7 @@ define(
 
         var blurProcessor = function (name) {
             hostedFields.removeClass(name, 'focused');
-            if (name == 'number' && !isValidCardNumber) {
+            if (name == 'number' && (!isValidCardNumber || !isValidCardType)) {
                 hostedFields.addClass(name, 'invalid');
             }
             if (name == 'cvv' && !isValidCvv) {
@@ -27,13 +28,13 @@ define(
         };
 
         var inputNumberProcessor = function (inputData) {
-            if (inputData.validNumber || !inputData.numberLength) {
+            if ((inputData.validNumber && validateCardType(getMageCardType(inputData.cardType), config.getAvailableCardTypes())) || !inputData.numberLength) {
                 hostedFields.removeClass('number', 'invalid');
             }
-            if (inputData.validNumber && inputData.numberLength) {
+            if (inputData.validNumber && validateCardType(getMageCardType(inputData.cardType), config.getAvailableCardTypes()) && inputData.numberLength) {
                 hostedFields.addClass('number', 'valid');
             }
-            if (!inputData.validNumber || !inputData.numberLength) {
+            if (!inputData.validNumber || !validateCardType(getMageCardType(inputData.cardType), config.getAvailableCardTypes()) || !inputData.numberLength) {
                 hostedFields.removeClass('number', 'valid');
             }
         };
@@ -51,12 +52,16 @@ define(
         };
 
         var inputProcessor = function (name, inputData) {
-            isValidCardNumber = (inputData.validNumber || !inputData.numberLength);
+            isValidCardNumber = ((inputData.validNumber && validateCardType(getMageCardType(inputData.cardType), config.getAvailableCardTypes())) || !inputData.numberLength);
             isValidCvv = (inputData.validCvv || !inputData.cvvLength);
 
             inputNumberProcessor(inputData);
             inputCvvProcessor(inputData);
         };
+
+        var validateCardType = function (cardType, allowedTypes) {
+            return typeof allowedTypes[cardType] !== 'undefined';
+        }
 
         /**
          * Find mage card type by SubscribePro card type
