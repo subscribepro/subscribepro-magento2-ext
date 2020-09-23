@@ -116,6 +116,10 @@ define(
                     hostedFields.addClass('number', 'invalid');
                 }
 
+                if (!validCardTypes.includes(inputProperties['cardType'])) {
+                    hostedFields.addClass('number', 'invalid');
+                }
+
                 if (!inputProperties['validCvv'] && config.hasVerification()) {
                     hostedFields.addClass('cvv', 'invalid');
                 }

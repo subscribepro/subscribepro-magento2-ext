@@ -160,4 +160,31 @@ class OrderItem
         }
         $orderItem->setProductOptions($productOptions);
     }
+
+    /**
+     * @param \Magento\Sales\Model\Order\Item $item
+     * @return bool
+     */
+    public function hasSubscription($item)
+    {
+        return $this->hasRecurringItem($item) || $this->hasNewSubscriptionItem($item);
+    }
+
+    /**
+     * @param \Magento\Sales\Model\Order\Item $item
+     * @return bool
+     */
+    public function hasRecurringItem($item)
+    {
+        return $this->getSubscriptionParam($item, SubscriptionOptionInterface::ITEM_FULFILS_SUBSCRIPTION);
+    }
+
+    /**
+     * @param \Magento\Sales\Model\Order\Item $item
+     * @return bool
+     */
+    public function hasNewSubscriptionItem($item)
+    {
+        return $this->getSubscriptionParam($item, SubscriptionOptionInterface::CREATE_NEW_SUBSCRIPTION_AT_CHECKOUT);
+    }
 }
