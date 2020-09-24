@@ -3,14 +3,18 @@
     <policies>
         <policy id="style-src">
             <values>
-                <value id="static-subscribepro-css" type="host">static.subscribepro.com</value>
+                <value id="static-subscribepro-css" type="host">*.subscribepro.com</value>
             </values>
         </policy>
         <policy id="script-src">
             <values>
                 <value id="core-spreedly" type="host">core.spreedly.com</value>
-                <value id="hosted-subscribepro-js" type="host">hosted.subscribepro.com</value>
-                <value id="static-subscribepro-js" type="host">static.subscribepro.com</value>
+                <value id="hosted-subscribepro-js" type="host">*.subscribepro.com</value>
+            </values>
+        </policy>
+        <policy id="connect-src">
+            <values>
+                <value id="subscribepro" type="host">*.subscribepro.com</value>
             </values>
         </policy>
         <policy id="frame-src">
