@@ -16,4 +16,7 @@
             <block class="Swarming\SubscribePro\Block\Adminhtml\System\Config\Config" name="subscribe_pro_script" template="Swarming_SubscribePro::payment/script.phtml" after="billing_method"/>
         </referenceBlock>
     </body>
+    <referenceContainer name="js">
+        <block class="Magento\Backend\Block\Template" template="Swarming_SubscribePro::order/create/js.phtml" name="swarming_subscribepro_admin_order_create" />
+    </referenceContainer>
 </page>

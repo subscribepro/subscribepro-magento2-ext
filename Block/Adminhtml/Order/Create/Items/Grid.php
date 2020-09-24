@@ -7,6 +7,7 @@ use Magento\CatalogInventory\Api\StockStateInterface;
 use Magento\Framework\Pricing\PriceCurrencyInterface;
 use Magento\Quote\Model\Quote\Item;
 use Magento\Catalog\Api\Data\ProductInterface;
+use Swarming\SubscribePro\Api\Data\SubscriptionOptionInterface;
 
 /**
  * Adminhtml sales order create items grid block
@@ -105,8 +106,8 @@ class Grid extends \Magento\Sales\Block\Adminhtml\Order\Create\Items\Grid
     public function getSubscriptionParameters(Item $quoteItem)
     {
         return [
-            'option' => $this->quoteItemHelper->getSubscriptionOption($quoteItem),
-            'interval' => $this->quoteItemHelper->getSubscriptionInterval($quoteItem)
+            SubscriptionOptionInterface::CREATE_NEW_SUBSCRIPTION_AT_CHECKOUT => $this->quoteItemHelper->getCreateNewSubscriptionAtCheckout($quoteItem),
+            SubscriptionOptionInterface::INTERVAL => $this->quoteItemHelper->getSubscriptionInterval($quoteItem)
         ];
     }
 }

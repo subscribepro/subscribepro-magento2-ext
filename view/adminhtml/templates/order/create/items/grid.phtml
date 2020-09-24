@@ -172,14 +172,42 @@
                         <td colspan="4">
                             <?php if ($subscriptionProduct['subscription_option_mode'] == 'subscription_and_onetime_purchase'): ?>
                                 <p>
-                                    <input type="radio" class="radio" name="item[<?php /* @escapeNotVerified */ echo $_item->getId() ?>][admin_subscription_option][option]" id="item-<?php /* @escapeNotVerified */ echo $_item->getId() ?>-one-time-purchase" <?php if($subscriptionOptions['option'] == 'onetime_purchase') echo 'checked="checked"';?> value="onetime_purchase" />
+                                    <input
+                                        type="radio"
+                                        class="radio"
+                                        value="onetime_purchase"
+                                        name="item[<?php /* @escapeNotVerified */ echo $_item->getId() ?>][admin_subscription_option][option]"
+                                        id="item-<?php /* @escapeNotVerified */ echo $_item->getId() ?>-one-time-purchase"
+                                        <?php if(
+                                            empty($subscriptionOptions['create_new_subscription_at_checkout']) ||
+                                            (
+                                                !empty($subscriptionOptions['create_new_subscription_at_checkout']) &&
+                                                $subscriptionProduct['default_subscription_option'] == 'onetime_purchase'
+                                            )
+                                        ):
+                                            echo 'checked="checked"';
+
+                                        endif;?> />
                                     <label for="item-<?php /* @escapeNotVerified */ echo $_item->getId() ?>-one-time-purchase">One Time Purchase</label>
                                 </p>
                             <?php endif;?>
                             <p>
-                                <input type="radio" class="radio" name="item[<?php /* @escapeNotVerified */ echo $_item->getId() ?>][admin_subscription_option][option]"
-                                       id="item-<?php /* @escapeNotVerified */ echo $_item->getId() ?>-subscription-option" value="subscription"
-                                    <?php if($subscriptionOptions['option'] == 'subscription' || $subscriptionProduct['subscription_option_mode'] == 'subscription_only') echo 'checked="checked"';?>
+                                <input
+                                    type="radio"
+                                    class="radio"
+                                    value="subscription"
+                                    name="item[<?php /* @escapeNotVerified */ echo $_item->getId() ?>][admin_subscription_option][option]"
+                                    id="item-<?php /* @escapeNotVerified */ echo $_item->getId() ?>-subscription-option"
+                                    <?php if(
+                                        !empty($subscriptionOptions['create_new_subscription_at_checkout']) ||
+                                        $subscriptionProduct['subscription_option_mode'] == 'subscription_only' ||
+                                        (
+                                            empty($subscriptionOptions['create_new_subscription_at_checkout']) &&
+                                            $subscriptionProduct['default_subscription_option'] == 'subscription'
+                                        )
+                                    ):
+                                        echo 'checked="checked"';
+                                    endif;?>
                                 />
                                 <label for="item-<?php /* @escapeNotVerified */ echo $_item->getId() ?>-subscription-option">Regular Delivery</label>
                             </p>

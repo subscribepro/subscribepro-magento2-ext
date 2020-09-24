@@ -154,7 +154,7 @@ class QuoteItemUpdater
         ) {
             return false;
         }
-        return $quoteItemParams['admin_subscription_option']['option'] == PlatformProductInterface::SO_SUBSCRIPTION;
+        return $quoteItemParams['admin_subscription_option']['option'];
     }
 
     protected function getInterval(array $quoteItemParams)
