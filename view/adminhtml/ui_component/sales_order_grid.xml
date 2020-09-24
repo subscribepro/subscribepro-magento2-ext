@@ -6,6 +6,7 @@
                 <item name="config" xsi:type="array">
                     <item name="visible" xsi:type="boolean">true</item>
                     <item name="label" xsi:type="string" translate="true">Subscription</item>
+                    <item name="sortable" xsi:type="boolean">false</item>
                 </item>
             </argument>
         </column>
