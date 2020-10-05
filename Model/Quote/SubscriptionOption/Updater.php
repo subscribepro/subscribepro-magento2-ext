@@ -3,8 +3,8 @@
 namespace Swarming\SubscribePro\Model\Quote\SubscriptionOption;
 
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Quote\Model\Quote\Item as QuoteItem;
 use Magento\Quote\Api\Data\CartItemInterface;
+use Magento\Quote\Model\Quote\Item as QuoteItem;
 use SubscribePro\Service\Product\ProductInterface as PlatformProductInterface;
 use Swarming\SubscribePro\Api\Data\SubscriptionOptionInterface;
 
@@ -51,6 +51,7 @@ class Updater
             $subscriptionInterval = null;
         }
 
+        $this->quoteItemHelper->setSubscriptionParam($quoteItem, SubscriptionOptionInterface::OPTION, $subscriptionOption);
         $this->quoteItemHelper->setSubscriptionParam($quoteItem, SubscriptionOptionInterface::CREATE_NEW_SUBSCRIPTION_AT_CHECKOUT, $createNewSubscriptionAtCheckout);
         $this->quoteItemHelper->setSubscriptionParam($quoteItem, SubscriptionOptionInterface::INTERVAL, $subscriptionInterval);
 
