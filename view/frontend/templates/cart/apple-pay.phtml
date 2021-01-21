@@ -1,0 +1,69 @@
+<?php
+/**
+ * @var \Swarming\SubscribePro\Block\Cart\ApplePay $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+?>
+<h4>DEBUG - APPLE PAY</h4>
+<hr/>
+<div style="-webkit-appearance: -apple-pay-button;
+-apple-pay-button-type: plain;
+-apple-pay-button-style: black;
+border-top-left-radius: 3px; border-top-right-radius: 3px;
+border-bottom-right-radius: 3px; border-bottom-left-radius: 3px;
+height: 45px;
+width: 100%;
+display: block;"
+     lang=en></div>
+<?php /*
+<div style="-webkit-appearance: -apple-pay-button; height: 50px; width: 250px; display: block; -apple-pay-button-type: subscribe; -apple-pay-button-style: black; border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px;" lang=en></div>
+ */ ?>
+<hr/>
+<script type="application/javascript">
+    require([
+        'jquery',
+    ], function ($) {
+        $(function () { // to ensure that code evaluates on page load
+            var container = $('#maincontent');
+
+            var subscribeProApplePayConfig = {
+                applePayBtn: container.find('.cart-container .checkout-methods-items .apple-pay-button'),
+                createSessionUrl: '<?php echo $escaper->escapeHtml($block->getCreateSessionUrl()); ?>',
+                merchantDomainName: '<?php echo $escaper->escapeHtml($block->getMerchantDomainName()); ?>',
+                apiAccessToken: '<?php echo $escaper->escapeHtml($block->getApiAccessToken()) ?>',
+                paymentRequest: ''
+            }
+
+            var subscribeProApplePay = {
+                config: {
+                    merchantDomainName: '',
+                    apiAccessToken: '',
+                    applePayBtn: '',
+                },
+                init: function (config) {
+                    // Save config
+                    this.config = config;
+                    // Show button(s)
+                    this.showApplePayButtons();
+                },
+                showApplePayButtons:  function () {
+                    // Check if user has Apple Pay and canMakePayments
+                    if (window.ApplePaySession) {
+                        console.log('--> window.ApplePaySession');
+                        if (ApplePaySession.canMakePayments) {
+                            console.log('--> ApplePaySession.canMakePayments');
+                            $(this.applePayBtn)
+                                .click(this.onApplePayButtonClicked.bind(this))
+                                .show();
+                        }
+                    }
+                },
+                onApplePayButtonClicked: function() {
+                    alert('Click!');
+                }
+            }
+
+            subscribeProApplePay.init(subscribeProApplePayConfig);
+        });
+    });
+</script>
