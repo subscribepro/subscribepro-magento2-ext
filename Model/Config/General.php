@@ -28,4 +28,17 @@ class General
     {
         return $this->scopeConfig->isSetFlag('swarming_subscribepro/general/enabled', ScopeInterface::SCOPE_WEBSITE, $websiteCode);
     }
+
+    /**
+     * @param string|null $websiteCode
+     * @return bool
+     */
+    public function isApplePayEnabled($websiteCode = null)
+    {
+        return $this->scopeConfig->isSetFlag(
+            'payment/subscribe_pro_apple_pay/enabled',
+            ScopeInterface::SCOPE_WEBSITE,
+            $websiteCode
+        );
+    }
 }

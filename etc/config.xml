@@ -82,6 +82,10 @@
                     <additionalInformation>Swarming\SubscribePro\Model\InstantPurchase\PaymentAdditionalInformationProvider</additionalInformation>
                 </instant_purchase>
             </subscribe_pro_vault>
+            <subscribe_pro_apple_pay>
+                <title>Subscribe Pro | Apple Pay</title>
+                <enabled>0</enabled>
+            </subscribe_pro_apple_pay>
         </payment>
     </default>
 </config>
