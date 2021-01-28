@@ -6,18 +6,17 @@
 ?>
 <h4>DEBUG - APPLE PAY</h4>
 <hr/>
-<div style="-webkit-appearance: -apple-pay-button;
--apple-pay-button-type: plain;
--apple-pay-button-style: black;
-border-top-left-radius: 3px; border-top-right-radius: 3px;
-border-bottom-right-radius: 3px; border-bottom-left-radius: 3px;
-height: 45px;
-width: 100%;
-display: block;"
-     lang=en></div>
-<?php /*
-<div style="-webkit-appearance: -apple-pay-button; height: 50px; width: 250px; display: block; -apple-pay-button-type: subscribe; -apple-pay-button-style: black; border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px;" lang=en></div>
- */ ?>
+<div class="subscriber-pro-apple-pay-button-container" style="display:none;">
+    <div class="apple-pay-button" style="-webkit-appearance: -apple-pay-button;
+    -apple-pay-button-type: plain;
+    -apple-pay-button-style: black;
+    border-top-left-radius: 3px; border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px; border-bottom-left-radius: 3px;
+    height: 45px;
+    width: 100%;
+    display: block;"
+         lang=en></div>
+</div>
 <hr/>
 <script type="application/javascript">
     require([
@@ -27,18 +26,19 @@ display: block;"
             var container = $('#maincontent');
 
             var subscribeProApplePayConfig = {
-                applePayBtn: container.find('.cart-container .checkout-methods-items .apple-pay-button'),
                 createSessionUrl: '<?php echo $escaper->escapeHtml($block->getCreateSessionUrl()); ?>',
                 merchantDomainName: '<?php echo $escaper->escapeHtml($block->getMerchantDomainName()); ?>',
                 apiAccessToken: '<?php echo $escaper->escapeHtml($block->getApiAccessToken()) ?>',
-                paymentRequest: ''
+                paymentRequest: <?php echo /* @noEscape */$block->getApplePayPaymentRequest() ?>
             }
 
             var subscribeProApplePay = {
                 config: {
                     merchantDomainName: '',
                     apiAccessToken: '',
+                    paymentRequest: {},
                     applePayBtn: '',
+                    createSessionUrl: ''
                 },
                 init: function (config) {
                     // Save config
@@ -49,17 +49,167 @@ display: block;"
                 showApplePayButtons:  function () {
                     // Check if user has Apple Pay and canMakePayments
                     if (window.ApplePaySession) {
-                        console.log('--> window.ApplePaySession');
                         if (ApplePaySession.canMakePayments) {
-                            console.log('--> ApplePaySession.canMakePayments');
-                            $(this.applePayBtn)
+                            $('.subscriber-pro-apple-pay-button-container')
                                 .click(this.onApplePayButtonClicked.bind(this))
                                 .show();
                         }
                     }
                 },
                 onApplePayButtonClicked: function() {
-                    alert('Click!');
+                    alert('Are you ready?!');
+                    var self = this,
+                        displayName = self.displayName;
+
+                    // Pre-configured paymentRequest
+                    const paymentRequest = self.config.paymentRequest;
+
+                    console.log('===> onApplePayButtonClicked');
+                    console.log(paymentRequest);
+                    console.log(paymentRequest.total);
+                    console.log(displayName);
+
+                    if (!displayName) {
+                        displayName = 'MERCHANT';
+                    }
+
+                    // Set merchant display name
+                    paymentRequest.total = self.replaceTotalLabel(paymentRequest.total, displayName);
+
+                    // Create session object
+                    const session = new ApplePaySession(1, paymentRequest);
+
+                    // Call Merchant Validation
+                    session.onvalidatemerchant = function (event) {
+                        // Requests an Apple Pay merchant session from Subscribe Pro platform and returns a promise.
+                        jQuery.ajax({
+                            url: self.config.createSessionUrl,
+                            type: "POST",
+                            dataType: "json",
+                            contentType: "application/json; charset=utf-8",
+                            crossDomain: true,
+                            headers: {
+                                'Authorization': 'Bearer ' + self.config.apiAccessToken
+                            },
+                            data: JSON.stringify({
+                                url: event.validationURL,
+                                merchantDomainName: self.config.merchantDomainName,
+                            }),
+                            success: function (data, textStatus, jqXHR) {
+                                console.log('===> SUCCESS');
+                                console.log(data.displayName);
+                                // Save display name
+                                self.displayName = data.displayName;
+                                // Complete validation
+                                session.completeMerchantValidation(data);
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                console.log('===> ERROR');
+                                session.abort();
+                            }
+                        });
+                    };
+
+                    // New shipping contact was selected for payment sheet is init'd the first time
+                    session.onshippingcontactselected = function (event) {
+                        // Fetch shipping methods when sheet shown and when new contact chosen
+                        jQuery.ajax({
+                            url: self.config.onshippingcontactselectedUrl,
+                            type: "POST",
+                            dataType: "json",
+                            contentType: "application/json; charset=utf-8",
+                            data: JSON.stringify({
+                                shippingContact: event.shippingContact
+                            }),
+                            success: function (data, textStatus, jqXHR) {
+                                session.completeShippingContactSelection(
+                                    ApplePaySession.STATUS_SUCCESS,
+                                    data.newShippingMethods,
+                                    self.replaceTotalLabel(data.newTotal, self.displayName),
+                                    data.newLineItems);
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                session.abort();
+                            }
+                        });
+                    };
+
+                    /**
+                     * Shipping Method Selection
+                     * If the user changes their chosen shipping method we need to recalculate
+                     * the total price. We can use the shipping method identifier to determine
+                     * which method was selected.
+                     */
+                    session.onshippingmethodselected = function (event) {
+                        // Fetch shipping methods when sheet shown and when new contact chosen
+                        jQuery.ajax({
+                            url: self.config.onshippingmethodselectedUrl,
+                            type: "POST",
+                            dataType: "json",
+                            contentType: "application/json; charset=utf-8",
+                            data: JSON.stringify({
+                                shippingMethod: event.shippingMethod
+                            }),
+                            success: function (data, textStatus, jqXHR) {
+                                session.completeShippingMethodSelection(
+                                    ApplePaySession.STATUS_SUCCESS,
+                                    self.replaceTotalLabel(data.newTotal, self.displayName),
+                                    data.newLineItems);
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                session.abort();
+                            }
+                        });
+                    };
+
+                    /**
+                     * Payment Authorization
+                     * Here you receive the encrypted payment data. You would then send it
+                     * on to your payment provider for processing, and return an appropriate
+                     * status in session.completePayment()
+                     */
+                    session.onpaymentauthorized = function (event) {
+                        jQuery.ajax({
+                            url: self.config.onpaymentauthorizedUrl,
+                            type: "POST",
+                            dataType: "json",
+                            contentType: "application/json; charset=utf-8",
+                            data: JSON.stringify({
+                                payment: event.payment
+                            }),
+                            success: function (data, textStatus, jqXHR) {
+                                // Complete payment
+                                session.completePayment(ApplePaySession.STATUS_SUCCESS);
+                                // Redirect to success page
+                                window.location.href = data.redirectUrl;
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                session.abort();
+                            }
+                        });
+                    };
+
+                    // Start the Apple Pay session
+                    // All our handlers are setup
+                    session.begin();
+                },
+                /**
+                 * Helper method to replace label in total line item with Merchant Display Name
+                 *
+                 * @param total
+                 * @param label
+                 * @returns {{label: *, amount: *}}
+                 */
+                replaceTotalLabel: function (total, label) {
+                    var newTotal = {
+                        label: label,
+                        amount: total.amount
+                    };
+                    if (total.type) {
+                        newTotal.type = total.type;
+                    }
+
+                    return newTotal;
                 }
             }
 

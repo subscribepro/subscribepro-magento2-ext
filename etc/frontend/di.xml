@@ -52,4 +52,10 @@
             </argument>
         </arguments>
     </type>
+
+    <type name="Swarming\SubscribePro\Model\ApplePay\PaymentRequestConfig">
+        <arguments>
+            <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session</argument>
+        </arguments>
+    </type>
 </config>
