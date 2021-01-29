@@ -29,7 +29,10 @@
                 createSessionUrl: '<?php echo $escaper->escapeHtml($block->getCreateSessionUrl()); ?>',
                 merchantDomainName: '<?php echo $escaper->escapeHtml($block->getMerchantDomainName()); ?>',
                 apiAccessToken: '<?php echo $escaper->escapeHtml($block->getApiAccessToken()) ?>',
-                paymentRequest: <?php echo /* @noEscape */$block->getApplePayPaymentRequest() ?>
+                paymentRequest: <?php echo /* @noEscape */$block->getApplePayPaymentRequest() ?>,
+                onShippingContactSelectedUrl: '<?php echo $escaper->escapeHtml($block->getShippingSelectedUrl()); ?>',
+                onShippingMethodSelectedUrl: '<?php echo $escaper->escapeHtml($block->getShippingSelectedUrl()); ?>',
+                onPaymentAuthorizedUrl: '<?php echo $escaper->escapeHtml($block->getPaymentAuthorizedUrl()); ?>',
             }
 
             var subscribeProApplePay = {
@@ -38,7 +41,10 @@
                     apiAccessToken: '',
                     paymentRequest: {},
                     applePayBtn: '',
-                    createSessionUrl: ''
+                    createSessionUrl: '',
+                    onShippingContactSelectedUrl: '',
+                    onShippingMethodSelectedUrl: '',
+                    onPaymentAuthorizedUrl: ''
                 },
                 init: function (config) {
                     // Save config
@@ -63,11 +69,6 @@
 
                     // Pre-configured paymentRequest
                     const paymentRequest = self.config.paymentRequest;
-
-                    console.log('===> onApplePayButtonClicked');
-                    console.log(paymentRequest);
-                    console.log(paymentRequest.total);
-                    console.log(displayName);
 
                     if (!displayName) {
                         displayName = 'MERCHANT';
@@ -104,7 +105,7 @@
                                 session.completeMerchantValidation(data);
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
-                                console.log('===> ERROR');
+                                console.log('===> ERROR', errorThrown);
                                 session.abort();
                             }
                         });
@@ -113,8 +114,13 @@
                     // New shipping contact was selected for payment sheet is init'd the first time
                     session.onshippingcontactselected = function (event) {
                         // Fetch shipping methods when sheet shown and when new contact chosen
+                        if (!self.config.onShippingContactSelectedUrl) {
+                            console.error('Invalid shipping url');
+                            return false;
+                        }
+
                         jQuery.ajax({
-                            url: self.config.onshippingcontactselectedUrl,
+                            url: self.config.onShippingContactSelectedUrl,
                             type: "POST",
                             dataType: "json",
                             contentType: "application/json; charset=utf-8",
@@ -143,7 +149,7 @@
                     session.onshippingmethodselected = function (event) {
                         // Fetch shipping methods when sheet shown and when new contact chosen
                         jQuery.ajax({
-                            url: self.config.onshippingmethodselectedUrl,
+                            url: self.config.onShippingMethodSelectedUrl,
                             type: "POST",
                             dataType: "json",
                             contentType: "application/json; charset=utf-8",
@@ -170,7 +176,7 @@
                      */
                     session.onpaymentauthorized = function (event) {
                         jQuery.ajax({
-                            url: self.config.onpaymentauthorizedUrl,
+                            url: self.config.onPaymentAuthorizedUrl,
                             type: "POST",
                             dataType: "json",
                             contentType: "application/json; charset=utf-8",

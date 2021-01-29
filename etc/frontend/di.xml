@@ -58,4 +58,14 @@
             <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session</argument>
         </arguments>
     </type>
+    <type name="Swarming\SubscribePro\Model\ApplePay\Shipping">
+        <arguments>
+            <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session</argument>
+        </arguments>
+    </type>
+    <type name="Swarming\SubscribePro\Model\ApplePay\Payment">
+        <arguments>
+            <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session</argument>
+        </arguments>
+    </type>
 </config>

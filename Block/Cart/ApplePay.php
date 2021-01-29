@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace Swarming\SubscribePro\Block\Cart;
 
+use Magento\Directory\Helper\Data as DirectoryHelper;
+use Magento\Framework\Serialize\Serializer\Json as JsonSerializer;
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
 use Magento\Quote\Model\Quote;
-use Magento\Directory\Helper\Data as DirectoryHelper;
 use Swarming\SubscribePro\Model\ApplePay\PaymentRequestConfig;
-use Magento\Framework\Serialize\Serializer\Json as JsonSerializer;
 
 class ApplePay extends Template
 {
@@ -74,5 +74,20 @@ class ApplePay extends Template
         }
 
         return $this->jsonJsonSerializer->serialize($paymentRequestConfig);
+    }
+
+    public function getShippingSelectedUrl(): string
+    {
+        return $this->_urlBuilder->getUrl('subscribepro/applepay/shippinglist');
+    }
+
+    public function onShippingMethodSelected(): string
+    {
+        return $this->_urlBuilder->getUrl('subscribepro/applepay/shippingmethod');
+    }
+
+    public function getPaymentAuthorizedUrl()
+    {
+        return $this->_urlBuilder->getUrl('subscribepro/applepay/paymentauthorized');
     }
 }

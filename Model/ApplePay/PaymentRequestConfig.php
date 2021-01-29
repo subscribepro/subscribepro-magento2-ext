@@ -11,9 +11,9 @@ use Magento\Framework\Convert\DataObject;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Session\SessionManagerInterface;
+use Psr\Log\LoggerInterface;
 use Swarming\SubscribePro\Platform\Manager\Customer as PlatformManagerCustomer;
 use Swarming\SubscribePro\Platform\Tool\Oauth as PlatformOAuth;
-Use Psr\Log\LoggerInterface;
 
 class PaymentRequestConfig extends DataObject
 {
@@ -118,7 +118,60 @@ class PaymentRequestConfig extends DataObject
      */
     public function getApplePayShippingMethods(): array
     {
-        return [];
+        $quote = $this->getQuote();
+        $shippingAddress = $quote->getShippingAddress();
+
+        // Pull out the shipping rates
+        $shippingRates = $shippingAddress
+            ->collectShippingRates()
+            ->getGroupedAllShippingRates();
+
+        $rates = [];
+        $currentRate = false;
+
+        if (!$shippingRates) {
+            return $rates;
+        }
+
+        foreach ($shippingRates as $carrier => $groupRates) {
+            foreach ($groupRates as $shippingRate) {
+                // Is this the current selected shipping method?
+                if ($quote->getShippingAddress()->getShippingMethod() == $shippingRate->getCode()) {
+                    $currentRate = $this->convertShippingRate($shippingRate);
+                } else {
+                    $rates[] = $this->convertShippingRate($shippingRate);
+                }
+            }
+        }
+
+        // Add the current shipping rate first
+        if ($currentRate) {
+            array_unshift($rates, $currentRate);
+        }
+
+        return $rates;
+    }
+
+    /**
+     * Convert a shipping rate into Apple Pay format
+     *
+     * @param  $shippingRate
+     * @return array
+     */
+    public function convertShippingRate($shippingRate)
+    {
+        // Don't show the same information twice
+        $detail = $shippingRate->getMethodTitle();
+        if ($shippingRate->getCarrierTitle() == $detail || $detail == 'Free') {
+            $detail = '';
+        }
+
+        return [
+            'label' => $shippingRate->getCarrierTitle(),
+            'amount' => (float) $this->formatPrice($shippingRate->getPrice()),
+            'detail' => $detail,
+            'identifier' => $shippingRate->getCode(),
+        ];
     }
 
     /**
