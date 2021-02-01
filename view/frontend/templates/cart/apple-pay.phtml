@@ -97,8 +97,6 @@
                                 merchantDomainName: self.config.merchantDomainName,
                             }),
                             success: function (data, textStatus, jqXHR) {
-                                console.log('===> SUCCESS');
-                                console.log(data.displayName);
                                 // Save display name
                                 self.displayName = data.displayName;
                                 // Complete validation
@@ -184,6 +182,8 @@
                                 payment: event.payment
                             }),
                             success: function (data, textStatus, jqXHR) {
+                                console.log('--> onPaymentAuthorized');
+                                console.log(data);
                                 // Complete payment
                                 session.completePayment(ApplePaySession.STATUS_SUCCESS);
                                 // Redirect to success page

@@ -3,60 +3,10 @@ declare(strict_types=1);
 
 namespace Swarming\SubscribePro\Model\ApplePay;
 
-use Magento\Checkout\Model\Session as CheckoutSession;
-use Magento\Directory\Model\Currency;
-use Magento\Directory\Model\Region as DirectoryRegion;
-use Magento\Framework\Session\SessionManagerInterface;
-use Magento\Quote\Model\Quote;
-use Magento\Quote\Model\QuoteRepository;
+use Swarming\SubscribePro\Model\ApplePay\Core as ApplePayCore;
 
-class Shipping
+class Shipping extends ApplePayCore
 {
-    /**
-     * @var CheckoutSession|SessionManagerInterface
-     */
-    private $checkoutSession;
-    /**
-     * @var Quote
-     */
-    private $quote;
-    /**
-     * @var QuoteRepository
-     */
-    private $quoteRepository;
-    /**
-     * @var DirectoryRegion
-     */
-    private $directoryRegion;
-    /**
-     * @var Currency
-     */
-    private Currency $currency;
-
-    public function __construct(
-        CheckoutSession $checkoutSession,
-        QuoteRepository $quoteRepository,
-        DirectoryRegion $directoryRegion,
-        Currency $currency
-    ) {
-        $this->checkoutSession = $checkoutSession;
-        $this->quoteRepository = $quoteRepository;
-        $this->directoryRegion = $directoryRegion;
-        $this->currency = $currency;
-    }
-
-    /**
-     * @return \Magento\Quote\Api\Data\CartInterface|Quote
-     */
-    public function getQuote()
-    {
-        if (!$this->quote) {
-            $this->quote = $this->checkoutSession->getQuote();
-        }
-
-        return $this->quote;
-    }
-
     public function setDataToQuote(array $shippingData)
     {
         // Retrieve the countryId from the request
@@ -64,7 +14,7 @@ class Shipping
         $countryId = strtoupper($countryId);
 
         // Lookup region
-        $region = $this->directoryRegion->loadByName($shippingData['administrativeArea'], $countryId);
+        $region = $this->getDirectoryRegionByName($shippingData['administrativeArea'], $countryId);
 
         $this->getQuote()->getShippingAddress()
             ->setCountryId($countryId)
@@ -140,47 +90,10 @@ class Shipping
         ];
     }
 
-    /**
-     * @return array
-     */
-    public function getGrandTotal()
-    {
-        return [
-            'label' => 'MERCHANT',
-            'amount' => $this->formatPrice($this->getQuote()->getGrandTotal()),
-        ];
-    }
-
-    public function formatPrice($price)
-    {
-        return $this->currency->format($price, ['display'=>\Zend_Currency::NO_SYMBOL], false);
-    }
-
-    /**
-     * @return array
-     */
-    public function getRowItems(): array
-    {
-        $address = $this->getQuote()->getShippingAddress();
-        return [
-            [
-                'label' => 'SUBTOTAL',
-                'amount' => $this->formatPrice($address->getSubtotalWithDiscount()),
-            ],
-            [
-                'label' => 'SHIPPING',
-                'amount' => $this->formatPrice($address->getShippingAmount()),
-            ],
-            [
-                'label' => 'TAX',
-                'amount' => $this->formatPrice($address->getTaxAmount()),
-            ],
-        ];
-    }
-
     public function setShippingMethodToQuote($applePayShippingMethod)
     {
         if (isset($applePayShippingMethod['identifier'])) {
+            // TODO: avoid deprecated methods.
             $this->getQuote()
                 ->getShippingAddress()
                 ->setShippingMethod($applePayShippingMethod['identifier'])
