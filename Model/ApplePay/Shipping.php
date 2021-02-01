@@ -165,15 +165,15 @@ class Shipping
         return [
             [
                 'label' => 'SUBTOTAL',
-                'amount' => $this->currency->format($address->getSubtotalWithDiscount()),
+                'amount' => $this->formatPrice($address->getSubtotalWithDiscount()),
             ],
             [
                 'label' => 'SHIPPING',
-                'amount' => $this->currency->format($address->getShippingAmount()),
+                'amount' => $this->formatPrice($address->getShippingAmount()),
             ],
             [
                 'label' => 'TAX',
-                'amount' => $this->currency->format($address->getTaxAmount()),
+                'amount' => $this->formatPrice($address->getTaxAmount()),
             ],
         ];
     }

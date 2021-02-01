@@ -84,7 +84,7 @@ class ShippingList implements HttpPostActionInterface, CsrfAwareActionInterface
         // Return JSON response
         $result = $this->jsonResultFactory->create();
         $result->setHeader('Content-type', 'application/json');
-        $result->setData($this->jsonSerializer->serialize($response));
+        $result->setData($response);
 
         return $result;
     }
