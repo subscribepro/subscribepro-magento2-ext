@@ -49,6 +49,11 @@
             <argument name="name" xsi:type="const">SubscribePro\Service\PaymentProfile\PaymentProfileService::NAME</argument>
         </arguments>
     </type>
+    <type name="Swarming\SubscribePro\Platform\Service\ApplePay\PaymentProfile">
+        <arguments>
+            <argument name="name" xsi:type="const">SubscribePro\Service\PaymentProfile\PaymentProfileService::NAME</argument>
+        </arguments>
+    </type>
     <type name="Swarming\SubscribePro\Platform\Service\Transaction">
         <arguments>
             <argument name="name" xsi:type="const">SubscribePro\Service\Transaction\TransactionService::NAME</argument>

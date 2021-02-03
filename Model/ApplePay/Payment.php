@@ -56,6 +56,8 @@ class Payment extends ApplePayCore
         if ($this->getCustomerSession()->isLoggedIn()) {
             $this->createPaymentProfileForCustomer($paymentData);
         } else {
+            var_dump('--- STOP: Customer NOT loggedIn ---');
+            die;
             $this->createPaymentToken($paymentData);
         }
         return $this;
@@ -63,8 +65,27 @@ class Payment extends ApplePayCore
 
     public function placeOrder()
     {
+        $quote = $this->getQuote();
+
+        // Recalculate session quote
+        $quote
+            ->setTotalsCollectedFlag(false)
+            ->collectTotals()
+            ->save();
+
         var_dump(__METHOD__);
         die;
+
+        // TODO: need a service to get quote from DB and recalculate it instead of using session quote.
+
+        //TODO: need to implement service for placeOrder.
+        //try{
+        //    $this->quoteSubmitOrder($cartId, $payment);
+        //} catch (LocalizedException $e) {
+        //}
+
+//        $quote->save();
+
         return $this;
     }
 
@@ -87,7 +108,7 @@ class Payment extends ApplePayCore
 //            }
         }
 
-        $magentoAddress = array(
+        $magentoAddress = [
             'street' => implode("\n", $address['addressLines']),
             'firstname' => $address['givenName'],
             'lastname' => $address['familyName'],
@@ -95,7 +116,7 @@ class Payment extends ApplePayCore
             'country_id' => $countryId,
             'postcode' => $address['postalCode'],
             'telephone' => (isset($address['phoneNumber']) ? $address['phoneNumber'] : '0000000000')
-        );
+        ];
 
         // Determine if a region is required for the selected country
         if (isset($address['administrativeArea'])) {
@@ -114,54 +135,52 @@ class Payment extends ApplePayCore
 
     protected function createPaymentProfileForCustomer(array $applePayPayment)
     {
-        /** @var $platformVaultHelper */
-//        $platformVaultHelper = Mage::helper('autoship/platform_vault');
-        /** @var $platformCustomerHelper */
-//        $platformCustomerHelper = Mage::helper('autoship/platform_customer');
-
         $quote = $this->getQuote();
-        var_dump(__METHOD__);
-        var_dump($quote->getId());
-        die;
+        $websiteId = $quote->getStore()->getWebsiteId();
 
         // Create SP customer
-//        $platformCustomer = $platformCustomerHelper->createOrUpdatePlatformCustomer($quote->getCustomer());
-        // Create payment profile
-        /*$paymentProfile = $platformVaultHelper->createApplePayPaymentProfile(
-            $platformCustomer->getId(),
-            $quote->getCustomer(),
-            $quote->getBillingAddress(),
-            $applePayPayment['token']['paymentData']
-        );*/
+        $platformCustomer = $this->getPlatformCustomer($quote->getCustomerEmail(), true, $websiteId);
 
-        return '';
+        // TODO: Before this row all works properly.
+
+        $defaultBillingAddress = $this->getCustomerSession()->getCustomer()->getDefaultBillingAddress();
+
+        $paymentProfile = $this->createPlatformPaymentProfile(
+            $platformCustomer->getId(),
+            $applePayPayment['token']['paymentData'],
+            $this->getCustomerSession()->getCustomer(),
+            null, // $defaultBillingAddress
+            $websiteId
+        );
 
         // Set apple pay pay method on quote
-//        $payment = $quote->getPayment();
-//        $payment->setMethod(SubscribePro_Autoship_Model_Payment_Method_Applepay::METHOD_CODE);
+        $payment = $quote->getPayment();
+        //TODO: change it to payment class constant.
+        $payment->setMethod('apple_pay');
 //        // Clear out additional information that may have been set previously in the session
-//        $payment->setAdditionalInformation(array());
-//        $payment->setAdditionalInformation('save_card', false);
-//        $payment->setAdditionalInformation('is_new_card', false);
-//        $payment->setAdditionalInformation('payment_token', $paymentProfile->getPaymentToken());
-//        $payment->setAdditionalInformation('payment_profile_id', $paymentProfile->getId());
-//        $payment->setAdditionalInformation('is_third_party', false);
-//        $payment->setAdditionalInformation('subscribe_pro_order_token', '');
-//        // CC Number
-//        $ccNumber = $paymentProfile->getCreditcardFirstDigits() . 'XXXXXX' . $paymentProfile->getCreditcardLastDigits();
-//        $payment->setAdditionalInformation('obscured_cc_number', $ccNumber);
-//        $payment->setData('cc_number', $ccNumber);
-//        $payment->setCcNumberEnc($payment->encrypt($ccNumber));
-//        $payment->setData('cc_exp_month', $paymentProfile->getCreditcardMonth());
-//        $payment->setData('cc_exp_year', $paymentProfile->getCreditcardYear());
-//        $payment->setData('cc_type', $platformVaultHelper->mapSubscribeProCardTypeToMagento($paymentProfile->getCreditcardType()));
-//        $quote->setPayment($payment);
-//
+        $payment->setAdditionalInformation([]);
+        $payment->setAdditionalInformation('save_card', false);
+        $payment->setAdditionalInformation('is_new_card', false);
+        $payment->setAdditionalInformation('payment_token', $paymentProfile->getPaymentToken());
+        $payment->setAdditionalInformation('payment_profile_id', $paymentProfile->getId());
+        $payment->setAdditionalInformation('is_third_party', false);
+        $payment->setAdditionalInformation('subscribe_pro_order_token', '');
+        // CC Number
+        $ccNumber = $paymentProfile->getCreditcardFirstDigits() . 'XXXXXX' . $paymentProfile->getCreditcardLastDigits();
+        $payment->setAdditionalInformation('obscured_cc_number', $ccNumber);
+        $payment->setData('cc_number', $ccNumber);
+        $payment->setCcNumberEnc($payment->encrypt($ccNumber));
+        $payment->setData('cc_exp_month', $paymentProfile->getCreditcardMonth());
+        $payment->setData('cc_exp_year', $paymentProfile->getCreditcardYear());
+        $payment->setData('cc_type', $this->mapSubscribeProCardTypeToMagento($paymentProfile->getCreditcardType()));
+        $quote->setPayment($payment);
+
 //        // Recalculate quote
-//        $payment->save();
-//        $quote->save();
-//
-//        return $this;
+        // TODO: remove deprecated call.
+        $payment->save();
+        $quote->save();
+
+        return $this;
     }
 
     public function createPaymentToken(array $applePayPayment)
