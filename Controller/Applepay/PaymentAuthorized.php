@@ -71,8 +71,8 @@ class PaymentAuthorized  implements HttpPostActionInterface, CsrfAwareActionInte
             }
 
             // Set shipping method selection
-            $this->payment->setPaymentToQuote($data['payment']);
-            $this->payment->placeOrder();
+            $quoteId = $this->payment->setPaymentToQuote($data['payment']);
+            $this->payment->placeOrder($quoteId);
 
             // Build up our response
             $response = [

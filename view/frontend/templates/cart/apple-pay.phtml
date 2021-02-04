@@ -31,7 +31,7 @@
                 apiAccessToken: '<?php echo $escaper->escapeHtml($block->getApiAccessToken()) ?>',
                 paymentRequest: <?php echo /* @noEscape */$block->getApplePayPaymentRequest() ?>,
                 onShippingContactSelectedUrl: '<?php echo $escaper->escapeHtml($block->getShippingSelectedUrl()); ?>',
-                onShippingMethodSelectedUrl: '<?php echo $escaper->escapeHtml($block->getShippingSelectedUrl()); ?>',
+                onShippingMethodSelectedUrl: '<?php echo $escaper->escapeHtml($block->onShippingMethodSelected()); ?>',
                 onPaymentAuthorizedUrl: '<?php echo $escaper->escapeHtml($block->getPaymentAuthorizedUrl()); ?>',
             }
 

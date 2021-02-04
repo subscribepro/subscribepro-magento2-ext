@@ -13,24 +13,24 @@ use Magento\Framework\Serialize\Serializer\Json as JsonSerializer;
 use Swarming\SubscribePro\Model\ApplePay\Shipping;
 use Magento\Framework\Exception\LocalizedException;
 
-class ShippingMethod  implements HttpPostActionInterface, CsrfAwareActionInterface
+class ShippingMethod implements HttpPostActionInterface, CsrfAwareActionInterface
 {
     /**
      * @var RequestInterface
      */
-    private RequestInterface $request;
+    private $request;
     /**
      * @var Shipping
      */
-    private Shipping $shipping;
+    private $shipping;
     /**
      * @var JsonSerializer
      */
-    private JsonSerializer $jsonSerializer;
+    private $jsonSerializer;
     /**
      * @var JsonResultFactory
      */
-    private JsonResultFactory $jsonResultFactory;
+    private $jsonResultFactory;
 
     public function __construct(
         RequestInterface $request,
@@ -66,7 +66,8 @@ class ShippingMethod  implements HttpPostActionInterface, CsrfAwareActionInterfa
             // Return JSON response
             $result = $this->jsonResultFactory->create();
             $result->setHeader('Content-type', 'application/json');
-            $result->setData($this->jsonSerializer->serialize($response));
+//            $result->setData($this->jsonSerializer->serialize($response));
+            $result->setData($response);
 
             return $result;
 

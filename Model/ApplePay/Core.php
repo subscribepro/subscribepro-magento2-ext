@@ -16,6 +16,7 @@ use Magento\Quote\Model\QuoteManagement;
 use Psr\Log\LoggerInterface;
 use Swarming\SubscribePro\Platform\Manager\Customer as PlatformCustomer;
 use Swarming\SubscribePro\Platform\Service\ApplePay\PaymentProfile as PlatformApplePayPaymentProfile;
+use Swarming\SubscribePro\Model\ApplePay\CreateOrderService;
 
 abstract class Core
 {
@@ -49,6 +50,10 @@ abstract class Core
      */
     protected $platformPaymentProfile;
     /**
+     * @var \Swarming\SubscribePro\Model\ApplePay\CreateOrderService
+     */
+    private $createOrderService;
+    /**
      * @var QuoteManagement
      */
     protected $quoteManagement;
@@ -68,6 +73,7 @@ abstract class Core
         DirectoryRegion $directoryRegion,
         PlatformCustomer $platformCustomer,
         PlatformApplePayPaymentProfile $platformPaymentProfile,
+        CreateOrderService $createOrderService,
         QuoteManagement  $quoteManagement,
         JsonSerializer $jsonSerializer,
         LoggerInterface $logger
@@ -78,6 +84,7 @@ abstract class Core
         $this->directoryRegion = $directoryRegion;
         $this->platformCustomer = $platformCustomer;
         $this->platformPaymentProfile = $platformPaymentProfile;
+        $this->createOrderService = $createOrderService;
         $this->quoteManagement = $quoteManagement;
         $this->jsonSerializer = $jsonSerializer;
         $this->logger = $logger;
@@ -290,5 +297,10 @@ abstract class Core
     public function quoteSubmitOrder($cartId, PaymentInterface $paymentMethod = null)
     {
         return $this->quoteManagement->placeOrder($cartId, $paymentMethod);
+    }
+
+    public function createOrderService($quoteId)
+    {
+        return $this->createOrderService->createOrder($quoteId);
     }
 }
