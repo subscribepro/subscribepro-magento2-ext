@@ -60,19 +60,12 @@ class Payment extends ApplePayCore
             die;
             $this->createPaymentToken($paymentData);
         }
-        return $this;
+        return $quote->getId();
     }
 
-    public function placeOrder()
+    public function placeOrder($quoteId)
     {
-        $quote = $this->getQuote();
-
-        // Recalculate session quote
-        $quote
-            ->setTotalsCollectedFlag(false)
-            ->collectTotals()
-            ->save();
-
+        $this->createOrderService($quoteId);
         var_dump(__METHOD__);
         die;
 

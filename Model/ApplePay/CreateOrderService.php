@@ -76,9 +76,14 @@ class CreateOrderService
 
         $shippingAddress = $quote->getShippingAddress();
 
-        var_dump($shippingAddress->getShippingMethod());
-        var_dump($shippingAddress->getShippingMethod());
-        die;
+        if (!$shippingAddress->getShippingMethod()) {
+            /*
+             * case when only one shipping_method available the apple pay does not trigger an event
+             * with "onshippingmethodselected".
+             */
+            // TODO: need to set shipping_method if only one available or throw error if it more than one methods.
+        }
+
         $quote->collectTotals();
 
         $this->quoteRepository->save($quote);
@@ -90,8 +95,11 @@ class CreateOrderService
 
         $incrementId = $order->getIncrementId() ?? null;
 
-        var_dump($incrementId);
+        var_export('New Order IncrementID');
+        var_export($incrementId);
         die;
+
+        // TODO: redirect to the success page.
 
     }
 }
