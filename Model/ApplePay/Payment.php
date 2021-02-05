@@ -63,23 +63,9 @@ class Payment extends ApplePayCore
         return $quote->getId();
     }
 
-    public function placeOrder($quoteId)
+    public function placeOrder($quoteId): bool
     {
-        $this->createOrderService($quoteId);
-        var_dump(__METHOD__);
-        die;
-
-        // TODO: need a service to get quote from DB and recalculate it instead of using session quote.
-
-        //TODO: need to implement service for placeOrder.
-        //try{
-        //    $this->quoteSubmitOrder($cartId, $payment);
-        //} catch (LocalizedException $e) {
-        //}
-
-//        $quote->save();
-
-        return $this;
+        return $this->createOrderService($quoteId);
     }
 
     protected function convertToMagentoAddress($address)

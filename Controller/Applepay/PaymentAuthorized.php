@@ -8,13 +8,16 @@ use Magento\Framework\App\CsrfAwareActionInterface;
 use Magento\Framework\App\Request\InvalidRequestException;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Controller\Result\JsonFactory as JsonResultFactory;
+use Magento\Framework\DataObject;
 use Magento\Framework\Phrase;
 use Magento\Framework\Serialize\Serializer\Json as JsonSerializer;
 use Swarming\SubscribePro\Model\ApplePay\Payment;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Checkout\Model\DefaultConfigProvider as CheckoutDefaultConfigProvider;
+use Magento\Framework\UrlInterface;
 use Psr\Log\LoggerInterface;
 
-class PaymentAuthorized  implements HttpPostActionInterface, CsrfAwareActionInterface
+class PaymentAuthorized implements HttpPostActionInterface, CsrfAwareActionInterface
 {
     /**
      * @var RequestInterface
@@ -31,11 +34,19 @@ class PaymentAuthorized  implements HttpPostActionInterface, CsrfAwareActionInte
     /**
      * @var JsonResultFactory
      */
-    private $jsonResultFactory;
+    private $resultJsonFactory;
     /**
      * @var LoggerInterface
      */
     private $logger;
+    /**
+     * @var CheckoutDefaultConfigProvider
+     */
+    private $defaultConfigProvider;
+    /**
+     * @var UrlInterface
+     */
+    private $urlBuilder;
 
     /**
      * PaymentAuthorized constructor.
@@ -51,17 +62,23 @@ class PaymentAuthorized  implements HttpPostActionInterface, CsrfAwareActionInte
         Payment $payment,
         JsonSerializer $jsonSerializer,
         JsonResultFactory $jsonResultFactory,
+        CheckoutDefaultConfigProvider $defaultConfigProvider,
+        UrlInterface $urlBuilder,
         LoggerInterface $logger
     ) {
         $this->request = $request;
         $this->payment = $payment;
         $this->jsonSerializer = $jsonSerializer;
-        $this->jsonResultFactory = $jsonResultFactory;
+        $this->resultJsonFactory = $jsonResultFactory;
         $this->logger = $logger;
+        $this->defaultConfigProvider = $defaultConfigProvider;
+        $this->urlBuilder = $urlBuilder;
     }
 
     public function execute()
     {
+        $result = new DataObject();
+
         try {
             // Get JSON POST
             $data = $this->getRequestData();
@@ -74,22 +91,22 @@ class PaymentAuthorized  implements HttpPostActionInterface, CsrfAwareActionInte
             $quoteId = $this->payment->setPaymentToQuote($data['payment']);
             $this->payment->placeOrder($quoteId);
 
-            // Build up our response
-            $response = [
-                'redirectUrl' => 'checkout/onepage/success',
-            ];
-
-            // Return JSON response
-            $result = $this->jsonResultFactory->create();
-            $result->setHeader('Content-type', 'application/json');
-            $result->setData($this->jsonSerializer->serialize($response));
+            $redirectUrl = $this->defaultConfigProvider->getDefaultSuccessPageUrl();
+            $urlToRedirect = $this->urlBuilder->getUrl('checkout/onepage/success/');
+            $result->setData('redirect', $redirectUrl);
+            $result->setData('redirectUrl', $urlToRedirect);
 
         } catch (LocalizedException $e) {
-            var_dump($e->getMessage());
-            die;
+            $this->logger->critical($e);
+            $result->setData('success', false);
+            $result->setData('error', true);
+            $result->setData(
+                'error_messages',
+                new Phrase('Something went wrong while processing your order. Please try again later.')
+            );
         }
 
-        return $result;
+        return $this->resultJsonFactory->create()->setData($result->getData());
     }
 
     public function getRequestData()
@@ -99,7 +116,7 @@ class PaymentAuthorized  implements HttpPostActionInterface, CsrfAwareActionInte
 
     public function createCsrfValidationException(RequestInterface $request): ?InvalidRequestException
     {
-        $resultRedirect = $this->jsonResultFactory->create();
+        $resultRedirect = $this->resultJsonFactory->create();
         $resultRedirect->setHttpResponseCode(401);
 
         return new InvalidRequestException(
