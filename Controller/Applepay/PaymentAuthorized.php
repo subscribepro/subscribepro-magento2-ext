@@ -11,7 +11,7 @@ use Magento\Framework\Controller\Result\JsonFactory as JsonResultFactory;
 use Magento\Framework\DataObject;
 use Magento\Framework\Phrase;
 use Magento\Framework\Serialize\Serializer\Json as JsonSerializer;
-use Swarming\SubscribePro\Model\ApplePay\Payment;
+use Swarming\SubscribePro\Model\ApplePay\PaymentService;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Checkout\Model\DefaultConfigProvider as CheckoutDefaultConfigProvider;
 use Magento\Framework\UrlInterface;
@@ -24,9 +24,9 @@ class PaymentAuthorized implements HttpPostActionInterface, CsrfAwareActionInter
      */
     private $request;
     /**
-     * @var Payment
+     * @var PaymentService
      */
-    private $payment;
+    private $paymentServie;
     /**
      * @var JsonSerializer
      */
@@ -52,14 +52,14 @@ class PaymentAuthorized implements HttpPostActionInterface, CsrfAwareActionInter
      * PaymentAuthorized constructor.
      *
      * @param RequestInterface  $request
-     * @param Payment           $payment
+     * @param PaymentService    $paymentService
      * @param JsonSerializer    $jsonSerializer
      * @param JsonResultFactory $jsonResultFactory
      * @param LoggerInterface   $logger
      */
     public function __construct(
         RequestInterface $request,
-        Payment $payment,
+        PaymentService $paymentService,
         JsonSerializer $jsonSerializer,
         JsonResultFactory $jsonResultFactory,
         CheckoutDefaultConfigProvider $defaultConfigProvider,
@@ -67,7 +67,7 @@ class PaymentAuthorized implements HttpPostActionInterface, CsrfAwareActionInter
         LoggerInterface $logger
     ) {
         $this->request = $request;
-        $this->payment = $payment;
+        $this->paymentServie = $paymentService;
         $this->jsonSerializer = $jsonSerializer;
         $this->resultJsonFactory = $jsonResultFactory;
         $this->logger = $logger;
@@ -88,8 +88,8 @@ class PaymentAuthorized implements HttpPostActionInterface, CsrfAwareActionInter
             }
 
             // Set shipping method selection
-            $quoteId = $this->payment->setPaymentToQuote($data['payment']);
-            $this->payment->placeOrder($quoteId);
+            $quoteId = $this->paymentServie->setPaymentToQuote($data['payment']);
+            $this->paymentServie->placeOrder($quoteId);
 
             $redirectUrl = $this->defaultConfigProvider->getDefaultSuccessPageUrl();
             $urlToRedirect = $this->urlBuilder->getUrl('checkout/onepage/success/');

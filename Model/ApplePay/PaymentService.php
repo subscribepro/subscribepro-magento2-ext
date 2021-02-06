@@ -7,7 +7,7 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Phrase;
 use Swarming\SubscribePro\Model\ApplePay\Core as ApplePayCore;
 
-class Payment extends ApplePayCore
+class PaymentService extends ApplePayCore
 {
     public function setPaymentToQuote(array $paymentData)
     {
@@ -61,11 +61,6 @@ class Payment extends ApplePayCore
             $this->createPaymentToken($paymentData);
         }
         return $quote->getId();
-    }
-
-    public function placeOrder($quoteId): bool
-    {
-        return $this->createOrderService($quoteId);
     }
 
     protected function convertToMagentoAddress($address)

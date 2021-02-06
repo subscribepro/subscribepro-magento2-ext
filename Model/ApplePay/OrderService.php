@@ -17,7 +17,7 @@ use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Email\Sender\OrderSender;
 use Psr\Log\LoggerInterface;
 
-class CreateOrderService
+class OrderService
 {
     /**
      * @var CartRepositoryInterface
