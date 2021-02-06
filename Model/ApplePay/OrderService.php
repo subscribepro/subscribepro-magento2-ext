@@ -117,21 +117,13 @@ class OrderService
 //            if (!$redirectUrl) {
 //                $redirectUrl = $this->defaultConfigProvider->getDefaultSuccessPageUrl();
 //            }
-            /**
-             * we only want to send to customer about new order when there is no redirect to third party
-             */
-//            if (!$redirectUrl && $order->getCanSendNewEmailFlag()) {
-//                try {
-//                    $this->orderSender->send($order);
-//                } catch (\Exception $e) {
-//                    $this->logger->critical($e);
-//                }
-//            }
 
             $this->checkoutSession
                 ->setLastQuoteId($quote->getId())
                 ->setLastSuccessQuoteId($quote->getId())
-                ->clearHelperData();
+                ->setLastOrderId($order->getId())
+                ->setLastRealOrderId($order->getIncrementId())
+                ->setLastOrderStatus($order->getStatus());
 
             return true;
         } catch (LocalizedException $e) {
