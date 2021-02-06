@@ -11,9 +11,9 @@ use Magento\Framework\Convert\DataObject;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Session\SessionManagerInterface;
-use Psr\Log\LoggerInterface;
 use Swarming\SubscribePro\Platform\Manager\Customer as PlatformManagerCustomer;
 use Swarming\SubscribePro\Platform\Tool\Oauth as PlatformOAuth;
+use Psr\Log\LoggerInterface;
 
 class PaymentRequestConfig extends DataObject
 {
@@ -65,6 +65,11 @@ class PaymentRequestConfig extends DataObject
         $this->logger = $logger;
     }
 
+    /**
+     * @return array
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
+     */
     public function getRequestConfig(): array
     {
         // Req fields
@@ -90,13 +95,18 @@ class PaymentRequestConfig extends DataObject
     }
 
     /**
-     * @return string|null
+     * @return string
      */
     public function getMerchantCountryCode(): string
     {
         return $this->directoryHelper->getDefaultCountry($this->getQuote()->getStore());
     }
 
+    /**
+     * @return \Magento\Quote\Api\Data\CartInterface|\Magento\Quote\Model\Quote
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
+     */
     public function getQuote()
     {
         if (!$this->quote) {
@@ -106,6 +116,9 @@ class PaymentRequestConfig extends DataObject
         return $this->quote;
     }
 
+    /**
+     * @return string
+     */
     public function getMerchantCurrencyCode(): string
     {
         return $this->getQuote()->getBaseCurrencyCode();
@@ -206,6 +219,9 @@ class PaymentRequestConfig extends DataObject
         ];
     }
 
+    /**
+     * @return array
+     */
     public function getSupportedApplePayCardTypes(): array
     {
         return [
@@ -216,11 +232,20 @@ class PaymentRequestConfig extends DataObject
         ];
     }
 
-    public function formatPrice($price)
+    /**
+     * @param $price
+     * @return string
+     */
+    public function formatPrice($price): string
     {
         return $this->currency->format($price, ['display'=>\Zend_Currency::NO_SYMBOL], false);
     }
 
+    /**
+     * @return string
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
+     */
     public function getAccessToken()
     {
         $quote = $this->checkoutSession->getQuote();
@@ -234,8 +259,7 @@ class PaymentRequestConfig extends DataObject
                 $websiteId
             )->getId();
         } catch (NoSuchEntityException $e) {
-            var_dump($e->getMessage());
-            die;
+            $this->logger->error($e->getMessage());
             $subscriberProCustomerId = false;
         }
 

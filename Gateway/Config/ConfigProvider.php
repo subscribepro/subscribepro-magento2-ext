@@ -76,11 +76,15 @@ class ConfigProvider
         ];
 
         $websiteId = $this->storeManager->getStore($storeId)->getWebsiteId();
-        if ($this->generalConfig->isEnabled($websiteId)) {
+        if ($this->isEnabledPayment($websiteId)) {
+            $platformConfig = $this->platformConfigTool->getConfig(
+                PlatformConfig::CONFIG_TRANSPARENT_REDIRECT_ENVIRONMENT_KEY,
+                $websiteId
+            );
             $config = [
                 'vaultCode' => self::VAULT_CODE,
                 'isActive' => $this->gatewayConfig->isActive($storeId),
-                'environmentKey' => $this->platformConfigTool->getConfig(PlatformConfig::CONFIG_TRANSPARENT_REDIRECT_ENVIRONMENT_KEY, $websiteId),
+                'environmentKey' => $platformConfig,
                 'availableCardTypes' => $this->getCcAvailableTypes($storeId),
                 'ccTypesMapper' => $this->gatewayConfig->getCcTypesMapper($storeId),
                 'hasVerification' => $this->gatewayConfig->hasVerification($storeId),
@@ -89,6 +93,11 @@ class ConfigProvider
             ];
         }
         return $config;
+    }
+
+    public function isEnabledPayment($websiteId)
+    {
+        return $this->generalConfig->isEnabled($websiteId);
     }
 
     /**

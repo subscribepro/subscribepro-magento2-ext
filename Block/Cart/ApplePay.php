@@ -9,6 +9,7 @@ use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
 use Magento\Quote\Model\Quote;
 use Swarming\SubscribePro\Model\ApplePay\PaymentRequestConfig;
+use Swarming\SubscribePro\Gateway\Config\ApplePayConfigProvider;
 
 class ApplePay extends Template
 {
@@ -28,12 +29,17 @@ class ApplePay extends Template
      * @var JsonSerializer
      */
     private $jsonJsonSerializer;
+    /**
+     * @var ApplePayConfigProvider
+     */
+    private $applePayConfigProvider;
 
     public function __construct(
         Context $context,
         Quote $quote,
         DirectoryHelper $directoryHelper,
         PaymentRequestConfig $paymentRequestConfig,
+        ApplePayConfigProvider $applePayConfigProvider,
         JsonSerializer $jsonJsonSerializer,
         array $data = []
     ) {
@@ -41,12 +47,18 @@ class ApplePay extends Template
         $this->quote = $quote;
         $this->directoryHelper = $directoryHelper;
         $this->paymentRequestConfig = $paymentRequestConfig;
+        $this->applePayConfigProvider = $applePayConfigProvider;
         $this->jsonJsonSerializer = $jsonJsonSerializer;
     }
 
+    /**
+     * @param null $storeId
+     * @return string
+     */
     public function getMerchantDomainName(): string
     {
-        return 'qhive-vpn.qbees.tech';
+        $storeId = $this->quote->getStoreId();
+        return $this->applePayConfigProvider->getDomain($storeId);
     }
 
     /**
@@ -59,13 +71,17 @@ class ApplePay extends Template
         return $this->paymentRequestConfig->getAccessToken();
     }
 
+    /**
+     * @return string
+     */
     public function getCreateSessionUrl(): string
     {
-//        return rtrim($this->getApiBaseUrl(), '/') . '/services/v2/vault/applepay/create-session.json';
-        return 'https://api.subscribepro.com/services/v2/vault/applepay/create-session.json';
+        $websiteId = $this->quote->getStore()->getWebsiteId();
+        return rtrim($this->applePayConfigProvider->getApiBaseUrl($websiteId), '/')
+            . '/services/v2/vault/applepay/create-session.json';
     }
 
-    public function getApplePayPaymentRequest()
+    public function getApplePayPaymentRequest(): string
     {
         $paymentRequestConfig = $this->paymentRequestConfig->getRequestConfig();
 
@@ -86,7 +102,7 @@ class ApplePay extends Template
         return $this->_urlBuilder->getUrl('subscribepro/applepay/shippingmethod');
     }
 
-    public function getPaymentAuthorizedUrl()
+    public function getPaymentAuthorizedUrl(): string
     {
         return $this->_urlBuilder->getUrl('subscribepro/applepay/paymentauthorized');
     }

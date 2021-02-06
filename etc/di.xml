@@ -361,6 +361,29 @@
         </arguments>
     </virtualType>
 
+    <!-- SubscribePro ApplePay Adapter -->
+    <virtualType name="SubscribeProApplePayAdapter" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">Swarming\SubscribePro\Gateway\Config\ApplePayConfigProvider::CODE</argument>
+            <argument name="formBlockType" xsi:type="string">Swarming\SubscribePro\Block\Adminhtml\Payment\Cc</argument>
+            <argument name="infoBlockType" xsi:type="string">Swarming\SubscribePro\Block\Payment\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">SubscribeProValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">SubscribeProValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">SubscribeProCommandPool</argument>
+        </arguments>
+    </virtualType>
+    <type name="Swarming\SubscribePro\Gateway\Config\ApplePayConfigProvider">
+        <arguments>
+            <argument name="gatewayConfig" xsi:type="object">\Swarming\SubscribePro\Gateway\Config\ApplePayConfig</argument>
+        </arguments>
+    </type>
+    <type name="Swarming\SubscribePro\Gateway\Config\ApplePayConfig">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">Swarming\SubscribePro\Gateway\Config\ApplePayConfigProvider::CODE</argument>
+        </arguments>
+    </type>
+    <!-- SubscribePro ApplePay Adapter -->
+
     <type name="Swarming\SubscribePro\Platform\Storage\Product">
         <arguments>
             <argument name="cache" xsi:type="object">Swarming\SubscribePro\Platform\Cache\Type\Product</argument>
@@ -374,18 +397,11 @@
 
     <!-- Mark client ID and client Secret keys as sensitive -->
     <type name="Magento\Config\Model\Config\TypePool">
-       <arguments>
-          <argument name="sensitive" xsi:type="array">
-             <item name="swarming_subscribepro/platform/client_id" xsi:type="string">1</item>
-          </argument>
-       </arguments>
-    </type>
-
-    <type name="Magento\Config\Model\Config\TypePool">
-       <arguments>
-          <argument name="sensitive" xsi:type="array">
-             <item name="swarming_subscribepro/platform/client_secret" xsi:type="string">1</item>
-          </argument>
-       </arguments>
+        <arguments>
+            <argument name="sensitive" xsi:type="array">
+                <item name="swarming_subscribepro/platform/client_id" xsi:type="string">1</item>
+                <item name="swarming_subscribepro/platform/client_secret" xsi:type="string">1</item>
+            </argument>
+        </arguments>
     </type>
 </config>

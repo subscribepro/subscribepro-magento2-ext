@@ -85,7 +85,7 @@
             <subscribe_pro_apple_pay>
                 <title>Subscribe Pro | Apple Pay</title>
                 <enabled>0</enabled>
-                <model>SubscribeProAdapter</model>
+                <model>SubscribeProApplePayAdapter</model>
                 <payment_action>authorize</payment_action>
                 <currency>USD</currency>
                 <order_status>processing</order_status>
