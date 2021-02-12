@@ -11,6 +11,7 @@ use Magento\Framework\Controller\Result\JsonFactory as JsonResultFactory;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Phrase;
 use Magento\Framework\Serialize\Serializer\Json as JsonSerializer;
+use Psr\Log\LoggerInterface;
 use Swarming\SubscribePro\Model\ApplePay\Shipping;
 
 class ShippingList implements HttpPostActionInterface, CsrfAwareActionInterface
@@ -31,25 +32,32 @@ class ShippingList implements HttpPostActionInterface, CsrfAwareActionInterface
      * @var Shipping
      */
     private $shipping;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     /**
      * ShippingList constructor.
      *
-     * @param RequestInterface  $request
-     * @param Shipping          $shipping
-     * @param JsonSerializer    $jsonSerializer
+     * @param RequestInterface $request
+     * @param Shipping $shipping
+     * @param JsonSerializer $jsonSerializer
      * @param JsonResultFactory $jsonResultFactory
+     * @param LoggerInterface $logger
      */
     public function __construct(
         RequestInterface $request,
         Shipping $shipping,
         JsonSerializer $jsonSerializer,
-        JsonResultFactory $jsonResultFactory
+        JsonResultFactory $jsonResultFactory,
+        LoggerInterface $logger
     ) {
         $this->request = $request;
         $this->shipping = $shipping;
         $this->jsonSerializer = $jsonSerializer;
         $this->jsonResultFactory = $jsonResultFactory;
+        $this->logger = $logger;
     }
 
     public function execute()
@@ -68,13 +76,17 @@ class ShippingList implements HttpPostActionInterface, CsrfAwareActionInterface
             $shippingMethodsForApplePay = $this->getShippingMethodsForApplePay();
             $grandTotalForApplePay = $this->getGrandTotal();
             $rowItemsApplePay = $this->getRowItems();
-
+            $this->logger->debug('ShippingList::execute');
         } catch (LocalizedException $e) {
+            $this->logger->debug('Error Message - ' . $e->getMessage());
             var_dump($e->getMessage());
             die;
         }
 
         // Build response
+        $this->logger->debug('newShippingMethods - ' . print_r($shippingMethodsForApplePay, true));
+        $this->logger->debug('newTotal - ' . print_r($grandTotalForApplePay, true));
+        $this->logger->debug('newLineItems - ' . print_r($rowItemsApplePay, true));
         $response = [
             'newShippingMethods'    => $shippingMethodsForApplePay,
             'newTotal'              => $grandTotalForApplePay,

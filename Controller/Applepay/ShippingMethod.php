@@ -12,6 +12,7 @@ use Magento\Framework\Phrase;
 use Magento\Framework\Serialize\Serializer\Json as JsonSerializer;
 use Swarming\SubscribePro\Model\ApplePay\Shipping;
 use Magento\Framework\Exception\LocalizedException;
+use Psr\Log\LoggerInterface;
 
 class ShippingMethod implements HttpPostActionInterface, CsrfAwareActionInterface
 {
@@ -31,17 +32,23 @@ class ShippingMethod implements HttpPostActionInterface, CsrfAwareActionInterfac
      * @var JsonResultFactory
      */
     private $jsonResultFactory;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     public function __construct(
         RequestInterface $request,
         Shipping $shipping,
         JsonSerializer $jsonSerializer,
-        JsonResultFactory $jsonResultFactory
+        JsonResultFactory $jsonResultFactory,
+        LoggerInterface $logger
     ) {
         $this->request = $request;
         $this->shipping = $shipping;
         $this->jsonSerializer = $jsonSerializer;
         $this->jsonResultFactory = $jsonResultFactory;
+        $this->logger = $logger;
     }
 
     public function execute()
@@ -58,6 +65,9 @@ class ShippingMethod implements HttpPostActionInterface, CsrfAwareActionInterfac
             $this->shipping->setShippingMethodToQuote($data['shippingMethod']);
 
             // Build up our response
+            $this->logger->debug('ShippingMethod::execute');
+            $this->logger->debug('newTotal - ' . print_r($this->getGrandTotal(), true));
+            $this->logger->debug('newLineItems - ' . print_r($this->getRowItems(), true));
             $response = [
                 'newTotal' => $this->getGrandTotal(),
                 'newLineItems' => $this->getRowItems(),
@@ -72,6 +82,7 @@ class ShippingMethod implements HttpPostActionInterface, CsrfAwareActionInterfac
             return $result;
 
         } catch (LocalizedException $e) {
+            $this->logger->debug('Error Message - ' . $e->getMessage());
             var_dump($e->getMessage());
             die;
         }
