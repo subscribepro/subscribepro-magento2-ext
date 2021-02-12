@@ -105,8 +105,6 @@ class OrderService
             if (!$defaultShippingMethod) {
                 throw new LocalizedException(__('Cannot find shipping method. Please check your shipping method list'));
             }
-            var_dump($defaultShippingMethod);
-            die;
             $shippingAddress->setShippingMethod($defaultShippingMethod['identifier']);
         }
 
