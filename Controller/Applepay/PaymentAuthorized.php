@@ -3,19 +3,20 @@ declare(strict_types=1);
 
 namespace Swarming\SubscribePro\Controller\Applepay;
 
+use Magento\Checkout\Model\DefaultConfigProvider as CheckoutDefaultConfigProvider;
 use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\App\CsrfAwareActionInterface;
 use Magento\Framework\App\Request\InvalidRequestException;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Controller\Result\JsonFactory as JsonResultFactory;
 use Magento\Framework\DataObject;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Phrase;
 use Magento\Framework\Serialize\Serializer\Json as JsonSerializer;
-use Swarming\SubscribePro\Model\ApplePay\PaymentService;
-use Magento\Framework\Exception\LocalizedException;
-use Magento\Checkout\Model\DefaultConfigProvider as CheckoutDefaultConfigProvider;
 use Magento\Framework\UrlInterface;
 use Psr\Log\LoggerInterface;
+use Swarming\SubscribePro\Model\ApplePay\PaymentService;
+use Swarming\SubscribePro\Model\ApplePay\Shipping as ApplePayShipping;
 
 class PaymentAuthorized implements HttpPostActionInterface, CsrfAwareActionInterface
 {
@@ -47,19 +48,27 @@ class PaymentAuthorized implements HttpPostActionInterface, CsrfAwareActionInter
      * @var UrlInterface
      */
     private $urlBuilder;
+    /**
+     * @var ApplePayShipping
+     */
+    private $shippingApplePay;
 
     /**
      * PaymentAuthorized constructor.
      *
-     * @param RequestInterface  $request
-     * @param PaymentService    $paymentService
-     * @param JsonSerializer    $jsonSerializer
-     * @param JsonResultFactory $jsonResultFactory
-     * @param LoggerInterface   $logger
+     * @param RequestInterface              $request
+     * @param PaymentService                $paymentService
+     * @param ApplePayShipping              $shippingApplePay
+     * @param JsonSerializer                $jsonSerializer
+     * @param JsonResultFactory             $jsonResultFactory
+     * @param CheckoutDefaultConfigProvider $defaultConfigProvider
+     * @param UrlInterface                  $urlBuilder
+     * @param LoggerInterface               $logger
      */
     public function __construct(
         RequestInterface $request,
         PaymentService $paymentService,
+        ApplePayShipping $shippingApplePay,
         JsonSerializer $jsonSerializer,
         JsonResultFactory $jsonResultFactory,
         CheckoutDefaultConfigProvider $defaultConfigProvider,
@@ -73,6 +82,7 @@ class PaymentAuthorized implements HttpPostActionInterface, CsrfAwareActionInter
         $this->logger = $logger;
         $this->defaultConfigProvider = $defaultConfigProvider;
         $this->urlBuilder = $urlBuilder;
+        $this->shippingApplePay = $shippingApplePay;
     }
 
     public function execute()
@@ -89,13 +99,17 @@ class PaymentAuthorized implements HttpPostActionInterface, CsrfAwareActionInter
 
             // Set shipping method selection
             $quoteId = $this->paymentServie->setPaymentToQuote($data['payment']);
-            $this->paymentServie->placeOrder($quoteId);
+            $shippingMethods = $this->shippingApplePay->getShippingMethods();
+            $defaultShippingMethod = [];
+            if (count($shippingMethods)) {
+                $defaultShippingMethod = $shippingMethods[0];
+            }
+            $this->paymentServie->placeOrder($quoteId, $defaultShippingMethod);
 
             $redirectUrl = $this->defaultConfigProvider->getDefaultSuccessPageUrl();
             $urlToRedirect = $this->urlBuilder->getUrl('checkout/onepage/success/');
             $result->setData('redirect', $redirectUrl);
             $result->setData('redirectUrl', $urlToRedirect);
-
         } catch (LocalizedException $e) {
             $this->logger->critical($e);
             $result->setData('success', false);

@@ -82,6 +82,7 @@
 
                     // Call Merchant Validation
                     session.onvalidatemerchant = function (event) {
+                        console.log(event);
                         // Requests an Apple Pay merchant session from Subscribe Pro platform and returns a promise.
                         jQuery.ajax({
                             url: self.config.createSessionUrl,
@@ -117,6 +118,7 @@
                             return false;
                         }
 
+                        console.log(event);
                         jQuery.ajax({
                             url: self.config.onShippingContactSelectedUrl,
                             type: "POST",
@@ -126,6 +128,8 @@
                                 shippingContact: event.shippingContact
                             }),
                             success: function (data, textStatus, jqXHR) {
+                                console.log(data);
+                                console.log(event);
                                 session.completeShippingContactSelection(
                                     ApplePaySession.STATUS_SUCCESS,
                                     data.newShippingMethods,
@@ -145,6 +149,7 @@
                      * which method was selected.
                      */
                     session.onshippingmethodselected = function (event) {
+                        console.log(event);
                         // Fetch shipping methods when sheet shown and when new contact chosen
                         jQuery.ajax({
                             url: self.config.onShippingMethodSelectedUrl,
@@ -155,6 +160,8 @@
                                 shippingMethod: event.shippingMethod
                             }),
                             success: function (data, textStatus, jqXHR) {
+                                console.log(data);
+                                console.log(event);
                                 session.completeShippingMethodSelection(
                                     ApplePaySession.STATUS_SUCCESS,
                                     self.replaceTotalLabel(data.newTotal, self.displayName),
@@ -173,6 +180,8 @@
                      * status in session.completePayment()
                      */
                     session.onpaymentauthorized = function (event) {
+                        console.log(event);
+                        // debugger;
                         jQuery.ajax({
                             url: self.config.onPaymentAuthorizedUrl,
                             type: "POST",

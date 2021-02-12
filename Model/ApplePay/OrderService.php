@@ -8,6 +8,7 @@ use Magento\Payment\Model\Method\Logger as PaymentLogger;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Model\BillingAddressManagement;
 use Magento\Quote\Model\Quote;
+use Magento\Quote\Model\Quote\Address as QuoteAddress;
 use Magento\Quote\Model\Quote\AddressFactory;
 use Magento\Quote\Model\QuoteManagement;
 use Magento\Quote\Model\ShippingAddressManagement;
@@ -84,7 +85,7 @@ class OrderService
         $this->logger = $logger;
     }
 
-    public function createOrder($quoteId): bool
+    public function createOrder($quoteId, $defaultShippingMethod = null): bool
     {
         /** @var Quote $quote */
         $quote = $this->quoteRepository->get($quoteId);
@@ -93,6 +94,7 @@ class OrderService
             throw  new LocalizedException(__('Something going wrong with display_id'));
         }
 
+        /** @var QuoteAddress $shippingAddress */
         $shippingAddress = $quote->getShippingAddress();
 
         if (!$shippingAddress->getShippingMethod()) {
@@ -100,9 +102,12 @@ class OrderService
              * case when only one shipping_method available the apple pay does not trigger an event
              * with "onshippingmethodselected".
              */
-            // TODO: need to set shipping_method if only one available or throw error if it more than one methods.
-//            $quoteId = $quote->getId();
-//            $storeId = $quote->getStoreId();
+            if (!$defaultShippingMethod) {
+                throw new LocalizedException(__('Cannot find shipping method. Please check your shipping method list'));
+            }
+            var_dump($defaultShippingMethod);
+            die;
+            $shippingAddress->setShippingMethod($defaultShippingMethod['identifier']);
         }
 
         $quote->collectTotals();

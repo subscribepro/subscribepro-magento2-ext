@@ -299,8 +299,8 @@ abstract class Core
         return $this->quoteManagement->placeOrder($cartId, $paymentMethod);
     }
 
-    public function placeOrder($quoteId): bool
+    public function placeOrder($quoteId, $defaultShippingMethod = null): bool
     {
-        return $this->orderService->createOrder($quoteId);
+        return $this->orderService->createOrder($quoteId, $defaultShippingMethod);
     }
 }
