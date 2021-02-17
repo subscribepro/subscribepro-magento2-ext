@@ -71,8 +71,11 @@ class SubmitAllAfter implements ObserverInterface
 
         $websiteCode = $quote->getStore()->getWebsite()->getCode();
         if (!$this->generalConfig->isEnabled($websiteCode)
-            || $order->getPayment()->getMethod() != GatewayConfigProvider::CODE
-            || $order->getPayment()->getMethod() != ApplePayConfigProvider::CODE
+            ||
+            (
+                $order->getPayment()->getMethod() != GatewayConfigProvider::CODE
+                && $order->getPayment()->getMethod() != ApplePayConfigProvider::CODE
+            )
             || !$quote->getCustomerId()
         ) {
             return;

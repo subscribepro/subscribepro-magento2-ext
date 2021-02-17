@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Swarming\SubscribePro\Model\ApplePay;
 
+use Magento\Checkout\Helper\Data as CheckoutHelperData;
+use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Payment\Model\Method\Logger as PaymentLogger;
 use Magento\Quote\Api\CartRepositoryInterface;
@@ -12,8 +14,6 @@ use Magento\Quote\Model\Quote\Address as QuoteAddress;
 use Magento\Quote\Model\Quote\AddressFactory;
 use Magento\Quote\Model\QuoteManagement;
 use Magento\Quote\Model\ShippingAddressManagement;
-use Magento\Checkout\Model\Session as CheckoutSession;
-use Magento\Checkout\Helper\Data as CheckoutHelperData;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Email\Sender\OrderSender;
 use Psr\Log\LoggerInterface;
@@ -112,8 +112,12 @@ class OrderService
         $this->quoteRepository->save($quote);
 
         try {
+            $paymentMethod = $quote->getPayment();
             /** @var Order $order */
-            $order = $this->quoteManagement->submit($quote);
+//            $order = $this->quoteManagement->submit($quote);
+            $order = $this->quoteManagement->placeOrder($quote->getId(), $paymentMethod);
+
+//            $this->createSubscriptions($quote, $order);
 
             // TODO: need to check redirect url if success page was changed by 3rd party module.
 //            $redirectUrl = $quote->getPayment()->getOrderPlaceRedirectUrl();

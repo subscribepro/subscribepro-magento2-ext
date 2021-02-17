@@ -369,7 +369,7 @@
             <argument name="infoBlockType" xsi:type="string">Swarming\SubscribePro\Block\Payment\Info</argument>
             <argument name="valueHandlerPool" xsi:type="object">SubscribeProValueHandlerPool</argument>
             <argument name="validatorPool" xsi:type="object">SubscribeProValidatorPool</argument>
-            <argument name="commandPool" xsi:type="object">SubscribeProCommandPool</argument>
+            <argument name="commandPool" xsi:type="object">SubscribeProApplePayCommandPool</argument>
         </arguments>
     </virtualType>
     <type name="Swarming\SubscribePro\Gateway\Config\ApplePayConfigProvider">
@@ -382,6 +382,23 @@
             <argument name="methodCode" xsi:type="const">Swarming\SubscribePro\Gateway\Config\ApplePayConfigProvider::CODE</argument>
         </arguments>
     </type>
+    <!-- SubscribeProCommandPool -->
+    <virtualType name="SubscribeProApplePayCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="authorize" xsi:type="string">Swarming\SubscribePro\Gateway\Command\AuthorizeCommand</item>
+                <item name="vault_authorize" xsi:type="string">Swarming\SubscribePro\Gateway\Command\VaultAuthorizeCommand</item>
+                <item name="capture" xsi:type="string">Swarming\SubscribePro\Gateway\Command\CaptureStrategyCommand</item>
+                <item name="purchase" xsi:type="string">Swarming\SubscribePro\Gateway\Command\PurchaseCommand</item>
+                <item name="settlement" xsi:type="string">Swarming\SubscribePro\Gateway\Command\CaptureCommand</item>
+                <item name="vault_sale" xsi:type="string">Swarming\SubscribePro\Gateway\Command\VaultPurchaseCommand</item>
+                <item name="refund" xsi:type="string">Swarming\SubscribePro\Gateway\Command\RefundCommand</item>
+                <item name="void" xsi:type="string">Swarming\SubscribePro\Gateway\Command\VoidCommand</item>
+                <item name="cancel" xsi:type="string">Swarming\SubscribePro\Gateway\Command\VoidCommand</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
     <!-- SubscribePro ApplePay Adapter -->
 
     <type name="Swarming\SubscribePro\Platform\Storage\Product">

@@ -130,7 +130,7 @@ class PaymentService extends ApplePayCore
         // Set apple pay pay method on quote
         $payment = $quote->getPayment();
         //TODO: change it to payment class constant.
-        $payment->setMethod('apple_pay');
+        $payment->setMethod(\Swarming\SubscribePro\Gateway\Config\ApplePayConfigProvider::CODE);
 //        // Clear out additional information that may have been set previously in the session
         $payment->setAdditionalInformation([]);
         $payment->setAdditionalInformation('save_card', false);
@@ -142,6 +142,8 @@ class PaymentService extends ApplePayCore
         // CC Number
         $ccNumber = $paymentProfile->getCreditcardFirstDigits() . 'XXXXXX' . $paymentProfile->getCreditcardLastDigits();
         $payment->setAdditionalInformation('obscured_cc_number', $ccNumber);
+        $payment->setData('payment_method_token', $paymentProfile->getPaymentToken());
+//        $payment->setData('is_active_payment_token_enabler', 1); // TODO: isCustomerLoggedIn
         $payment->setData('cc_number', $ccNumber);
         $payment->setCcNumberEnc($payment->encrypt($ccNumber));
         $payment->setData('cc_exp_month', $paymentProfile->getCreditcardMonth());
@@ -159,7 +161,6 @@ class PaymentService extends ApplePayCore
 
     public function createPaymentToken(array $applePayPayment)
     {
-        //$platformVaultHelper = Mage::helper('autoship/platform_vault');
         $platformVaultHelper = '';
 
         $quote = $this->getQuote();
@@ -172,7 +173,7 @@ class PaymentService extends ApplePayCore
         // Set apple pay pay method on quote
         $payment = $quote->getPayment();
         // TODO: need a constant
-        $payment->setMethod('subscribe_pro_applepay');
+        $payment->setMethod(\Swarming\SubscribePro\Gateway\Config\ApplePayConfigProvider::CODE);
         // Clear out additional information that may have been set previously in the session
         $payment->setAdditionalInformation([]);
         $payment->setAdditionalInformation('save_card', false);
