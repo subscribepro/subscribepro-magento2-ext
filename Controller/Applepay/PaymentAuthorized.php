@@ -104,9 +104,7 @@ class PaymentAuthorized implements HttpPostActionInterface, CsrfAwareActionInter
             if (count($shippingMethods)) {
                 $defaultShippingMethod = $shippingMethods[0];
             }
-            $this->logger->debug('PaymentAuthorized::execute');
-            $this->logger->debug('quoteId - ' . $quoteId);
-            $this->logger->debug('defaultShippingMethod - ' . print_r($defaultShippingMethod, true));
+
             $this->paymentServie->placeOrder($quoteId, $defaultShippingMethod);
 
             $redirectUrl = $this->defaultConfigProvider->getDefaultSuccessPageUrl();

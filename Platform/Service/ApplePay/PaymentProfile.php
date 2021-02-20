@@ -28,7 +28,7 @@ class PaymentProfile extends AbstractService
      * @throws \SubscribePro\Exception\EntityInvalidDataException
      * @throws \SubscribePro\Exception\HttpException
      */
-    public function saveProfile(PaymentProfileInterface $paymentProfile, $websiteId = null)
+    public function saveApplePayProfile(PaymentProfileInterface $paymentProfile, $websiteId = null)
     {
         return $this->getService($websiteId)->saveProfile($paymentProfile);
     }

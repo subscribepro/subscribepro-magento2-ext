@@ -382,11 +382,11 @@
             <argument name="methodCode" xsi:type="const">Swarming\SubscribePro\Gateway\Config\ApplePayConfigProvider::CODE</argument>
         </arguments>
     </type>
-    <!-- SubscribeProCommandPool -->
+    <!-- SubscribeProApplePayCommandPool -->
     <virtualType name="SubscribeProApplePayCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
         <arguments>
             <argument name="commands" xsi:type="array">
-                <item name="authorize" xsi:type="string">Swarming\SubscribePro\Gateway\Command\AuthorizeCommand</item>
+                <item name="authorize" xsi:type="string">Swarming\SubscribePro\Gateway\Command\ApplePay\AuthorizeCommand</item>
                 <item name="vault_authorize" xsi:type="string">Swarming\SubscribePro\Gateway\Command\VaultAuthorizeCommand</item>
                 <item name="capture" xsi:type="string">Swarming\SubscribePro\Gateway\Command\CaptureStrategyCommand</item>
                 <item name="purchase" xsi:type="string">Swarming\SubscribePro\Gateway\Command\PurchaseCommand</item>
@@ -398,7 +398,24 @@
             </argument>
         </arguments>
     </virtualType>
-
+    <!-- ApplePay AuthorizeCommand -->
+    <type name="Swarming\SubscribePro\Gateway\Command\ApplePay\AuthorizeCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">SubscribeProApplePayPlaceOrderRequest</argument>
+            <argument name="handler" xsi:type="object">SubscribeProPlaceOrderHandler</argument>
+            <argument name="validator" xsi:type="object">Swarming\SubscribePro\Gateway\Validator\ResponseValidator</argument>
+        </arguments>
+    </type>
+    <virtualType name="SubscribeProApplePayPlaceOrderRequest" type="Magento\Payment\Gateway\Request\BuilderComposite">
+        <arguments>
+            <argument name="builders" xsi:type="array">
+                <item name="customer" xsi:type="string">Swarming\SubscribePro\Gateway\Request\CustomerDataBuilder</item>
+                <item name="order" xsi:type="string">Swarming\SubscribePro\Gateway\Request\OrderDataBuilder</item>
+                <item name="payment" xsi:type="string">Swarming\SubscribePro\Gateway\Request\ApplePayPaymentDataBuilder</item>
+                <item name="address" xsi:type="string">Swarming\SubscribePro\Gateway\Request\AddressDataBuilder</item>
+            </argument>
+        </arguments>
+    </virtualType>
     <!-- SubscribePro ApplePay Adapter -->
 
     <type name="Swarming\SubscribePro\Platform\Storage\Product">

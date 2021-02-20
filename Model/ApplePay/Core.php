@@ -202,7 +202,7 @@ abstract class Core
         $paymentProfile->setApplePayPaymentData($paymentProfileData);
 
         // Create and save profile via API
-        $this->platformPaymentProfile->saveProfile($paymentProfile);
+        $this->platformPaymentProfile->saveApplePayProfile($paymentProfile);
 
         return $paymentProfile;
     }

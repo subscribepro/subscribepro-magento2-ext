@@ -91,7 +91,7 @@ class OrderService
         $quote = $this->quoteRepository->get($quoteId);
 
         if (!$quote || !$quote->getIsActive()) {
-            throw  new LocalizedException(__('Something going wrong with display_id'));
+            throw  new LocalizedException(__('Something going wrong.'));
         }
 
         /** @var QuoteAddress $shippingAddress */
@@ -99,7 +99,7 @@ class OrderService
 
         if (!$shippingAddress->getShippingMethod()) {
             /*
-             * case when only one shipping_method available the apple pay does not trigger an event
+             * In case when only one shipping_method available the apple pay does not trigger an event
              * with "onshippingmethodselected".
              */
             if (!$defaultShippingMethod) {
@@ -113,24 +113,13 @@ class OrderService
 
         try {
             $paymentMethod = $quote->getPayment();
-            /** @var Order $order */
-//            $order = $this->quoteManagement->submit($quote);
-            $order = $this->quoteManagement->placeOrder($quote->getId(), $paymentMethod);
-
-//            $this->createSubscriptions($quote, $order);
+            $this->quoteManagement->placeOrder($quote->getId(), $paymentMethod);
 
             // TODO: need to check redirect url if success page was changed by 3rd party module.
 //            $redirectUrl = $quote->getPayment()->getOrderPlaceRedirectUrl();
 //            if (!$redirectUrl) {
 //                $redirectUrl = $this->defaultConfigProvider->getDefaultSuccessPageUrl();
 //            }
-
-            $this->checkoutSession
-                ->setLastQuoteId($quote->getId())
-                ->setLastSuccessQuoteId($quote->getId())
-                ->setLastOrderId($order->getId())
-                ->setLastRealOrderId($order->getIncrementId())
-                ->setLastOrderStatus($order->getStatus());
 
             return true;
         } catch (LocalizedException $e) {

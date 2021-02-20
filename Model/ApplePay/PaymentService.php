@@ -115,9 +115,7 @@ class PaymentService extends ApplePayCore
         // Create SP customer
         $platformCustomer = $this->getPlatformCustomer($quote->getCustomerEmail(), true, $websiteId);
 
-        // TODO: Before this row all works properly.
-
-        $defaultBillingAddress = $this->getCustomerSession()->getCustomer()->getDefaultBillingAddress();
+        //$defaultBillingAddress = $this->getCustomerSession()->getCustomer()->getDefaultBillingAddress();
 
         $paymentProfile = $this->createPlatformPaymentProfile(
             $platformCustomer->getId(),
@@ -129,7 +127,6 @@ class PaymentService extends ApplePayCore
 
         // Set apple pay pay method on quote
         $payment = $quote->getPayment();
-        //TODO: change it to payment class constant.
         $payment->setMethod(\Swarming\SubscribePro\Gateway\Config\ApplePayConfigProvider::CODE);
 //        // Clear out additional information that may have been set previously in the session
         $payment->setAdditionalInformation([]);
@@ -143,7 +140,7 @@ class PaymentService extends ApplePayCore
         $ccNumber = $paymentProfile->getCreditcardFirstDigits() . 'XXXXXX' . $paymentProfile->getCreditcardLastDigits();
         $payment->setAdditionalInformation('obscured_cc_number', $ccNumber);
         $payment->setData('payment_method_token', $paymentProfile->getPaymentToken());
-//        $payment->setData('is_active_payment_token_enabler', 1); // TODO: isCustomerLoggedIn
+        $payment->setData('is_active_payment_token_enabler', $this->getCustomerSession()->isLoggedIn());
         $payment->setData('cc_number', $ccNumber);
         $payment->setCcNumberEnc($payment->encrypt($ccNumber));
         $payment->setData('cc_exp_month', $paymentProfile->getCreditcardMonth());
@@ -172,7 +169,7 @@ class PaymentService extends ApplePayCore
 
         // Set apple pay pay method on quote
         $payment = $quote->getPayment();
-        // TODO: need a constant
+
         $payment->setMethod(\Swarming\SubscribePro\Gateway\Config\ApplePayConfigProvider::CODE);
         // Clear out additional information that may have been set previously in the session
         $payment->setAdditionalInformation([]);
