@@ -62,13 +62,24 @@ class ShippingList implements HttpPostActionInterface, CsrfAwareActionInterface
 
     public function execute()
     {
+        $result = $this->jsonResultFactory->create();
+
         try {
             $data = $this->getRequestData();
 
             if (!isset($data['shippingContact'])) {
-                throw new LocalizedException(new Phrase('Invalid Request Data!'));
-            }
+                $errorMsg = new Phrase('Invalid Request Data!');
+                $response = [
+                    'success' => false,
+                    'message' => (string) $errorMsg
+                ];
+                $result->setHeader('Content-type', 'application/json');
+                $result->setData($response);
 
+                return $result;
+            }
+            $this->logger->debug('ShippingList::execute');
+            $this->logger->debug('ShippingAddress' . print_r($data['shippingContact'], true));
             // Pass over the shipping destination
             $this->shipping->setDataToQuote($data['shippingContact']);
 
@@ -76,11 +87,17 @@ class ShippingList implements HttpPostActionInterface, CsrfAwareActionInterface
             $shippingMethodsForApplePay = $this->getShippingMethodsForApplePay();
             $grandTotalForApplePay = $this->getGrandTotal();
             $rowItemsApplePay = $this->getRowItems();
-            $this->logger->debug('ShippingList::execute');
         } catch (LocalizedException $e) {
             $this->logger->debug('Error Message - ' . $e->getMessage());
-            var_dump($e->getMessage());
-            die;
+
+            $response = [
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage()
+            ];
+            $result->setHeader('Content-type', 'application/json');
+            $result->setData($response);
+
+            return $result;
         }
 
         // Build response
@@ -94,7 +111,6 @@ class ShippingList implements HttpPostActionInterface, CsrfAwareActionInterface
         ];
 
         // Return JSON response
-        $result = $this->jsonResultFactory->create();
         $result->setHeader('Content-type', 'application/json');
         $result->setData($response);
 

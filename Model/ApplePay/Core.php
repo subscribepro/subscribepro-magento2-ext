@@ -16,7 +16,6 @@ use Magento\Quote\Model\QuoteManagement;
 use Psr\Log\LoggerInterface;
 use Swarming\SubscribePro\Platform\Manager\Customer as PlatformCustomer;
 use Swarming\SubscribePro\Platform\Service\ApplePay\PaymentProfile as PlatformApplePayPaymentProfile;
-use Swarming\SubscribePro\Model\ApplePay\OrderService;
 
 abstract class Core
 {
@@ -178,22 +177,21 @@ abstract class Core
     }
 
     public function createPlatformPaymentProfile(
-        $subscribeProCustomerId,
+        int $subscribeProCustomerId,
         array $paymentProfileData,
-        $customer = null,
-        $billingAddress = null,
+        $billingAddress,
         $websiteId = null
     ) {
         // New payment profile
         $paymentProfile = $this->platformPaymentProfile->createApplePayProfile($paymentProfileData, $websiteId);
 
-        if ($customer) {
-            $paymentProfile = $this->initProfileWithCustomerDefault($paymentProfile, $customer);
-        }
+
         if ($billingAddress) {
             $spBillingAddress = $paymentProfile->getBillingAddress();
-//            $this->mapMagentoAddressToPlatform($billingAddress, $spBillingAddress);
+            $this->mapMagentoAddressToPlatform($billingAddress, $spBillingAddress);
             $paymentProfile->setBillingAddress($spBillingAddress);
+        } else {
+            throw new LocalizedException(new Phrase('The billing address is empty.'));
         }
 
         // Set SP customer id
@@ -210,10 +208,9 @@ abstract class Core
     public function initProfileWithCustomerDefault($paymentProfile, $customer)
     {
         if (!$customer) {
-            // TODO: maybe it will require to load through repository not from session.
             $customer = $this->getCustomerSession()->getCustomer();
         }
-        // Grab billing address
+        // Grab default billing address
         $addressId = $customer->getData('default_billing');
 
         // Add address data if default billing addy exists

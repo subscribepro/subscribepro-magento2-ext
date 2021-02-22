@@ -54,7 +54,7 @@ class PaymentService extends ApplePayCore
 
         // Save payment details on quote
         if ($this->getCustomerSession()->isLoggedIn()) {
-            $this->createPaymentProfileForCustomer($paymentData);
+            $this->createPaymentProfileForCustomer($paymentData, $quote->getBillingAddress());
         } else {
             var_dump('--- STOP: Customer NOT loggedIn ---');
             die;
@@ -107,7 +107,7 @@ class PaymentService extends ApplePayCore
         return $magentoAddress;
     }
 
-    protected function createPaymentProfileForCustomer(array $applePayPayment)
+    protected function createPaymentProfileForCustomer(array $applePayPayment, $billingAddress)
     {
         $quote = $this->getQuote();
         $websiteId = $quote->getStore()->getWebsiteId();
@@ -115,20 +115,17 @@ class PaymentService extends ApplePayCore
         // Create SP customer
         $platformCustomer = $this->getPlatformCustomer($quote->getCustomerEmail(), true, $websiteId);
 
-        //$defaultBillingAddress = $this->getCustomerSession()->getCustomer()->getDefaultBillingAddress();
-
         $paymentProfile = $this->createPlatformPaymentProfile(
-            $platformCustomer->getId(),
+            (int) $platformCustomer->getId(),
             $applePayPayment['token']['paymentData'],
-            $this->getCustomerSession()->getCustomer(),
-            null, // $defaultBillingAddress
+            $billingAddress,
             $websiteId
         );
 
         // Set apple pay pay method on quote
         $payment = $quote->getPayment();
         $payment->setMethod(\Swarming\SubscribePro\Gateway\Config\ApplePayConfigProvider::CODE);
-//        // Clear out additional information that may have been set previously in the session
+        // Clear out additional information that may have been set previously in the session
         $payment->setAdditionalInformation([]);
         $payment->setAdditionalInformation('save_card', false);
         $payment->setAdditionalInformation('is_new_card', false);
