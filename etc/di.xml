@@ -366,10 +366,23 @@
         <arguments>
             <argument name="code" xsi:type="const">Swarming\SubscribePro\Gateway\Config\ApplePayConfigProvider::CODE</argument>
             <argument name="formBlockType" xsi:type="string">Swarming\SubscribePro\Block\Adminhtml\Payment\Cc</argument>
-            <argument name="infoBlockType" xsi:type="string">Swarming\SubscribePro\Block\Payment\Info</argument>
-            <argument name="valueHandlerPool" xsi:type="object">SubscribeProValueHandlerPool</argument>
-            <argument name="validatorPool" xsi:type="object">SubscribeProValidatorPool</argument>
+            <argument name="infoBlockType" xsi:type="string">Swarming\SubscribePro\Block\Payment\ApplePayInfo</argument>
+            <argument name="valueHandlerPool" xsi:type="object">SubscribeProApplePayValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">SubscribeProApplePayValidatorPool</argument>
             <argument name="commandPool" xsi:type="object">SubscribeProApplePayCommandPool</argument>
+        </arguments>
+    </virtualType>
+    <!-- SubscribeProApplePayValueHandlerPool -->
+    <virtualType name="SubscribeProApplePayValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">SubscribeProApplePayConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="SubscribeProApplePayConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">Swarming\SubscribePro\Gateway\Config\ApplePayConfig</argument>
         </arguments>
     </virtualType>
     <type name="Swarming\SubscribePro\Gateway\Config\ApplePayConfigProvider">
@@ -382,6 +395,19 @@
             <argument name="methodCode" xsi:type="const">Swarming\SubscribePro\Gateway\Config\ApplePayConfigProvider::CODE</argument>
         </arguments>
     </type>
+    <!-- SubscribeProValidatorPool -->
+    <virtualType name="SubscribeProApplePayValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">SubscribeProCountryApplePayValidator</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="SubscribeProCountryApplePayValidator" type="Magento\Payment\Gateway\Validator\CountryValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">Swarming\SubscribePro\Gateway\Config\ApplePayConfig</argument>
+        </arguments>
+    </virtualType>
     <!-- SubscribeProApplePayCommandPool -->
     <virtualType name="SubscribeProApplePayCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
         <arguments>

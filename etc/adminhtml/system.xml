@@ -284,7 +284,7 @@
             <group id="subscribe_pro_apple_pay" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0">
                 <label>Subscribe Pro | Apple Pay</label>
 
-                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>

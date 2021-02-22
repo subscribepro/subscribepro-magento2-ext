@@ -7,7 +7,7 @@ use Swarming\SubscribePro\Model\ApplePay\Core as ApplePayCore;
 
 class Shipping extends ApplePayCore
 {
-    public function setDataToQuote(array $shippingData)
+    public function setDataToQuote(array $shippingData): bool
     {
         // Retrieve the countryId from the request
         $countryId = ($shippingData['countryCode']) ?? null;
