@@ -289,37 +289,46 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
 
-                <field id="title" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Title</label>
                 </field>
 
-                <field id="merchant_identifier" translate="text" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="merchant_identifier" translate="text" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Merchant Identifier</label>
                     <depends>
                         <field id="enabled">1</field>
                     </depends>
                 </field>
 
-                <field id="domain" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="domain" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Domain</label>
                     <depends>
                         <field id="enabled">1</field>
                     </depends>
                 </field>
 
-                <field id="payment_action" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="payment_action" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Payment Action</label>
                     <source_model>Swarming\SubscribePro\Model\Config\Source\PaymentAction</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
                 </field>
 
-                <field id="order_status" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="order_status" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>New Order Status</label>
                     <source_model>Magento\Sales\Model\Config\Source\Order\Status\Processing</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
                 </field>
 
-                <field id="currency" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="currency" translate="label" type="select" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Accepted Currency</label>
                     <source_model>Magento\Config\Model\Config\Source\Locale\Currency</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
                 </field>
 
                 <field id="min_order_total" translate="label" type="text" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="0">
