@@ -84,8 +84,16 @@
             </subscribe_pro_vault>
             <subscribe_pro_apple_pay>
                 <title>Subscribe Pro | Apple Pay</title>
-                <enabled>0</enabled>
                 <model>SubscribeProApplePayAdapter</model>
+                <enabled>0</enabled>
+                <is_gateway>1</is_gateway>
+                <can_use_checkout>1</can_use_checkout>
+                <can_use_internal>1</can_use_internal>
+                <can_authorize>1</can_authorize>
+                <can_capture>1</can_capture>
+                <can_refund>1</can_refund>
+                <can_cancel>1</can_cancel>
+                <can_void>1</can_void>
                 <payment_action>authorize</payment_action>
                 <currency>USD</currency>
                 <order_status>processing</order_status>
