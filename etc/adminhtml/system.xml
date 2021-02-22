@@ -290,7 +290,7 @@
                 </field>
 
                 <field id="title" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Subscribe Pro | Apple Pay</label>
+                    <label>Title</label>
                 </field>
 
                 <field id="merchant_identifier" translate="text" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
