@@ -3,9 +3,18 @@ declare(strict_types=1);
 
 namespace Swarming\SubscribePro\Model\ApplePay;
 
+use Magento\Customer\Model\Session as CustomerSession;
+use Magento\Directory\Model\Currency;
+use Magento\Directory\Model\Region as DirectoryRegion;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Phrase;
+use Magento\Framework\Serialize\Serializer\Json as JsonSerializer;
+use Magento\Framework\Session\SessionManagerInterface;
+use Magento\Quote\Model\QuoteManagement;
+use Psr\Log\LoggerInterface;
 use Swarming\SubscribePro\Model\ApplePay\Core as ApplePayCore;
+use Swarming\SubscribePro\Platform\Manager\Customer as PlatformCustomer;
+use Swarming\SubscribePro\Platform\Service\ApplePay\PaymentProfile as PlatformApplePayPaymentProfile;
 
 class PaymentService extends ApplePayCore
 {
@@ -25,8 +34,6 @@ class PaymentService extends ApplePayCore
         if ($this->getCustomerSession()->isLoggedIn()) {
             $quote->setCustomer($this->getCustomerData());
         } else {
-            var_dump('--- STOP ---');
-            die;
             // Save email for guests
             if (!isset($paymentData['shippingContact']['emailAddress'])) {
                 throw new LocalizedException(new Phrase('Email address missing from Apple Pay payment details!'));
@@ -56,8 +63,6 @@ class PaymentService extends ApplePayCore
         if ($this->getCustomerSession()->isLoggedIn()) {
             $this->createPaymentProfileForCustomer($paymentData, $quote->getBillingAddress());
         } else {
-            var_dump('--- STOP: Customer NOT loggedIn ---');
-            die;
             $this->createPaymentToken($paymentData);
         }
         return $quote->getId();
@@ -158,8 +163,13 @@ class PaymentService extends ApplePayCore
         $platformVaultHelper = '';
 
         $quote = $this->getQuote();
-
-        $paymentMethod = $platformVaultHelper->createApplePayPaymentToken(
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $product = $objectManager->create('Swarming\SubscribePro\Helper\Vault');
+        $paymentMethod = $product->createApplePayPaymentToken(
+            $quote->getBillingAddress(),
+            $applePayPayment['token']['paymentData']
+        );
+        $paymentMethod = $this->getApplePayPaymentToken(
             $quote->getBillingAddress(),
             $applePayPayment['token']['paymentData']
         );
@@ -182,7 +192,7 @@ class PaymentService extends ApplePayCore
         $payment->setCcNumberEnc($payment->encrypt($ccNumber));
         $payment->setData('cc_exp_month', $paymentMethod->getMonth());
         $payment->setData('cc_exp_year', $paymentMethod->getYear());
-        $payment->setData('cc_type', $platformVaultHelper->mapSubscribeProCardTypeToMagento($paymentMethod->getCardType()));
+        $payment->setData('cc_type', $this->platformVaultHelper->mapSubscribeProCardTypeToMagento($paymentMethod->getCardType()));
         $quote->setPayment($payment);
 
         // Save quote

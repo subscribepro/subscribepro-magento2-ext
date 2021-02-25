@@ -5,6 +5,7 @@ namespace Swarming\SubscribePro\Helper;
 use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
 use Magento\Vault\Api\Data\PaymentTokenInterface;
 use SubscribePro\Service\PaymentProfile\PaymentProfileInterface;
+use SubscribePro\Sdk;
 
 class Vault
 {
@@ -22,6 +23,7 @@ class Vault
      * @var \Magento\Framework\Intl\DateTimeFactory
      */
     protected $dateTimeFactory;
+    private $sdkFactory;
 
     /**
      * @param \Swarming\SubscribePro\Gateway\Config\Config $gatewayConfig
@@ -31,11 +33,13 @@ class Vault
     public function __construct(
         \Swarming\SubscribePro\Gateway\Config\Config $gatewayConfig,
         \Magento\Framework\Encryption\EncryptorInterface $encryptor,
-        \Magento\Framework\Intl\DateTimeFactory $dateTimeFactory
+        \Magento\Framework\Intl\DateTimeFactory $dateTimeFactory,
+        Sdk $sdkFactory
     ) {
         $this->gatewayConfig = $gatewayConfig;
         $this->encryptor = $encryptor;
         $this->dateTimeFactory = $dateTimeFactory;
+        $this->sdk = $sdkFactory;
     }
 
     /**
@@ -73,6 +77,41 @@ class Vault
         $tokenDetails['expirationDate'] = $profile->getCreditcardMonth() . '/' . $profile->getCreditcardYear();
         $token->setTokenDetails($this->encodeDetails($tokenDetails));
         $token->setExpiresAt($this->getExpirationDate($profile->getCreditcardYear(), $profile->getCreditcardMonth()));
+        return $token;
+    }
+
+    public function createApplePayPaymentToken($billingAddress, array $applePayPaymentData)
+    {
+        // Build request data
+        $requestData = array(
+            'billing_address' => [
+                'first_name' => $billingAddress->getData('firstname'),
+                'last_name' => $billingAddress->getData('lastname'),
+            ],
+            'applepay_payment_data' => $applePayPaymentData,
+        );
+        // Add optional fields - billing address
+        $optionalFields = ['company' => 'company', 'city' => 'city', 'postcode' => 'postcode', 'country' => 'country_id', 'phone' => 'telephone', ];
+        foreach ($optionalFields as $fieldKey => $magentoFieldKey) {
+            if (strlen($billingAddress->getData($magentoFieldKey))) {
+                $requestData['billing_address'][$fieldKey] = $billingAddress->getData($magentoFieldKey);
+            }
+        }
+        if (strlen($billingAddress->getStreet1())) {
+            $requestData['billing_address']['street1'] = $billingAddress->getStreet1();
+        }
+        if (strlen($billingAddress->getStreet2())) {
+            $requestData['billing_address']['street2'] = $billingAddress->getStreet2();
+        }
+        if (strlen($billingAddress->getRegionCode())) {
+            $requestData['billing_address']['region'] = $billingAddress->getRegionCode();
+        }
+
+        // Create token
+        /**TODO issue with token service **/
+        $token = $this->tokenService->createToken($requestData);
+        $token = $this->tokenService->saveToken($token);
+
         return $token;
     }
 

@@ -251,20 +251,27 @@ class PaymentRequestConfig extends DataObject
         $quote = $this->checkoutSession->getQuote();
         $customerId = $quote->getCustomerId();
         $websiteId = $quote->getStore()->getWebsiteId();
-
-        try {
-            $subscriberProCustomerId = $this->platformManagerCustomer->getCustomerById(
-                $customerId,
-                true,
-                $websiteId
-            )->getId();
-        } catch (NoSuchEntityException $e) {
-            $this->logger->error($e->getMessage());
-            $subscriberProCustomerId = false;
+        if ($customerId) {
+            try {
+                $subscriberProCustomerId = $this->platformManagerCustomer->getCustomerById(
+                    $customerId,
+                    true,
+                    $websiteId
+                )->getId();
+            } catch (NoSuchEntityException $e) {
+                $this->logger->error($e->getMessage());
+                $subscriberProCustomerId = false;
+            }
         }
 
+
         try {
-            $data = $this->platformOAuth->getWidgetAccessTokenByCustomerId($subscriberProCustomerId, $websiteId);
+            if ($customerId) {
+                $data = $this->platformOAuth->getWidgetAccessTokenByCustomerId($subscriberProCustomerId, $websiteId);
+            } else {
+                $data = $this->platformOAuth->getWidgetAccessTokenByGuest($websiteId);
+            }
+
 
             return ($data && isset($data['access_token'])) ? $data['access_token'] : '';
         } catch (LocalizedException $e) {

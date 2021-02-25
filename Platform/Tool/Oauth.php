@@ -11,4 +11,9 @@ class Oauth extends AbstractTool
     {
         return $this->getTool($websiteId)->retrieveWidgetAccessTokenByCustomerId($customerId);
     }
+
+    public function getWidgetAccessTokenByGuest($websiteId = null)
+    {
+        return $this->getTool($websiteId)->retrieveWidgetAccessTokenByGuest();
+    }
 }
