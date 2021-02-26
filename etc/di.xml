@@ -44,6 +44,11 @@
             <argument name="name" xsi:type="const">SubscribePro\Service\Subscription\SubscriptionService::NAME</argument>
         </arguments>
     </type>
+    <type name="Swarming\SubscribePro\Platform\Service\Token">
+        <arguments>
+            <argument name="name" xsi:type="const">SubscribePro\Service\Token\TokenService::NAME</argument>
+        </arguments>
+    </type>
     <type name="Swarming\SubscribePro\Platform\Service\PaymentProfile">
         <arguments>
             <argument name="name" xsi:type="const">SubscribePro\Service\PaymentProfile\PaymentProfileService::NAME</argument>

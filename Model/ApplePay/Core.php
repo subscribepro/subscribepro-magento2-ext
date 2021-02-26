@@ -64,6 +64,10 @@ abstract class Core
      * @var LoggerInterface
      */
     protected $logger;
+    /**
+     * @var HelperVault
+     */
+    protected $platformVaultHelper;
 
     public function __construct(
         SessionManagerInterface $checkoutSession,
@@ -299,5 +303,15 @@ abstract class Core
     public function placeOrder($quoteId, $defaultShippingMethod = null): bool
     {
         return $this->orderService->createOrder($quoteId, $defaultShippingMethod);
+    }
+
+    public function getApplePayPaymentToken($billingAddress, $applePayPaymentData)
+    {
+        $paymentMethod = $this->platformVaultHelper->createApplePayPaymentToken(
+            $billingAddress,
+            $applePayPaymentData
+        );
+
+        return $paymentMethod;
     }
 }
