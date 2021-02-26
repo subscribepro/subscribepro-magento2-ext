@@ -23,7 +23,11 @@ class Vault
      * @var \Magento\Framework\Intl\DateTimeFactory
      */
     protected $dateTimeFactory;
-    private $sdkFactory;
+
+    /**
+     * @var \Swarming\SubscribePro\Platform\Service\Token
+     */
+    private $token;
 
     /**
      * @param \Swarming\SubscribePro\Gateway\Config\Config $gatewayConfig
@@ -34,12 +38,12 @@ class Vault
         \Swarming\SubscribePro\Gateway\Config\Config $gatewayConfig,
         \Magento\Framework\Encryption\EncryptorInterface $encryptor,
         \Magento\Framework\Intl\DateTimeFactory $dateTimeFactory,
-        Sdk $sdkFactory
+        \Swarming\SubscribePro\Platform\Service\Token $token
     ) {
         $this->gatewayConfig = $gatewayConfig;
         $this->encryptor = $encryptor;
         $this->dateTimeFactory = $dateTimeFactory;
-        $this->sdk = $sdkFactory;
+        $this->token = $token;
     }
 
     /**
@@ -108,9 +112,8 @@ class Vault
         }
 
         // Create token
-        /**TODO issue with token service **/
-        $token = $this->tokenService->createToken($requestData);
-        $token = $this->tokenService->saveToken($token);
+        $token = $this->token->createToken($requestData);
+        $token = $this->token->saveToken($token);
 
         return $token;
     }

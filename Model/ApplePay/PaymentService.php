@@ -12,12 +12,60 @@ use Magento\Framework\Serialize\Serializer\Json as JsonSerializer;
 use Magento\Framework\Session\SessionManagerInterface;
 use Magento\Quote\Model\QuoteManagement;
 use Psr\Log\LoggerInterface;
+use Swarming\SubscribePro\Helper\Vault;
 use Swarming\SubscribePro\Model\ApplePay\Core as ApplePayCore;
 use Swarming\SubscribePro\Platform\Manager\Customer as PlatformCustomer;
 use Swarming\SubscribePro\Platform\Service\ApplePay\PaymentProfile as PlatformApplePayPaymentProfile;
 
 class PaymentService extends ApplePayCore
 {
+    /**
+     * @var Vault
+     */
+    private $vault;
+
+    /**
+     * PaymentService constructor.
+     *
+     * @param SessionManagerInterface $checkoutSession
+     * @param CustomerSession $customerSession
+     * @param Currency $currency
+     * @param DirectoryRegion $directoryRegion
+     * @param PlatformCustomer $platformCustomer
+     * @param PlatformApplePayPaymentProfile $platformPaymentProfile
+     * @param OrderService $orderService
+     * @param QuoteManagement $quoteManagement
+     * @param JsonSerializer $jsonSerializer
+     * @param LoggerInterface $logger
+     * @param Vault $vault
+     */
+    public function __construct(
+        SessionManagerInterface $checkoutSession,
+        CustomerSession $customerSession,
+        Currency $currency,
+        DirectoryRegion $directoryRegion,
+        PlatformCustomer $platformCustomer,
+        PlatformApplePayPaymentProfile $platformPaymentProfile,
+        OrderService $orderService,
+        QuoteManagement $quoteManagement,
+        JsonSerializer $jsonSerializer,
+        LoggerInterface $logger,
+        Vault $vault
+    ) {
+        $this->vault = $vault;
+        parent::__construct($checkoutSession,
+            $customerSession,
+            $currency,
+            $directoryRegion,
+            $platformCustomer,
+            $platformPaymentProfile,
+            $orderService,
+            $quoteManagement,
+            $jsonSerializer,
+            $logger
+        );
+    }
+
     public function setPaymentToQuote(array $paymentData)
     {
         if (!$paymentData
@@ -160,19 +208,15 @@ class PaymentService extends ApplePayCore
 
     public function createPaymentToken(array $applePayPayment)
     {
-        $platformVaultHelper = '';
-
         $quote = $this->getQuote();
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $product = $objectManager->create('Swarming\SubscribePro\Helper\Vault');
-        $paymentMethod = $product->createApplePayPaymentToken(
+        $paymentMethod = $this->vault->createApplePayPaymentToken(
             $quote->getBillingAddress(),
             $applePayPayment['token']['paymentData']
         );
-        $paymentMethod = $this->getApplePayPaymentToken(
-            $quote->getBillingAddress(),
-            $applePayPayment['token']['paymentData']
-        );
+//        $paymentMethod = $this->getApplePayPaymentToken(
+//            $quote->getBillingAddress(),
+//            $applePayPayment['token']['paymentData']
+//        );
 
         // Set apple pay pay method on quote
         $payment = $quote->getPayment();
@@ -187,13 +231,15 @@ class PaymentService extends ApplePayCore
         $payment->setAdditionalInformation('subscribe_pro_order_token', '');
         // CC Number
         $ccNumber = $paymentMethod->getFirstSixDigits() . 'XXXXXX' . $paymentMethod->getLastFourDigits();
+        $payment->setData('payment_method_token', $paymentMethod->getToken());
         $payment->setAdditionalInformation('obscured_cc_number', $ccNumber);
         $payment->setData('cc_number', $ccNumber);
         $payment->setCcNumberEnc($payment->encrypt($ccNumber));
         $payment->setData('cc_exp_month', $paymentMethod->getMonth());
         $payment->setData('cc_exp_year', $paymentMethod->getYear());
-        $payment->setData('cc_type', $this->platformVaultHelper->mapSubscribeProCardTypeToMagento($paymentMethod->getCardType()));
+        $payment->setData('cc_type', $this->mapSubscribeProCardTypeToMagento($paymentMethod->getCardType()));
         $quote->setPayment($payment);
+        $quote->setCheckoutMethod('guest');
 
         // Save quote
         $payment->save();
