@@ -7,6 +7,8 @@
     <preference for="Swarming\SubscribePro\Model\CatalogRule\InspectorInterface" type="Swarming\SubscribePro\Model\CatalogRule\Inspector" />
     <preference for="Magento\Sales\Block\Adminhtml\Order\Create\Items\Grid" type="Swarming\SubscribePro\Block\Adminhtml\Order\Create\Items\Grid" />
     <preference for="Swarming\SubscribePro\Api\CartManagementInterface" type="Swarming\SubscribePro\Model\Quote\QuoteManagement" />
+    <preference for="Swarming\SubscribePro\Api\GetOrderStatusInterface" type="Swarming\SubscribePro\Service\GetOrderStatus" />
+    <preference for="Swarming\SubscribePro\Api\Data\OrderPaymentStateInterface" type="Swarming\SubscribePro\Model\Order\PaymentState" />
 
     <type name="Swarming\SubscribePro\Platform\Platform">
         <arguments>
@@ -260,6 +262,7 @@
                 <item name="customer" xsi:type="string">Swarming\SubscribePro\Gateway\Request\CustomerDataBuilder</item>
                 <item name="order" xsi:type="string">Swarming\SubscribePro\Gateway\Request\OrderDataBuilder</item>
                 <item name="payment" xsi:type="string">Swarming\SubscribePro\Gateway\Request\PaymentDataBuilder</item>
+                <item name="3ds" xsi:type="string">Swarming\SubscribePro\Gateway\Request\ThreeDSecure</item>
                 <item name="address" xsi:type="string">Swarming\SubscribePro\Gateway\Request\AddressDataBuilder</item>
             </argument>
         </arguments>
@@ -267,6 +270,7 @@
     <virtualType name="SubscribeProPlaceOrderHandler" type="Magento\Payment\Gateway\Response\HandlerChain">
         <arguments>
             <argument name="handlers" xsi:type="array">
+                <item name="3ds" xsi:type="string">Swarming\SubscribePro\Gateway\Response\ThreeDSecure</item>
                 <item name="payment_details" xsi:type="string">Swarming\SubscribePro\Gateway\Response\PaymentDetailsHandler</item>
                 <item name="txn_id" xsi:type="string">Swarming\SubscribePro\Gateway\Response\TransactionIdHandler</item>
                 <item name="card_details" xsi:type="string">Swarming\SubscribePro\Gateway\Response\CardDetailsHandler</item>
@@ -372,13 +376,6 @@
        <arguments>
           <argument name="sensitive" xsi:type="array">
              <item name="swarming_subscribepro/platform/client_id" xsi:type="string">1</item>
-          </argument>
-       </arguments>
-    </type>
-
-    <type name="Magento\Config\Model\Config\TypePool">
-       <arguments>
-          <argument name="sensitive" xsi:type="array">
              <item name="swarming_subscribepro/platform/client_secret" xsi:type="string">1</item>
           </argument>
        </arguments>
