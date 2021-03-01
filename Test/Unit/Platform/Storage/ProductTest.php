@@ -9,6 +9,7 @@ use Magento\Store\Model\StoreManagerInterface;
 use Magento\Framework\Cache\FrontendInterface as CacheFrontendInterface;
 use Magento\Framework\App\Cache\StateInterface as CacheStateInterface;
 use Swarming\SubscribePro\Model\Config\Advanced as CacheConfig;
+use Magento\Framework\Serialize\Serializer\Serialize;
 
 class ProductTest extends \PHPUnit\Framework\TestCase
 {
@@ -37,6 +38,11 @@ class ProductTest extends \PHPUnit\Framework\TestCase
      */
     protected $advancedConfigMock;
 
+    /**
+     * @var \Magento\Framework\Serialize\Serializer\Serialize
+     */
+    protected $serializer;
+
     protected function setUp()
     {
         $this->cacheMock = $this->getMockBuilder(CacheFrontendInterface::class)->getMock();
@@ -45,11 +51,14 @@ class ProductTest extends \PHPUnit\Framework\TestCase
         $this->advancedConfigMock = $this->getMockBuilder(CacheConfig::class)
             ->disableOriginalConstructor()->getMock();
 
+        $this->serializer = new Serialize;
+
         $this->productStorage = new ProductStorage(
             $this->cacheMock,
             $this->stateMock,
             $this->advancedConfigMock,
-            $this->storeManagerMock
+            $this->storeManagerMock,
+            $this->serializer
         );
     }
 
@@ -124,7 +133,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
         $this->cacheMock->expects($this->once())
             ->method('load')
             ->with($this->stringContains(ProductStorage::PRODUCT_CACHE_KEY . '_'))
-            ->willReturn(serialize($platformProductMock));
+            ->willReturn($this->serializer->serialize($platformProductMock));
 
         $cachedProduct = $this->productStorage->load($sku, $websiteId);
 
