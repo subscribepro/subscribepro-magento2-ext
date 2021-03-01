@@ -7,7 +7,7 @@ use Swarming\SubscribePro\Gateway\Config\ConfigProvider as GatewayConfigProvider
 use SubscribePro\Exception\InvalidArgumentException;
 use SubscribePro\Exception\HttpException;
 
-class Checkout implements ConfigProviderInterface
+final class Checkout implements ConfigProviderInterface
 {
     /**
      * @var \Swarming\SubscribePro\Gateway\Config\ConfigProvider

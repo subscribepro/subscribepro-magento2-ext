@@ -8,7 +8,6 @@ use Swarming\SubscribePro\Platform\Storage\Config as ConfigStorage;
 use Magento\Framework\Cache\FrontendInterface as CacheFrontendInterface;
 use Magento\Framework\App\Cache\StateInterface as CacheStateInterface;
 use Swarming\SubscribePro\Model\Config\Advanced as CacheConfig;
-use Magento\Framework\Serialize\Serializer\Serialize;
 
 class ConfigTest extends \PHPUnit\Framework\TestCase
 {
@@ -37,11 +36,6 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
      */
     protected $advancedConfigMock;
 
-    /**
-     * @var \Magento\Framework\Serialize\Serializer\Serialize
-     */
-    protected $serializer;
-
     protected function setUp()
     {
         $this->cacheMock = $this->getMockBuilder(CacheFrontendInterface::class)->getMock();
@@ -50,14 +44,11 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
         $this->advancedConfigMock = $this->getMockBuilder(CacheConfig::class)
             ->disableOriginalConstructor()->getMock();
 
-        $this->serializer = new Serialize;
-
         $this->configStorage = new ConfigStorage(
             $this->cacheMock,
             $this->stateMock,
             $this->advancedConfigMock,
-            $this->storeManagerMock,
-            $this->serializer
+            $this->storeManagerMock
         );
     }
 
@@ -133,7 +124,7 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
         $this->cacheMock->expects($this->once())
             ->method('load')
             ->with($cacheKey)
-            ->willReturn($this->serializer->serialize($configData));
+            ->willReturn(serialize($configData));
 
         $this->assertEquals(
             $configData,
@@ -199,7 +190,7 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
         $this->cacheMock->expects($this->once())
             ->method('save')
             ->with(
-                $this->serializer->serialize($config),
+                serialize($config),
                 $cacheKey,
                 [],
                 $lifeTime
@@ -234,7 +225,7 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
         $this->cacheMock->expects($this->once())
             ->method('save')
             ->with(
-                $this->serializer->serialize($config),
+                serialize($config),
                 $cacheKey,
                 [],
                 $lifeTime

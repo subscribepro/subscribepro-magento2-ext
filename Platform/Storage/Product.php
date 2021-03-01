@@ -34,30 +34,21 @@ class Product
     private $platformProducts = [];
 
     /**
-     * @var \Magento\Framework\Serialize\Serializer\Serialize
-     */
-    protected $serializer;
-
-
-    /**
      * @param \Magento\Framework\Cache\FrontendInterface $cache
      * @param \Magento\Framework\App\Cache\StateInterface $state
      * @param \Swarming\SubscribePro\Model\Config\Advanced $advancedConfig
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
-     * @param \Magento\Framework\Serialize\Serializer\Serialize $serializer
      */
     public function __construct(
         \Magento\Framework\Cache\FrontendInterface $cache,
         \Magento\Framework\App\Cache\StateInterface $state,
         \Swarming\SubscribePro\Model\Config\Advanced $advancedConfig,
-        \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Magento\Framework\Serialize\Serializer\Serialize $serializer
+        \Magento\Store\Model\StoreManagerInterface $storeManager
     ) {
         $this->cache = $cache;
         $this->state = $state;
         $this->advancedConfig = $advancedConfig;
         $this->storeManager = $storeManager;
-        $this->serializer = $serializer;
     }
 
     /**
@@ -81,7 +72,7 @@ class Product
             return null;
         }
 
-        $platformProduct = $this->serializer->unserialize($platformProductData);
+        $platformProduct = unserialize($platformProductData);
         $this->platformProducts[$cacheKey] = $platformProduct;
 
         return $platformProduct;
@@ -103,7 +94,7 @@ class Product
         }
 
         $lifeTime = $lifeTime ?: $this->advancedConfig->getCacheLifeTime($websiteId);
-        $this->cache->save($this->serializer->serialize($platformProduct), $cacheKey, [], $lifeTime);
+        $this->cache->save(serialize($platformProduct), $cacheKey, [], $lifeTime);
     }
 
     /**
@@ -131,6 +122,6 @@ class Product
     protected function getCacheKey($sku, $websiteId = null)
     {
         $websiteCode = $this->storeManager->getWebsite($websiteId)->getCode();
-        return self::PRODUCT_CACHE_KEY . '_' . hash('sha256', $this->serializer->serialize([$sku, $websiteCode]));
+        return self::PRODUCT_CACHE_KEY . '_' . md5(serialize([$sku, $websiteCode]));
     }
 }
