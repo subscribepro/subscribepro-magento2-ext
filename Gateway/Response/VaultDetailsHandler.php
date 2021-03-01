@@ -73,7 +73,9 @@ class VaultDetailsHandler implements HandlerInterface
         $transaction = $this->subjectReader->readTransaction($response);
         $payment = $paymentDO->getPayment();
 
-        if ($payment->getAdditionalInformation(VaultConfigProvider::IS_ACTIVE_CODE)) {
+        if (!$payment->getIsTransactionPending()
+            && $payment->getAdditionalInformation(VaultConfigProvider::IS_ACTIVE_CODE)
+        ) {
             $paymentToken = $this->getVaultPaymentToken($transaction);
             $extensionAttributes = $this->getExtensionAttributes($payment);
             $extensionAttributes->setVaultPaymentToken($paymentToken);

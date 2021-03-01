@@ -41,6 +41,7 @@
                 <item name="payment_profile.created" xsi:type="object">Swarming\SubscribePro\Platform\Webhook\Handler\PaymentProfile\CreateHandler</item>
                 <item name="payment_profile.updated" xsi:type="object">Swarming\SubscribePro\Platform\Webhook\Handler\PaymentProfile\UpdateHandler</item>
                 <item name="payment_profile.redacted" xsi:type="object">Swarming\SubscribePro\Platform\Webhook\Handler\PaymentProfile\RedactHandler</item>
+                <item name="payment_transaction.updated" xsi:type="object">Swarming\SubscribePro\Platform\Webhook\Handler\PaymentTransaction\UpdatedHandler</item>
             </argument>
         </arguments>
     </type>
