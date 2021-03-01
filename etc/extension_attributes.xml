@@ -3,4 +3,7 @@
     <extension_attributes for="Magento\Quote\Api\Data\ProductOptionInterface">
         <attribute code="subscription_option" type="Swarming\SubscribePro\Api\Data\SubscriptionOptionInterface" />
     </extension_attributes>
+    <extension_attributes for="Magento\Sales\Api\Data\OrderItemInterface">
+        <attribute code="subscription_option" type="Swarming\SubscribePro\Api\Data\SubscriptionOptionInterface" />
+    </extension_attributes>
 </config>
