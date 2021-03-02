@@ -87,6 +87,7 @@
                 <model>SubscribeProApplePayAdapter</model>
                 <active>0</active>
                 <active_non_subscription>0</active_non_subscription>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
                 <is_gateway>1</is_gateway>
                 <can_use_checkout>1</can_use_checkout>
                 <can_use_internal>1</can_use_internal>
