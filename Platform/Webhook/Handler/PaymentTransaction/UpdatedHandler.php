@@ -6,6 +6,7 @@ namespace Swarming\SubscribePro\Platform\Webhook\Handler\PaymentTransaction;
 
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\Order;
+use Swarming\SubscribePro\Gateway\Config\ConfigProvider as GatewayConfigProvider;
 use Swarming\SubscribePro\Platform\Webhook\HandlerInterface;
 use SubscribePro\Service\Webhook\EventInterface;
 use SubscribePro\Service\Transaction\TransactionInterface;
@@ -24,6 +25,21 @@ class UpdatedHandler implements HandlerInterface
     private $orderRepository;
 
     /**
+     * @var \Magento\Quote\Api\CartRepositoryInterface
+     */
+    private $quoteRepository;
+
+    /**
+     * @var \Swarming\SubscribePro\Model\Quote\SubscriptionCreator
+     */
+    private $subscriptionCreator;
+
+    /**
+     * @var \Magento\Quote\Model\Quote\Item\CartItemOptionsProcessor
+     */
+    private $cartItemOptionProcessor;
+
+    /**
      * @var \Swarming\SubscribePro\Platform\Service\Transaction
      */
     private $platformTransactionService;
@@ -31,15 +47,24 @@ class UpdatedHandler implements HandlerInterface
     /**
      * @param \Magento\Sales\Model\OrderFactory $orderFactory
      * @param \Magento\Sales\Api\OrderRepositoryInterface $orderRepository
+     * @param \Magento\Quote\Api\CartRepositoryInterface $quoteRepository
+     * @param \Swarming\SubscribePro\Model\Quote\SubscriptionCreator $subscriptionCreator
+     * @param \Magento\Quote\Model\Quote\Item\CartItemOptionsProcessor $cartItemOptionProcessor
      * @param \Swarming\SubscribePro\Platform\Service\Transaction $platformTransactionService
      */
     public function __construct(
         \Magento\Sales\Model\OrderFactory $orderFactory,
         \Magento\Sales\Api\OrderRepositoryInterface $orderRepository,
+        \Magento\Quote\Api\CartRepositoryInterface $quoteRepository,
+        \Swarming\SubscribePro\Model\Quote\SubscriptionCreator $subscriptionCreator,
+        \Magento\Quote\Model\Quote\Item\CartItemOptionsProcessor $cartItemOptionProcessor,
         \Swarming\SubscribePro\Platform\Service\Transaction $platformTransactionService
     ) {
         $this->orderFactory = $orderFactory;
         $this->orderRepository = $orderRepository;
+        $this->quoteRepository = $quoteRepository;
+        $this->subscriptionCreator = $subscriptionCreator;
+        $this->cartItemOptionProcessor = $cartItemOptionProcessor;
         $this->platformTransactionService = $platformTransactionService;
     }
 
@@ -59,6 +84,7 @@ class UpdatedHandler implements HandlerInterface
         switch ($transaction->getState()) {
             case TransactionInterface::STATE_SUCCEEDED:
                 $this->approveOrder($order);
+                $this->createSubscriptions($order);
                 break;
             case TransactionInterface::STATE_FAILED:
             case TransactionInterface::STATE_GATEWAY_PROCESSING_FAILED:
@@ -75,6 +101,36 @@ class UpdatedHandler implements HandlerInterface
         $orderPayment = $this->getOrderPayment($order);
         $orderPayment->accept();
         $this->orderRepository->save($order);
+    }
+
+    /**
+     * @param \Magento\Sales\Api\Data\OrderInterface $order
+     * @return void
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    private function createSubscriptions(OrderInterface $order)
+    {
+        $quote = $this->quoteRepository->get($order->getQuoteId());
+        if ($order->getPayment()->getMethod() == GatewayConfigProvider::CODE && $quote->getCustomerId()) {
+            $this->addProductOptionsToQuoteItems($quote);
+            $this->subscriptionCreator->createSubscriptions($quote, $order);
+        }
+    }
+
+    /**
+     * @param \Magento\Quote\Model\Quote $quote
+     * @return void
+     */
+    private function addProductOptionsToQuoteItems($quote)
+    {
+        foreach ($quote->getAllItems() as $quoteItem) {
+            if ($quoteItem->getProductOption()) { // Skip if options are already added
+                continue;
+            }
+            /** @var \Magento\Quote\Model\Quote\Item $quoteItem */
+            $item = $this->cartItemOptionProcessor->addProductOptions($quoteItem->getProductType(), $quoteItem);
+            $this->cartItemOptionProcessor->applyCustomOptions($item);
+        }
     }
 
     /**
