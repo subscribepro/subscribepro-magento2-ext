@@ -298,13 +298,6 @@
                     <label>Title</label>
                 </field>
 
-                <field id="merchant_identifier" translate="text" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Merchant Identifier</label>
-                    <depends>
-                        <field id="enabled">1</field>
-                    </depends>
-                </field>
-
                 <field id="domain" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Domain</label>
                     <depends>
