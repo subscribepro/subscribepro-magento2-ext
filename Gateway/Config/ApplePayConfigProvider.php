@@ -22,6 +22,15 @@ class ApplePayConfigProvider extends ConfigProvider
     }
 
     /**
+     * @param null $storeId
+     * @return bool
+     */
+    public function isActiveNonSubscription($storeId = null): bool
+    {
+        return (bool)$this->gatewayConfig->getValue('active_non_subscription', $storeId);
+    }
+
+    /**
      * @param null $websiteCode
      * @return string
      */
