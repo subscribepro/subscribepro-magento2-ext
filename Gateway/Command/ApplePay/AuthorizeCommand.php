@@ -27,7 +27,10 @@ class AuthorizeCommand extends AbstractProfileCreatorCommand implements CommandI
                 VaultDataBuilder::PAYMENT_PROFILE_ID => $profileId
             ], $transaction);
         } else {
-            $this->platformTransactionService->authorizeByToken($requestData[PaymentDataBuilder::PAYMENT_METHOD_TOKEN], x);
+            $this->platformTransactionService->authorizeByToken(
+                $requestData[PaymentDataBuilder::PAYMENT_METHOD_TOKEN],
+                $transaction
+            );
         }
 
         return $transaction;
