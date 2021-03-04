@@ -4,8 +4,9 @@ namespace Swarming\SubscribePro\Platform\Webhook\Handler\PaymentProfile;
 
 use Magento\Framework\Exception\NoSuchEntityException;
 use SubscribePro\Service\Webhook\EventInterface;
+use Swarming\SubscribePro\Gateway\Config\ApplePayConfigProvider;
+use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
 use Swarming\SubscribePro\Platform\Webhook\HandlerInterface;
-use Swarming\SubscribePro\Platform\Webhook\Handler\PaymentProfile\AbstractHandler;
 
 class CreateHandler extends AbstractHandler implements HandlerInterface
 {
@@ -55,14 +56,22 @@ class CreateHandler extends AbstractHandler implements HandlerInterface
         // This can happen if the customer creates the card record in Magento
         // since Subscribe Pro still sends a payment_profile.created webhook
         try {
-            $this->getPaymentToken($event);
+            $paymentMethodCode = ConfigProvider::CODE;
+            $paymentProfileData = $event->getEventData('payment_profile');
+            if (isset($paymentProfileData['payment_method_type'])
+                && $paymentProfileData['payment_method_type'] === 'apple_pay'
+            ) {
+                $paymentMethodCode = ApplePayConfigProvider::CODE;
+            }
+
+            $this->getPaymentToken($event, $paymentMethodCode);
         } catch (NoSuchEntityException $e) {
             $paymentToken = $this->paymentTokenFactory->create();
             $profile = $this->platformPaymentProfileService->createProfile((array)$event->getEventData('payment_profile'));
             if (!$profile->getMagentoCustomerId()) {
                 $profile->setMagentoCustomerId($this->getCustomerId($event));
             }
-            $this->vaultHelper->initVault($paymentToken, $profile);
+            $this->vaultHelper->initVault($paymentToken, $profile, $paymentMethodCode);
             $this->paymentTokenRepository->save($paymentToken);
         }
     }
