@@ -65,8 +65,7 @@ class SubscriptionCreator
      */
     public function createSubscriptions($quote, $order)
     {
-        //$paymentProfileId = $this->getPaymentProfileId($order->getPayment());
-        $paymentProfileId = 6102533;
+        $paymentProfileId = $this->getPaymentProfileId($order->getPayment());
         $platformCustomer = $this->platformCustomerManager->getCustomerById($quote->getCustomerId());
 
         $subscriptionsSuccess = [];
