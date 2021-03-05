@@ -42,6 +42,11 @@ class SubscriptionCreator
     protected $logger;
 
     /**
+     * @var \Magento\ConfigurableProduct\Model\Product\Type\Configurable
+     */
+    protected $configurable;
+
+    /**
      * @param \Swarming\SubscribePro\Model\Config\SubscriptionOptions $subscriptionOptionsConfig
      * @param \Swarming\SubscribePro\Platform\Service\Subscription $platformSubscriptionService
      * @param \Swarming\SubscribePro\Helper\QuoteItem $quoteItemHelper
@@ -49,6 +54,7 @@ class SubscriptionCreator
      * @param \Magento\Framework\Event\ManagerInterface $eventManager
      * @param \Magento\Framework\Intl\DateTimeFactory $dateTimeFactory
      * @param \Psr\Log\LoggerInterface $logger
+     * @param \Magento\ConfigurableProduct\Model\Product\Type\Configurable $configurable
      */
     public function __construct(
         \Swarming\SubscribePro\Model\Config\SubscriptionOptions $subscriptionOptionsConfig,
@@ -57,7 +63,8 @@ class SubscriptionCreator
         \Swarming\SubscribePro\Helper\ProductOption $productOptionHelper,
         \Magento\Framework\Event\ManagerInterface $eventManager,
         \Magento\Framework\Intl\DateTimeFactory $dateTimeFactory,
-        \Psr\Log\LoggerInterface $logger
+        \Psr\Log\LoggerInterface $logger,
+        \Magento\ConfigurableProduct\Model\Product\Type\Configurable $configurable
     ) {
         $this->subscriptionOptionsConfig = $subscriptionOptionsConfig;
         $this->platformSubscriptionService = $platformSubscriptionService;
@@ -66,6 +73,7 @@ class SubscriptionCreator
         $this->eventManager = $eventManager;
         $this->dateTimeFactory = $dateTimeFactory;
         $this->logger = $logger;
+        $this->configurable = $configurable;
     }
 
     /**
@@ -79,7 +87,7 @@ class SubscriptionCreator
     {
         $quote = $quoteItem->getQuote();
         $store = $quote->getStore();
-        $productSku = $quoteItem->getProduct()->getData(ProductInterface::SKU);
+        $productSku = $this->getProductSku($quoteItem);
         try {
             $subscription = $this->platformSubscriptionService->createSubscription();
             $subscription->setCustomerId($platformCustomerId);
@@ -121,6 +129,32 @@ class SubscriptionCreator
             return false;
         }
         return $subscription->getId();
+    }
+
+    /**
+     * Gets the product sku for the quote item
+     * If enabled, grabs the child SKU when configurable
+     *
+     * @param \Magento\Quote\Model\Quote\Item $quoteItem
+     * @return string
+     */
+    protected function getProductSku($quoteItem)
+    {
+        $product = $quoteItem->getProduct();
+
+        if( !$this->subscriptionOptionsConfig->isChildSkuForConfigurableEnabled() ){
+            return $product->getData( ProductInterface::SKU );
+        }
+
+        if( $quoteItem->getProductType() === $this->configurable::TYPE_CODE ){
+            $superAttribute = $quoteItem->getBuyRequest()->getSuperAttribute();
+            $child = $this->configurable->getProductByAttributes($superAttribute, $product);
+            if( $child ){ // returns null when not found
+                $product = $child;
+            }
+        }
+
+        return $product->getData( ProductInterface::SKU );
     }
 
     /**
