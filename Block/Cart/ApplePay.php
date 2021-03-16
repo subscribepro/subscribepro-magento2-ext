@@ -113,10 +113,23 @@ class ApplePay extends Template
         $quote = $this->checkoutSession->getQuote();
         $isLoggedIn = $this->customerSession->isLoggedIn();
         $isActiveNonSubscription = $this->applePayConfigProvider->isActiveNonSubscription($quote->getStoreId());
-        if (count($quote->getItems()) && !$isActiveNonSubscription && !$isLoggedIn) {
-            foreach ($quote->getItems() as $item) {
-                if ($this->quoteItemHelper->hasSubscription($item)) {
-                    return false;
+
+        if ($isActiveNonSubscription && !$isLoggedIn) {
+            if (count($quote->getItems())) {
+                foreach ($quote->getItems() as $item) {
+                    if ($this->quoteItemHelper->hasSubscription($item)) {
+                        return false;
+                    }
+                }
+            }
+        } elseif (!$isLoggedIn) {
+            return false;
+        } elseif ($isLoggedIn) {
+            if (count($quote->getItems()) && !$isActiveNonSubscription) {
+                foreach ($quote->getItems() as $item) {
+                    if (!$this->quoteItemHelper->hasSubscription($item)) {
+                        return false;
+                    }
                 }
             }
         }
