@@ -2,10 +2,9 @@
 
 namespace Swarming\SubscribePro\Helper;
 
-use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
 use Magento\Vault\Api\Data\PaymentTokenInterface;
 use SubscribePro\Service\PaymentProfile\PaymentProfileInterface;
-use SubscribePro\Sdk;
+use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
 
 class Vault
 {
@@ -91,15 +90,21 @@ class Vault
     public function createApplePayPaymentToken($billingAddress, array $applePayPaymentData)
     {
         // Build request data
-        $requestData = array(
+        $requestData = [
             'billing_address' => [
                 'first_name' => $billingAddress->getData('firstname'),
                 'last_name' => $billingAddress->getData('lastname'),
             ],
             'applepay_payment_data' => $applePayPaymentData,
-        );
+        ];
         // Add optional fields - billing address
-        $optionalFields = ['company' => 'company', 'city' => 'city', 'postcode' => 'postcode', 'country' => 'country_id', 'phone' => 'telephone', ];
+        $optionalFields = [
+            'company' => 'company',
+            'city' => 'city',
+            'postcode' => 'postcode',
+            'country' => 'country_id',
+            'phone' => 'telephone'
+        ];
         foreach ($optionalFields as $fieldKey => $magentoFieldKey) {
             if (strlen($billingAddress->getData($magentoFieldKey))) {
                 $requestData['billing_address'][$fieldKey] = $billingAddress->getData($magentoFieldKey);

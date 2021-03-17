@@ -15,8 +15,7 @@ class CardRenderer extends AbstractCardRenderer
      */
     public function canRender(PaymentTokenInterface $token)
     {
-        return ($token->getPaymentMethodCode() === ConfigProvider::CODE
-            || $token->getPaymentMethodCode() === ApplePayConfigProvider::CODE);
+        return ($token->getPaymentMethodCode() === ConfigProvider::CODE);
     }
 
     /**
