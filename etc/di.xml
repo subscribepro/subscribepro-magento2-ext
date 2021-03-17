@@ -480,4 +480,57 @@
             </argument>
         </arguments>
     </type>
+
+    <!-- ApplePay Logger Handlers-->
+<!--    <virtualType name="ApplePayErrorLogger" type="Magento\Framework\Logger\Monolog">-->
+<!--        <arguments>-->
+<!--            <argument name="handlers" xsi:type="array">-->
+<!--                <item name="error" xsi:type="object">Swarming\SubscribePro\Logger\ErrorHandler</item>-->
+<!--            </argument>-->
+<!--        </arguments>-->
+<!--    </virtualType>-->
+    <virtualType name="Swarming\SubscribePro\Model\VirtualLoggerHandler" type="Magento\Framework\Logger\Handler\Base">
+        <arguments>
+            <argument name="fileName" xsi:type="string">/var/log/subscribepro_applepay/error.log</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Swarming\SubscribePro\Model\VirtualLogger" type="Magento\Framework\Logger\Monolog">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="system" xsi:type="object">Swarming\SubscribePro\Model\VirtualLoggerHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Swarming\SubscribePro\Model\ApplePay\OrderService">
+        <arguments>
+            <argument name="logger" xsi:type="object">Swarming\SubscribePro\Model\VirtualLogger</argument>
+        </arguments>
+    </type>
+    <type name="Swarming\SubscribePro\Model\ApplePay\PaymentRequestConfig">
+        <arguments>
+            <argument name="logger" xsi:type="object">Swarming\SubscribePro\Model\VirtualLogger</argument>
+        </arguments>
+    </type>
+    <type name="Swarming\SubscribePro\Model\ApplePay\PaymentService">
+        <arguments>
+            <argument name="logger" xsi:type="object">Swarming\SubscribePro\Model\VirtualLogger</argument>
+        </arguments>
+    </type>
+    <type name="Swarming\SubscribePro\Model\ApplePay\PaymentAuthorized">
+        <arguments>
+            <argument name="logger" xsi:type="object">Swarming\SubscribePro\Model\VirtualLogger</argument>
+        </arguments>
+    </type>
+    <type name="Swarming\SubscribePro\Controller\ApplePay\Shipping">
+        <arguments>
+            <argument name="logger" xsi:type="object">Swarming\SubscribePro\Model\VirtualLogger</argument>
+        </arguments>
+    </type>
+    <type name="Swarming\SubscribePro\Controller\ApplePay\ShippingList">
+        <arguments>
+            <argument name="logger" xsi:type="object">Swarming\SubscribePro\Model\VirtualLogger</argument>
+        </arguments>
+    </type>
+    <!-- ApplePay Logger Handlers-->
 </config>

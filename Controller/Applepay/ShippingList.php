@@ -68,6 +68,7 @@ class ShippingList implements HttpPostActionInterface, CsrfAwareActionInterface
             $data = $this->getRequestData();
 
             if (!isset($data['shippingContact'])) {
+                $this->logger->error('Invalid Request Data!');
                 $errorMsg = new Phrase('Invalid Request Data!');
                 $response = [
                     'success' => false,
@@ -88,7 +89,7 @@ class ShippingList implements HttpPostActionInterface, CsrfAwareActionInterface
             $grandTotalForApplePay = $this->getGrandTotal();
             $rowItemsApplePay = $this->getRowItems();
         } catch (LocalizedException $e) {
-            $this->logger->debug('Error Message - ' . $e->getMessage());
+            $this->logger->error($e->getMessage());
 
             $response = [
                 'success' => false,
@@ -101,9 +102,6 @@ class ShippingList implements HttpPostActionInterface, CsrfAwareActionInterface
         }
 
         // Build response
-        $this->logger->debug('newShippingMethods - ' . print_r($shippingMethodsForApplePay, true));
-        $this->logger->debug('newTotal - ' . print_r($grandTotalForApplePay, true));
-        $this->logger->debug('newLineItems - ' . print_r($rowItemsApplePay, true));
         $response = [
             'newShippingMethods'    => $shippingMethodsForApplePay,
             'newTotal'              => $grandTotalForApplePay,

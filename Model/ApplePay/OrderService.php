@@ -91,6 +91,7 @@ class OrderService
         $quote = $this->quoteRepository->get($quoteId);
 
         if (!$quote || !$quote->getIsActive()) {
+            $this->logger->error('Quote is not active or null');
             throw  new LocalizedException(__('Something going wrong.'));
         }
 
@@ -103,7 +104,10 @@ class OrderService
              * with "onshippingmethodselected".
              */
             if (!$defaultShippingMethod) {
-                throw new LocalizedException(__('Cannot find shipping method. Please check your shipping method list'));
+                $errMsg = 'Cannot find shipping method. Please check your shipping method list';
+                $this->logger->error('QuoteId: ' . $quoteId);
+                $this->logger->error($errMsg);
+                throw new LocalizedException(__($errMsg));
             }
             $shippingAddress->setShippingMethod($defaultShippingMethod['identifier']);
         }
@@ -115,14 +119,10 @@ class OrderService
             $paymentMethod = $quote->getPayment();
             $this->quoteManagement->placeOrder($quote->getId(), $paymentMethod);
 
-            // TODO: need to check redirect url if success page was changed by 3rd party module.
-//            $redirectUrl = $quote->getPayment()->getOrderPlaceRedirectUrl();
-//            if (!$redirectUrl) {
-//                $redirectUrl = $this->defaultConfigProvider->getDefaultSuccessPageUrl();
-//            }
-
             return true;
         } catch (LocalizedException $e) {
+            $this->logger->error('QuoteId: ' . $quote->getId());
+            $this->logger->error($e->getMessage());
             $this->checkoutHelperData->sendPaymentFailedEmail(
                 $quote,
                 $e->getMessage()

@@ -113,6 +113,8 @@ class PaymentAuthorized implements HttpPostActionInterface, CsrfAwareActionInter
             $this->logger->debug('redirectUrl - ' . $urlToRedirect);
             $result->setData('redirectUrl', $urlToRedirect);
         } catch (LocalizedException $e) {
+            $this->logger->error('QuoteId: ' . $quoteId);
+            $this->logger->error($e);
             $this->logger->critical($e);
             $result->setData('success', false);
             $result->setData('error', true);

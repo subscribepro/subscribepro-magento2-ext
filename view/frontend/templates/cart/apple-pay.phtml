@@ -78,7 +78,6 @@ require([
 
                 // Call Merchant Validation
                 session.onvalidatemerchant = function (event) {
-                    console.log(event);
                     // Requests an Apple Pay merchant session from Subscribe Pro platform and returns a promise.
                     jQuery.ajax({
                         url: self.config.createSessionUrl,
@@ -100,7 +99,7 @@ require([
                             session.completeMerchantValidation(data);
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
-                            console.log('===> ERROR', errorThrown);
+                            console.error(errorThrown);
                             session.abort();
                         }
                     });
@@ -111,10 +110,10 @@ require([
                     // Fetch shipping methods when sheet shown and when new contact chosen
                     if (!self.config.onShippingContactSelectedUrl) {
                         console.error('Invalid shipping url');
+                        session.abort();
                         return false;
                     }
 
-                    console.log(event);
                     jQuery.ajax({
                         url: self.config.onShippingContactSelectedUrl,
                         type: "POST",
@@ -124,15 +123,23 @@ require([
                             shippingContact: event.shippingContact
                         }),
                         success: function (data, textStatus, jqXHR) {
+                            let status = ApplePaySession.STATUS_SUCCESS;
+
+                            if (!data.success) {
+                                status = ApplePaySession.STATUS_ERROR;
+                            }
                             console.log(data);
-                            console.log(event);
+                            console.log(status);
+
                             session.completeShippingContactSelection(
-                                ApplePaySession.STATUS_SUCCESS,
+                                status,
                                 data.newShippingMethods,
                                 self.replaceTotalLabel(data.newTotal, self.displayName),
-                                data.newLineItems);
+                                data.newLineItems
+                            );
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
+                            console.error(errorThrown);
                             session.abort();
                         }
                     });
@@ -164,6 +171,7 @@ require([
                                 data.newLineItems);
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
+                            // console.error(errorThrown);
                             session.abort();
                         }
                     });

@@ -213,10 +213,6 @@ class PaymentService extends ApplePayCore
             $quote->getBillingAddress(),
             $applePayPayment['token']['paymentData']
         );
-//        $paymentMethod = $this->getApplePayPaymentToken(
-//            $quote->getBillingAddress(),
-//            $applePayPayment['token']['paymentData']
-//        );
 
         // Set apple pay pay method on quote
         $payment = $quote->getPayment();

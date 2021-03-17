@@ -143,6 +143,8 @@ class PaymentRequestConfig extends DataObject
         $currentRate = false;
 
         if (!$shippingRates) {
+            $this->logger->error('QuoteId: ' . $quote->getId());
+            $this->logger->error('No  shippingRates');
             return $rates;
         }
 
@@ -264,7 +266,6 @@ class PaymentRequestConfig extends DataObject
             }
         }
 
-
         try {
             if ($customerId) {
                 $data = $this->platformOAuth->getWidgetAccessTokenByCustomerId($subscriberProCustomerId, $websiteId);
@@ -275,6 +276,11 @@ class PaymentRequestConfig extends DataObject
 
             return ($data && isset($data['access_token'])) ? $data['access_token'] : '';
         } catch (LocalizedException $e) {
+            $this->logger->error('QuoteId: ' . $quote->getId());
+            $this->logger->error('WebsiteId: ' . $websiteId);
+            if ($subscriberProCustomerId) {
+                $this->logger->error('SubscriberProCustomerId: ' . $subscriberProCustomerId);
+            }
             $this->logger->error($e->getMessage());
         }
 

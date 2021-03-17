@@ -53,38 +53,34 @@ class ShippingMethod implements HttpPostActionInterface, CsrfAwareActionInterfac
 
     public function execute()
     {
+        // Return JSON response
+        $result = $this->jsonResultFactory->create();
+        $result->setHeader('Content-type', 'application/json');
+
         try {
             // Get JSON POST
             $data = $this->getRequestData();
 
-            if (!isset($data['shippingMethod'])) {
+//            if (!isset($data['shippingMethod'])) {
                 throw new LocalizedException(new Phrase('Invalid Request Data!'));
-            }
+//            }
 
             // Set shipping method selection
             $this->shipping->setShippingMethodToQuote($data['shippingMethod']);
 
             // Build up our response
-            $this->logger->debug('ShippingMethod::execute');
-            $this->logger->debug('newTotal - ' . print_r($this->getGrandTotal(), true));
-            $this->logger->debug('newLineItems - ' . print_r($this->getRowItems(), true));
             $response = [
                 'newTotal' => $this->getGrandTotal(),
                 'newLineItems' => $this->getRowItems(),
             ];
 
-            // Return JSON response
-            $result = $this->jsonResultFactory->create();
-            $result->setHeader('Content-type', 'application/json');
-//            $result->setData($this->jsonSerializer->serialize($response));
             $result->setData($response);
 
             return $result;
 
         } catch (LocalizedException $e) {
-            $this->logger->debug('Error Message - ' . $e->getMessage());
-            var_dump($e->getMessage());
-            die;
+            $this->logger->error($e->getMessage());
+            $result->setData([]);
         }
 
         return $result;
