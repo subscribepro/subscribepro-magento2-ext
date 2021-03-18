@@ -61,9 +61,9 @@ class ShippingMethod implements HttpPostActionInterface, CsrfAwareActionInterfac
             // Get JSON POST
             $data = $this->getRequestData();
 
-//            if (!isset($data['shippingMethod'])) {
+            if (!isset($data['shippingMethod'])) {
                 throw new LocalizedException(new Phrase('Invalid Request Data!'));
-//            }
+            }
 
             // Set shipping method selection
             $this->shipping->setShippingMethodToQuote($data['shippingMethod']);

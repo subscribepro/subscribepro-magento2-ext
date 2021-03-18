@@ -58,7 +58,7 @@ class Transaction extends AbstractService
     }
 
     /**
-     * @param int $paymentProfileId
+     * @param array $paymentProfileId
      * @param \SubscribePro\Service\Transaction\TransactionInterface $transaction
      * @param int|null $websiteId
      * @return \SubscribePro\Service\Transaction\TransactionInterface
