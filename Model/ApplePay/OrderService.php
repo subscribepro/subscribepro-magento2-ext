@@ -91,6 +91,7 @@ class OrderService
         $quote = $this->quoteRepository->get($quoteId);
 
         if (!$quote || !$quote->getIsActive()) {
+            $this->logger->error('QuoteID: ' . $quoteId);
             $this->logger->error('Quote is not active or null');
             throw  new LocalizedException(__('Something going wrong.'));
         }
