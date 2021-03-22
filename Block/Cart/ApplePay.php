@@ -126,13 +126,19 @@ class ApplePay extends Template
             return false;
         } elseif ($isLoggedIn) {
             if (count($quote->getItems()) && !$isActiveNonSubscription) {
+                $atLeastOneRegular = false;
                 foreach ($quote->getItems() as $item) {
-                    if (!$this->quoteItemHelper->hasSubscription($item)) {
-                        return false;
+                    if ($this->quoteItemHelper->hasSubscription($item)) {
+                        // if have at least one RegularProduct - allow ApplePay button;
+                        $atLeastOneRegular = true;
                     }
+                }
+                if (!$atLeastOneRegular) {
+                    return false;
                 }
             }
         }
+
         return true;
     }
 
