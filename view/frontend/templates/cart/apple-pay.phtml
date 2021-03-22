@@ -123,16 +123,34 @@ require([
                             shippingContact: event.shippingContact
                         }),
                         success: function (data, textStatus, jqXHR) {
-                            let status = ApplePaySession.STATUS_SUCCESS;
 
                             if (!data.success) {
-                                status = ApplePaySession.STATUS_ERROR;
+                                if (data.errorCode && data.errorCode.length) {
+                                    let ApplePayShippingContactUpdate = {
+                                        status: ApplePaySession.STATUS_FAILURE,
+                                        newShippingMethods: data.newShippingMethods,
+                                        newLineItems: data.newLineItems,
+                                        newTotal: self.replaceTotalLabel(data.newTotal, self.displayName),
+                                        errors: []
+                                    };
+
+                                    ApplePayShippingContactUpdate.errors.push(
+                                        new ApplePayError(
+                                            data.errorCode ,
+                                            data.contactField,
+                                            data.message
+                                        )
+                                    );
+
+                                    session.completeShippingContactSelection(ApplePayShippingContactUpdate);
+                                } else {
+                                    console.error(data);
+                                }
+                                return false;
                             }
-                            console.log(data);
-                            console.log(status);
 
                             session.completeShippingContactSelection(
-                                status,
+                                ApplePaySession.STATUS_SUCCESS,
                                 data.newShippingMethods,
                                 self.replaceTotalLabel(data.newTotal, self.displayName),
                                 data.newLineItems
@@ -164,7 +182,6 @@ require([
                         }),
                         success: function (data, textStatus, jqXHR) {
                             console.log(data);
-                            console.log(event);
                             session.completeShippingMethodSelection(
                                 ApplePaySession.STATUS_SUCCESS,
                                 self.replaceTotalLabel(data.newTotal, self.displayName),

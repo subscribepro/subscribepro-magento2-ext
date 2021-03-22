@@ -68,19 +68,25 @@ class ShippingList implements HttpPostActionInterface, CsrfAwareActionInterface
             $data = $this->getRequestData();
 
             if (!isset($data['shippingContact'])) {
-                $this->logger->error('Invalid Request Data!');
-                $errorMsg = new Phrase('Invalid Request Data!');
+                $errorText = 'Missing Request ShippingContact Data from ApplePay!';
+                $this->logger->error($errorText);
+                $errorMessage = new Phrase($errorText);
                 $response = [
                     'success' => false,
-                    'message' => (string) $errorMsg
+                    'errorCode' => 'shippingContactInvalid',
+                    'contactField' => 'addressLines',
+                    'message' => (string) $errorMessage,
+                    'newTotal' => [
+                        'label' => 'MERCHANT',
+                        'amount' => 0
+                    ]
                 ];
                 $result->setHeader('Content-type', 'application/json');
                 $result->setData($response);
 
                 return $result;
             }
-            $this->logger->debug('ShippingList::execute');
-            $this->logger->debug('ShippingAddress' . print_r($data['shippingContact'], true));
+
             // Pass over the shipping destination
             $this->shipping->setDataToQuote($data['shippingContact']);
 
@@ -93,7 +99,13 @@ class ShippingList implements HttpPostActionInterface, CsrfAwareActionInterface
 
             $response = [
                 'success' => false,
-                'message' => 'Error: ' . $e->getMessage()
+                'errorCode' => 'shippingContactInvalid',
+                'contactField' => 'addressLines',
+                'message' => (string) $e->getMessage(),
+                'newTotal' => [
+                    'label' => 'MERCHANT',
+                    'amount' => 0
+                ]
             ];
             $result->setHeader('Content-type', 'application/json');
             $result->setData($response);
@@ -103,6 +115,7 @@ class ShippingList implements HttpPostActionInterface, CsrfAwareActionInterface
 
         // Build response
         $response = [
+            'success' => true,
             'newShippingMethods'    => $shippingMethodsForApplePay,
             'newTotal'              => $grandTotalForApplePay,
             'newLineItems'          => $rowItemsApplePay,
