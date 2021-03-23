@@ -70,6 +70,7 @@ class ShippingMethod implements HttpPostActionInterface, CsrfAwareActionInterfac
 
             // Build up our response
             $response = [
+                'success' => true,
                 'newTotal' => $this->getGrandTotal(),
                 'newLineItems' => $this->getRowItems(),
             ];
@@ -77,10 +78,19 @@ class ShippingMethod implements HttpPostActionInterface, CsrfAwareActionInterfac
             $result->setData($response);
 
             return $result;
-
         } catch (LocalizedException $e) {
             $this->logger->error($e->getMessage());
-            $result->setData([]);
+            $response = [
+                'success' => false,
+                'errorCode' => 'unknown',
+                'contactField' => '',
+                'message' => (string) $e->getMessage(),
+                'newTotal' => [
+                    'label' => 'MERCHANT',
+                    'amount' => 0
+                ]
+            ];
+            $result->setData($response);
         }
 
         return $result;

@@ -141,7 +141,7 @@ require([
                                             data.message
                                         )
                                     );
-
+                                    console.log('--> onShippingContactSelected: failed');
                                     session.completeShippingContactSelection(ApplePayShippingContactUpdate);
                                 } else {
                                     console.error(data);
@@ -170,7 +170,6 @@ require([
                  * which method was selected.
                  */
                 session.onshippingmethodselected = function (event) {
-                    console.log(event);
                     // Fetch shipping methods when sheet shown and when new contact chosen
                     jQuery.ajax({
                         url: self.config.onShippingMethodSelectedUrl,
@@ -181,14 +180,25 @@ require([
                             shippingMethod: event.shippingMethod
                         }),
                         success: function (data, textStatus, jqXHR) {
-                            console.log(data);
+
+                            if (!data.success) {
+                                console.error('--> onShippingMethodSelected: STATUS_FAILED');
+                                console.error(data.message);
+                                session.abort();
+                                alert(data.message);
+
+                                return false;
+                            }
+
                             session.completeShippingMethodSelection(
                                 ApplePaySession.STATUS_SUCCESS,
                                 self.replaceTotalLabel(data.newTotal, self.displayName),
-                                data.newLineItems);
+                                data.newLineItems
+                            );
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
-                            // console.error(errorThrown);
+                            console.error('--> onShippingMethodSelected: Error');
+                            console.error(errorThrown);
                             session.abort();
                         }
                     });
@@ -201,8 +211,7 @@ require([
                  * status in session.completePayment()
                  */
                 session.onpaymentauthorized = function (event) {
-                    console.log(event);
-                    // debugger;
+
                     jQuery.ajax({
                         url: self.config.onPaymentAuthorizedUrl,
                         type: "POST",
@@ -212,23 +221,34 @@ require([
                             payment: event.payment
                         }),
                         success: function (data, textStatus, jqXHR) {
-                            console.log('--> onPaymentAuthorized');
-                            console.log(data);
+
+                            if (!data.success) {
+                                console.error('--> onPaymentAuthorized: STATUS_FAILED');
+                                console.error('--> ApplePay session aborted');
+                                console.log(data);
+                                session.abort();
+                                alert(data.message);
+                                return false;
+                            }
+
                             // Complete payment
                             session.completePayment(ApplePaySession.STATUS_SUCCESS);
+
                             // Redirect to success page
                             if (data.redirectUrl) {
                                 window.location.href = data.redirectUrl;
                             } else {
-                                console.log('No redirectUrl');
+                                console.error('--> completePayment: true');
+                                console.error('--> No RedirectUrl');
                                 console.log(data);
                             }
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
-                            console.log('--> onPaymentAuthorized: ERROR');
-                            console.log(textStatus);
-                            console.log(errorThrown);
+                            console.error('--> onPaymentAuthorized: ERROR');
+                            console.error(textStatus);
+                            console.error(errorThrown);
                             session.abort();
+                            alert(errorThrown);
                         }
                     });
                 };

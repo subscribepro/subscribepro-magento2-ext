@@ -87,7 +87,8 @@ class PaymentAuthorized implements HttpPostActionInterface, CsrfAwareActionInter
 
     public function execute()
     {
-        $result = new DataObject();
+        $result = $this->resultJsonFactory->create();
+        $result->setHeader('Content-type', 'application/json');
 
         try {
             // Get JSON POST
@@ -109,22 +110,30 @@ class PaymentAuthorized implements HttpPostActionInterface, CsrfAwareActionInter
 
             $redirectUrl = $this->defaultConfigProvider->getDefaultSuccessPageUrl();
             $urlToRedirect = $this->urlBuilder->getUrl('checkout/onepage/success/');
-            $result->setData('redirect', $redirectUrl);
+
+            $response = [
+                'success' => true,
+                'redirect' => $redirectUrl,
+                'redirectUrl' => $urlToRedirect
+            ];
+            $result->setData($response);
+
             $this->logger->debug('redirectUrl - ' . $urlToRedirect);
-            $result->setData('redirectUrl', $urlToRedirect);
+
         } catch (LocalizedException $e) {
-            $this->logger->error('QuoteId: ' . $quoteId);
+            if (isset($quoteId)) {
+                $this->logger->error('QuoteId: ' . $quoteId);
+            }
             $this->logger->error($e);
-            $this->logger->critical($e);
-            $result->setData('success', false);
-            $result->setData('error', true);
-            $result->setData(
-                'error_messages',
-                new Phrase('Something went wrong while processing your order. Please try again later.')
-            );
+
+            $response = [
+                'success' => false,
+                'message' => (string) $e->getMessage()
+            ];
+            $result->setData($response);
         }
 
-        return $this->resultJsonFactory->create()->setData($result->getData());
+        return $result;
     }
 
     public function getRequestData()
