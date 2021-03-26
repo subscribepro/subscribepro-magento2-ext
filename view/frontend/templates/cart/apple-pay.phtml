@@ -136,7 +136,7 @@ require([
 
                                     ApplePayShippingContactUpdate.errors.push(
                                         new ApplePayError(
-                                            data.errorCode ,
+                                            data.errorCode,
                                             data.contactField,
                                             data.message
                                         )
@@ -157,7 +157,8 @@ require([
                             );
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
-                            console.error(errorThrown);
+                            console.log('--> ajax: error');
+                            console.error(errorThrown.message);
                             session.abort();
                         }
                     });
