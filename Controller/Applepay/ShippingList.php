@@ -63,17 +63,17 @@ class ShippingList implements HttpPostActionInterface, CsrfAwareActionInterface
     public function execute()
     {
         $result = $this->jsonResultFactory->create();
-        $errorText = 'Invalid Shipping Address Data!';
-        $errorMessage = new Phrase($errorText);
 
         try {
             $data = $this->getRequestData();
 
             if (!isset($data['shippingContact'])) {
-                $this->logger->error($errorText);
+                $errorMessage = new Phrase('Please select a different address');
+                $this->logger->error((string) $errorMessage);
                 $response = [
                     'success' => false,
-                    'errorCode' => 'shippingContactInvalid',
+                    'is_exception' => false,
+                    'errorCode' => 'addressUnserviceable',
                     'contactField' => 'addressLines',
                     'message' => (string) $errorMessage,
                     'newTotal' => [
@@ -92,11 +92,13 @@ class ShippingList implements HttpPostActionInterface, CsrfAwareActionInterface
             foreach ($data['shippingContact'] as $contactField => $fieldValue) {
                 if ($this->canValidateField($contactField)) {
                     if (empty($fieldValue)) {
+                        $errorMessage = new Phrase('Shipping Address Invalid');
                         $response = [
                             'success' => false,
+                            'is_exception' => false,
                             'errorCode' => 'shippingContactInvalid',
                             'contactField' => $contactField,
-                            'message' => (string) '',
+                            'message' => (string) $errorMessage,
                             'newTotal' => [
                                 'label' => 'MERCHANT',
                                 'amount' => 0
@@ -121,16 +123,20 @@ class ShippingList implements HttpPostActionInterface, CsrfAwareActionInterface
             $rowItemsApplePay = $this->getRowItems();
         } catch (LocalizedException $e) {
             $this->logger->error($e->getMessage());
-
+            $errorMessage = new Phrase('Something went wrong. Please contact support for assistance.');
             $response = [
                 'success' => false,
-                'errorCode' => 'shippingContactInvalid',
-                'contactField' => 'addressLines',
+                'is_exception' => true,
+                'exception_message' => $e->getMessage(),
+                'errorCode' => '',
+                'contactField' => '',
                 'message' => $errorMessage,
                 'newTotal' => [
                     'label' => 'MERCHANT',
                     'amount' => 0
-                ]
+                ],
+                'newShippingMethods' => [],
+                'newLineItems' => []
             ];
             $result->setHeader('Content-type', 'application/json');
             $result->setData($response);

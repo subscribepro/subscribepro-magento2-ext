@@ -125,7 +125,12 @@ require([
                         success: function (data, textStatus, jqXHR) {
 
                             if (!data.success) {
-                                if (data.errorCode && data.errorCode.length) {
+                                if (data.is_exception) {
+                                    console.error('--> onShippingContactSelected: Exception');
+                                    console.error(data.exception_message);
+                                    session.abort();
+                                    alert(data.message);
+                                } else if (data.errorCode && data.errorCode.length) {
                                     let ApplePayShippingContactUpdate = {
                                         status: ApplePaySession.STATUS_FAILURE,
                                         newShippingMethods: data.newShippingMethods,
@@ -141,11 +146,13 @@ require([
                                             data.message
                                         )
                                     );
-                                    console.log('--> onShippingContactSelected: failed');
+                                    console.log('--> onShippingContactSelected: STATUS_FAILED');
                                     session.completeShippingContactSelection(ApplePayShippingContactUpdate);
                                 } else {
                                     console.error(data);
+                                    session.abort();
                                 }
+
                                 return false;
                             }
 
@@ -157,7 +164,7 @@ require([
                             );
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
-                            console.log('--> ajax: error');
+                            console.log('--> Ajax: error');
                             console.error(errorThrown.message);
                             session.abort();
                         }
@@ -246,8 +253,7 @@ require([
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
                             console.error('--> onPaymentAuthorized: ERROR');
-                            console.error(textStatus);
-                            console.error(errorThrown);
+                            console.error(errorThrown.message);
                             session.abort();
                             alert(errorThrown);
                         }
