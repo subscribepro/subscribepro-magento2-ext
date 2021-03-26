@@ -64,11 +64,21 @@ abstract class Core
      * @var LoggerInterface
      */
     protected $logger;
-    /**
-     * @var HelperVault
-     */
-    protected $platformVaultHelper;
 
+    /**
+     * Core constructor.
+     *
+     * @param SessionManagerInterface        $checkoutSession
+     * @param CustomerSession                $customerSession
+     * @param Currency                       $currency
+     * @param DirectoryRegion                $directoryRegion
+     * @param PlatformCustomer               $platformCustomer
+     * @param PlatformApplePayPaymentProfile $platformPaymentProfile
+     * @param OrderService                   $orderService
+     * @param QuoteManagement                $quoteManagement
+     * @param JsonSerializer                 $jsonSerializer
+     * @param LoggerInterface                $logger
+     */
     public function __construct(
         SessionManagerInterface $checkoutSession,
         CustomerSession $customerSession,
@@ -105,16 +115,25 @@ abstract class Core
         return $this->quote;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function formatPrice($price)
     {
         return $this->currency->format($price, ['display'=>\Zend_Currency::NO_SYMBOL], false);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getDirectoryRegionByName($administrativeArea, $countryId)
     {
         return $this->directoryRegion->loadByName($administrativeArea, $countryId);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getDirectoryRegionByCode($administrativeArea, $countryId)
     {
         return $this->directoryRegion->loadByCode($administrativeArea, $countryId);
@@ -292,11 +311,17 @@ abstract class Core
         return $cardTypes;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function quoteSubmitOrder($cartId, PaymentInterface $paymentMethod = null)
     {
         return $this->quoteManagement->placeOrder($cartId, $paymentMethod);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function placeOrder($quoteId, $defaultShippingMethod = null): bool
     {
         return $this->orderService->createOrder($quoteId, $defaultShippingMethod);
