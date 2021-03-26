@@ -147,7 +147,7 @@ class ShippingList implements HttpPostActionInterface, CsrfAwareActionInterface
         // Build response
         $response = [
             'success' => true,
-            'newShippingMethods'    => $shippingMethodsForApplePay,
+            'newShippingMethods'    => ($shippingMethodsForApplePay)?? [],
             'newTotal'              => $grandTotalForApplePay,
             'newLineItems'          => $rowItemsApplePay,
         ];

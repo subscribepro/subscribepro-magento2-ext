@@ -123,6 +123,7 @@ require([
                             shippingContact: event.shippingContact
                         }),
                         success: function (data, textStatus, jqXHR) {
+                            let applePayStatus = ApplePaySession.STATUS_SUCCESS;
 
                             if (!data.success) {
                                 if (data.is_exception) {
@@ -131,8 +132,9 @@ require([
                                     session.abort();
                                     alert(data.message);
                                 } else if (data.errorCode && data.errorCode.length) {
+                                    applePayStatus = ApplePaySession.STATUS_FAILURE;
                                     let ApplePayShippingContactUpdate = {
-                                        status: ApplePaySession.STATUS_FAILURE,
+                                        status: applePayStatus,
                                         newShippingMethods: data.newShippingMethods,
                                         newLineItems: data.newLineItems,
                                         newTotal: self.replaceTotalLabel(data.newTotal, self.displayName),
@@ -156,8 +158,11 @@ require([
                                 return false;
                             }
 
+                            if (!data.newShippingMethods.length) {
+                                applePayStatus = ApplePaySession.STATUS_FAILURE;
+                            }
                             session.completeShippingContactSelection(
-                                ApplePaySession.STATUS_SUCCESS,
+                                applePayStatus,
                                 data.newShippingMethods,
                                 self.replaceTotalLabel(data.newTotal, self.displayName),
                                 data.newLineItems
