@@ -63,14 +63,14 @@ class ShippingList implements HttpPostActionInterface, CsrfAwareActionInterface
     public function execute()
     {
         $result = $this->jsonResultFactory->create();
+        $errorText = 'Invalid Shipping Address Data!';
+        $errorMessage = new Phrase($errorText);
 
         try {
             $data = $this->getRequestData();
 
             if (!isset($data['shippingContact'])) {
-                $errorText = 'Missing Request ShippingContact Data from ApplePay!';
                 $this->logger->error($errorText);
-                $errorMessage = new Phrase($errorText);
                 $response = [
                     'success' => false,
                     'errorCode' => 'shippingContactInvalid',
@@ -79,12 +79,37 @@ class ShippingList implements HttpPostActionInterface, CsrfAwareActionInterface
                     'newTotal' => [
                         'label' => 'MERCHANT',
                         'amount' => 0
-                    ]
+                    ],
+                    'newShippingMethods' => [],
+                    'newLineItems' => []
                 ];
                 $result->setHeader('Content-type', 'application/json');
                 $result->setData($response);
 
                 return $result;
+            }
+            // Validate every address contact field due ApplePay documentation.
+            foreach ($data['shippingContact'] as $contactField => $fieldValue) {
+                if ($this->canValidateField($contactField)) {
+                    if (empty($fieldValue)) {
+                        $response = [
+                            'success' => false,
+                            'errorCode' => 'shippingContactInvalid',
+                            'contactField' => $contactField,
+                            'message' => (string) '',
+                            'newTotal' => [
+                                'label' => 'MERCHANT',
+                                'amount' => 0
+                            ],
+                            'newShippingMethods' => [],
+                            'newLineItems' => []
+                        ];
+                        $result->setHeader('Content-type', 'application/json');
+                        $result->setData($response);
+
+                        return $result;
+                    }
+                }
             }
 
             // Pass over the shipping destination
@@ -101,7 +126,7 @@ class ShippingList implements HttpPostActionInterface, CsrfAwareActionInterface
                 'success' => false,
                 'errorCode' => 'shippingContactInvalid',
                 'contactField' => 'addressLines',
-                'message' => (string) $e->getMessage(),
+                'message' => $errorMessage,
                 'newTotal' => [
                     'label' => 'MERCHANT',
                     'amount' => 0
@@ -182,5 +207,22 @@ class ShippingList implements HttpPostActionInterface, CsrfAwareActionInterface
     public function getRowItems(): array
     {
         return $this->shipping->getRowItems();
+    }
+
+    /**
+     * @param string $contactField
+     * @return bool
+     */
+    public function canValidateField(string $contactField): bool
+    {
+        $requiredFields = [
+            'administrativeArea',
+            'country',
+            'countryCode',
+            'locality',
+            'postalCode'
+        ];
+
+        return in_array($contactField, $requiredFields);
     }
 }
