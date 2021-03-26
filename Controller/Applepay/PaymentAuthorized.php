@@ -85,17 +85,21 @@ class PaymentAuthorized implements HttpPostActionInterface, CsrfAwareActionInter
         $this->shippingApplePay = $shippingApplePay;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function execute()
     {
         $result = $this->resultJsonFactory->create();
         $result->setHeader('Content-type', 'application/json');
+        $errorMessage = new Phrase('Apple Pay error. Please contact support for assistance.');
 
         try {
             // Get JSON POST
             $data = $this->getRequestData();
 
             if (!isset($data['payment'])) {
-                throw new LocalizedException(new Phrase('Invalid Request Data!'));
+                throw new LocalizedException($errorMessage);
             }
 
             // Set shipping method selection
@@ -118,17 +122,17 @@ class PaymentAuthorized implements HttpPostActionInterface, CsrfAwareActionInter
             ];
             $result->setData($response);
 
-            $this->logger->debug('redirectUrl - ' . $urlToRedirect);
-
         } catch (LocalizedException $e) {
             if (isset($quoteId)) {
                 $this->logger->error('QuoteId: ' . $quoteId);
             }
-            $this->logger->error($e);
+            $this->logger->error($e->getMessage());
 
             $response = [
                 'success' => false,
-                'message' => (string) $e->getMessage()
+                'is_exception' => true,
+                'exception_message' => $e->getMessage(),
+                'message' => (string) $errorMessage,
             ];
             $result->setData($response);
         }
@@ -136,11 +140,17 @@ class PaymentAuthorized implements HttpPostActionInterface, CsrfAwareActionInter
         return $result;
     }
 
-    public function getRequestData()
+    /**
+     * @return string
+     */
+    public function getRequestData(): string
     {
         return $this->jsonSerializer->unserialize($this->request->getContent());
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function createCsrfValidationException(RequestInterface $request): ?InvalidRequestException
     {
         $resultRedirect = $this->resultJsonFactory->create();
@@ -148,10 +158,13 @@ class PaymentAuthorized implements HttpPostActionInterface, CsrfAwareActionInter
 
         return new InvalidRequestException(
             $resultRedirect,
-            [new Phrase('Invalid Post Request.')]
+            [new Phrase('Invalid Request.')]
         );
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function validateForCsrf(RequestInterface $request): ?bool
     {
         return $request->isPost();

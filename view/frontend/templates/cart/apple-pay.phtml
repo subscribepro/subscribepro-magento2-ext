@@ -234,10 +234,14 @@ require([
 
                             if (!data.success) {
                                 console.error('--> onPaymentAuthorized: STATUS_FAILED');
-                                console.error('--> ApplePay session aborted');
-                                console.log(data);
+                                if (data.is_exception) {
+                                    console.error(data.exception_message);
+                                } else {
+                                    console.log(data);
+                                }
                                 session.abort();
                                 alert(data.message);
+
                                 return false;
                             }
 
@@ -254,10 +258,10 @@ require([
                             }
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
-                            console.error('--> onPaymentAuthorized: ERROR');
+                            console.error('--> Ajax: ERROR');
                             console.error(errorThrown.message);
                             session.abort();
-                            alert(errorThrown);
+                            alert(errorThrown.message);
                         }
                     });
                 };
