@@ -123,7 +123,7 @@ abstract class Core
     /**
      * @return array
      */
-    public function getGrandTotal()
+    public function getGrandTotal(): array
     {
         return [
             'label' => 'MERCHANT',
@@ -153,11 +153,17 @@ abstract class Core
         ];
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getCheckoutSession()
     {
         return $this->checkoutSession;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getCustomerSession()
     {
         return $this->customerSession;
@@ -175,11 +181,26 @@ abstract class Core
         return $this->customerData;
     }
 
+    /**
+     * @param string $customerEmail
+     * @param false  $createIfNotExist
+     * @param null   $websiteId
+     *
+     * @return \SubscribePro\Service\Customer\CustomerInterface
+     */
     public function getPlatformCustomer(string $customerEmail, $createIfNotExist = false, $websiteId = null)
     {
         return $this->platformCustomer->getCustomer($customerEmail, $createIfNotExist, $websiteId);
     }
 
+    /**
+     * @param int   $subscribeProCustomerId
+     * @param array $paymentProfileData
+     * @param       $billingAddress
+     * @param null  $websiteId
+     * @return \SubscribePro\Service\PaymentProfile\PaymentProfileInterface
+     * @throws LocalizedException
+     */
     public function createPlatformPaymentProfile(
         int $subscribeProCustomerId,
         array $paymentProfileData,
@@ -205,30 +226,6 @@ abstract class Core
 
         // Create and save profile via API
         $this->platformPaymentProfile->saveApplePayProfile($paymentProfile);
-
-        return $paymentProfile;
-    }
-
-    public function initProfileWithCustomerDefault($paymentProfile, $customer)
-    {
-        if (!$customer) {
-            $customer = $this->getCustomerSession()->getCustomer();
-        }
-        // Grab default billing address
-        $addressId = $customer->getData('default_billing');
-
-        // Add address data if default billing addy exists
-        if ($addressId) {
-            // Get address
-            // TODO:  it may contain data not from ApplePay.
-            $billingAddress = $customer->getDefaultBillingAddress();
-            // Map
-            $this->mapMagentoAddressToPlatform($billingAddress, $paymentProfile->getBillingAddress());
-        } else {
-            // Empty billing address
-            $paymentProfile->getBillingAddress()->setFirstName($customer->getData('firstname'));
-            $paymentProfile->getBillingAddress()->setLastName($customer->getData('lastname'));
-        }
 
         return $paymentProfile;
     }
@@ -281,7 +278,7 @@ abstract class Core
     /**
      * @return array
      */
-    protected function getAllCardTypeMappings()
+    protected function getAllCardTypeMappings(): array
     {
         // Subscribe Pro / Spreedly type => Magento type
         $cardTypes = [
@@ -303,15 +300,5 @@ abstract class Core
     public function placeOrder($quoteId, $defaultShippingMethod = null): bool
     {
         return $this->orderService->createOrder($quoteId, $defaultShippingMethod);
-    }
-
-    public function getApplePayPaymentToken($billingAddress, $applePayPaymentData)
-    {
-        $paymentMethod = $this->platformVaultHelper->createApplePayPaymentToken(
-            $billingAddress,
-            $applePayPaymentData
-        );
-
-        return $paymentMethod;
     }
 }

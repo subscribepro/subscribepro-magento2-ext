@@ -37,6 +37,15 @@ class ShippingMethod implements HttpPostActionInterface, CsrfAwareActionInterfac
      */
     private $logger;
 
+    /**
+     * ShippingMethod constructor.
+     *
+     * @param RequestInterface  $request
+     * @param Shipping          $shipping
+     * @param JsonSerializer    $jsonSerializer
+     * @param JsonResultFactory $jsonResultFactory
+     * @param LoggerInterface   $logger
+     */
     public function __construct(
         RequestInterface $request,
         Shipping $shipping,
@@ -51,6 +60,9 @@ class ShippingMethod implements HttpPostActionInterface, CsrfAwareActionInterfac
         $this->logger = $logger;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function execute()
     {
         // Return JSON response
@@ -100,11 +112,17 @@ class ShippingMethod implements HttpPostActionInterface, CsrfAwareActionInterfac
         return $result;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getRequestData()
     {
         return $this->jsonSerializer->unserialize($this->request->getContent());
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function createCsrfValidationException(RequestInterface $request): ?InvalidRequestException
     {
         $resultRedirect = $this->jsonResultFactory->create();
@@ -116,17 +134,26 @@ class ShippingMethod implements HttpPostActionInterface, CsrfAwareActionInterfac
         );
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function validateForCsrf(RequestInterface $request): ?bool
     {
         return $request->isPost();
     }
 
-    public function getRowItems()
+    /**
+     * {@inheritdoc}
+     */
+    public function getRowItems(): array
     {
         return $this->shipping->getRowItems();
     }
 
-    public function getGrandTotal()
+    /**
+     * {@inheritdoc}
+     */
+    public function getGrandTotal(): array
     {
         return $this->shipping->getGrandTotal();
     }
