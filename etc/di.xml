@@ -482,13 +482,6 @@
     </type>
 
     <!-- ApplePay Logger Handlers-->
-<!--    <virtualType name="ApplePayErrorLogger" type="Magento\Framework\Logger\Monolog">-->
-<!--        <arguments>-->
-<!--            <argument name="handlers" xsi:type="array">-->
-<!--                <item name="error" xsi:type="object">Swarming\SubscribePro\Logger\ErrorHandler</item>-->
-<!--            </argument>-->
-<!--        </arguments>-->
-<!--    </virtualType>-->
     <virtualType name="Swarming\SubscribePro\Model\VirtualLoggerHandler" type="Magento\Framework\Logger\Handler\Base">
         <arguments>
             <argument name="fileName" xsi:type="string">/var/log/subscribepro_applepay/error.log</argument>

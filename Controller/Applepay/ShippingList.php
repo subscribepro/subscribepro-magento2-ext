@@ -120,6 +120,11 @@ class ShippingList implements HttpPostActionInterface, CsrfAwareActionInterface
             // Retrieve the shipping rates available for this quote
             $shippingMethodsForApplePay = $this->getShippingMethodsForApplePay();
             $grandTotalForApplePay = $this->getGrandTotal();
+
+            if (count($shippingMethodsForApplePay) === 1 && isset($shippingMethodsForApplePay[0]['amount'])) {
+                // If we have only one ShippingMethod we should set it to quote.
+                $this->shipping->setShippingMethodToQuote($shippingMethodsForApplePay[0]);
+            }
             $rowItemsApplePay = $this->getRowItems();
         } catch (LocalizedException $e) {
             $this->logger->error($e->getMessage());
