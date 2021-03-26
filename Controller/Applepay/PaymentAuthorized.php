@@ -143,7 +143,7 @@ class PaymentAuthorized implements HttpPostActionInterface, CsrfAwareActionInter
     /**
      * @return string
      */
-    public function getRequestData(): string
+    public function getRequestData(): array
     {
         return $this->jsonSerializer->unserialize($this->request->getContent());
     }
