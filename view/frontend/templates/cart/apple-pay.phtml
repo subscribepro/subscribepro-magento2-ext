@@ -191,7 +191,9 @@ require([
 
                             if (!data.success) {
                                 console.error('--> onShippingMethodSelected: STATUS_FAILED');
-                                console.error(data.message);
+                                if (data.is_exception) {
+                                    console.error(data.exception_message);
+                                }
                                 session.abort();
                                 alert(data.message);
 
@@ -205,8 +207,8 @@ require([
                             );
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
-                            console.error('--> onShippingMethodSelected: Error');
-                            console.error(errorThrown);
+                            console.error('--> Ajax: Error');
+                            console.error(errorThrown.message);
                             session.abort();
                         }
                     });

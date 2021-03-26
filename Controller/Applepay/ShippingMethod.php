@@ -56,13 +56,14 @@ class ShippingMethod implements HttpPostActionInterface, CsrfAwareActionInterfac
         // Return JSON response
         $result = $this->jsonResultFactory->create();
         $result->setHeader('Content-type', 'application/json');
+        $errorMessage = new Phrase('Shipping method error. Please select a different shipping method.');
 
         try {
             // Get JSON POST
             $data = $this->getRequestData();
 
             if (!isset($data['shippingMethod'])) {
-                throw new LocalizedException(new Phrase('Invalid Request Data!'));
+                throw new LocalizedException($errorMessage);
             }
 
             // Set shipping method selection
@@ -82,13 +83,16 @@ class ShippingMethod implements HttpPostActionInterface, CsrfAwareActionInterfac
             $this->logger->error($e->getMessage());
             $response = [
                 'success' => false,
-                'errorCode' => 'unknown',
+                'is_exception' => true,
+                'exception_message' => $e->getMessage(),
+                'errorCode' => '',
                 'contactField' => '',
-                'message' => (string) $e->getMessage(),
+                'message' => (string) $errorMessage,
                 'newTotal' => [
                     'label' => 'MERCHANT',
                     'amount' => 0
-                ]
+                ],
+                'newLineItems' => []
             ];
             $result->setData($response);
         }
