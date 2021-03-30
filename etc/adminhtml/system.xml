@@ -329,16 +329,6 @@
                     </depends>
                 </field>
 
-                <field id="allowspecific" translate="label" type="allowspecific" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Payment from Applicable Countries</label>
-                    <source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>
-                </field>
-
-                <field id="specificcountry" translate="label" type="multiselect" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Payment from Specific Countries</label>
-                    <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
-                </field>
-
                 <field id="min_order_total" translate="label" type="text" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Minimum Order Total</label>
                 </field>
