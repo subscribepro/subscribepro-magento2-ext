@@ -37,7 +37,7 @@ class CaptureStrategyCommand implements CommandInterface
     /**
      * @inheritdoc
      */
-    public function execute(array $commandSubject)
+    public function execute(array $commandSubject): void
     {
         /** @var \Magento\Payment\Gateway\Data\PaymentDataObjectInterface $paymentDO */
         $paymentDO = $this->subjectReader->readPayment($commandSubject);
@@ -54,7 +54,7 @@ class CaptureStrategyCommand implements CommandInterface
      * @param \Magento\Sales\Model\Order\Payment $payment
      * @return string
      */
-    protected function getCommand(Payment $payment)
+    protected function getCommand(Payment $payment): string
     {
         return $payment->getParentTransactionId() ? self::SETTLEMENT : self::PURCHASE;
     }
