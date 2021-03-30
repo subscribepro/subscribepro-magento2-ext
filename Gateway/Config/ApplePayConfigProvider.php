@@ -3,22 +3,27 @@ declare(strict_types=1);
 
 namespace Swarming\SubscribePro\Gateway\Config;
 
-use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
+use Swarming\SubscribePro\Gateway\Config\ConfigProvider as GatewayConfigProvider;
 
-class ApplePayConfigProvider extends ConfigProvider
+class ApplePayConfigProvider extends GatewayConfigProvider
 {
     const CODE = 'subscribe_pro_apple_pay';
-
     const VAULT_CODE = 'subscribe_pro_vault';
 
-    public function isEnabledPayment($website)
+    /**
+     * @param null $websiteCode
+     * @return bool
+     */
+    public function isEnabledPayment($websiteCode = null): bool
     {
-        return ($this->generalConfig->isEnabled($website) && $this->generalConfig->isApplePayEnabled($website));
+        return ($this->generalConfig->isEnabled($websiteCode) && $this->generalConfig->isApplePayEnabled($websiteCode));
     }
 
-    public function getDomain($storeId = null)
+    public function getDomain($storeId = null): string
     {
-        return $this->gatewayConfig->getValue('domain', $storeId);
+        $value = $this->gatewayConfig->getValue('domain', $storeId);
+
+        return ($value !== null) ? $value : '';
     }
 
     /**
@@ -27,15 +32,17 @@ class ApplePayConfigProvider extends ConfigProvider
      */
     public function isActiveNonSubscription($storeId = null): bool
     {
-        return (bool)$this->gatewayConfig->getValue('active_non_subscription', $storeId);
+        return (bool) $this->gatewayConfig->getValue('active_non_subscription', $storeId);
     }
 
     /**
      * @param null $websiteCode
      * @return string
      */
-    public function getApiBaseUrl($websiteCode = null)
+    public function getApiBaseUrl($websiteCode = null): string
     {
-        return $this->generalConfig->getBaseUrl($websiteCode);
+        $value = $this->generalConfig->getBaseUrl($websiteCode);
+
+        return ($value)?? '';
     }
 }
