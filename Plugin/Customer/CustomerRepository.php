@@ -13,17 +13,14 @@ class CustomerRepository
      * @var \Swarming\SubscribePro\Platform\Manager\Customer
      */
     protected $platformCustomerManager;
-
     /**
      * @var \Swarming\SubscribePro\Platform\Service\Customer
      */
     protected $platformCustomerService;
-
     /**
      * @var \Psr\Log\LoggerInterface
      */
     protected $logger;
-
     /**
      * @var \Swarming\SubscribePro\Model\Config\General
      */
@@ -54,12 +51,27 @@ class CustomerRepository
      * @param string|null $passwordHash
      * @return \Magento\Customer\Api\Data\CustomerInterface
      */
-    public function aroundSave(CustomerRepositoryInterface $subject, \Closure $proceed, CustomerInterface $customer, $passwordHash = null)
-    {
+    public function aroundSave(
+        CustomerRepositoryInterface $subject,
+        \Closure $proceed,
+        CustomerInterface $customer,
+        $passwordHash = null
+    ) {
+        $customerId = $customer->getId();
+        $oldCustomerData = $subject->getById($customerId);
+        $oldCustomerEmail = $oldCustomerData->getEmail();
+
         $customer = $proceed($customer, $passwordHash);
 
         if ($this->generalConfig->isEnabled()) {
-            $platformCustomer = $this->getPlatformCustomer($customer);
+            if ($oldCustomerEmail && $oldCustomerEmail !== $customer->getEmail()) {
+                $platformCustomer = $this->getPlatformCustomerByEmail(
+                    $oldCustomerEmail,
+                    $oldCustomerData->getWebsiteId()
+                );
+            } else {
+                $platformCustomer = $this->getPlatformCustomer($customer);
+            }
 
             if ($platformCustomer) {
                 $this->updatePlatformCustomer($customer, $platformCustomer);
@@ -76,7 +88,34 @@ class CustomerRepository
     protected function getPlatformCustomer($customer)
     {
         try {
-            $platformCustomer = $this->platformCustomerManager->getCustomerById($customer->getId(), false, $customer->getWebsiteId());
+            $platformCustomer = $this->platformCustomerManager->getCustomerById(
+                $customer->getId(),
+                false,
+                $customer->getWebsiteId()
+            );
+        } catch (NoSuchEntityException $e) {
+            $platformCustomer = null;
+        } catch (\Exception $e) {
+            $this->logger->critical($e);
+            $platformCustomer = null;
+        }
+
+        return $platformCustomer;
+    }
+
+    /**
+     * @param string $customerEmail
+     * @param        $customerWebsiteId
+     * @return PlatformCustomerInterface|null
+     */
+    protected function getPlatformCustomerByEmail(string $customerEmail, $customerWebsiteId)
+    {
+        try {
+            $platformCustomer = $this->platformCustomerManager->getCustomer(
+                $customerEmail,
+                false,
+                $customerWebsiteId
+            );
         } catch (NoSuchEntityException $e) {
             $platformCustomer = null;
         } catch (\Exception $e) {
