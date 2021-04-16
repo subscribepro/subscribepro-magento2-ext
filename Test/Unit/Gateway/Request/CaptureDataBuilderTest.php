@@ -33,13 +33,14 @@ class CaptureDataBuilderTest extends \PHPUnit\Framework\TestCase
      * @expectedException \Magento\Framework\Exception\LocalizedException
      * @expectedExceptionMessage Parent transaction is not found.
      */
-    public function testFailToBuildWithoutParentTransaction() {
+    public function testFailToBuildWithoutParentTransaction()
+    {
         $subject = ['subject'];
-        
+
         $orderMock = $this->getMockBuilder(OrderAdapterInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
-        
+
         $paymentInfoMock = $this->getMockBuilder(Payment::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -55,11 +56,12 @@ class CaptureDataBuilderTest extends \PHPUnit\Framework\TestCase
             ->method('readPayment')
             ->with($subject)
             ->willReturn($paymentDOMock);
-        
+
         $this->captureDataBuilder->build($subject);
     }
-    
-    public function testBuildWithInvalidAmount() {
+
+    public function testBuildWithInvalidAmount()
+    {
         $subject = ['subject'];
         $transactionId = 131;
         $result = [
@@ -67,12 +69,12 @@ class CaptureDataBuilderTest extends \PHPUnit\Framework\TestCase
             TransactionInterface::AMOUNT => null,
             TransactionInterface::CURRENCY_CODE => null
         ];
-        
+
         $orderMock = $this->getMockBuilder(OrderAdapterInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
         $orderMock->expects($this->never())->method('getCurrencyCode');
-        
+
         $paymentInfoMock = $this->getMockBuilder(Payment::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -88,7 +90,7 @@ class CaptureDataBuilderTest extends \PHPUnit\Framework\TestCase
             ->method('readPayment')
             ->with($subject)
             ->willReturn($paymentDOMock);
-        
+
         $this->subjectReaderMock->expects($this->once())
             ->method('readAmount')
             ->with($subject)
@@ -96,8 +98,9 @@ class CaptureDataBuilderTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals($result, $this->captureDataBuilder->build($subject));
     }
-    
-    public function testBuild() {
+
+    public function testBuild()
+    {
         $subject = ['subject'];
         $transactionId = 131;
         $amount = 1234;
@@ -107,12 +110,12 @@ class CaptureDataBuilderTest extends \PHPUnit\Framework\TestCase
             TransactionInterface::AMOUNT => '123400.00',
             TransactionInterface::CURRENCY_CODE => 'US'
         ];
-        
+
         $orderMock = $this->getMockBuilder(OrderAdapterInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
         $orderMock->expects($this->once())->method('getCurrencyCode')->willReturn($currencyCode);
-        
+
         $paymentInfoMock = $this->getMockBuilder('Magento\Sales\Model\Order\Payment')
             ->disableOriginalConstructor()
             ->getMock();
@@ -128,7 +131,7 @@ class CaptureDataBuilderTest extends \PHPUnit\Framework\TestCase
             ->method('readPayment')
             ->with($subject)
             ->willReturn($paymentDOMock);
-        
+
         $this->subjectReaderMock->expects($this->once())
             ->method('readAmount')
             ->with($subject)

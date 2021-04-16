@@ -23,7 +23,8 @@ class DefaultInspectorTest extends AbstractInspector
         );
     }
 
-    public function testIsAppliedIfHasSpecialPrice() {
+    public function testIsAppliedIfHasSpecialPrice()
+    {
         $price = 100;
         $basePrice = 110;
 

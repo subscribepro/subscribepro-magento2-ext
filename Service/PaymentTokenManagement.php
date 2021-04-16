@@ -6,7 +6,6 @@ use Magento\Vault\Api\Data\PaymentTokenInterface;
 use Swarming\SubscribePro\Api\PaymentTokenManagementInterface;
 use Magento\Framework\Api\Search\FilterGroupBuilder;
 
-
 class PaymentTokenManagement implements PaymentTokenManagementInterface
 {
     /**
@@ -60,7 +59,7 @@ class PaymentTokenManagement implements PaymentTokenManagementInterface
      */
     public function getSubscribeProTokensByCustomerId($customerId)
     {
-        $filterGroups = array();
+        $filterGroups = [];
 
         $customerIdFilter = $this->filterBuilder->setField(PaymentTokenInterface::CUSTOMER_ID)
             ->setValue($customerId)

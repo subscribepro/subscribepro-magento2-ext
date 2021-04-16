@@ -44,7 +44,8 @@ class SubscriptionTest extends AbstractService
             ->willReturn($subscriptionMock);
         
         $this->assertSame(
-            $subscriptionMock, $this->subscriptionService->createSubscription(['subscription data'], $websiteId)
+            $subscriptionMock,
+            $this->subscriptionService->createSubscription(['subscription data'], $websiteId)
         );
     }
 
@@ -78,7 +79,8 @@ class SubscriptionTest extends AbstractService
             ->willReturn($subscriptionMock);
 
         $this->assertSame(
-            $subscriptionMock, $this->subscriptionService->loadSubscription($subscriptionId, $websiteId)
+            $subscriptionMock,
+            $this->subscriptionService->loadSubscription($subscriptionId, $websiteId)
         );
     }
 
@@ -94,7 +96,8 @@ class SubscriptionTest extends AbstractService
             ->willReturn($subscriptionMock);
 
         $this->assertSame(
-            $subscriptionMock, $this->subscriptionService->saveSubscription($subscriptionMock, $websiteId)
+            $subscriptionMock,
+            $this->subscriptionService->saveSubscription($subscriptionMock, $websiteId)
         );
     }
 
@@ -111,7 +114,7 @@ class SubscriptionTest extends AbstractService
             ->willReturn($subscriptionsMock);
 
         $this->assertEquals(
-            $subscriptionsMock, 
+            $subscriptionsMock,
             $this->subscriptionService->loadSubscriptionsByCustomer($customerId, $websiteId)
         );
     }

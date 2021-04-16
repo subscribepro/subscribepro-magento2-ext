@@ -559,7 +559,7 @@ class AddProductToCartAfterTest extends \PHPUnit\Framework\TestCase
             ->with($quoteItem2Mock, $platformProduct2Mock, $subscription2Option, $subscription2Interval)
             ->willReturn($item2Warnings);
 
-        $warningsMap = array_map(function($warning) {
+        $warningsMap = array_map(function ($warning) {
             return [$warning];
         }, array_merge($item1Warnings, $item2Warnings));
         $this->messageManagerMock->expects($this->exactly(count($item1Warnings) + count($item2Warnings)))

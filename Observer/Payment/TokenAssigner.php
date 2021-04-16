@@ -70,6 +70,5 @@ class TokenAssigner extends \Magento\Payment\Observer\AbstractDataAssignObserver
         if (!empty($additionalData[TransactionInterface::SUBSCRIBE_PRO_ORDER_TOKEN])) {
             $paymentModel->setAdditionalInformation(TransactionInterface::SUBSCRIBE_PRO_ORDER_TOKEN, $additionalData[TransactionInterface::SUBSCRIBE_PRO_ORDER_TOKEN]);
         }
-
     }
 }

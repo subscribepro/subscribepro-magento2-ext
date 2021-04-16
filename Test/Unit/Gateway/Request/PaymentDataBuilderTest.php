@@ -28,7 +28,8 @@ class PaymentDataBuilderTest extends \PHPUnit\Framework\TestCase
         $this->paymentDataBuilder = new PaymentDataBuilder($this->subjectReaderMock);
     }
 
-    public function testBuild() {
+    public function testBuild()
+    {
         $subject = ['subject'];
         $result = [
             PaymentDataBuilder::PAYMENT_METHOD_TOKEN => ['info'],

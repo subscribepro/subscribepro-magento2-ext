@@ -44,7 +44,8 @@ class CustomerTest extends AbstractService
             ->willReturn($platformCustomerMock);
         
         $this->assertSame(
-            $platformCustomerMock, $this->customerService->createCustomer(['customer data'], $websiteId)
+            $platformCustomerMock,
+            $this->customerService->createCustomer(['customer data'], $websiteId)
         );
     }
 
@@ -78,7 +79,8 @@ class CustomerTest extends AbstractService
             ->willReturn($platformCustomerMock);
 
         $this->assertSame(
-            $platformCustomerMock, $this->customerService->loadCustomer($customerId, $websiteId)
+            $platformCustomerMock,
+            $this->customerService->loadCustomer($customerId, $websiteId)
         );
     }
 
@@ -94,7 +96,8 @@ class CustomerTest extends AbstractService
             ->willReturn($platformCustomerMock);
 
         $this->assertSame(
-            $platformCustomerMock, $this->customerService->saveCustomer($platformCustomerMock, $websiteId)
+            $platformCustomerMock,
+            $this->customerService->saveCustomer($platformCustomerMock, $websiteId)
         );
     }
 
@@ -111,7 +114,8 @@ class CustomerTest extends AbstractService
             ->willReturn($platformCustomersMock);
 
         $this->assertEquals(
-            $platformCustomersMock, $this->customerService->loadCustomers($filters, $websiteId)
+            $platformCustomersMock,
+            $this->customerService->loadCustomers($filters, $websiteId)
         );
     }
 
