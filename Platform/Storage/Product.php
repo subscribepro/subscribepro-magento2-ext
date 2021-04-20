@@ -122,6 +122,6 @@ class Product
     protected function getCacheKey($sku, $websiteId = null)
     {
         $websiteCode = $this->storeManager->getWebsite($websiteId)->getCode();
-        return self::PRODUCT_CACHE_KEY . '_' . md5(serialize([$sku, $websiteCode]));
+        return self::PRODUCT_CACHE_KEY . '_' . hash('sha256', serialize([$sku, $websiteCode]));
     }
 }
