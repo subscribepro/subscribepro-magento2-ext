@@ -39,7 +39,7 @@ class TestConnectionTest extends \PHPUnit\Framework\TestCase
      */
     protected $resultFactoryMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->requestMock = $this->getMockBuilder(RequestInterface::class)->getMock();
         $this->resultFactoryMock = $this->getMockBuilder(ResultFactory::class)->disableOriginalConstructor()->getMock();

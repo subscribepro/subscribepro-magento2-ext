@@ -16,7 +16,7 @@ class PurchaseCommandTest extends AbstractProfileCreatorCommand
      */
     protected $purchaseCommand;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->initProperties();
         $this->purchaseCommand = new PurchaseCommand(

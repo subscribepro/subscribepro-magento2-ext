@@ -21,7 +21,7 @@ class OrderDataBuilderTest extends \PHPUnit\Framework\TestCase
      */
     protected $orderDataBuilder;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->subjectReaderMock = $this->getMockBuilder(SubjectReader::class)
             ->disableOriginalConstructor()->getMock();

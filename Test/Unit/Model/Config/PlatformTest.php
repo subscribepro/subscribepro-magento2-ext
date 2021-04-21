@@ -24,7 +24,7 @@ class PlatformTest extends \PHPUnit\Framework\TestCase
      */
     protected $directoryList;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->scopeConfigMock = $this->getMockBuilder(ScopeConfigInterface::class)->getMock();
         $this->directoryList = $this->getMockBuilder(DirectoryList::class)

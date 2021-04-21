@@ -16,7 +16,7 @@ class AuthorizeCommandTest extends AbstractProfileCreatorCommand
      */
     protected $authorizeCommand;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->initProperties();
         $this->authorizeCommand = new AuthorizeCommand(

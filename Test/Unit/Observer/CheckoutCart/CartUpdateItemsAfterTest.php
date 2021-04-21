@@ -70,7 +70,7 @@ class CartUpdateItemsAfterTest extends \PHPUnit\Framework\TestCase
      */
     protected $messageManagerMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->generalConfigMock = $this->getMockBuilder(GeneralConfig::class)
             ->disableOriginalConstructor()->getMock();

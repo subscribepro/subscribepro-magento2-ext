@@ -47,7 +47,7 @@ class UpdateHandlerTest extends \PHPUnit\Framework\TestCase
      */
     protected $vaultHelperMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->paymentTokenManagementMock = $this->getMockBuilder(PaymentTokenManagementInterface::class)->getMock();
         $this->paymentTokenRepositoryMock = $this->getMockBuilder(PaymentTokenRepositoryInterface::class)->getMock();

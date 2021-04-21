@@ -20,7 +20,7 @@ class VoidDataBuilderTest extends \PHPUnit\Framework\TestCase
      */
     protected $voidDataBuilder;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->subjectReaderMock = $this->getMockBuilder(SubjectReader::class)
             ->disableOriginalConstructor()->getMock();

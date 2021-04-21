@@ -12,7 +12,7 @@ class SubjectReaderTest extends \PHPUnit\Framework\TestCase
      */
     protected $subjectReader;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->subjectReader = new SubjectReader();
     }

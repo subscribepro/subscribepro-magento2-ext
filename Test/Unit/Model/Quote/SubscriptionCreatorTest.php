@@ -48,7 +48,7 @@ class SubscriptionCreatorTest extends \PHPUnit\Framework\TestCase
      */
     protected $orderItemHelperMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->platformCustomerManagerMock = $this->getMockBuilder(CustomerManager::class)
             ->disableOriginalConstructor()

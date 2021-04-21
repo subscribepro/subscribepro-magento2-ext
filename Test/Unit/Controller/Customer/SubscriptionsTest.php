@@ -28,7 +28,7 @@ class SubscriptionsTest extends \PHPUnit\Framework\TestCase
      */
     protected $resultFactoryMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->resultFactoryMock = $this->getMockBuilder(ResultFactory::class)->disableOriginalConstructor()->getMock();
 

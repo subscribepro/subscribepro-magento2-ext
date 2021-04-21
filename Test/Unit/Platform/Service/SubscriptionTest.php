@@ -18,7 +18,7 @@ class SubscriptionTest extends AbstractService
      */
     protected $subscriptionPlatformService;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->platformMock = $this->createPlatformMock();
         $this->subscriptionPlatformService = $this->getMockBuilder(SubscriptionService::class)
@@ -36,13 +36,13 @@ class SubscriptionTest extends AbstractService
     public function testCreateSubscription($websiteId, $expectedWebsiteId)
     {
         $subscriptionMock = $this->createSubscriptionMock();
-        
+
         $this->initService($this->subscriptionPlatformService, $expectedWebsiteId);
         $this->subscriptionPlatformService->expects($this->once())
             ->method('createSubscription')
             ->with(['subscription data'])
             ->willReturn($subscriptionMock);
-        
+
         $this->assertSame(
             $subscriptionMock,
             $this->subscriptionService->createSubscription(['subscription data'], $websiteId)

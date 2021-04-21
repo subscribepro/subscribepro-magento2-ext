@@ -49,7 +49,7 @@ class ConfigProviderTest extends \PHPUnit\Framework\TestCase
      */
     protected $storeManagerMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->generalConfigMock = $this->getMockBuilder(GeneralConfig::class)
             ->disableOriginalConstructor()

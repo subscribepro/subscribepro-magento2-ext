@@ -23,7 +23,7 @@ class OrderItemTest extends \PHPUnit\Framework\TestCase
      */
     protected $orderItemRepositoryMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->orderItemRepositoryMock = $this->getMockBuilder(OrderItemRepositoryInterface::class)->getMock();
 

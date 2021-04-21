@@ -22,7 +22,7 @@ class AddressDataReaderTest extends \PHPUnit\Framework\TestCase
      */
     protected $addressDataBuilder;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->subjectReaderMock = $this->getMockBuilder(SubjectReader::class)
             ->disableOriginalConstructor()->getMock();

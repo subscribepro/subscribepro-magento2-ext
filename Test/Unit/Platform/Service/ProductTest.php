@@ -18,7 +18,7 @@ class ProductTest extends AbstractService
      */
     protected $productPlatformService;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->platformMock = $this->createPlatformMock();
         $this->productPlatformService = $this->getMockBuilder(ProductService::class)

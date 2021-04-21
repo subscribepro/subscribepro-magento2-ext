@@ -19,7 +19,7 @@ class TransactionTest extends AbstractService
      */
     protected $transactionPlatformService;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->platformMock = $this->createPlatformMock();
         $this->transactionPlatformService = $this->getMockBuilder(TransactionService::class)
@@ -37,13 +37,13 @@ class TransactionTest extends AbstractService
     public function testCreateTransaction($websiteId, $expectedWebsiteId)
     {
         $transactionMock = $this->createTransactionMock();
-        
+
         $this->initService($this->transactionPlatformService, $expectedWebsiteId);
         $this->transactionPlatformService->expects($this->once())
             ->method('createTransaction')
             ->with(['transaction data'])
             ->willReturn($transactionMock);
-        
+
         $this->assertSame(
             $transactionMock,
             $this->transactionService->createTransaction(['transaction data'], $websiteId)

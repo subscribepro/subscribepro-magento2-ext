@@ -12,7 +12,7 @@ class ConfigurableProductTest extends AbstractInspector
      */
     protected $configurableProduct;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

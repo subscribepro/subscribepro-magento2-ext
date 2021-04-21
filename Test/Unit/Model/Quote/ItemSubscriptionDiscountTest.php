@@ -42,7 +42,7 @@ class ItemSubscriptionDiscountTest extends \PHPUnit\Framework\TestCase
      */
     protected $priceCurrencyMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->subscriptionDiscountConfigMock = $this->getMockBuilder(SubscriptionDiscountConfig::class)
             ->disableOriginalConstructor()->getMock();

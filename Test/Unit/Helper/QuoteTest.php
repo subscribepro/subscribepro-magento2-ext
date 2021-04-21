@@ -19,7 +19,7 @@ class QuoteTest extends \PHPUnit\Framework\TestCase
      */
     protected $quoteItemHelperMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->quoteItemHelperMock = $this->getMockBuilder(QuoteItemHelper::class)
             ->disableOriginalConstructor()->getMock();

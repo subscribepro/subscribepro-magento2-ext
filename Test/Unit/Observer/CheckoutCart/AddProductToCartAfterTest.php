@@ -72,7 +72,7 @@ class AddProductToCartAfterTest extends \PHPUnit\Framework\TestCase
      */
     protected $quoteItemHelperMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->generalConfigMock = $this->getMockBuilder(GeneralConfig::class)
             ->disableOriginalConstructor()->getMock();

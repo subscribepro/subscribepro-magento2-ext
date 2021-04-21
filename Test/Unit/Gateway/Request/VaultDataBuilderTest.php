@@ -22,7 +22,7 @@ class VaultDataBuilderTest extends \PHPUnit\Framework\TestCase
      */
     protected $vaultDataBuilder;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->subjectReaderMock = $this->getMockBuilder(SubjectReader::class)
             ->disableOriginalConstructor()->getMock();
@@ -64,7 +64,14 @@ class VaultDataBuilderTest extends \PHPUnit\Framework\TestCase
     public function failToBuildWithEmptyVaultDataProvider()
     {
         $extensionAttributes = $this->getMockBuilder(OrderPaymentExtensionInterface::class)
-            ->setMethods(['setVaultPaymentToken', 'getVaultPaymentToken'])
+            ->setMethods(
+                [
+                    'getNotificationMessage',
+                    'setNotificationMessage',
+                    'setVaultPaymentToken',
+                    'getVaultPaymentToken'
+                ]
+            )
             ->getMock();
         $extensionAttributes->expects($this->any())->method('getVaultPaymentToken')->willReturn(null);
 
@@ -88,7 +95,14 @@ class VaultDataBuilderTest extends \PHPUnit\Framework\TestCase
             ->willReturn($profileId);
 
         $extensionAttributes = $this->getMockBuilder(OrderPaymentExtensionInterface::class)
-            ->setMethods(['setVaultPaymentToken', 'getVaultPaymentToken'])
+            ->setMethods(
+                [
+                    'getNotificationMessage',
+                    'setNotificationMessage',
+                    'setVaultPaymentToken',
+                    'getVaultPaymentToken'
+                ]
+            )
             ->getMock();
         $extensionAttributes->expects($this->any())
             ->method('getVaultPaymentToken')
@@ -134,7 +148,14 @@ class VaultDataBuilderTest extends \PHPUnit\Framework\TestCase
             ->willReturn($profileId);
 
         $extensionAttributes = $this->getMockBuilder(OrderPaymentExtensionInterface::class)
-            ->setMethods(['setVaultPaymentToken', 'getVaultPaymentToken'])
+            ->setMethods(
+                [
+                    'getNotificationMessage',
+                    'setNotificationMessage',
+                    'setVaultPaymentToken',
+                    'getVaultPaymentToken'
+                ]
+            )
             ->getMock();
         $extensionAttributes->expects($this->any())
             ->method('getVaultPaymentToken')

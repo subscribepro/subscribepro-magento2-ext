@@ -25,7 +25,7 @@ class ResponseValidatorTest extends \PHPUnit\Framework\TestCase
      */
     protected $subjectReaderMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->resultInterfaceFactoryMock = $this->getMockBuilder(ResultInterfaceFactory::class)
             ->disableOriginalConstructor()

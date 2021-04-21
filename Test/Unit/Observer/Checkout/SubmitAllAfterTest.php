@@ -42,7 +42,7 @@ class SubmitAllAfterTest extends \PHPUnit\Framework\TestCase
      */
     protected $loggerMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->generalConfigMock = $this->getMockBuilder(GeneralConfig::class)
             ->disableOriginalConstructor()
@@ -106,7 +106,7 @@ class SubmitAllAfterTest extends \PHPUnit\Framework\TestCase
             ->method('isEnabled')
             ->with($websiteCode)
             ->willReturn(false);
-        
+
         $this->subscriptionCreatorMock->expects($this->never())
             ->method('createSubscriptions');
         $this->checkoutSessionMock->expects($this->never())

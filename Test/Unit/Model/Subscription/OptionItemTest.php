@@ -13,7 +13,7 @@ class OptionItemTest extends \PHPUnit\Framework\TestCase
      */
     protected $subscriptionOptionItem;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->subscriptionOptionItem = new OptionItem();
     }

@@ -18,7 +18,7 @@ class AddressTest extends AbstractService
      */
     protected $addressPlatformService;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->platformMock = $this->createPlatformMock();
         $this->addressPlatformService = $this->getMockBuilder(AddressService::class)
@@ -36,13 +36,13 @@ class AddressTest extends AbstractService
     public function testCreateAddress($websiteId, $expectedWebsiteId)
     {
         $platformAddressMock = $this->createPlatformAddressMock();
-        
+
         $this->initService($this->addressPlatformService, $expectedWebsiteId);
         $this->addressPlatformService->expects($this->once())
             ->method('createAddress')
             ->with(['address data'])
             ->willReturn($platformAddressMock);
-        
+
         $this->assertSame(
             $platformAddressMock,
             $this->addressService->createAddress(['address data'], $websiteId)
@@ -117,7 +117,7 @@ class AddressTest extends AbstractService
             $this->addressService->findOrSave($platformAddressMock, $websiteId)
         );
     }
-    
+
     public function testLoadAddresses()
     {
         $websiteId = 12;

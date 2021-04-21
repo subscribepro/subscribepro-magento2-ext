@@ -32,7 +32,7 @@ class VaultTest extends \PHPUnit\Framework\TestCase
      */
     protected $dateTimeFactoryMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->gatewayConfigMock = $this->getMockBuilder(GatewayConfig::class)
             ->disableOriginalConstructor()->getMock();

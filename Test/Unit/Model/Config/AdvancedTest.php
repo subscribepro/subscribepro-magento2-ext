@@ -18,7 +18,7 @@ class AdvancedTest extends \PHPUnit\Framework\TestCase
      */
     protected $scopeConfigMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->scopeConfigMock = $this->getMockBuilder(ScopeConfigInterface::class)->getMock();
         $this->advancedConfig = new Advanced($this->scopeConfigMock);

@@ -30,7 +30,7 @@ class QuoteItemTest extends \PHPUnit\Framework\TestCase
      */
     protected $dateTimeFactoryMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->itemOptionFactoryMock = $this->getMockBuilder(OptionFactory::class)
             ->disableOriginalConstructor()

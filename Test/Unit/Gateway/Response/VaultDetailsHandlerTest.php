@@ -47,7 +47,7 @@ class VaultDetailsHandlerTest extends \PHPUnit\Framework\TestCase
      */
     protected $subjectReaderMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->subjectReaderMock = $this->getMockBuilder(SubjectReader::class)
             ->disableOriginalConstructor()->getMock();
@@ -85,10 +85,10 @@ class VaultDetailsHandlerTest extends \PHPUnit\Framework\TestCase
             ->with(VaultConfigProvider::IS_ACTIVE_CODE)
             ->willReturn(false);
         $paymentInfoMock->expects($this->never())->method('getExtensionAttributes');
-        
+
         $paymentDOMock = $this->getMockBuilder(PaymentDataObjectInterface::class)->getMock();
         $paymentDOMock->expects($this->once())->method('getPayment')->willReturn($paymentInfoMock);
-        
+
         $this->subjectReaderMock->expects($this->once())
             ->method('readPayment')
             ->with($handlingSubject)
@@ -101,7 +101,7 @@ class VaultDetailsHandlerTest extends \PHPUnit\Framework\TestCase
 
         $this->vaultDetailsHandler->handle($handlingSubject, $response);
     }
-    
+
     public function testHandleWithoutExtensionAttributes()
     {
         $handlingSubject = ['subject'];
@@ -140,10 +140,10 @@ class VaultDetailsHandlerTest extends \PHPUnit\Framework\TestCase
         $paymentInfoMock->expects($this->once())
             ->method('setExtensionAttributes')
             ->willReturn($extensionAttributesMock);
-        
+
         $paymentDOMock = $this->getMockBuilder(PaymentDataObjectInterface::class)->getMock();
         $paymentDOMock->expects($this->once())->method('getPayment')->willReturn($paymentInfoMock);
-        
+
         $this->subjectReaderMock->expects($this->once())
             ->method('readPayment')
             ->with($handlingSubject)
@@ -157,7 +157,7 @@ class VaultDetailsHandlerTest extends \PHPUnit\Framework\TestCase
         $this->paymentTokenFactoryMock->expects($this->once())
             ->method('create')
             ->willReturn($paymentTokenMock);
-        
+
         $this->paymentExtensionFactoryMock->expects($this->once())
             ->method('create')
             ->willReturn($extensionAttributesMock);
@@ -173,7 +173,7 @@ class VaultDetailsHandlerTest extends \PHPUnit\Framework\TestCase
 
         $this->vaultDetailsHandler->handle($handlingSubject, $response);
     }
-    
+
     public function testHandleWithExtensionAttributes()
     {
         $handlingSubject = ['subject'];
@@ -209,10 +209,10 @@ class VaultDetailsHandlerTest extends \PHPUnit\Framework\TestCase
         $paymentInfoMock->expects($this->once())
             ->method('getExtensionAttributes')
             ->willReturn($extensionAttributesMock);
-        
+
         $paymentDOMock = $this->getMockBuilder(PaymentDataObjectInterface::class)->getMock();
         $paymentDOMock->expects($this->once())->method('getPayment')->willReturn($paymentInfoMock);
-        
+
         $this->subjectReaderMock->expects($this->once())
             ->method('readPayment')
             ->with($handlingSubject)

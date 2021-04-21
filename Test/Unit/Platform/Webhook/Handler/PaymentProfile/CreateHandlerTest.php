@@ -52,7 +52,7 @@ class CreateHandlerTest extends \PHPUnit\Framework\TestCase
      */
     protected $paymentTokenFactoryMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->paymentTokenManagementMock = $this->getMockBuilder(PaymentTokenManagementInterface::class)->getMock();
         $this->paymentTokenRepositoryMock = $this->getMockBuilder(PaymentTokenRepositoryInterface::class)->getMock();

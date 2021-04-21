@@ -12,7 +12,7 @@ class BundleProductTest extends AbstractInspector
      */
     protected $bundleProduct;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

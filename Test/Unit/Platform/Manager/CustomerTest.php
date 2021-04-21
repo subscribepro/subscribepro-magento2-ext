@@ -25,7 +25,7 @@ class CustomerTest extends \PHPUnit\Framework\TestCase
      */
     protected $customerRepositoryMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->platformCustomerServiceMock = $this->getMockBuilder(CustomerService::class)
             ->disableOriginalConstructor()->getMock();
@@ -58,7 +58,7 @@ class CustomerTest extends \PHPUnit\Framework\TestCase
     {
         $email = 'email';
         $websiteId = 12;
-        
+
         $customerMock = $this->getMockBuilder(CustomerInterface::class)->getMock();
         $customerMock->expects($this->once())->method('getId')->willReturn(11);
         $customerMock->expects($this->once())->method('getEmail')->willReturn($email);
@@ -67,7 +67,7 @@ class CustomerTest extends \PHPUnit\Framework\TestCase
         $customerMock->expects($this->once())->method('getMiddlename')->willReturn('middle');
         $customerMock->expects($this->once())->method('getGroupId')->willReturn(324);
         $customerMock->expects($this->once())->method('getWebsiteId')->willReturn(21);
-        
+
         $platformCustomerMock = $this->createPlatformCustomerMock();
         $platformCustomerMock->expects($this->once())->method('setMagentoCustomerId')->with(11);
         $platformCustomerMock->expects($this->once())->method('setEmail')->with($email);

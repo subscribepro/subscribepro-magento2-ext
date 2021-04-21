@@ -18,7 +18,7 @@ class PaymentProfileTest extends AbstractService
      */
     protected $paymentProfilePlatformService;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->platformMock = $this->createPlatformMock();
         $this->paymentProfilePlatformService = $this->getMockBuilder(PaymentProfileService::class)

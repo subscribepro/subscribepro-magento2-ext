@@ -74,7 +74,7 @@ class UpdateProductAfterTest extends \PHPUnit\Framework\TestCase
      */
     protected $requestMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->generalConfigMock = $this->getMockBuilder(GeneralConfig::class)
             ->disableOriginalConstructor()->getMock();
@@ -369,7 +369,7 @@ class UpdateProductAfterTest extends \PHPUnit\Framework\TestCase
     public function testExecute($sku, $subscriptionParams, $subscriptionOption, $subscriptionInterval, $warnings)
     {
         $platformProductMock = $this->getMockBuilder(ProductInterface::class)->getMock();
-        
+
         $productMock = $this->createProductMock();
         $productMock->expects($this->once())
             ->method('getData')

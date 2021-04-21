@@ -18,7 +18,7 @@ class CustomerTest extends AbstractService
      */
     protected $customerPlatformService;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->platformMock = $this->createPlatformMock();
         $this->customerPlatformService = $this->getMockBuilder(CustomerService::class)
@@ -36,13 +36,13 @@ class CustomerTest extends AbstractService
     public function testCreateCustomer($websiteId, $expectedWebsiteId)
     {
         $platformCustomerMock = $this->createPlatformCustomerMock();
-        
+
         $this->initService($this->customerPlatformService, $expectedWebsiteId);
         $this->customerPlatformService->expects($this->once())
             ->method('createCustomer')
             ->with(['customer data'])
             ->willReturn($platformCustomerMock);
-        
+
         $this->assertSame(
             $platformCustomerMock,
             $this->customerService->createCustomer(['customer data'], $websiteId)

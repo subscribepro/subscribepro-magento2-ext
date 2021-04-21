@@ -16,7 +16,7 @@ class ItemTest extends \PHPUnit\Framework\TestCase
      */
     protected $quoteItemPlugin;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->quoteItemPlugin = new Item();
     }

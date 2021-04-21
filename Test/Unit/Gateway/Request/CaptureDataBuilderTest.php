@@ -21,7 +21,7 @@ class CaptureDataBuilderTest extends \PHPUnit\Framework\TestCase
      */
     protected $captureDataBuilder;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->subjectReaderMock = $this->getMockBuilder(SubjectReader::class)
             ->disableOriginalConstructor()->getMock();

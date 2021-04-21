@@ -11,7 +11,7 @@ class CartRuleCombineTest extends \PHPUnit\Framework\TestCase
      */
     protected $cartRuleCombineSource;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->cartRuleCombineSource = new CartRuleCombine();
     }

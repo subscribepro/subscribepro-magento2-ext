@@ -20,7 +20,7 @@ class PaymentDataBuilderTest extends \PHPUnit\Framework\TestCase
      */
     protected $paymentDataBuilder;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->subjectReaderMock = $this->getMockBuilder(SubjectReader::class)
             ->disableOriginalConstructor()->getMock();
