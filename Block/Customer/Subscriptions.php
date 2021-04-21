@@ -168,6 +168,7 @@ class Subscriptions extends \Magento\Framework\View\Element\Template
      */
     public function getCustomerData()
     {
+        /** @var \Magento\Customer\Model\Data\Customer $customer */
         $customer = $this->customerRepository->getById($this->customerSession->getCustomerId());
         $customerData = $customer->__toArray();
         foreach ($customer->getAddresses() as $key => $address) {

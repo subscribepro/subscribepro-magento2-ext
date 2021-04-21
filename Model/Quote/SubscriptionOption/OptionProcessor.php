@@ -60,7 +60,7 @@ class OptionProcessor implements CartItemProcessorInterface
             && $cartItem->getProductOption()->getExtensionAttributes()->getSubscriptionOption()
         ) {
             $subscriptionOption = $cartItem->getProductOption()->getExtensionAttributes()->getSubscriptionOption();
-            $subscriptionOption = $subscriptionOption->__toArray();
+            $subscriptionOption = $subscriptionOption->toArray();
             if (!empty($subscriptionOption) && is_array($subscriptionOption)) {
                 return $this->objectFactory->create([self::KEY_SUBSCRIPTION_OPTION => $subscriptionOption]);
             }
