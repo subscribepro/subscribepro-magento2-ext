@@ -58,24 +58,30 @@ class CustomerRepository
         $passwordHash = null
     ) {
         $customerId = $customer->getId();
-        $oldCustomerData = $subject->getById($customerId);
-        $oldCustomerEmail = $oldCustomerData->getEmail();
 
-        $customer = $proceed($customer, $passwordHash);
+        if ($customerId) {
+            $oldCustomerData = $subject->getById($customerId);
+            $oldCustomerEmail = $oldCustomerData->getEmail();
 
-        if ($this->generalConfig->isEnabled()) {
-            if ($oldCustomerEmail && $oldCustomerEmail !== $customer->getEmail()) {
-                $platformCustomer = $this->getPlatformCustomerByEmail(
-                    $oldCustomerEmail,
-                    $oldCustomerData->getWebsiteId()
-                );
-            } else {
-                $platformCustomer = $this->getPlatformCustomer($customer);
+            $customer = $proceed($customer, $passwordHash);
+
+            if ($this->generalConfig->isEnabled()) {
+                if ($oldCustomerEmail && $oldCustomerEmail !== $customer->getEmail()) {
+                    $platformCustomer = $this->getPlatformCustomerByEmail(
+                        $oldCustomerEmail,
+                        $oldCustomerData->getWebsiteId()
+                    );
+                } else {
+                    $platformCustomer = $this->getPlatformCustomer($customer);
+                }
+
+                if ($platformCustomer) {
+                    $this->updatePlatformCustomer($customer, $platformCustomer);
+                }
             }
-
-            if ($platformCustomer) {
-                $this->updatePlatformCustomer($customer, $platformCustomer);
-            }
+        } else {
+            // It is a new customer
+            $customer = $proceed($customer, $passwordHash);
         }
 
         return $customer;

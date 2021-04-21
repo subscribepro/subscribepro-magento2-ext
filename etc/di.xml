@@ -113,7 +113,7 @@
     </type>
 
     <type name="Magento\Customer\Api\CustomerRepositoryInterface">
-        <plugin name="subscribepro_customer" type="Swarming\SubscribePro\Plugin\Customer\CustomerRepository" />
+        <plugin name="subscribepro_customer" type="Swarming\SubscribePro\Plugin\Customer\CustomerRepository" sortOrder="2"/>
     </type>
 
     <type name="Magento\Quote\Model\Quote\Item\CartItemOptionsProcessor">
