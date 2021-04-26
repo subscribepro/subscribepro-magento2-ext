@@ -10,6 +10,13 @@
     <preference for="Swarming\SubscribePro\Api\GetOrderStatusInterface" type="Swarming\SubscribePro\Service\GetOrderStatus" />
     <preference for="Swarming\SubscribePro\Api\Data\OrderPaymentStateInterface" type="Swarming\SubscribePro\Model\Order\PaymentState" />
 
+    <type name="Swarming\SubscribePro\Model\MetaService">
+        <arguments>
+            <argument name="metaUser" xsi:type="object">Swarming\SubscribePro\Model\Meta\Customer</argument>
+            <argument name="userType" xsi:type="const">Swarming\SubscribePro\Model\Meta\Customer::TYPE</argument>
+        </arguments>
+    </type>
+
     <type name="Swarming\SubscribePro\Platform\Platform">
         <arguments>
             <argument name="config" xsi:type="array">

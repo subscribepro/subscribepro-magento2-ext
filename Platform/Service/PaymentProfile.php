@@ -10,6 +10,25 @@ use SubscribePro\Service\PaymentProfile\PaymentProfileInterface;
 class PaymentProfile extends AbstractService
 {
     /**
+     * @var \Swarming\SubscribePro\Model\MetaService
+     */
+    private $metaService;
+
+    /**
+     * @param \Swarming\SubscribePro\Platform\Platform $platform
+     * @param $name
+     * @param \Swarming\SubscribePro\Model\MetaService $metaService
+     */
+    public function __construct(
+        \Swarming\SubscribePro\Platform\Platform $platform,
+        $name,
+        \Swarming\SubscribePro\Model\MetaService $metaService
+    ) {
+        $this->metaService = $metaService;
+        parent::__construct($platform, $name);
+    }
+
+    /**
      * @param array $paymentProfileData
      * @param int|null $websiteId
      * @return \SubscribePro\Service\PaymentProfile\PaymentProfileInterface
@@ -89,7 +108,8 @@ class PaymentProfile extends AbstractService
      */
     public function saveToken($token, PaymentProfileInterface $paymentProfile, $websiteId = null)
     {
-        return $this->getService($websiteId)->saveToken($token, $paymentProfile);
+        $metadata = $this->metaService->getData();
+        return $this->getService($websiteId)->saveToken($token, $paymentProfile, $metadata);
     }
 
     /**

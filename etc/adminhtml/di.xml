@@ -38,4 +38,11 @@
             </argument>
         </arguments>
     </type>
+
+    <type name="Swarming\SubscribePro\Model\MetaService">
+        <arguments>
+            <argument name="metaUser" xsi:type="object">Swarming\SubscribePro\Model\Meta\AdminUser</argument>
+            <argument name="userType" xsi:type="const">Swarming\SubscribePro\Model\Meta\AdminUser::TYPE</argument>
+        </arguments>
+    </type>
 </config>
