@@ -11,7 +11,7 @@ class PaymentActionTest extends \PHPUnit\Framework\TestCase
      */
     protected $paymentActionSource;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->paymentActionSource = new PaymentAction();
     }

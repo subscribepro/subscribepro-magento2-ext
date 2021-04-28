@@ -12,7 +12,7 @@ class VaultPurchaseCommandTest extends AbstractCommand
      */
     protected $vaultPurchaseCommand;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->initProperties();
         $this->vaultPurchaseCommand = new VaultPurchaseCommand(

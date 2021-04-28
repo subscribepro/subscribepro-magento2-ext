@@ -67,7 +67,7 @@ class PaymentMethods
     protected function filterOutMethods(array $methods)
     {
         $subscribeProMethods = [];
-        foreach($methods as $method) {
+        foreach ($methods as $method) {
             if ($method->getCode() == ConfigProvider::CODE || $method->getCode() == ConfigProvider::VAULT_CODE) {
                 $subscribeProMethods[] = $method;
             }

@@ -60,7 +60,7 @@ class OrderItem
                 'label' => (string)__('Delivery'),
                 'value' => (string)__('One Time')
             ];
-        } else if ($subscriptionId) {
+        } elseif ($subscriptionId) {
             $additionalOptions[] = [
                 'label' => (string)__('Regular Delivery'),
                 'value' => (string)__($this->getSubscriptionParam($orderItem, SubscriptionOptionInterface::INTERVAL))

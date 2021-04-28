@@ -29,7 +29,7 @@ class Availability extends \PHPUnit\Framework\TestCase
      */
     protected $quoteHelperMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->checkoutSessionMock = $this->getMockBuilder(CheckoutSession::class)
             ->disableOriginalConstructor()->getMock();
@@ -46,7 +46,7 @@ class Availability extends \PHPUnit\Framework\TestCase
     {
         $methodInstanceMock = $this->createMethodInstanceMock();
         $resultMock = $this->createResultMock();
-        
+
         $observerMock = $this->createObserverMock();
         $observerMock->expects($this->at(0))
             ->method('getData')
@@ -60,11 +60,11 @@ class Availability extends \PHPUnit\Framework\TestCase
             ->method('getData')
             ->with('quote')
             ->willReturn(null);
-        
+
         $this->checkoutSessionMock->expects($this->once())
             ->method('getQuote')
             ->willReturn(null);
-        
+
         $resultMock->expects($this->never())->method('setData');
 
         $this->paymentAvailability->execute($observerMock);
@@ -184,7 +184,7 @@ class Availability extends \PHPUnit\Framework\TestCase
     {
         return $this->getMockBuilder(MethodAdapter::class)->disableOriginalConstructor()->getMock();
     }
-    
+
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject|\Magento\Quote\Api\Data\CartInterface
      */
@@ -192,7 +192,7 @@ class Availability extends \PHPUnit\Framework\TestCase
     {
         return $this->getMockBuilder(CartInterface::class)->getMock();
     }
-    
+
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject|\Magento\Framework\DataObject
      */

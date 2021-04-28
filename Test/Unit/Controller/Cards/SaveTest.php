@@ -58,7 +58,7 @@ class SaveTest extends \PHPUnit\Framework\TestCase
      */
     protected $requestMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->requestMock = $this->getMockBuilder(RequestInterface::class)
             ->setMethods(['getParam', 'getParams', 'isPost'])

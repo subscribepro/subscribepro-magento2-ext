@@ -132,11 +132,13 @@ class Index extends Action implements CsrfAwareActionInterface
         return hash_equals($hash, $hashFromRequest);
     }
 
-    public function createCsrfValidationException(RequestInterface $request): ?InvalidRequestException {
+    public function createCsrfValidationException(RequestInterface $request): ?InvalidRequestException
+    {
         return null;
     }
 
-    public function validateForCsrf(RequestInterface $request): ?bool {
+    public function validateForCsrf(RequestInterface $request): ?bool
+    {
         return true;
     }
 }

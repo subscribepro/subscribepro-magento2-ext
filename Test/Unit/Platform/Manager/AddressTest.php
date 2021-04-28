@@ -19,7 +19,7 @@ class AddressTest extends \PHPUnit\Framework\TestCase
      */
     protected $platformAddressServiceMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->platformAddressServiceMock = $this->getMockBuilder(AddressService::class)
             ->disableOriginalConstructor()->getMock();
@@ -31,7 +31,7 @@ class AddressTest extends \PHPUnit\Framework\TestCase
     {
         $platformCustomerId = 451;
         $websiteId = 12;
-        
+
         $addressMock = $this->getMockBuilder(QuoteAddress::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -74,13 +74,14 @@ class AddressTest extends \PHPUnit\Framework\TestCase
             ->method('createAddress')
             ->with([], $websiteId)
             ->willReturn($platformAddressMock);
-        
+
         $this->platformAddressServiceMock->expects($this->once())
             ->method('findOrSave')
             ->with($platformAddressMock, $websiteId);
-        
+
         $this->assertSame(
-            $platformAddressMock, $this->addressManager->findOrSaveAddress($addressMock, $platformCustomerId, $websiteId)
+            $platformAddressMock,
+            $this->addressManager->findOrSaveAddress($addressMock, $platformCustomerId, $websiteId)
         );
     }
 }

@@ -39,7 +39,7 @@ class PlatformTest extends \PHPUnit\Framework\TestCase
         'logging_file_name' => 'config_file_name'
     ];
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->sdkFactoryMock = $this->getMockBuilder(SdkFactory::class)
             ->disableOriginalConstructor()
@@ -102,12 +102,12 @@ class PlatformTest extends \PHPUnit\Framework\TestCase
             ->method('getWebsite')
             ->with($websiteId)
             ->willReturn($websiteMock);
-        
+
         $this->sdkFactoryMock->expects($this->once())
             ->method('create')
             ->with(['config' => $expectedConfig])
             ->willReturn($sdkMock);
-        
+
         $this->assertSame(
             $sdkMock,
             $this->platform->getSdk($websiteId),

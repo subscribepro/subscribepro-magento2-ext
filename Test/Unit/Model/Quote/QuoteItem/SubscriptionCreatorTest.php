@@ -61,7 +61,7 @@ class SubscriptionCreatorTest extends \PHPUnit\Framework\TestCase
      */
     protected $loggerMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->subscriptionOptionConfigMock = $this->getMockBuilder(SubscriptionOptionsConfig::class)
             ->disableOriginalConstructor()
@@ -100,7 +100,8 @@ class SubscriptionCreatorTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testFailToCreateSubscription() {
+    public function testFailToCreateSubscription()
+    {
         $exception = new \Exception('error');
 
         $platformCustomerId = 32123;
@@ -215,7 +216,8 @@ class SubscriptionCreatorTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testCreateSubscription() {
+    public function testCreateSubscription()
+    {
         $platformCustomerId = 32123;
         $paymentProfileId = 4324;
         $shippingMethod = 'table_rate';
@@ -335,7 +337,8 @@ class SubscriptionCreatorTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testCreateSubscriptionWithVirtual() {
+    public function testCreateSubscriptionWithVirtual()
+    {
         $platformCustomerId = 32123;
         $paymentProfileId = 4324;
         $qty = 4234;
@@ -427,7 +430,8 @@ class SubscriptionCreatorTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testCreateSubscriptionWithCouponCode() {
+    public function testCreateSubscriptionWithCouponCode()
+    {
         $platformCustomerId = 32123;
         $paymentProfileId = 4324;
         $shippingMethod = 'table_rate';

@@ -2,15 +2,20 @@
 
 namespace Swarming\SubscribePro\Test\Unit\Platform\Storage;
 
-use Swarming\SubscribePro\Api\Data\ProductInterface as PlatformProductInterface;
-use Swarming\SubscribePro\Platform\Storage\Product as ProductStorage;
+use Magento\Framework\App\Cache\StateInterface as CacheStateInterface;
+use Magento\Framework\Cache\FrontendInterface as CacheFrontendInterface;
+use Magento\Framework\Serialize\SerializerInterface;
 use Magento\Store\Api\Data\WebsiteInterface;
 use Magento\Store\Model\StoreManagerInterface;
-use Magento\Framework\Cache\FrontendInterface as CacheFrontendInterface;
-use Magento\Framework\App\Cache\StateInterface as CacheStateInterface;
+use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
+use Swarming\SubscribePro\Api\Data\ProductInterface as PlatformProductInterface;
+use Swarming\SubscribePro\Api\Data\ProductInterfaceFactory as PlatformProductFactory;
 use Swarming\SubscribePro\Model\Config\Advanced as CacheConfig;
+use Swarming\SubscribePro\Platform\Cache\Type\Product;
+use Swarming\SubscribePro\Platform\Storage\Product as ProductStorage;
 
-class ProductTest extends \PHPUnit\Framework\TestCase
+class ProductTest extends TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Platform\Storage\Product
@@ -18,184 +23,262 @@ class ProductTest extends \PHPUnit\Framework\TestCase
     protected $productStorage;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Framework\Cache\FrontendInterface
+     * @var \Magento\Framework\Cache\FrontendInterface|MockObject
      */
     protected $cacheMock;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Framework\App\Cache\StateInterface
+     * @var \Magento\Framework\App\Cache\StateInterface|MockObject
      */
     protected $stateMock;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Store\Model\StoreManagerInterface
+     * @var \Magento\Store\Model\StoreManagerInterface|MockObject
      */
     protected $storeManagerMock;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|\Swarming\SubscribePro\Model\Config\Advanced
+     * @var \Swarming\SubscribePro\Model\Config\Advanced|MockObject
      */
     protected $advancedConfigMock;
 
-    protected function setUp()
+    /**
+     * @var \Swarming\SubscribePro\Api\Data\ProductInterfaceFactory|MockObject
+     */
+    protected $platformProductFactoryMock;
+
+    /**
+     * @var \Magento\Framework\Serialize\SerializerInterface|MockObject
+     */
+    protected $serializerMock;
+
+    protected function setUp(): void
     {
         $this->cacheMock = $this->getMockBuilder(CacheFrontendInterface::class)->getMock();
         $this->stateMock = $this->getMockBuilder(CacheStateInterface::class)->getMock();
         $this->storeManagerMock = $this->getMockBuilder(StoreManagerInterface::class)->getMock();
         $this->advancedConfigMock = $this->getMockBuilder(CacheConfig::class)
             ->disableOriginalConstructor()->getMock();
+        $this->platformProductFactoryMock = $this->getMockBuilder(PlatformProductFactory::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->serializerMock = $this->getMockBuilder(SerializerInterface::class)->getMock();
 
         $this->productStorage = new ProductStorage(
             $this->cacheMock,
             $this->stateMock,
             $this->advancedConfigMock,
-            $this->storeManagerMock
+            $this->storeManagerMock,
+            $this->platformProductFactoryMock,
+            $this->serializerMock
         );
     }
 
-    public function testLoadIfProductCacheDisabled()
+    public function testLoadIfProductCacheDisabled(): void
     {
-        $sku = 'sku';
-        $websiteId = 23;
+        $sku = 'sku16';
+        $websiteId = 1;
+        $websiteCode = 'code1';
 
         $websiteMock = $this->createWebsiteMock();
-        $websiteMock->expects($this->any())->method('getCode')->willReturn('code');
+        $websiteMock->method('getCode')->willReturn($websiteCode);
 
-        $this->storeManagerMock->expects($this->once())
+        $this->storeManagerMock->expects(self::once())
             ->method('getWebsite')
             ->with($websiteId)
             ->willReturn($websiteMock);
 
-        $this->stateMock->expects($this->once())
+        $this->serializerMock->expects(self::once())
+            ->method('serialize')
+            ->with([$sku, $websiteCode])
+            ->willReturn(json_encode([$sku, $websiteCode]));
+
+        $this->stateMock->expects(self::once())
             ->method('isEnabled')
-            ->with(\Swarming\SubscribePro\Platform\Cache\Type\Product::TYPE_IDENTIFIER)
+            ->with(Product::TYPE_IDENTIFIER)
             ->willReturn(false);
 
-        $this->cacheMock->expects($this->never())->method('load');
+        $this->cacheMock->expects(self::never())->method('load');
 
-        $this->assertNull($this->productStorage->load($sku, $websiteId));
+        self::assertNull($this->productStorage->load($sku, $websiteId));
     }
 
-    public function testLoadIfProductCacheNotLoaded()
+    public function testLoadIfProductCacheNotLoaded(): void
     {
-        $sku = 'sku';
-        $websiteId = 23;
+        $sku = 'sku43';
+        $websiteId = 13;
+        $websiteCode = 'code13';
 
         $websiteMock = $this->createWebsiteMock();
-        $websiteMock->expects($this->once())->method('getCode')->willReturn('code');
+        $websiteMock->expects(self::once())
+            ->method('getCode')
+            ->willReturn($websiteCode);
 
-        $this->stateMock->expects($this->once())
+        $this->stateMock->expects(self::once())
             ->method('isEnabled')
-            ->with(\Swarming\SubscribePro\Platform\Cache\Type\Product::TYPE_IDENTIFIER)
+            ->with(Product::TYPE_IDENTIFIER)
             ->willReturn(true);
 
-        $this->storeManagerMock->expects($this->once())
+        $this->storeManagerMock->expects(self::once())
             ->method('getWebsite')
             ->with($websiteId)
             ->willReturn($websiteMock);
 
-        $this->cacheMock->expects($this->once())
+        $this->serializerMock->expects(self::once())
+            ->method('serialize')
+            ->with([$sku, $websiteCode])
+            ->willReturn(json_encode([$sku, $websiteCode]));
+
+        $this->cacheMock->expects(self::once())
             ->method('load')
-            ->with($this->stringContains(ProductStorage::PRODUCT_CACHE_KEY . '_'))
+            ->with(self::stringContains(ProductStorage::PRODUCT_CACHE_KEY . '_'))
             ->willReturn(null);
 
-        $this->assertNull($this->productStorage->load($sku, $websiteId));
+        self::assertNull($this->productStorage->load($sku, $websiteId));
     }
 
-    public function testLoad()
+    public function testLoad(): void
     {
-        $sku = 'sku';
-        $websiteId = 23;
+        $sku = 'sku61';
+        $websiteId = 21;
+        $websiteCode = 'code21';
         $platformProductMock = $this->createPlatformProductMock();
+        $platformProductData = ['sku' => $sku];
+        $platformProductDataSerialized = json_encode($platformProductData);
 
         $websiteMock = $this->createWebsiteMock();
-        $websiteMock->expects($this->any())->method('getCode')->willReturn('code');
+        $websiteMock->method('getCode')
+            ->willReturn($websiteCode);
 
-        $this->stateMock->expects($this->once())
+        $this->stateMock->expects(self::once())
             ->method('isEnabled')
-            ->with(\Swarming\SubscribePro\Platform\Cache\Type\Product::TYPE_IDENTIFIER)
+            ->with(Product::TYPE_IDENTIFIER)
             ->willReturn(true);
 
-        $this->storeManagerMock->expects($this->exactly(2))
+        $this->storeManagerMock->expects(self::exactly(2))
             ->method('getWebsite')
             ->with($websiteId)
             ->willReturn($websiteMock);
 
-        $this->cacheMock->expects($this->once())
+        $this->serializerMock->expects(self::exactly(2))
+            ->method('serialize')
+            ->with([$sku, $websiteCode])
+            ->willReturn(json_encode([$sku, $websiteCode]));
+
+        $this->cacheMock->expects(self::once())
             ->method('load')
-            ->with($this->stringContains(ProductStorage::PRODUCT_CACHE_KEY . '_'))
-            ->willReturn(serialize($platformProductMock));
+            ->with(self::stringContains(ProductStorage::PRODUCT_CACHE_KEY . '_'))
+            ->willReturn($platformProductDataSerialized);
+
+        $this->serializerMock->expects(self::once())
+            ->method('unserialize')
+            ->with($platformProductDataSerialized)
+            ->willReturn($platformProductData);
+
+        $this->platformProductFactoryMock->expects(self::once())
+            ->method('create')
+            ->with(['data' => $platformProductData])
+            ->willReturn($platformProductMock);
 
         $cachedProduct = $this->productStorage->load($sku, $websiteId);
 
-        $this->assertEquals(
+        self::assertEquals(
             $platformProductMock,
             $cachedProduct,
             'Fail to test product storage load from cache'
         );
-        $this->assertSame(
+        self::assertSame(
             $cachedProduct,
             $this->productStorage->load($sku, $websiteId),
             'Fail to test product storage load from internal cache'
         );
     }
 
-    public function testSaveIfProductCacheDisabled()
+    public function testSaveIfProductCacheDisabled(): void
     {
-        $websiteId = 23;
+        $sku = 'sku25';
+        $websiteId = 89;
+        $websiteCode = 'code89';
 
         $platformProductMock = $this->createPlatformProductMock();
-        $platformProductMock->expects($this->once())->method('getSku')->willReturn('sku');
+        $platformProductMock->expects(self::once())
+            ->method('getSku')
+            ->willReturn($sku);
 
         $websiteMock = $this->createWebsiteMock();
-        $websiteMock->expects($this->any())->method('getCode')->willReturn('code');
+        $websiteMock->method('getCode')
+            ->willReturn($websiteCode);
 
-        $this->storeManagerMock->expects($this->once())
+        $this->storeManagerMock->expects(self::once())
             ->method('getWebsite')
             ->with($websiteId)
             ->willReturn($websiteMock);
 
-        $this->stateMock->expects($this->once())
+        $this->stateMock->expects(self::once())
             ->method('isEnabled')
-            ->with(\Swarming\SubscribePro\Platform\Cache\Type\Product::TYPE_IDENTIFIER)
+            ->with(Product::TYPE_IDENTIFIER)
             ->willReturn(false);
 
-        $this->cacheMock->expects($this->never())->method('save');
+        $this->serializerMock->expects(self::once())
+            ->method('serialize')
+            ->with([$sku, $websiteCode])
+            ->willReturn(json_encode([$sku, $websiteCode]));
+        $this->cacheMock->expects(self::never())->method('save');
 
         $this->productStorage->save($platformProductMock, $websiteId);
     }
 
-    public function testSaveWithoutLifeTime()
+    public function testSaveWithoutLifeTime(): void
     {
-        $websiteId = 5002;
-        $lifeTime = 5005;
+        $sku = 'sku99';
+        $websiteId = 90;
+        $websiteCode = 'code90';
+        $lifeTime = 9999;
+        $platformProductData = ['sku' => $sku];
+        $platformProductDataSerialized = json_encode($platformProductData);
 
         $platformProductMock = $this->createPlatformProductMock();
-        $platformProductMock->expects($this->once())->method('getSku')->willReturn('sku');
+        $platformProductMock->expects(self::once())
+            ->method('getSku')
+            ->willReturn($sku);
+        $platformProductMock->expects(self::once())
+            ->method('toArray')
+            ->willReturn($platformProductData);
 
         $websiteMock = $this->createWebsiteMock();
-        $websiteMock->expects($this->any())->method('getCode')->willReturn('code');
+        $websiteMock->method('getCode')
+            ->willReturn($websiteCode);
 
-        $this->stateMock->expects($this->once())
+        $this->stateMock->expects(self::once())
             ->method('isEnabled')
-            ->with(\Swarming\SubscribePro\Platform\Cache\Type\Product::TYPE_IDENTIFIER)
+            ->with(Product::TYPE_IDENTIFIER)
             ->willReturn(true);
 
-        $this->storeManagerMock->expects($this->once())
+        $this->storeManagerMock->expects(self::once())
             ->method('getWebsite')
             ->with($websiteId)
             ->willReturn($websiteMock);
 
-        $this->advancedConfigMock->expects($this->once())
+        $this->advancedConfigMock->expects(self::once())
             ->method('getCacheLifeTime')
             ->with($websiteId)
             ->willReturn($lifeTime);
 
-        $this->cacheMock->expects($this->once())
+        $this->serializerMock->expects(self::at(0))
+            ->method('serialize')
+            ->with([$sku, $websiteCode])
+            ->willReturn(json_encode([$sku, $websiteCode]));
+
+        $this->serializerMock->expects(self::at(1))
+            ->method('serialize')
+            ->with($platformProductData)
+            ->willReturn($platformProductDataSerialized);
+
+        $this->cacheMock->expects(self::once())
             ->method('save')
             ->with(
-                $this->isType('string'),
-                $this->stringContains(ProductStorage::PRODUCT_CACHE_KEY . '_'),
+                $platformProductDataSerialized,
+                self::stringContains(ProductStorage::PRODUCT_CACHE_KEY . '_'),
                 [],
                 $lifeTime
             );
@@ -203,34 +286,54 @@ class ProductTest extends \PHPUnit\Framework\TestCase
         $this->productStorage->save($platformProductMock, $websiteId);
     }
 
-    public function testSaveWithLifeTime()
+    public function testSaveWithLifeTime(): void
     {
-        $websiteId = 2020;
-        $lifeTime = 1010;
+        $sku = 'sku82';
+        $websiteId = 21;
+        $websiteCode = 'code21';
+        $lifeTime = 8888;
+        $platformProductData = ['sku' => $sku];
+        $platformProductDataSerialized = json_encode($platformProductData);
 
         $platformProductMock = $this->createPlatformProductMock();
-        $platformProductMock->expects($this->once())->method('getSku')->willReturn('sku');
+        $platformProductMock->expects(self::once())
+            ->method('getSku')
+            ->willReturn($sku);
+        $platformProductMock->expects(self::once())
+            ->method('toArray')
+            ->willReturn($platformProductData);
 
         $websiteMock = $this->createWebsiteMock();
-        $websiteMock->expects($this->any())->method('getCode')->willReturn('code');
+        $websiteMock->method('getCode')
+            ->willReturn($websiteCode);
 
-        $this->stateMock->expects($this->once())
+        $this->stateMock->expects(self::once())
             ->method('isEnabled')
-            ->with(\Swarming\SubscribePro\Platform\Cache\Type\Product::TYPE_IDENTIFIER)
+            ->with(Product::TYPE_IDENTIFIER)
             ->willReturn(true);
 
-        $this->storeManagerMock->expects($this->once())
+        $this->storeManagerMock->expects(self::once())
             ->method('getWebsite')
             ->with($websiteId)
             ->willReturn($websiteMock);
 
-        $this->advancedConfigMock->expects($this->never())->method('getCacheLifeTime');
+        $this->advancedConfigMock->expects(self::never())->method('getCacheLifeTime');
 
-        $this->cacheMock->expects($this->once())
+        $this->serializerMock->expects(self::at(0))
+            ->method('serialize')
+            ->with([$sku, $websiteCode])
+            ->willReturn(json_encode([$sku, $websiteCode]));
+
+        $this->serializerMock->expects(self::at(1))
+            ->method('serialize')
+            ->with($platformProductData)
+            ->willReturn($platformProductDataSerialized);
+
+        $this->cacheMock->expects(self::once())
             ->method('save')
             ->with(
-                $this->isType('string'),
-                $this->stringContains(ProductStorage::PRODUCT_CACHE_KEY . '_'),
+                $platformProductDataSerialized,
+                self::stringContains(ProductStorage::PRODUCT_CACHE_KEY . '_'),
                 [],
                 $lifeTime
             );
@@ -238,92 +341,117 @@ class ProductTest extends \PHPUnit\Framework\TestCase
         $this->productStorage->save($platformProductMock, $websiteId, $lifeTime);
     }
 
-    public function testRemoveIfProductCacheDisabled()
+    public function testRemoveIfProductCacheDisabled(): void
     {
         $sku = 'sku2';
-        $websiteId = 3232;
+        $websiteId = 59;
+        $websiteCode = 'code59';
 
         $websiteMock = $this->createWebsiteMock();
-        $websiteMock->expects($this->any())->method('getCode')->willReturn('code');
+        $websiteMock->method('getCode')
+            ->willReturn($websiteCode);
 
-        $this->storeManagerMock->expects($this->once())
+        $this->storeManagerMock->expects(self::once())
             ->method('getWebsite')
             ->with($websiteId)
             ->willReturn($websiteMock);
 
-        $this->stateMock->expects($this->once())
+        $this->serializerMock->expects(self::once())
+            ->method('serialize')
+            ->with([$sku, $websiteCode])
+            ->willReturn(json_encode([$sku, $websiteCode]));
+
+        $this->stateMock->expects(self::once())
             ->method('isEnabled')
-            ->with(\Swarming\SubscribePro\Platform\Cache\Type\Product::TYPE_IDENTIFIER)
+            ->with(Product::TYPE_IDENTIFIER)
             ->willReturn(false);
 
-        $this->cacheMock->expects($this->never())->method('remove');
+        $this->cacheMock->expects(self::never())->method('remove');
 
         $this->productStorage->remove($sku, $websiteId);
     }
 
-    public function testRemoveIfProductCachedInternal()
+    public function testRemoveIfProductCachedInternal(): void
     {
-        $websiteId = 12323;
+        $sku = 'sku79';
+        $websiteId = 40;
+        $websiteCode = 'code40';
+
         $websiteMock = $this->createWebsiteMock();
-        $websiteMock->expects($this->any())->method('getCode')->willReturn('code');
+        $websiteMock->method('getCode')
+            ->willReturn($websiteCode);
 
         $platformProductMock = $this->createPlatformProductMock();
-        $platformProductMock->expects($this->once())->method('getSku')->willReturn('sku');
+        $platformProductMock->expects(self::once())
+            ->method('getSku')
+            ->willReturn($sku);
 
         $websiteMock = $this->createWebsiteMock();
-        $websiteMock->expects($this->any())->method('getCode')->willReturn('code');
+        $websiteMock->method('getCode')->willReturn($websiteCode);
 
-        $this->stateMock->expects($this->exactly(2))
+        $this->stateMock->expects(self::exactly(2))
             ->method('isEnabled')
-            ->with(\Swarming\SubscribePro\Platform\Cache\Type\Product::TYPE_IDENTIFIER)
+            ->with(Product::TYPE_IDENTIFIER)
             ->willReturn(false);
 
-        $this->storeManagerMock->expects($this->exactly(2))
+        $this->storeManagerMock->expects(self::exactly(2))
             ->method('getWebsite')
             ->with($websiteId)
             ->willReturn($websiteMock);
 
-        $this->cacheMock->expects($this->never())->method('remove');
+        $this->serializerMock->expects(self::exactly(2))
+            ->method('serialize')
+            ->with([$sku, $websiteCode])
+            ->willReturn(json_encode([$sku, $websiteCode]));
+
+        $this->cacheMock->expects(self::never())->method('remove');
 
         $this->productStorage->save($platformProductMock, $websiteId);
-        $this->productStorage->remove('sku', $websiteId);
+        $this->productStorage->remove($sku, $websiteId);
     }
 
-    public function testRemove()
+    public function testRemove(): void
     {
-        $websiteId = 12323;
+        $sku = 'sku77';
+        $websiteId = 11;
+        $websiteCode = 'code11';
         $websiteMock = $this->createWebsiteMock();
-        $websiteMock->expects($this->any())->method('getCode')->willReturn('code');
+        $websiteMock->method('getCode')->willReturn($websiteCode);
 
-        $this->stateMock->expects($this->once())
+        $this->stateMock->expects(self::once())
             ->method('isEnabled')
-            ->with(\Swarming\SubscribePro\Platform\Cache\Type\Product::TYPE_IDENTIFIER)
+            ->with(Product::TYPE_IDENTIFIER)
             ->willReturn(true);
 
-        $this->storeManagerMock->expects($this->once())
+        $this->storeManagerMock->expects(self::once())
             ->method('getWebsite')
             ->with($websiteId)
             ->willReturn($websiteMock);
 
-        $this->cacheMock->expects($this->once())
-            ->method('remove')
-            ->with($this->stringContains(ProductStorage::PRODUCT_CACHE_KEY . '_'));
+        $this->serializerMock->expects(self::once())
+            ->method('serialize')
+            ->with([$sku, $websiteCode])
+            ->willReturn(json_encode([$sku, $websiteCode]));
 
-        $this->productStorage->remove('sku', $websiteId);
+        $this->cacheMock->expects(self::once())
+            ->method('remove')
+            ->with(self::stringContains(ProductStorage::PRODUCT_CACHE_KEY . '_'));
+
+        $this->productStorage->remove($sku, $websiteId);
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|\Swarming\SubscribePro\Api\Data\ProductInterface
+     * @return \Swarming\SubscribePro\Api\Data\ProductInterface|\PHPUnit\Framework\MockObject\MockObject
      */
-    private function createPlatformProductMock()
+    private function createPlatformProductMock(): MockObject
     {
         return $this->getMockBuilder(PlatformProductInterface::class)->getMock();
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|\Magento\Store\Api\Data\WebsiteInterface
+     * @return \Magento\Store\Api\Data\WebsiteInterface|\PHPUnit\Framework\MockObject\MockObject
      */
-    private function createWebsiteMock()
+    private function createWebsiteMock(): MockObject
     {
         return $this->getMockBuilder(WebsiteInterface::class)->getMock();
     }

@@ -18,7 +18,7 @@ class DataAssignerTest extends \PHPUnit\Framework\TestCase
      */
     protected $paymentDataAssigner;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->paymentDataAssigner = new PaymentDataAssigner();
     }
@@ -30,18 +30,18 @@ class DataAssignerTest extends \PHPUnit\Framework\TestCase
             ->method('getData')
             ->with(PaymentInterface::KEY_ADDITIONAL_DATA)
             ->willReturn('not array');
-        
+
         $eventMock = $this->createEventMock();
         $eventMock->expects($this->once())
             ->method('getDataByKey')
             ->with(AbstractDataAssignObserver::DATA_CODE)
             ->willReturn($dataMock);
-        
+
         $observerMock = $this->createObserverMock();
         $observerMock->expects($this->any())
             ->method('getEvent')
             ->willReturn($eventMock);
-        
+
         $this->paymentDataAssigner->execute($observerMock);
     }
 
@@ -51,18 +51,18 @@ class DataAssignerTest extends \PHPUnit\Framework\TestCase
             PaymentDataBuilder::PAYMENT_METHOD_TOKEN => 'payment token',
             'some_key' => 'value',
         ];
-        
+
         $dataMock = $this->createDataMock();
         $dataMock->expects($this->once())
             ->method('getData')
             ->with(PaymentInterface::KEY_ADDITIONAL_DATA)
             ->willReturn($additionalInfo);
-        
+
         $paymentInfoMock = $this->createPaymentInfoMock();
         $paymentInfoMock->expects($this->once())
             ->method('setAdditionalInformation')
             ->with(PaymentDataBuilder::PAYMENT_METHOD_TOKEN, 'payment token');
-        
+
         $eventMock = $this->createEventMock();
         $eventMock->expects($this->at(0))
             ->method('getDataByKey')
@@ -72,12 +72,12 @@ class DataAssignerTest extends \PHPUnit\Framework\TestCase
             ->method('getDataByKey')
             ->with(AbstractDataAssignObserver::MODEL_CODE)
             ->willReturn($paymentInfoMock);
-        
+
         $observerMock = $this->createObserverMock();
         $observerMock->expects($this->any())
             ->method('getEvent')
             ->willReturn($eventMock);
-        
+
         $this->paymentDataAssigner->execute($observerMock);
     }
 
@@ -96,7 +96,7 @@ class DataAssignerTest extends \PHPUnit\Framework\TestCase
     {
         return $this->getMockBuilder(PaymentInfoInterface::class)->getMock();
     }
-    
+
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject|\Magento\Framework\Event
      */
@@ -104,7 +104,7 @@ class DataAssignerTest extends \PHPUnit\Framework\TestCase
     {
         return $this->getMockBuilder(Event::class)->getMock();
     }
-    
+
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject|\Magento\Framework\DataObject
      */

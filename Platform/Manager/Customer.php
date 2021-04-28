@@ -6,7 +6,6 @@ use SubscribePro\Service\Customer\CustomerInterface as PlatformCustomerInterface
 use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 
-
 class Customer
 {
     /**
@@ -64,7 +63,7 @@ class Customer
 
         if (!empty($platformCustomers)) {
             $platformCustomer = $platformCustomers[0];
-        } else if ($createIfNotExist) {
+        } elseif ($createIfNotExist) {
             $customer = $this->customerRepository->get($customerEmail, $websiteId);
             $platformCustomer = $this->createPlatformCustomer($customer, $websiteId);
         } else {

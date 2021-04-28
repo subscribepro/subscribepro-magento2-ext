@@ -33,7 +33,7 @@ class CustomerRepositoryTest extends \PHPUnit\Framework\TestCase
      */
     protected $customerRepositoryPlugin;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->platformCustomerManager = $this->getMockBuilder(PlatformCustomerManager::class)
             ->disableOriginalConstructor()

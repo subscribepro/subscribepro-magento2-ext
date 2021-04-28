@@ -43,7 +43,7 @@ class IndexTest extends \PHPUnit\Framework\TestCase
      */
     protected $loggerMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $contextMock = $this->getMockBuilder(Context::class)->disableOriginalConstructor()->getMock();
         $this->webhookProcessorMock = $this->getMockBuilder(WebhookProcessor::class)

@@ -17,7 +17,7 @@ class CheckoutTest extends \PHPUnit\Framework\TestCase
      */
     protected $gatewayConfigProviderMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->gatewayConfigProviderMock = $this->getMockBuilder(GatewayConfigProvider::class)
             ->disableOriginalConstructor()->getMock();

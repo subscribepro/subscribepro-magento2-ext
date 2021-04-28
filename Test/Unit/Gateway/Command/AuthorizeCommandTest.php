@@ -16,7 +16,7 @@ class AuthorizeCommandTest extends AbstractProfileCreatorCommand
      */
     protected $authorizeCommand;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->initProperties();
         $this->authorizeCommand = new AuthorizeCommand(
@@ -70,18 +70,18 @@ class AuthorizeCommandTest extends AbstractProfileCreatorCommand
     {
         $exception = new LocalizedException(__('Cannot create payment profile.'));
         $requestData = [
-            VaultConfigProvider::IS_ACTIVE_CODE => true, 
+            VaultConfigProvider::IS_ACTIVE_CODE => true,
             PaymentDataBuilder::PAYMENT_METHOD_TOKEN => 'token'
         ];
         $this->executeSetPlatformWebsite($this->subjectReaderMock, $this->storeManagerMock, $this->platformMock);
         $this->processTransactionFail($requestData, $exception);
         $this->authorizeCommand->execute($this->commandSubject);
     }
-    
+
     public function testExecuteIfIsActiveCode()
     {
         $requestData = [
-            VaultConfigProvider::IS_ACTIVE_CODE => true, 
+            VaultConfigProvider::IS_ACTIVE_CODE => true,
             PaymentDataBuilder::PAYMENT_METHOD_TOKEN => 'token',
             PaymentProfileInterface::MAGENTO_CUSTOMER_ID => 123
         ];
@@ -94,7 +94,7 @@ class AuthorizeCommandTest extends AbstractProfileCreatorCommand
         ];
         $profileMock = $this->createPaymentProfile($requestData);
         $profileMock->expects($this->once())->method('getId')->willReturn($profileId);
-        
+
         $this->platformTransactionServiceMock->expects($this->once())
             ->method('createTransaction')
             ->with($requestData)
@@ -107,7 +107,7 @@ class AuthorizeCommandTest extends AbstractProfileCreatorCommand
         $this->executeCommand($requestData, $transactionMock);
         $this->authorizeCommand->execute($this->commandSubject);
     }
-    
+
     public function testExecuteIfNotIsActiveCode()
     {
         $token = 'token';

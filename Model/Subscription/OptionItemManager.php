@@ -102,5 +102,3 @@ class OptionItemManager
         return $buyRequest;
     }
 }
-
-

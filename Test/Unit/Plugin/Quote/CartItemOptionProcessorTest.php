@@ -20,7 +20,7 @@ class CartItemOptionsProcessorTest extends \PHPUnit\Framework\TestCase
      */
     protected $subscriptionOptionProcessorMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->subscriptionOptionProcessorMock = $this->getMockBuilder(SubscriptionOptionProcessor::class)
             ->disableOriginalConstructor()->getMock();

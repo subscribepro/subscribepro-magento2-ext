@@ -18,7 +18,7 @@ class WebhookTest extends AbstractService
      */
     protected $webhookPlatformService;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->platformMock = $this->createPlatformMock();
         $this->webhookPlatformService = $this->getMockBuilder(WebhookService::class)
@@ -54,7 +54,8 @@ class WebhookTest extends AbstractService
             ->willReturn($webhookEventMock);
 
         $this->assertSame(
-            $webhookEventMock, $this->webhookService->loadEvent($eventId, $websiteId)
+            $webhookEventMock,
+            $this->webhookService->loadEvent($eventId, $websiteId)
         );
     }
 

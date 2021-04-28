@@ -25,7 +25,7 @@ class SubscriptionConfigTest extends \PHPUnit\Framework\TestCase
      */
     protected $blockFactoryMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->subscriptionOptionConfigMock = $this->getMockBuilder(SubscriptionOptionsConfig::class)
             ->disableOriginalConstructor()->getMock();
