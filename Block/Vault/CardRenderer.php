@@ -58,6 +58,9 @@ class CardRenderer extends AbstractCardRenderer
         return $this->getIconForType($this->getTokenDetails()['type'])['width'];
     }
 
+    /**
+     * @return string
+     */
     public function getApplePayLabel()
     {
         $label = '';

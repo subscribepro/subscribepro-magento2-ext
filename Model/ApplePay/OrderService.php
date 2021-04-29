@@ -61,6 +61,20 @@ class OrderService
      */
     private $logger;
 
+    /**
+     * OrderService constructor.
+     *
+     * @param CartRepositoryInterface   $quoteRepository
+     * @param QuoteManagement           $quoteManagement
+     * @param CheckoutSession           $checkoutSession
+     * @param AddressFactory            $addressFactory
+     * @param ShippingAddressManagement $shippingAddressManagement
+     * @param BillingAddressManagement  $billingAddressManagement
+     * @param PaymentLogger             $paymentLogger
+     * @param CheckoutHelperData        $checkoutHelperData
+     * @param OrderSender               $orderSender
+     * @param LoggerInterface           $logger
+     */
     public function __construct(
         CartRepositoryInterface $quoteRepository,
         QuoteManagement $quoteManagement,

@@ -121,6 +121,10 @@ class PaymentService extends ApplePayCore
         return $quote->getId();
     }
 
+    /**
+     * @param $address
+     * @return array
+     */
     protected function convertToMagentoAddress($address)
     {
         if (is_string($address)) {

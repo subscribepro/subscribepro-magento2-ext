@@ -172,6 +172,11 @@ class ApplePay extends Template
             . '/services/v2/vault/applepay/create-session.json';
     }
 
+    /**
+     * @return string
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
+     */
     public function getApplePayPaymentRequest(): string
     {
         $paymentRequestConfig = $this->paymentRequestConfig->getRequestConfig();
@@ -183,16 +188,25 @@ class ApplePay extends Template
         return $this->jsonJsonSerializer->serialize($paymentRequestConfig);
     }
 
+    /**
+     * @return string
+     */
     public function getShippingSelectedUrl(): string
     {
         return $this->_urlBuilder->getUrl('subscribepro/applepay/shippinglist');
     }
 
+    /**
+     * @return string
+     */
     public function onShippingMethodSelected(): string
     {
         return $this->_urlBuilder->getUrl('subscribepro/applepay/shippingmethod');
     }
 
+    /**
+     * @return string
+     */
     public function getPaymentAuthorizedUrl(): string
     {
         return $this->_urlBuilder->getUrl('subscribepro/applepay/paymentauthorized');

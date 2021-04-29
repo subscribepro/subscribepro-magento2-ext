@@ -87,6 +87,11 @@ class Vault
         return $token;
     }
 
+    /**
+     * @param       $billingAddress
+     * @param array $applePayPaymentData
+     * @return mixed
+     */
     public function createApplePayPaymentToken($billingAddress, array $applePayPaymentData)
     {
         // Build request data
