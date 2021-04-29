@@ -129,17 +129,6 @@ class PaymentService extends ApplePayCore
 
         // Retrieve the countryId from the request
         $countryId = strtoupper($address['countryCode']);
-        //TODO: check address country_id here.
-        if ((!$countryId || empty($countryId)) && ($countryName = $address['country'])) {
-//            $countryCollection = $this->directoryRegion;
-//            foreach ($countryCollection as $country) {
-//                if ($countryName == $country->getName()) {
-//                    $countryId = strtoupper($country->getCountryId());
-//                    break;
-//                }
-//            }
-        }
-
         $magentoAddress = [
             'street' => implode("\n", $address['addressLines']),
             'firstname' => $address['givenName'],
