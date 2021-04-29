@@ -23,6 +23,9 @@ abstract class Core
      * @var Quote
      */
     protected $quote;
+    /**
+     * @var \Magento\Customer\Api\Data\CustomerInterface|null
+     */
     protected $customerData;
     /**
      * @var SessionManagerInterface

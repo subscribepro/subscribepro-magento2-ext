@@ -60,6 +60,9 @@ class ShippingList implements HttpPostActionInterface, CsrfAwareActionInterface
         $this->logger = $logger;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function execute()
     {
         $result = $this->jsonResultFactory->create();

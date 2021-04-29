@@ -12,6 +12,11 @@ use Swarming\SubscribePro\Gateway\Request\VaultDataBuilder;
 
 class AuthorizeCommand extends AbstractProfileCreatorCommand implements CommandInterface
 {
+    /**
+     * @param array $requestData
+     * @return \SubscribePro\Service\Transaction\TransactionInterface
+     * @throws Exception
+     */
     protected function processTransaction(array $requestData)
     {
         if (empty($requestData[PaymentDataBuilder::PAYMENT_METHOD_TOKEN])) {

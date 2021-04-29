@@ -85,6 +85,14 @@ class OrderService
         $this->logger = $logger;
     }
 
+    /**
+     * @param      $quoteId
+     * @param null $defaultShippingMethod
+     * @return bool
+     * @throws LocalizedException
+     * @throws \Magento\Framework\Exception\CouldNotSaveException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     public function createOrder($quoteId, $defaultShippingMethod = null): bool
     {
         /** @var Quote $quote */

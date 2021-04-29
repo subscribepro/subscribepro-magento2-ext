@@ -19,6 +19,10 @@ class ApplePayConfigProvider extends GatewayConfigProvider
         return ($this->generalConfig->isEnabled($websiteCode) && $this->generalConfig->isApplePayEnabled($websiteCode));
     }
 
+    /**
+     * @param null $storeId
+     * @return string
+     */
     public function getDomain($storeId = null): string
     {
         $value = $this->gatewayConfig->getValue('domain', $storeId);

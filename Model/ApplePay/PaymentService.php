@@ -66,6 +66,11 @@ class PaymentService extends ApplePayCore
         );
     }
 
+    /**
+     * @param array $paymentData
+     * @return int|mixed
+     * @throws LocalizedException
+     */
     public function setPaymentToQuote(array $paymentData)
     {
         if (!$paymentData
@@ -160,6 +165,12 @@ class PaymentService extends ApplePayCore
         return $magentoAddress;
     }
 
+    /**
+     * @param array $applePayPayment
+     * @param       $billingAddress
+     * @return $this
+     * @throws LocalizedException
+     */
     protected function createPaymentProfileForCustomer(array $applePayPayment, $billingAddress)
     {
         $quote = $this->getQuote();
@@ -206,6 +217,11 @@ class PaymentService extends ApplePayCore
         return $this;
     }
 
+    /**
+     * @param array $applePayPayment
+     * @return $this
+     * @throws LocalizedException
+     */
     public function createPaymentToken(array $applePayPayment)
     {
         $quote = $this->getQuote();

@@ -21,6 +21,9 @@ class PaymentRequestConfig extends DataObject
      * @var DirectoryHelper
      */
     private $directoryHelper;
+    /**
+     * @var \Magento\Quote\Api\Data\CartInterface|\Magento\Quote\Model\Quote
+     */
     private $quote;
     /**
      * @var CheckoutSession|SessionManagerInterface
@@ -47,6 +50,17 @@ class PaymentRequestConfig extends DataObject
      */
     private $logger;
 
+    /**
+     * PaymentRequestConfig constructor.
+     *
+     * @param SessionManagerInterface $checkoutSession
+     * @param DirectoryHelper         $directoryHelper
+     * @param Currency                $currency
+     * @param CheckoutHelper          $checkoutHelper
+     * @param PlatformOAuth           $platformOAuth
+     * @param PlatformManagerCustomer $platformManagerCustomer
+     * @param LoggerInterface         $logger
+     */
     public function __construct(
         SessionManagerInterface $checkoutSession,
         DirectoryHelper $directoryHelper,

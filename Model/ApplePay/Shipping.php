@@ -7,6 +7,11 @@ use Swarming\SubscribePro\Model\ApplePay\Core as ApplePayCore;
 
 class Shipping extends ApplePayCore
 {
+    /**
+     * @param array $shippingData
+     * @return bool
+     * @throws \Exception
+     */
     public function setDataToQuote(array $shippingData): bool
     {
         // Retrieve the countryId from the request
@@ -36,6 +41,9 @@ class Shipping extends ApplePayCore
         return true;
     }
 
+    /**
+     * @return array
+     */
     public function getShippingMethods(): array
     {
         $quote = $this->getQuote();
@@ -90,6 +98,11 @@ class Shipping extends ApplePayCore
         ];
     }
 
+    /**
+     * @param $applePayShippingMethod
+     * @return $this
+     * @throws \Exception
+     */
     public function setShippingMethodToQuote($applePayShippingMethod)
     {
         if (isset($applePayShippingMethod['identifier'])) {

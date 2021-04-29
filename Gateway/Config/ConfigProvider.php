@@ -95,6 +95,10 @@ class ConfigProvider
         return $config;
     }
 
+    /**
+     * @param $websiteId
+     * @return bool
+     */
     public function isEnabledPayment($websiteId)
     {
         return $this->generalConfig->isEnabled($websiteId);
