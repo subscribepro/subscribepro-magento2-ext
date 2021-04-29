@@ -113,6 +113,5 @@ class SubmitBefore implements ObserverInterface
                 'quote' => $quote,
             ]
         );
-
     }
 }
