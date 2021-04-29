@@ -2,8 +2,6 @@
 
 namespace Swarming\SubscribePro\Platform\Service;
 
-use Swarming\SubscribePro\Api\Data\SubscriptionInterface;
-
 /**
  * @method \SubscribePro\Service\Subscription\SubscriptionService getService($websiteId = null)
  */
