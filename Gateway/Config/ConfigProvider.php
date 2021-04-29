@@ -77,14 +77,14 @@ class ConfigProvider
 
         $websiteId = $this->storeManager->getStore($storeId)->getWebsiteId();
         if ($this->isEnabledPayment($websiteId)) {
-            $platformConfig = $this->platformConfigTool->getConfig(
+            $environmentKey = $this->platformConfigTool->getConfig(
                 PlatformConfig::CONFIG_TRANSPARENT_REDIRECT_ENVIRONMENT_KEY,
                 $websiteId
             );
             $config = [
                 'vaultCode' => self::VAULT_CODE,
                 'isActive' => $this->gatewayConfig->isActive($storeId),
-                'environmentKey' => $platformConfig,
+                'environmentKey' => $environmentKey,
                 'availableCardTypes' => $this->getCcAvailableTypes($storeId),
                 'ccTypesMapper' => $this->gatewayConfig->getCcTypesMapper($storeId),
                 'hasVerification' => $this->gatewayConfig->hasVerification($storeId),
