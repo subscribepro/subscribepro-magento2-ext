@@ -77,7 +77,7 @@ class PaymentService extends ApplePayCore
             || !isset($paymentData['token']['paymentData'])
             || !is_array($paymentData['token']['paymentData'])
         ) {
-            throw new LocalizedException(new Phrase('Apple Pay payment data not found!'));
+            throw new LocalizedException(__('Apple Pay payment data not found!'));
         }
 
         // Quote
@@ -89,14 +89,14 @@ class PaymentService extends ApplePayCore
         } else {
             // Save email for guests
             if (!isset($paymentData['shippingContact']['emailAddress'])) {
-                throw new LocalizedException(new Phrase('Email address missing from Apple Pay payment details!'));
+                throw new LocalizedException(__('Email address missing from Apple Pay payment details!'));
             }
             $quote->setCustomerEmail($paymentData['shippingContact']['emailAddress']);
             // Save name
             if (!isset($paymentData['shippingContact']['givenName'])
                 || !isset($paymentData['shippingContact']['familyName'])
             ) {
-                throw new LocalizedException(new Phrase('Customer name missing from Apple Pay payment details!'));
+                throw new LocalizedException(__('Customer name missing from Apple Pay payment details!'));
             }
             $quote->setCustomerFirstname($paymentData['shippingContact']['givenName']);
             $quote->setCustomerLastname($paymentData['shippingContact']['familyName']);

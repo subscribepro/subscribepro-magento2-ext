@@ -71,7 +71,7 @@ class ShippingList implements HttpPostActionInterface, CsrfAwareActionInterface
             $data = $this->getRequestData();
 
             if (!isset($data['shippingContact'])) {
-                $errorMessage = new Phrase('Please select a different address');
+                $errorMessage = __('Please select a different address');
                 $this->logger->error((string) $errorMessage);
                 $response = [
                     'success' => false,
@@ -95,7 +95,7 @@ class ShippingList implements HttpPostActionInterface, CsrfAwareActionInterface
             foreach ($data['shippingContact'] as $contactField => $fieldValue) {
                 if ($this->canValidateField($contactField)) {
                     if (empty($fieldValue)) {
-                        $errorMessage = new Phrase('Shipping Address Invalid');
+                        $errorMessage = __('Shipping Address Invalid');
                         $response = [
                             'success' => false,
                             'is_exception' => false,
@@ -131,7 +131,7 @@ class ShippingList implements HttpPostActionInterface, CsrfAwareActionInterface
             $rowItemsApplePay = $this->getRowItems();
         } catch (LocalizedException $e) {
             $this->logger->error($e->getMessage());
-            $errorMessage = new Phrase('Something went wrong. Please contact support for assistance.');
+            $errorMessage = __('Something went wrong. Please contact support for assistance.');
             $response = [
                 'success' => false,
                 'is_exception' => true,
@@ -186,7 +186,7 @@ class ShippingList implements HttpPostActionInterface, CsrfAwareActionInterface
 
         return new InvalidRequestException(
             $resultRedirect,
-            [new Phrase('Invalid Post Request.')]
+            [__('Invalid Post Request.')]
         );
     }
 

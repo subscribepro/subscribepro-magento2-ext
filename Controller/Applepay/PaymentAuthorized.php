@@ -92,7 +92,7 @@ class PaymentAuthorized implements HttpPostActionInterface, CsrfAwareActionInter
     {
         $result = $this->resultJsonFactory->create();
         $result->setHeader('Content-type', 'application/json');
-        $errorMessage = new Phrase('Apple Pay error. Please contact support for assistance.');
+        $errorMessage = __('Apple Pay error. Please contact support for assistance.');
 
         try {
             // Get JSON POST
@@ -158,7 +158,7 @@ class PaymentAuthorized implements HttpPostActionInterface, CsrfAwareActionInter
 
         return new InvalidRequestException(
             $resultRedirect,
-            [new Phrase('Invalid Request.')]
+            [__('Invalid Request.')]
         );
     }
 

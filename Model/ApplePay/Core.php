@@ -238,7 +238,7 @@ abstract class Core
             $this->mapMagentoAddressToPlatform($billingAddress, $spBillingAddress);
             $paymentProfile->setBillingAddress($spBillingAddress);
         } else {
-            throw new LocalizedException(new Phrase('The billing address is empty.'));
+            throw new LocalizedException(__('The billing address is empty.'));
         }
 
         // Set SP customer id
@@ -289,7 +289,7 @@ abstract class Core
         } else {
             if ($throwExceptionOnTypeNotFound) {
                 throw new LocalizedException(
-                    new Phrase('Invalid credit card type: %type', ['type' => $type])
+                    __('Invalid credit card type: %type', ['type' => $type])
                 );
             }
         }

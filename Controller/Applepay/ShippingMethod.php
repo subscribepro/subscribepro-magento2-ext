@@ -68,7 +68,7 @@ class ShippingMethod implements HttpPostActionInterface, CsrfAwareActionInterfac
         // Return JSON response
         $result = $this->jsonResultFactory->create();
         $result->setHeader('Content-type', 'application/json');
-        $errorMessage = new Phrase('Shipping method error. Please select a different shipping method.');
+        $errorMessage = __('Shipping method error. Please select a different shipping method.');
 
         try {
             // Get JSON POST
@@ -130,7 +130,7 @@ class ShippingMethod implements HttpPostActionInterface, CsrfAwareActionInterfac
 
         return new InvalidRequestException(
             $resultRedirect,
-            [new Phrase('Invalid Post Request.')]
+            [__('Invalid Post Request.')]
         );
     }
 
