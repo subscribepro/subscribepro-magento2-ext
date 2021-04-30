@@ -16,12 +16,12 @@ class PaymentProfile extends AbstractService
 
     /**
      * @param \Swarming\SubscribePro\Platform\Platform $platform
-     * @param $name
+     * @param string $name
      * @param \Swarming\SubscribePro\Model\MetaService $metaService
      */
     public function __construct(
         \Swarming\SubscribePro\Platform\Platform $platform,
-        $name,
+        string $name,
         \Swarming\SubscribePro\Model\MetaService $metaService
     ) {
         $this->metaService = $metaService;
