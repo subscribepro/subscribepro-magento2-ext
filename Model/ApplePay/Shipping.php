@@ -10,6 +10,7 @@ use Magento\Framework\Serialize\Serializer\Json as JsonSerializer;
 use Magento\Framework\Session\SessionManagerInterface;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\QuoteManagement;
+use Magento\Quote\Model\ResourceModel\Quote as QuoteResourceModel;
 
 class Shipping
 {
@@ -44,6 +45,10 @@ class Shipping
      */
     protected $quoteManagement;
     /**
+     * @var QuoteResourceModel
+     */
+    private $quoteResourceModel;
+    /**
      * @var JsonSerializer
      */
     protected $jsonSerializer;
@@ -52,11 +57,13 @@ class Shipping
         SessionManagerInterface $checkoutSession,
         DirectoryRegion $directoryRegion,
         Currency $currency,
+        QuoteResourceModel $quoteResourceModel,
         JsonSerializer $jsonSerializer
     ) {
         $this->checkoutSession = $checkoutSession;
         $this->directoryRegion = $directoryRegion;
         $this->currency = $currency;
+        $this->quoteResourceModel = $quoteResourceModel;
         $this->jsonSerializer = $jsonSerializer;
     }
 
@@ -108,8 +115,9 @@ class Shipping
         // Recalculate quote
         $this->getQuote()
             ->setTotalsCollectedFlag(false)
-            ->collectTotals()
-            ->save();
+            ->collectTotals();
+
+        $this->quoteResourceModel->save($this->getQuote());
 
         return true;
     }
@@ -182,14 +190,16 @@ class Shipping
             // TODO: avoid deprecated methods.
             $this->getQuote()
                 ->getShippingAddress()
-                ->setShippingMethod($applePayShippingMethod['identifier'])
-                ->save();
+                ->setShippingMethod($applePayShippingMethod['identifier']);
+
+            $this->quoteResourceModel->save($this->getQuote());
 
             // Recalculate quote
             $this->getQuote()
                 ->setTotalsCollectedFlag(false)
-                ->collectTotals()
-                ->save();
+                ->collectTotals();
+
+            $this->quoteResourceModel->save($this->getQuote());
         }
 
         return $this;
