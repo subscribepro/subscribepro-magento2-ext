@@ -406,13 +406,6 @@ class PaymentService
         $payment->setData('cc_type', $this->mapSubscribeProCardTypeToMagento($paymentProfile->getCreditcardType()));
         $quote->setPayment($payment);
 
-//        // Recalculate quote
-        // TODO: remove deprecated call.
-        // Magento\Quote\Model\Quote\ResourceModel\Quote\Payment
-        // Magento\Quote\Model\Quote
-//        $payment->save();
-//        $quote->save();
-
         $this->quotePaymentResourceModel->save($payment);
         $this->quoteResourceModel->save($quote);
 
@@ -456,8 +449,6 @@ class PaymentService
         $quote->setCheckoutMethod('guest');
 
         // Save quote
-//        $payment->save();
-//        $quote->save();
         $this->quotePaymentResourceModel->save($payment);
         $this->quoteResourceModel->save($quote);
 
