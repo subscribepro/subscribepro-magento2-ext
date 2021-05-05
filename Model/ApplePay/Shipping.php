@@ -3,11 +3,83 @@ declare(strict_types=1);
 
 namespace Swarming\SubscribePro\Model\ApplePay;
 
-use Swarming\SubscribePro\Model\ApplePay\Core as ApplePayCore;
+use Magento\Customer\Model\Session as CustomerSession;
+use Magento\Directory\Model\Currency;
+use Magento\Directory\Model\Region as DirectoryRegion;
+use Magento\Framework\Serialize\Serializer\Json as JsonSerializer;
+use Magento\Framework\Session\SessionManagerInterface;
+use Magento\Quote\Model\Quote;
+use Magento\Quote\Model\QuoteManagement;
 
-class Shipping extends ApplePayCore
+class Shipping
 {
     const DEFAULT_FREE_METHOD = 'Free';
+
+    /**
+     * @var Quote
+     */
+    protected $quote;
+    /**
+     * @var \Magento\Customer\Api\Data\CustomerInterface|null
+     */
+    protected $customerData;
+    /**
+     * @var SessionManagerInterface
+     */
+    protected $checkoutSession;
+    /**
+     * @var CustomerSession
+     */
+    protected $customerSession;
+    /**
+     * @var Currency
+     */
+    protected $currency;
+    /**
+     * @var DirectoryRegion
+     */
+    protected $directoryRegion;
+    /**
+     * @var QuoteManagement
+     */
+    protected $quoteManagement;
+    /**
+     * @var JsonSerializer
+     */
+    protected $jsonSerializer;
+
+    public function __construct(
+        SessionManagerInterface $checkoutSession,
+        DirectoryRegion $directoryRegion,
+        Currency $currency,
+        JsonSerializer $jsonSerializer
+    ) {
+        $this->checkoutSession = $checkoutSession;
+        $this->directoryRegion = $directoryRegion;
+        $this->currency = $currency;
+        $this->jsonSerializer = $jsonSerializer;
+    }
+
+    /**
+     * @return \Magento\Quote\Api\Data\CartInterface|Quote
+     */
+    protected function getQuote()
+    {
+        if (!$this->quote) {
+            $this->quote = $this->checkoutSession->getQuote();
+        }
+
+        return $this->quote;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getDirectoryRegionByName($administrativeArea, $countryId)
+    {
+        return $this->directoryRegion->loadByName($administrativeArea, $countryId);
+    }
+
     /**
      * @param array $shippingData
      * @return bool
@@ -121,5 +193,46 @@ class Shipping extends ApplePayCore
         }
 
         return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function formatPrice($price)
+    {
+        return $this->currency->format($price, ['display'=>\Zend_Currency::NO_SYMBOL], false);
+    }
+
+    /**
+     * @return array
+     */
+    public function getGrandTotal(): array
+    {
+        return [
+            'label' => 'MERCHANT',
+            'amount' => $this->formatPrice($this->getQuote()->getGrandTotal()),
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function getRowItems(): array
+    {
+        $address = $this->getQuote()->getShippingAddress();
+        return [
+            [
+                'label' => 'SUBTOTAL',
+                'amount' => $this->formatPrice($address->getSubtotalWithDiscount()),
+            ],
+            [
+                'label' => 'SHIPPING',
+                'amount' => $this->formatPrice($address->getShippingAmount()),
+            ],
+            [
+                'label' => 'TAX',
+                'amount' => $this->formatPrice($address->getTaxAmount()),
+            ],
+        ];
     }
 }
