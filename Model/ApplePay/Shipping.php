@@ -7,6 +7,7 @@ use Swarming\SubscribePro\Model\ApplePay\Core as ApplePayCore;
 
 class Shipping extends ApplePayCore
 {
+    const DEFAULT_FREE_METHOD = 'Free';
     /**
      * @param array $shippingData
      * @return bool
@@ -86,7 +87,7 @@ class Shipping extends ApplePayCore
     {
         // Don't show the same information twice
         $detail = $shippingRate->getMethodTitle();
-        if ($shippingRate->getCarrierTitle() == $detail || $detail == 'Free') {
+        if ($shippingRate->getCarrierTitle() == $detail || $detail === self::DEFAULT_FREE_METHOD) {
             $detail = '';
         }
 

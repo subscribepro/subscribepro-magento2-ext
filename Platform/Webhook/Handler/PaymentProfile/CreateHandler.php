@@ -10,6 +10,8 @@ use Swarming\SubscribePro\Platform\Webhook\HandlerInterface;
 
 class CreateHandler extends AbstractHandler implements HandlerInterface
 {
+    const PAYMENT_METHOD_CODE = 'apple_pay';
+
     /**
      * @var \Swarming\SubscribePro\Platform\Service\PaymentProfile
      */
@@ -59,7 +61,7 @@ class CreateHandler extends AbstractHandler implements HandlerInterface
             $paymentMethodCode = ConfigProvider::CODE;
             $paymentProfileData = $event->getEventData('payment_profile');
             if (isset($paymentProfileData['payment_method_type'])
-                && $paymentProfileData['payment_method_type'] === 'apple_pay'
+                && $paymentProfileData['payment_method_type'] === self::PAYMENT_METHOD_CODE
             ) {
                 $paymentMethodCode = ApplePayConfigProvider::CODE;
             }
@@ -67,7 +69,9 @@ class CreateHandler extends AbstractHandler implements HandlerInterface
             $this->getPaymentToken($event, $paymentMethodCode);
         } catch (NoSuchEntityException $e) {
             $paymentToken = $this->paymentTokenFactory->create();
-            $profile = $this->platformPaymentProfileService->createProfile((array)$event->getEventData('payment_profile'));
+            $profile = $this->platformPaymentProfileService->createProfile(
+                (array)$event->getEventData('payment_profile')
+            );
             if (!$profile->getMagentoCustomerId()) {
                 $profile->setMagentoCustomerId($this->getCustomerId($event));
             }

@@ -19,6 +19,7 @@ use Swarming\SubscribePro\Platform\Service\ApplePay\PaymentProfile as PlatformAp
 
 class PaymentService extends ApplePayCore
 {
+    const DEFAULT_PHONE_NUMBER = '0000000000';
     /**
      * @var Vault
      */
@@ -140,7 +141,7 @@ class PaymentService extends ApplePayCore
             'city' => $address['locality'],
             'country_id' => $countryId,
             'postcode' => $address['postalCode'],
-            'telephone' => (isset($address['phoneNumber']) ? $address['phoneNumber'] : '0000000000')
+            'telephone' => (isset($address['phoneNumber']) ? $address['phoneNumber'] : self::DEFAULT_PHONE_NUMBER)
         ];
 
         // Determine if a region is required for the selected country

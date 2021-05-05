@@ -16,7 +16,8 @@ define([
             createSessionUrl: '',
             onShippingContactSelectedUrl: '',
             onShippingMethodSelectedUrl: '',
-            onPaymentAuthorizedUrl: ''
+            onPaymentAuthorizedUrl: '',
+            displayName: 'MERCHANT'
         },
         initialize: function (config, node) {
             this._super();
@@ -48,10 +49,6 @@ define([
 
             // Pre-configured paymentRequest
             const paymentRequest = self.defaults.paymentRequest;
-
-            if (!displayName) {
-                displayName = 'MERCHANT';
-            }
 
             // Set merchant display name
             paymentRequest.total = self.replaceTotalLabel(paymentRequest.total, displayName);
