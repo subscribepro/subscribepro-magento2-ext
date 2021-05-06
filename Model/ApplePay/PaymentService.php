@@ -11,7 +11,8 @@ use Magento\Framework\Serialize\Serializer\Json as JsonSerializer;
 use Magento\Framework\Session\SessionManagerInterface;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\QuoteManagement;
-use Swarming\SubscribePro\Helper\Vault;
+use Magento\Quote\Api\Data\AddressInterface;
+use Swarming\SubscribePro\Helper\ApplePay\Vault as ApplePayVaultHelper;
 use Swarming\SubscribePro\Platform\Manager\Customer as PlatformCustomer;
 use Swarming\SubscribePro\Platform\Service\ApplePay\PaymentProfile as PlatformApplePayPaymentProfile;
 use Magento\Quote\Model\ResourceModel\Quote\Payment as QuotePaymentResourceModel;
@@ -31,9 +32,9 @@ class PaymentService
      */
     protected $customerData;
     /**
-     * @var Vault
+     * @var ApplePayVaultHelper
      */
-    private $vault;
+    private $applePayVaultHelper;
     /**
      * @var SessionManagerInterface
      */
@@ -95,7 +96,7 @@ class PaymentService
         QuotePaymentResourceModel $quotePaymentResourceModel,
         QuoteResourceModel $quoteResourceModel,
         JsonSerializer $jsonSerializer,
-        Vault $vault,
+        ApplePayVaultHelper $vault,
         LoggerInterface $logger
     ) {
         $this->checkoutSession = $checkoutSession;
@@ -109,7 +110,7 @@ class PaymentService
         $this->quotePaymentResourceModel = $quotePaymentResourceModel;
         $this->quoteResourceModel = $quoteResourceModel;
         $this->jsonSerializer = $jsonSerializer;
-        $this->vault = $vault;
+        $this->applePayVaultHelper = $vault;
         $this->logger = $logger;
     }
     /**
@@ -420,7 +421,7 @@ class PaymentService
     public function createPaymentToken(array $applePayPayment)
     {
         $quote = $this->getQuote();
-        $paymentMethod = $this->vault->createApplePayPaymentToken(
+        $paymentMethod = $this->createApplePayPaymentVaultToken(
             $quote->getBillingAddress(),
             $applePayPayment['token']['paymentData']
         );
@@ -461,5 +462,17 @@ class PaymentService
     public function placeOrder($quoteId, $defaultShippingMethod = null): bool
     {
         return $this->orderService->createOrder($quoteId, $defaultShippingMethod);
+    }
+
+    /**
+     * @param AddressInterface $billingAddress
+     * @param array $applePayPaymentData
+     * @return string
+     */
+    protected function createApplePayPaymentVaultToken(
+        AddressInterface $billingAddress,
+        array $applePayPaymentData
+    ): string {
+        return $this->applePayVaultHelper->createApplePayPaymentToken($billingAddress, $applePayPaymentData);
     }
 }
