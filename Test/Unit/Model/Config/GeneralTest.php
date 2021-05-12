@@ -18,7 +18,7 @@ class GeneralTest extends \PHPUnit\Framework\TestCase
      */
     protected $scopeConfigMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->scopeConfigMock = $this->getMockBuilder(ScopeConfigInterface::class)->getMock();
         $this->generalConfig = new General($this->scopeConfigMock);

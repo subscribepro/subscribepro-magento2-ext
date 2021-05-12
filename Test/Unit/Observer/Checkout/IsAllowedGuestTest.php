@@ -28,7 +28,7 @@ class IsAllowedGuestTest extends \PHPUnit\Framework\TestCase
      */
     protected $quoteHelperMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->generalConfigMock = $this->getMockBuilder(GeneralConfig::class)
             ->disableOriginalConstructor()->getMock();
@@ -75,7 +75,7 @@ class IsAllowedGuestTest extends \PHPUnit\Framework\TestCase
             ->method('isEnabled')
             ->with($websiteCode)
             ->willReturn(false);
-        
+
         $this->quoteHelperMock->expects($this->never())->method('hasSubscription');
 
         $this->isAllowedGuest->execute($observerMock);

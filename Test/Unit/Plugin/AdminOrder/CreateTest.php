@@ -19,7 +19,7 @@ class CreateTest extends \PHPUnit\Framework\TestCase
      */
     protected $orderItemHelperMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->orderItemHelperMock = $this->getMockBuilder(OrderItemHelper::class)
             ->disableOriginalConstructor()->getMock();

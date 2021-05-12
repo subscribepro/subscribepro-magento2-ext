@@ -21,7 +21,7 @@ class TransactionIdHandlerTest extends \PHPUnit\Framework\TestCase
      */
     protected $subjectReaderMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->subjectReaderMock = $this->getMockBuilder(SubjectReader::class)
             ->disableOriginalConstructor()->getMock();
@@ -37,7 +37,7 @@ class TransactionIdHandlerTest extends \PHPUnit\Framework\TestCase
     {
         $handlingSubject = ['subject'];
         $response = ['response'];
-        
+
         $paymentDOMock = $this->getMockBuilder(PaymentDataObjectInterface::class)->getMock();
         $paymentDOMock->expects($this->once())->method('getPayment')->willReturn($payment);
 
@@ -45,7 +45,7 @@ class TransactionIdHandlerTest extends \PHPUnit\Framework\TestCase
             ->method('readPayment')
             ->with($handlingSubject)
             ->willReturn($paymentDOMock);
-        
+
         $this->subjectReaderMock->expects($this->never())->method('readTransaction');
 
         $this->transactionIdHandler->handle($handlingSubject, $response);
@@ -62,7 +62,7 @@ class TransactionIdHandlerTest extends \PHPUnit\Framework\TestCase
             'Payment is not instance of payment' => ['payment' => new \ArrayObject()],
         ];
     }
-    
+
     public function testHandle()
     {
         $handlingSubject = ['subject'];
@@ -86,10 +86,10 @@ class TransactionIdHandlerTest extends \PHPUnit\Framework\TestCase
         $paymentInfoMock->expects($this->once())
             ->method('setTransactionAdditionalInfo')
             ->with(Transaction::RAW_DETAILS, $transactionDetails);
-        
+
         $paymentDOMock = $this->getMockBuilder(PaymentDataObjectInterface::class)->getMock();
         $paymentDOMock->expects($this->once())->method('getPayment')->willReturn($paymentInfoMock);
-        
+
         $this->subjectReaderMock->expects($this->once())
             ->method('readPayment')
             ->with($handlingSubject)
@@ -99,7 +99,7 @@ class TransactionIdHandlerTest extends \PHPUnit\Framework\TestCase
             ->method('readTransaction')
             ->with($response)
             ->willReturn($transactionMock);
-        
+
         $this->transactionIdHandler->handle($handlingSubject, $response);
     }
 }

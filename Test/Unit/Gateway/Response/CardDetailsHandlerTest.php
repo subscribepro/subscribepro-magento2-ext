@@ -27,7 +27,7 @@ class CardDetailsHandlerTest extends \PHPUnit\Framework\TestCase
      */
     protected $subjectReaderMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->gatewayConfigMock = $this->getMockBuilder(GatewayConfig::class)
             ->disableOriginalConstructor()->getMock();
@@ -45,7 +45,7 @@ class CardDetailsHandlerTest extends \PHPUnit\Framework\TestCase
         $handlingSubject = ['subject'];
         $response = ['response'];
         $transactionMock = $this->getMockBuilder(TransactionInterface::class)->getMock();
-        
+
         $paymentInfoMock = $this->getMockBuilder(PaymentInfoInterface::class)->getMock();
         $paymentDOMock = $this->getMockBuilder(PaymentDataObjectInterface::class)->getMock();
         $paymentDOMock->expects($this->once())->method('getPayment')->willReturn($paymentInfoMock);
@@ -54,7 +54,7 @@ class CardDetailsHandlerTest extends \PHPUnit\Framework\TestCase
             ->method('readPayment')
             ->with($handlingSubject)
             ->willReturn($paymentDOMock);
-        
+
         $this->subjectReaderMock->expects($this->once())
             ->method('readTransaction')
             ->with($response)
@@ -62,7 +62,7 @@ class CardDetailsHandlerTest extends \PHPUnit\Framework\TestCase
 
         $this->cardDetailsHandler->handle($handlingSubject, $response);
     }
-    
+
     public function testHandle()
     {
         $handlingSubject = ['subject'];
@@ -87,10 +87,10 @@ class CardDetailsHandlerTest extends \PHPUnit\Framework\TestCase
         $paymentInfoMock->expects($this->at(5))
             ->method('setAdditionalInformation')
             ->with(CardDetailsHandler::CARD_NUMBER, 'xxxx-4111');
-        
+
         $paymentDOMock = $this->getMockBuilder(PaymentDataObjectInterface::class)->getMock();
         $paymentDOMock->expects($this->once())->method('getPayment')->willReturn($paymentInfoMock);
-        
+
         $this->subjectReaderMock->expects($this->once())
             ->method('readPayment')
             ->with($handlingSubject)
@@ -100,7 +100,7 @@ class CardDetailsHandlerTest extends \PHPUnit\Framework\TestCase
             ->method('readTransaction')
             ->with($response)
             ->willReturn($transactionMock);
-        
+
         $this->gatewayConfigMock->expects($this->once())
             ->method('getMappedCcType')
             ->with('visa')

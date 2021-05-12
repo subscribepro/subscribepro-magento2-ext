@@ -27,7 +27,7 @@ class ConfigurationTest extends \PHPUnit\Framework\TestCase
      */
     protected $quoteItemHelperMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->productHelperMock = $this->getMockBuilder(ProductHelper::class)
             ->disableOriginalConstructor()->getMock();

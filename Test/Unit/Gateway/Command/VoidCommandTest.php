@@ -12,7 +12,7 @@ class VoidCommandTest extends AbstractCommand
      */
     protected $voidCommand;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->initProperties();
         $this->voidCommand = new VoidCommand(

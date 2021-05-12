@@ -5,6 +5,7 @@ namespace Swarming\SubscribePro\Observer\Payment;
 use Magento\Framework\Event\Observer;
 use Magento\Quote\Api\Data\PaymentInterface;
 use Swarming\SubscribePro\Gateway\Request\PaymentDataBuilder;
+use SubscribePro\Service\Transaction\TransactionInterface;
 
 class DataAssigner extends \Magento\Payment\Observer\AbstractDataAssignObserver
 {
@@ -13,6 +14,7 @@ class DataAssigner extends \Magento\Payment\Observer\AbstractDataAssignObserver
      */
     protected $additionalInformationList = [
         PaymentDataBuilder::PAYMENT_METHOD_TOKEN,
+        TransactionInterface::BROWSER_INFO,
     ];
 
     /**

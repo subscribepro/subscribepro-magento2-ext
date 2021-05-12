@@ -25,13 +25,13 @@ class TokenAssignerTest extends \PHPUnit\Framework\TestCase
      * @var \Swarming\SubscribePro\Observer\Payment\TokenAssigner
      */
     protected $paymentTokenAssigner;
-    
+
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Vault\Api\PaymentTokenManagementInterface
      */
     protected $paymentTokenManagementMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->paymentTokenManagementMock = $this->getMockBuilder(PaymentTokenManagementInterface::class)->getMock();
         $this->paymentTokenAssigner = new PaymentTokenAssigner($this->paymentTokenManagementMock);
@@ -48,18 +48,18 @@ class TokenAssignerTest extends \PHPUnit\Framework\TestCase
             ->method('getData')
             ->with(PaymentInterface::KEY_ADDITIONAL_DATA)
             ->willReturn($additionalData);
-        
+
         $eventMock = $this->createEventMock();
         $eventMock->expects($this->once())
             ->method('getDataByKey')
             ->with(AbstractDataAssignObserver::DATA_CODE)
             ->willReturn($dataMock);
-        
+
         $observerMock = $this->createObserverMock();
         $observerMock->expects($this->any())
             ->method('getEvent')
             ->willReturn($eventMock);
-        
+
         $this->paymentTokenAssigner->execute($observerMock);
     }
 
@@ -86,16 +86,16 @@ class TokenAssignerTest extends \PHPUnit\Framework\TestCase
         $additionalInfo = [
             VaultDataBuilder::PAYMENT_PROFILE_ID => 141
         ];
-        
+
         $dataMock = $this->createDataMock();
         $dataMock->expects($this->once())
             ->method('getData')
             ->with(PaymentInterface::KEY_ADDITIONAL_DATA)
             ->willReturn($additionalInfo);
-        
+
         $paymentInfoMock = $this->getMockBuilder(PaymentInfoInterface::class)->getMock();
         $paymentInfoMock->expects($this->never())->method('setAdditionalInformation');
-        
+
         $eventMock = $this->createEventMock();
         $eventMock->expects($this->at(0))
             ->method('getDataByKey')
@@ -105,12 +105,12 @@ class TokenAssignerTest extends \PHPUnit\Framework\TestCase
             ->method('getDataByKey')
             ->with(AbstractDataAssignObserver::MODEL_CODE)
             ->willReturn($paymentInfoMock);
-        
+
         $observerMock = $this->createObserverMock();
         $observerMock->expects($this->any())
             ->method('getEvent')
             ->willReturn($eventMock);
-        
+
         $this->paymentTokenAssigner->execute($observerMock);
     }
 
@@ -196,7 +196,7 @@ class TokenAssignerTest extends \PHPUnit\Framework\TestCase
         $observerMock->expects($this->any())
             ->method('getEvent')
             ->willReturn($eventMock);
-        
+
         $this->paymentTokenManagementMock->expects($this->once())
             ->method('getByGatewayToken')
             ->with($profileId, ConfigProvider::CODE, $customerId)
@@ -221,7 +221,7 @@ class TokenAssignerTest extends \PHPUnit\Framework\TestCase
             PaymentTokenInterface::CUSTOMER_ID => $customerId,
             PaymentTokenInterface::PUBLIC_HASH => $tokenHash
         ];
-        
+
         $tokenMock = $this->getMockBuilder('Magento\Vault\Api\Data\PaymentTokenInterface')->getMock();
         $tokenMock->expects($this->once())->method('getPublicHash')->willReturn($tokenHash);
 
@@ -264,7 +264,7 @@ class TokenAssignerTest extends \PHPUnit\Framework\TestCase
         $observerMock->expects($this->any())
             ->method('getEvent')
             ->willReturn($eventMock);
-        
+
         $this->paymentTokenManagementMock->expects($this->once())
             ->method('getByGatewayToken')
             ->with($profileId, ConfigProvider::CODE, $customerId)
@@ -288,7 +288,7 @@ class TokenAssignerTest extends \PHPUnit\Framework\TestCase
     {
         return $this->getMockBuilder(QuotePayment::class)->disableOriginalConstructor()->getMock();
     }
-    
+
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject|\Magento\Framework\Event
      */
@@ -296,7 +296,7 @@ class TokenAssignerTest extends \PHPUnit\Framework\TestCase
     {
         return $this->getMockBuilder(Event::class)->getMock();
     }
-    
+
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject|\Magento\Framework\DataObject
      */

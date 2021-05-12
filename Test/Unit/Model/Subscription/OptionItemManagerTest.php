@@ -48,7 +48,7 @@ class OptionItemManagerTest extends \PHPUnit\Framework\TestCase
      */
     protected $objectFactoryMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->subscriptionItemFactoryMock = $this->getMockBuilder(OptionItemFactory::class)
             ->disableOriginalConstructor()
@@ -194,7 +194,8 @@ class OptionItemManagerTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    public function testGetSubscriptionOptionItemIfBuyRequestIsObject() {
+    public function testGetSubscriptionOptionItemIfBuyRequestIsObject()
+    {
         $sku = 'product-sku';
         $productTypeId = 'virtual';
         $subscriptionItemOptions = ['options'];

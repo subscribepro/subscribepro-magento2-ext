@@ -21,7 +21,7 @@ class OrderDataBuilderTest extends \PHPUnit\Framework\TestCase
      */
     protected $orderDataBuilder;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->subjectReaderMock = $this->getMockBuilder(SubjectReader::class)
             ->disableOriginalConstructor()->getMock();
@@ -29,7 +29,8 @@ class OrderDataBuilderTest extends \PHPUnit\Framework\TestCase
         $this->orderDataBuilder = new OrderDataBuilder($this->subjectReaderMock);
     }
 
-    public function testBuildWithoutBillingAddress() {
+    public function testBuildWithoutBillingAddress()
+    {
         $subject = ['subject'];
         $result = [
             TransactionInterface::AMOUNT => 1025,
@@ -62,8 +63,9 @@ class OrderDataBuilderTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals($result, $this->orderDataBuilder->build($subject));
     }
-    
-    public function testBuildWithBillingAddress() {
+
+    public function testBuildWithBillingAddress()
+    {
         $subject = ['subject'];
         $result = [
             TransactionInterface::AMOUNT => 1025,

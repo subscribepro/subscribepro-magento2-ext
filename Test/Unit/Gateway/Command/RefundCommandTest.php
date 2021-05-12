@@ -11,7 +11,7 @@ class RefundCommandTest extends AbstractCommand
      */
     protected $refundCommand;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->initProperties();
         $this->refundCommand = new RefundCommand(

@@ -23,7 +23,7 @@ class VaultConfigTest extends \PHPUnit\Framework\TestCase
      */
     protected $configPath;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->scopeConfigMock = $this->getMockBuilder(ScopeConfigInterface::class)->getMock();
         $this->configPath = 'test/code';

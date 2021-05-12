@@ -12,11 +12,23 @@ define(
             },
 
             getVaultCode: function () {
-                return this.getConfig().vaultCode
+                return this.getConfig().vaultCode;
             },
 
             isActive: function () {
-                return this.getConfig().isActive
+                return this.getConfig().isActive;
+            },
+
+            isThreeDSActive: function () {
+                return this.getConfig().isThreeDSActive;
+            },
+
+            getBrowserSize: function () {
+                return this.getConfig().browserSize;
+            },
+
+            getAcceptHeader: function () {
+                return this.getConfig().acceptHeader;
             },
 
             getEnvironmentKey: function () {
@@ -45,9 +57,9 @@ define(
 
             getConfig: function () {
                 var config = {};
-                if (window["checkoutConfig"] != undefined) {
+                if (window['checkoutConfig'] != undefined) {
                     config = window.checkoutConfig.payment[code];
-                } else if (window["subscribeProPaymentConfig"] != undefined) {
+                } else if (window['subscribeProPaymentConfig'] != undefined) {
                     config = window.subscribeProPaymentConfig;
                 }
                 return config;

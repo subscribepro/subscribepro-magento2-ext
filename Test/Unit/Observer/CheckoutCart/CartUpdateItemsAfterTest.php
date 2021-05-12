@@ -70,7 +70,7 @@ class CartUpdateItemsAfterTest extends \PHPUnit\Framework\TestCase
      */
     protected $messageManagerMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->generalConfigMock = $this->getMockBuilder(GeneralConfig::class)
             ->disableOriginalConstructor()->getMock();
@@ -424,12 +424,12 @@ class CartUpdateItemsAfterTest extends \PHPUnit\Framework\TestCase
         $itemId1,
         $itemId2,
         $product1Sku,
-        $product2Sku, 
-        $exception, 
+        $product2Sku,
+        $exception,
         $subscription1Params,
         $subscription2Params,
         $subscriptionOption,
-        $subscriptionInterval, 
+        $subscriptionInterval,
         $appMode
     ) {
         $platformProduct2Mock = $this->createPlatformProductMock();
@@ -667,7 +667,7 @@ class CartUpdateItemsAfterTest extends \PHPUnit\Framework\TestCase
             ->with($quoteItem2Mock, $platformProduct2Mock, $subscription2Option, $subscription2Interval)
             ->willReturn($item2Warnings);
 
-        $warningsMap = array_map(function($warning) {
+        $warningsMap = array_map(function ($warning) {
             return [$warning];
         }, array_merge($item1Warnings, $item2Warnings));
         $this->messageManagerMock->expects($this->exactly(count($item1Warnings) + count($item2Warnings)))

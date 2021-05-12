@@ -33,7 +33,7 @@ class CustomerConfigSaveAfterTest extends \PHPUnit\Framework\TestCase
      */
     protected $loggerMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->scopeConfigMock = $this->getMockBuilder(ScopeConfigInterface::class)->getMock();
         $this->configFactoryMock = $this->getMockBuilder(ConfigFactory::class)
@@ -53,7 +53,7 @@ class CustomerConfigSaveAfterTest extends \PHPUnit\Framework\TestCase
             ->method('getValue')
             ->with(Share::XML_PATH_CUSTOMER_ACCOUNT_SHARE, ScopeInterface::SCOPE_STORE)
             ->willReturn(Share::SHARE_GLOBAL);
-        
+
         $this->configFactoryMock->expects($this->never())->method('create');
 
         $this->customerConfigSaveAfter->execute($this->createObserverMock());

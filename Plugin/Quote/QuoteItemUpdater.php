@@ -62,8 +62,7 @@ class QuoteItemUpdater
         \Magento\Framework\Message\ManagerInterface $messageManager,
         \Magento\Framework\App\State $appState,
         \Psr\Log\LoggerInterface $logger
-    )
-    {
+    ) {
         $this->platformProductManager = $platformProductManager;
         $this->subscriptionOptionUpdater = $subscriptionOptionUpdater;
         $this->productRepository = $productRepository;
@@ -148,8 +147,7 @@ class QuoteItemUpdater
 
     protected function getSubscriptionOption(array $quoteItemParams)
     {
-        if (
-            !isset($quoteItemParams['admin_subscription_option']['option'])
+        if (!isset($quoteItemParams['admin_subscription_option']['option'])
             || !strlen($quoteItemParams['admin_subscription_option']['option'])
         ) {
             return false;

@@ -49,7 +49,7 @@ class ConfigProviderTest extends \PHPUnit\Framework\TestCase
      */
     protected $storeManagerMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->generalConfigMock = $this->getMockBuilder(GeneralConfig::class)
             ->disableOriginalConstructor()
@@ -124,14 +124,14 @@ class ConfigProviderTest extends \PHPUnit\Framework\TestCase
      * @dataProvider getConfigDataProvider
      */
     public function testGetConfig(
-        $isActive, 
-        $environmentKey, 
+        $isActive,
+        $environmentKey,
         $availableCardTypes,
         $ccAvailableTypes,
-        $ccTypesMapper, 
-        $hasVerification, 
-        $cvvImageUrl, 
-        $icons, 
+        $ccTypesMapper,
+        $hasVerification,
+        $cvvImageUrl,
+        $icons,
         $result
     ) {
         $storeMock = $this->getMockBuilder(StoreInterface::class)->getMock();
@@ -143,7 +143,7 @@ class ConfigProviderTest extends \PHPUnit\Framework\TestCase
         $this->gatewayConfigMock->expects($this->once())->method('getAvailableCardTypes')->willReturn($availableCardTypes);
         $this->gatewayConfigMock->expects($this->once())->method('getCcTypesMapper')->willReturn($ccTypesMapper);
         $this->gatewayConfigMock->expects($this->once())->method('hasVerification')->willReturn($hasVerification);
-        
+
         $this->platformConfigToolMock->expects($this->once())
             ->method('getConfig')
             ->with(ConfigTool::CONFIG_TRANSPARENT_REDIRECT_ENVIRONMENT_KEY)
@@ -151,9 +151,9 @@ class ConfigProviderTest extends \PHPUnit\Framework\TestCase
 
         $this->ccConfigMock->expects($this->once())->method('getCcAvailableTypes')->willReturn($ccAvailableTypes);
         $this->ccConfigMock->expects($this->once())->method('getCvvImageUrl')->willReturn($cvvImageUrl);
-        
+
         $this->ccConfigProviderMock->expects($this->once())->method('getIcons')->willReturn($icons);
-        
+
         $this->assertEquals($result, $this->configProvider->getConfig());
     }
 

@@ -10,4 +10,3 @@ interface InspectorInterface
      */
     public function isApplied($product);
 }
-

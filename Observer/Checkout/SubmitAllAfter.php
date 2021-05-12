@@ -4,6 +4,7 @@ namespace Swarming\SubscribePro\Observer\Checkout;
 
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
+use Magento\Sales\Model\Order;
 use Swarming\SubscribePro\Model\Quote\SubscriptionCreator;
 use Swarming\SubscribePro\Gateway\Config\ConfigProvider as GatewayConfigProvider;
 
@@ -70,6 +71,7 @@ class SubmitAllAfter implements ObserverInterface
 
         $websiteCode = $quote->getStore()->getWebsite()->getCode();
         if (!$this->generalConfig->isEnabled($websiteCode)
+            || $order->getState() === Order::STATE_PAYMENT_REVIEW
             || $order->getPayment()->getMethod() != GatewayConfigProvider::CODE
             || !$quote->getCustomerId()
         ) {

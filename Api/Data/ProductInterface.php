@@ -23,7 +23,7 @@ interface ProductInterface extends \SubscribePro\Service\Product\ProductInterfac
     const TAX_RATE = 'tax_rate';
 
     const IS_CATALOG_RULE_APPLIED = 'is_catalog_rule_applied';
-    
+
     /**
      * @return string|null
      */
@@ -67,7 +67,7 @@ interface ProductInterface extends \SubscribePro\Service\Product\ProductInterfac
      * @return $this
      */
     public function setFinalPrice($finalPrice);
-    
+
     /**
      * @return float|null
      */

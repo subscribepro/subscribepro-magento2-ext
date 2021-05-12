@@ -18,12 +18,12 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
      * @var \PHPUnit_Framework_MockObject_MockObject|\SubscribePro\Tools\Config
      */
     protected $platformConfigToolMock;
-    
+
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject|\Swarming\SubscribePro\Platform\Storage\Config
      */
     protected $configStorageMock;
-    
+
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject|\Swarming\SubscribePro\Platform\Platform
      */
@@ -31,7 +31,7 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
 
     protected $name = 'test_name';
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->platformMock = $this->getMockBuilder(Platform::class)
             ->disableOriginalConstructor()
@@ -65,7 +65,7 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
 
         $this->platformMock->expects($this->never())->method('getSdk');
         $this->platformConfigToolMock->expects($this->never())->method('load');
-        
+
         $this->assertEquals($result, $this->configTool->getConfig($key, $websiteId));
     }
 

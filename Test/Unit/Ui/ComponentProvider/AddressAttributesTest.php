@@ -36,7 +36,7 @@ class AddressAttributesTest extends \PHPUnit\Framework\TestCase
      */
     protected $mergerMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->attributeMetadataDataProviderMock = $this->getMockBuilder(AttributeMetadataDataProvider::class)
             ->disableOriginalConstructor()->getMock();

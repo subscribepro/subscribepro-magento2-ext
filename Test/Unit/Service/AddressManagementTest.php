@@ -34,7 +34,7 @@ class AddressManagementTest extends \PHPUnit\Framework\TestCase
      */
     protected $addressMapperMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->addressRepositoryMock = $this->getMockBuilder(AddressRepositoryInterface::class)->getMock();
         $this->addressConfigMock = $this->getMockBuilder(AddressConfig::class)

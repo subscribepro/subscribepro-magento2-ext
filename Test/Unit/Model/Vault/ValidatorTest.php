@@ -26,7 +26,7 @@ class ValidatorTest extends \PHPUnit\Framework\TestCase
      */
     protected $directoryDataMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->regionFactoryMock = $this->getMockBuilder(RegionFactory::class)
             ->disableOriginalConstructor()->getMock();

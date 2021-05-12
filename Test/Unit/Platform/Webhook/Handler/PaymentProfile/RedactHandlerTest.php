@@ -35,7 +35,7 @@ class RedactHandlerTest extends \PHPUnit\Framework\TestCase
      */
     protected $customerRepositoryMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->paymentTokenManagementMock = $this->getMockBuilder(PaymentTokenManagementInterface::class)->getMock();
         $this->paymentTokenRepositoryMock = $this->getMockBuilder(PaymentTokenRepositoryInterface::class)->getMock();

@@ -11,6 +11,25 @@ use SubscribePro\Service\Transaction\TransactionInterface;
 class Transaction extends AbstractService
 {
     /**
+     * @var \Swarming\SubscribePro\Model\MetaService
+     */
+    private $metaService;
+
+    /**
+     * @param \Swarming\SubscribePro\Platform\Platform $platform
+     * @param string $name
+     * @param \Swarming\SubscribePro\Model\MetaService $metaService
+     */
+    public function __construct(
+        \Swarming\SubscribePro\Platform\Platform $platform,
+        string $name,
+        \Swarming\SubscribePro\Model\MetaService $metaService
+    ) {
+        $this->metaService = $metaService;
+        parent::__construct($platform, $name);
+    }
+
+    /**
      * @param array $transactionData
      * @param int|null $websiteId
      * @return \SubscribePro\Service\Transaction\TransactionInterface
@@ -41,11 +60,12 @@ class Transaction extends AbstractService
      */
     public function verifyProfile($paymentProfileId, TransactionInterface $transaction, $websiteId = null)
     {
-        return $this->getService($websiteId)->verifyProfile($paymentProfileId, $transaction);
+        $metadata = $this->metaService->getData();
+        return $this->getService($websiteId)->verifyProfile($paymentProfileId, $transaction, $metadata);
     }
 
     /**
-     * @param int $paymentProfileId
+     * @param array $paymentProfileId
      * @param \SubscribePro\Service\Transaction\TransactionInterface $transaction
      * @param int|null $websiteId
      * @return \SubscribePro\Service\Transaction\TransactionInterface
@@ -54,11 +74,12 @@ class Transaction extends AbstractService
      */
     public function authorizeByProfile($paymentProfileId, TransactionInterface $transaction, $websiteId = null)
     {
-        return $this->getService($websiteId)->authorizeByProfile($paymentProfileId, $transaction);
+        $metadata = $this->metaService->getData();
+        return $this->getService($websiteId)->authorizeByProfile($paymentProfileId, $transaction, $metadata);
     }
 
     /**
-     * @param int $paymentProfileId
+     * @param array $paymentProfileId
      * @param \SubscribePro\Service\Transaction\TransactionInterface $transaction
      * @param int|null $websiteId
      * @return \SubscribePro\Service\Transaction\TransactionInterface
@@ -67,7 +88,8 @@ class Transaction extends AbstractService
      */
     public function purchaseByProfile($paymentProfileId, TransactionInterface $transaction, $websiteId = null)
     {
-        return $this->getService($websiteId)->purchaseByProfile($paymentProfileId, $transaction);
+        $metadata = $this->metaService->getData();
+        return $this->getService($websiteId)->purchaseByProfile($paymentProfileId, $transaction, $metadata);
     }
 
     /**
@@ -75,13 +97,14 @@ class Transaction extends AbstractService
      * @param \SubscribePro\Service\Transaction\TransactionInterface $transaction
      * @param \SubscribePro\Service\Address\AddressInterface|null $platformAddress
      * @param int|null $websiteId
-     * @return \SubscribePro\Service\Token\TokenInterface
+     * @return \SubscribePro\Service\Transaction\TransactionInterface
      * @throws \SubscribePro\Exception\EntityInvalidDataException
      * @throws \SubscribePro\Exception\HttpException
      */
     public function authorizeByToken($token, TransactionInterface $transaction, AddressInterface $platformAddress = null, $websiteId = null)
     {
-        return $this->getService($websiteId)->authorizeByToken($token, $transaction, $platformAddress);
+        $metadata = $this->metaService->getData();
+        return $this->getService($websiteId)->authorizeByToken($token, $transaction, $platformAddress, $metadata);
     }
 
     /**
@@ -89,13 +112,14 @@ class Transaction extends AbstractService
      * @param \SubscribePro\Service\Transaction\TransactionInterface $transaction
      * @param \SubscribePro\Service\Address\AddressInterface|null $platformAddress
      * @param int|null $websiteId
-     * @return \SubscribePro\Service\Token\TokenInterface
+     * @return \SubscribePro\Service\Transaction\TransactionInterface
      * @throws \SubscribePro\Exception\EntityInvalidDataException
      * @throws \SubscribePro\Exception\HttpException
      */
     public function purchaseByToken($token, TransactionInterface $transaction, AddressInterface $platformAddress = null, $websiteId = null)
     {
-        return $this->getService($websiteId)->purchaseByToken($token, $transaction, $platformAddress);
+        $metadata = $this->metaService->getData();
+        return $this->getService($websiteId)->purchaseByToken($token, $transaction, $platformAddress, $metadata);
     }
 
     /**
@@ -103,12 +127,11 @@ class Transaction extends AbstractService
      * @param \SubscribePro\Service\Transaction\TransactionInterface|null $transaction
      * @param int|null $websiteId
      * @return \SubscribePro\Service\Transaction\TransactionInterface
-     * @throws \SubscribePro\Exception\EntityInvalidDataException
-     * @throws \SubscribePro\Exception\HttpException
      */
     public function capture($transactionId, TransactionInterface $transaction = null, $websiteId = null)
     {
-        return $this->getService($websiteId)->capture($transactionId, $transaction);
+        $metadata = $this->metaService->getData();
+        return $this->getService($websiteId)->capture($transactionId, $transaction, $metadata);
     }
 
     /**
@@ -121,7 +144,8 @@ class Transaction extends AbstractService
      */
     public function credit($transactionId, TransactionInterface $transaction = null, $websiteId = null)
     {
-        return $this->getService($websiteId)->credit($transactionId, $transaction);
+        $metadata = $this->metaService->getData();
+        return $this->getService($websiteId)->credit($transactionId, $transaction, $metadata);
     }
 
     /**
@@ -132,6 +156,7 @@ class Transaction extends AbstractService
      */
     public function void($transactionId, $websiteId = null)
     {
-        return $this->getService($websiteId)->void($transactionId);
+        $metadata = $this->metaService->getData();
+        return $this->getService($websiteId)->void($transactionId, $metadata);
     }
 }

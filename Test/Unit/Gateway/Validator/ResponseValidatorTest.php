@@ -25,14 +25,14 @@ class ResponseValidatorTest extends \PHPUnit\Framework\TestCase
      */
     protected $subjectReaderMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->resultInterfaceFactoryMock = $this->getMockBuilder(ResultInterfaceFactory::class)
             ->disableOriginalConstructor()
             ->setMethods(['create'])->getMock();
         $this->subjectReaderMock = $this->getMockBuilder(SubjectReader::class)
             ->disableOriginalConstructor()->getMock();
-        
+
         $this->responseValidator = new ResponseValidator(
             $this->resultInterfaceFactoryMock,
             $this->subjectReaderMock
@@ -45,22 +45,23 @@ class ResponseValidatorTest extends \PHPUnit\Framework\TestCase
      * @param bool $isValid
      * @dataProvider validateDataProvider
      */
-    public function testValidate($validationSubject, $transactionState, $isValid) {
+    public function testValidate($validationSubject, $transactionState, $isValid)
+    {
         $transactionMock = $this->getMockBuilder(TransactionInterface::class)->getMock();
         $transactionMock->expects($this->once())->method('getState')->willReturn($transactionState);
-        
+
         $resultMock = $this->getMockBuilder(ResultInterface::class)->getMock();
-        
+
         $this->subjectReaderMock->expects($this->once())
             ->method('readTransaction')
             ->with($validationSubject)
             ->willReturn($transactionMock);
-        
+
         $this->resultInterfaceFactoryMock->expects($this->once())
             ->method('create')
             ->with(['isValid' => $isValid, 'failsDescription' => []])
             ->willReturn($resultMock);
-        
+
         $this->assertSame($resultMock, $this->responseValidator->validate($validationSubject));
     }
 

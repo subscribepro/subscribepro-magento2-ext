@@ -14,7 +14,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
      */
     protected $productHelper;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->productHelper = new ProductHelper();
     }

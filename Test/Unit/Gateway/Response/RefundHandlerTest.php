@@ -23,7 +23,7 @@ class RefundHandlerTest extends \PHPUnit\Framework\TestCase
      */
     protected $subjectReaderMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->subjectReaderMock = $this->getMockBuilder(SubjectReader::class)
             ->disableOriginalConstructor()->getMock();
@@ -39,7 +39,7 @@ class RefundHandlerTest extends \PHPUnit\Framework\TestCase
     {
         $handlingSubject = ['subject'];
         $response = ['response'];
-        
+
         $paymentDOMock = $this->getMockBuilder(PaymentDataObjectInterface::class)->getMock();
         $paymentDOMock->expects($this->once())->method('getPayment')->willReturn($payment);
 
@@ -47,7 +47,7 @@ class RefundHandlerTest extends \PHPUnit\Framework\TestCase
             ->method('readPayment')
             ->with($handlingSubject)
             ->willReturn($paymentDOMock);
-        
+
         $this->subjectReaderMock->expects($this->never())->method('readTransaction');
 
         $this->refundHandler->handle($handlingSubject, $response);
@@ -112,10 +112,10 @@ class RefundHandlerTest extends \PHPUnit\Framework\TestCase
             ->method('setTransactionAdditionalInfo')
             ->with(Transaction::RAW_DETAILS, $transactionDetails);
         $paymentInfoMock->expects($this->once())->method('getCreditmemo')->willReturn($creditMemoMock);
-        
+
         $paymentDOMock = $this->getMockBuilder(PaymentDataObjectInterface::class)->getMock();
         $paymentDOMock->expects($this->once())->method('getPayment')->willReturn($paymentInfoMock);
-        
+
         $this->subjectReaderMock->expects($this->once())
             ->method('readPayment')
             ->with($handlingSubject)
@@ -125,7 +125,7 @@ class RefundHandlerTest extends \PHPUnit\Framework\TestCase
             ->method('readTransaction')
             ->with($response)
             ->willReturn($transactionMock);
-        
+
         $this->refundHandler->handle($handlingSubject, $response);
     }
 

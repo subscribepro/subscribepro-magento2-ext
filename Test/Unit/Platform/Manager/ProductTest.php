@@ -25,7 +25,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
      */
     protected $platformProductServiceMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->platformProductServiceMock = $this->getMockBuilder(ProductService::class)
             ->disableOriginalConstructor()->getMock();
