@@ -25,7 +25,7 @@ class CaptureStrategyCommandTest extends \PHPUnit\Framework\TestCase
      */
     protected $subjectReaderMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->commandPoolMock = $this->getMockBuilder(CommandPoolInterface::class)->getMock();
         $this->subjectReaderMock = $this->getMockBuilder(SubjectReader::class)
@@ -55,7 +55,7 @@ class CaptureStrategyCommandTest extends \PHPUnit\Framework\TestCase
 
         $this->captureStrategyCommand->execute($commandSubject);
     }
-    
+
     /**
      * @dataProvider executeDataProvider
      * @param array $commandSubject
@@ -70,13 +70,13 @@ class CaptureStrategyCommandTest extends \PHPUnit\Framework\TestCase
         $paymentInfoMock->expects($this->once())
             ->method('getParentTransactionId')
             ->willReturn($parentTransactionId);
-        
+
         $paymentDOMock = $this->getMockBuilder(PaymentDataObjectInterface::class)->getMock();
         $paymentDOMock->expects($this->once())->method('getPayment')->willReturn($paymentInfoMock);
-        
+
         $commandMock = $this->getMockBuilder(CommandInterface::class)->getMock();
         $commandMock->expects($this->once())->method('execute')->willReturn($commandSubject);
-        
+
         $this->subjectReaderMock->expects($this->once())
             ->method('readPayment')
             ->with($commandSubject)

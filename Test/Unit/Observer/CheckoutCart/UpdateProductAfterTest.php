@@ -74,7 +74,7 @@ class UpdateProductAfterTest extends \PHPUnit\Framework\TestCase
      */
     protected $requestMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->generalConfigMock = $this->getMockBuilder(GeneralConfig::class)
             ->disableOriginalConstructor()->getMock();
@@ -369,7 +369,7 @@ class UpdateProductAfterTest extends \PHPUnit\Framework\TestCase
     public function testExecute($sku, $subscriptionParams, $subscriptionOption, $subscriptionInterval, $warnings)
     {
         $platformProductMock = $this->getMockBuilder(ProductInterface::class)->getMock();
-        
+
         $productMock = $this->createProductMock();
         $productMock->expects($this->once())
             ->method('getData')
@@ -412,7 +412,9 @@ class UpdateProductAfterTest extends \PHPUnit\Framework\TestCase
             ->with($quoteItemMock, $platformProductMock, $subscriptionOption, $subscriptionInterval)
             ->willReturn($warnings);
 
-        $warningsMap = array_map(function($warning) {return [$warning];}, $warnings);
+        $warningsMap = array_map(function ($warning) {
+            return [$warning];
+        }, $warnings);
         $this->messageManagerMock->expects($this->exactly(count($warnings)))
             ->method('addWarningMessage')
             ->willReturnMap($warningsMap);

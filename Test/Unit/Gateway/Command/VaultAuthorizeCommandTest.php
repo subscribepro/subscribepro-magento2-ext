@@ -12,7 +12,7 @@ class VaultAuthorizeCommandTest extends AbstractCommand
      */
     protected $vaultAuthorizeCommand;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->initProperties();
         $this->vaultAuthorizeCommand = new VaultAuthorizeCommand(

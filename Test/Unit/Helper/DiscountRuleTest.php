@@ -17,7 +17,7 @@ class DiscountRuleTest extends \PHPUnit\Framework\TestCase
      */
     protected $loggerMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->loggerMock = $this->getMockBuilder(\Psr\Log\LoggerInterface::class)
             ->disableOriginalConstructor()

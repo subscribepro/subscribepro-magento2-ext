@@ -28,7 +28,7 @@ class TokenRepositoryTest extends \PHPUnit\Framework\TestCase
      */
     protected $loggerMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->paymentProfileServiceMock = $this->getMockBuilder(PaymentProfileService::class)
             ->disableOriginalConstructor()->getMock();

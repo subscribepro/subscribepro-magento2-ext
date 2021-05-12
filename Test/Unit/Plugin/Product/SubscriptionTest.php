@@ -25,7 +25,7 @@ class SubscriptionTest extends \PHPUnit\Framework\TestCase
      */
     protected $productHelperMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->subscriptionDiscountConfigMock = $this->getMockBuilder(SubscriptionDiscountConfig::class)
             ->disableOriginalConstructor()->getMock();

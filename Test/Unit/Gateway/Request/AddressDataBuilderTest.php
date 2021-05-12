@@ -22,7 +22,7 @@ class AddressDataReaderTest extends \PHPUnit\Framework\TestCase
      */
     protected $addressDataBuilder;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->subjectReaderMock = $this->getMockBuilder(SubjectReader::class)
             ->disableOriginalConstructor()->getMock();
@@ -30,7 +30,8 @@ class AddressDataReaderTest extends \PHPUnit\Framework\TestCase
         $this->addressDataBuilder = new AddressDataBuilder($this->subjectReaderMock);
     }
 
-    public function testBuildWithoutBillingAddress() {
+    public function testBuildWithoutBillingAddress()
+    {
         $subject = ['subject'];
         $orderMock = $this->getMockBuilder(OrderAdapterInterface::class)
             ->disableOriginalConstructor()
@@ -47,8 +48,9 @@ class AddressDataReaderTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals([], $this->addressDataBuilder->build($subject));
     }
-    
-    public function testBuildWithBillingAddress() {
+
+    public function testBuildWithBillingAddress()
+    {
         $subject = ['subject'];
         $result = [
             PaymentProfileInterface::BILLING_ADDRESS => [

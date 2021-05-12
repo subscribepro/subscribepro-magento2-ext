@@ -67,7 +67,7 @@ class SubscriptionProductTest extends \PHPUnit\Framework\TestCase
      */
     protected $priceCurrencyMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->platformProductManagerMock = $this->getMockBuilder(ProductManager::class)
             ->disableOriginalConstructor()->getMock();

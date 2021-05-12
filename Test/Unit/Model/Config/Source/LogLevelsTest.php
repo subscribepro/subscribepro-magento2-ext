@@ -11,7 +11,7 @@ class LogLevelsTest extends \PHPUnit\Framework\TestCase
      */
     protected $logLevelsSource;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->logLevelsSource = new LogLevels();
     }

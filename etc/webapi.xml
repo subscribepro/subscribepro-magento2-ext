@@ -109,6 +109,12 @@
             <parameter name="customerId" force="true">%customer_id%</parameter>
         </data>
     </route>
+    <route url="/V1/swarming_subscribepro/me/get-order-status/:orderId" method="POST">
+        <service class="Swarming\SubscribePro\Api\GetOrderStatusInterface" method="execute"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
     <route url="/V1/swarming_subscribepro/customers/:customerId/carts" method="POST">
         <service class="Swarming\SubscribePro\Api\CartManagementInterface" method="createEmptyCartForCustomer"/>
         <resources>

@@ -22,7 +22,7 @@ class VaultDataBuilderTest extends \PHPUnit\Framework\TestCase
      */
     protected $vaultDataBuilder;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->subjectReaderMock = $this->getMockBuilder(SubjectReader::class)
             ->disableOriginalConstructor()->getMock();
@@ -36,7 +36,8 @@ class VaultDataBuilderTest extends \PHPUnit\Framework\TestCase
      * @dataProvider failToBuildWithEmptyVaultDataProvider
      * @param null|\PHPUnit_Framework_MockObject_MockObject $extensionAttributes
      */
-    public function testFailToBuildWithEmptyVault($extensionAttributes) {
+    public function testFailToBuildWithEmptyVault($extensionAttributes)
+    {
         $subject = ['subject'];
 
         $paymentInfoMock = $this->getMockBuilder(Payment::class)
@@ -45,7 +46,7 @@ class VaultDataBuilderTest extends \PHPUnit\Framework\TestCase
         $paymentInfoMock->expects($this->once())
             ->method('getExtensionAttributes')
             ->willReturn($extensionAttributes);
-        
+
         $paymentDOMock = $this->getMockBuilder(PaymentDataObjectInterface::class)->getMock();
         $paymentDOMock->expects($this->once())->method('getPayment')->willReturn($paymentInfoMock);
 
@@ -63,17 +64,25 @@ class VaultDataBuilderTest extends \PHPUnit\Framework\TestCase
     public function failToBuildWithEmptyVaultDataProvider()
     {
         $extensionAttributes = $this->getMockBuilder(OrderPaymentExtensionInterface::class)
-            ->setMethods(['setVaultPaymentToken', 'getVaultPaymentToken'])
+            ->setMethods(
+                [
+                    'getNotificationMessage',
+                    'setNotificationMessage',
+                    'setVaultPaymentToken',
+                    'getVaultPaymentToken'
+                ]
+            )
             ->getMock();
         $extensionAttributes->expects($this->any())->method('getVaultPaymentToken')->willReturn(null);
-        
+
         return [
             'Without extension attributes' => ['extensionAttributes' => null],
             'With extension attributes' => ['extensionAttributes' => $extensionAttributes],
         ];
     }
 
-    public function testBuild() {
+    public function testBuild()
+    {
         $profileId = 'token';
         $uniqueId = 'unique_id';
         $orderToken = 'orderToken1234';
@@ -86,7 +95,14 @@ class VaultDataBuilderTest extends \PHPUnit\Framework\TestCase
             ->willReturn($profileId);
 
         $extensionAttributes = $this->getMockBuilder(OrderPaymentExtensionInterface::class)
-            ->setMethods(['setVaultPaymentToken', 'getVaultPaymentToken'])
+            ->setMethods(
+                [
+                    'getNotificationMessage',
+                    'setNotificationMessage',
+                    'setVaultPaymentToken',
+                    'getVaultPaymentToken'
+                ]
+            )
             ->getMock();
         $extensionAttributes->expects($this->any())
             ->method('getVaultPaymentToken')
@@ -119,7 +135,8 @@ class VaultDataBuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($result, $this->vaultDataBuilder->build($subject));
     }
 
-    public function testBuildWithoutUniqueId() {
+    public function testBuildWithoutUniqueId()
+    {
         $profileId = 'token';
         $orderToken = 'orderToken4567';
         $subject = ['subject'];
@@ -131,7 +148,14 @@ class VaultDataBuilderTest extends \PHPUnit\Framework\TestCase
             ->willReturn($profileId);
 
         $extensionAttributes = $this->getMockBuilder(OrderPaymentExtensionInterface::class)
-            ->setMethods(['setVaultPaymentToken', 'getVaultPaymentToken'])
+            ->setMethods(
+                [
+                    'getNotificationMessage',
+                    'setNotificationMessage',
+                    'setVaultPaymentToken',
+                    'getVaultPaymentToken'
+                ]
+            )
             ->getMock();
         $extensionAttributes->expects($this->any())
             ->method('getVaultPaymentToken')

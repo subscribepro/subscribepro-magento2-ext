@@ -18,7 +18,7 @@ class AbstractCommandTest extends TestAbstractCommand
      */
     protected $requestData = ['requestData'];
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->initProperties();
         $this->abstractCommand = $this->getMockBuilder(AbstractCommand::class)
@@ -56,7 +56,7 @@ class AbstractCommandTest extends TestAbstractCommand
             ->method('processTransaction')
             ->with($this->requestData)
             ->willThrowException($exception);
-        
+
         $this->processTransactionFail($this->requestData, $exception);
         $this->abstractCommand->execute($this->commandSubject);
     }
@@ -79,14 +79,14 @@ class AbstractCommandTest extends TestAbstractCommand
             ->method('processTransaction')
             ->with($this->requestData)
             ->willReturn($transaction);
-        
+
         $this->validatorMock->expects($this->once())
             ->method('validate')
             ->with(['subject' => 'commandSubject', 'transaction' => $transaction])
             ->willReturn($resultMock);
-        
+
         $this->handlerMock->expects($this->never())->method('handle');
-        
+
         $this->abstractCommand->execute($this->commandSubject);
     }
 
@@ -98,7 +98,7 @@ class AbstractCommandTest extends TestAbstractCommand
             ->method('processTransaction')
             ->with($this->requestData)
             ->willReturn($transaction);
-        
+
         $this->executeCommand($this->requestData, $transaction);
         $this->abstractCommand->execute($this->commandSubject);
     }

@@ -237,6 +237,11 @@
                     <source_model>Swarming\SubscribePro\Model\Config\Source\PaymentAction</source_model>
                 </field>
 
+                <field id="three_ds_active" translate="label" type="select" sortOrder="45" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Enable 3DS</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
                 <field id="order_status" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>New Order Status</label>
                     <source_model>Magento\Sales\Model\Config\Source\Order\Status\Processing</source_model>

@@ -19,7 +19,7 @@ class TransactionTest extends AbstractService
      */
     protected $transactionPlatformService;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->platformMock = $this->createPlatformMock();
         $this->transactionPlatformService = $this->getMockBuilder(TransactionService::class)
@@ -37,15 +37,15 @@ class TransactionTest extends AbstractService
     public function testCreateTransaction($websiteId, $expectedWebsiteId)
     {
         $transactionMock = $this->createTransactionMock();
-        
+
         $this->initService($this->transactionPlatformService, $expectedWebsiteId);
         $this->transactionPlatformService->expects($this->once())
             ->method('createTransaction')
             ->with(['transaction data'])
             ->willReturn($transactionMock);
-        
+
         $this->assertSame(
-            $transactionMock, 
+            $transactionMock,
             $this->transactionService->createTransaction(['transaction data'], $websiteId)
         );
     }
@@ -80,7 +80,8 @@ class TransactionTest extends AbstractService
             ->willReturn($transactionMock);
 
         $this->assertSame(
-            $transactionMock, $this->transactionService->loadTransaction($transactionId, $websiteId)
+            $transactionMock,
+            $this->transactionService->loadTransaction($transactionId, $websiteId)
         );
     }
 
@@ -97,7 +98,7 @@ class TransactionTest extends AbstractService
             ->willReturn($transactionMock);
 
         $this->assertSame(
-            $transactionMock, 
+            $transactionMock,
             $this->transactionService->verifyProfile($paymentProfileId, $transactionMock, $websiteId)
         );
     }
@@ -115,7 +116,7 @@ class TransactionTest extends AbstractService
             ->willReturn($transactionMock);
 
         $this->assertSame(
-            $transactionMock, 
+            $transactionMock,
             $this->transactionService->authorizeByProfile($paymentProfileId, $transactionMock, $websiteId)
         );
     }
@@ -133,7 +134,7 @@ class TransactionTest extends AbstractService
             ->willReturn($transactionMock);
 
         $this->assertSame(
-            $transactionMock, 
+            $transactionMock,
             $this->transactionService->purchaseByProfile($paymentProfileId, $transactionMock, $websiteId)
         );
     }
@@ -155,7 +156,7 @@ class TransactionTest extends AbstractService
             ->willReturn($transactionMock);
 
         $this->assertSame(
-            $transactionMock, 
+            $transactionMock,
             $this->transactionService->authorizeByToken($token, $transactionMock, $platformAddressMock, $websiteId)
         );
     }
@@ -198,7 +199,7 @@ class TransactionTest extends AbstractService
             ->willReturn($transactionMock);
 
         $this->assertSame(
-            $transactionMock, 
+            $transactionMock,
             $this->transactionService->purchaseByToken($token, $transactionMock, $platformAddressMock, $websiteId)
         );
     }
@@ -240,7 +241,7 @@ class TransactionTest extends AbstractService
             ->willReturn($transactionMock);
 
         $this->assertSame(
-            $transactionMock, 
+            $transactionMock,
             $this->transactionService->capture($transactionId, $transactionMock, $websiteId)
         );
     }
@@ -280,7 +281,7 @@ class TransactionTest extends AbstractService
             ->willReturn($transactionMock);
 
         $this->assertSame(
-            $transactionMock, 
+            $transactionMock,
             $this->transactionService->credit($transactionId, $transactionMock, $websiteId)
         );
     }
@@ -317,7 +318,8 @@ class TransactionTest extends AbstractService
             ->willReturn($transactionMock);
 
         $this->assertSame(
-            $transactionMock, $this->transactionService->void($transactionId, $websiteId)
+            $transactionMock,
+            $this->transactionService->void($transactionId, $websiteId)
         );
     }
 

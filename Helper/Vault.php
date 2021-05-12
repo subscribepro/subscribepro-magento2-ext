@@ -5,6 +5,7 @@ namespace Swarming\SubscribePro\Helper;
 use Magento\Vault\Api\Data\PaymentTokenInterface;
 use SubscribePro\Service\PaymentProfile\PaymentProfileInterface;
 use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
+use Magento\Framework\App\ObjectManager;
 
 class Vault
 {
@@ -12,6 +13,11 @@ class Vault
      * @var \Swarming\SubscribePro\Gateway\Config\Config
      */
     protected $gatewayConfig;
+
+    /**
+     * @var \Swarming\SubscribePro\Helper\PaymentProfileThreeDs
+     */
+    protected $paymentProfileThreeDs;
 
     /**
      * @var \Magento\Framework\Encryption\EncryptorInterface
@@ -27,15 +33,19 @@ class Vault
      * @param \Swarming\SubscribePro\Gateway\Config\Config $gatewayConfig
      * @param \Magento\Framework\Encryption\EncryptorInterface $encryptor
      * @param \Magento\Framework\Intl\DateTimeFactory $dateTimeFactory
+     * @param \Swarming\SubscribePro\Helper\PaymentProfileThreeDs|null $paymentProfileThreeDs
      */
     public function __construct(
         \Swarming\SubscribePro\Gateway\Config\Config $gatewayConfig,
         \Magento\Framework\Encryption\EncryptorInterface $encryptor,
-        \Magento\Framework\Intl\DateTimeFactory $dateTimeFactory
+        \Magento\Framework\Intl\DateTimeFactory $dateTimeFactory,
+        \Swarming\SubscribePro\Helper\PaymentProfileThreeDs $paymentProfileThreeDs = null
     ) {
         $this->gatewayConfig = $gatewayConfig;
         $this->encryptor = $encryptor;
         $this->dateTimeFactory = $dateTimeFactory;
+        $this->paymentProfileThreeDs = $paymentProfileThreeDs
+            ?: ObjectManager::getInstance()->get(PaymentProfileThreeDs::class);
     }
 
     /**
@@ -53,6 +63,9 @@ class Vault
         $token->setGatewayToken($profile->getId());
         $token->setIsActive(true);
         $token->setIsVisible(true);
+        if ($this->paymentProfileThreeDs->hasThreeDsStatus($profile)) {
+            $this->paymentProfileThreeDs->processThreeDsStatus($token, $profile);
+        }
         $token->setCustomerId($profile->getMagentoCustomerId());
         $token->setTokenDetails($this->getTokenDetails(
             $profile->getCreditcardType(),
@@ -77,6 +90,9 @@ class Vault
         $tokenDetails['expirationDate'] = $profile->getCreditcardMonth() . '/' . $profile->getCreditcardYear();
         $token->setTokenDetails($this->encodeDetails($tokenDetails));
         $token->setExpiresAt($this->getExpirationDate($profile->getCreditcardYear(), $profile->getCreditcardMonth()));
+        if ($this->paymentProfileThreeDs->hasThreeDsStatus($profile)) {
+            $this->paymentProfileThreeDs->processThreeDsStatus($token, $profile);
+        }
         return $token;
     }
 

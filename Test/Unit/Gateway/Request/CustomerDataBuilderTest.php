@@ -21,7 +21,7 @@ class CustomerDataBuilderTest extends \PHPUnit\Framework\TestCase
      */
     protected $customerDataBuilder;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->subjectReaderMock = $this->getMockBuilder(SubjectReader::class)
             ->disableOriginalConstructor()->getMock();
@@ -29,7 +29,8 @@ class CustomerDataBuilderTest extends \PHPUnit\Framework\TestCase
         $this->customerDataBuilder = new CustomerDataBuilder($this->subjectReaderMock);
     }
 
-    public function testBuild() {
+    public function testBuild()
+    {
         $subject = ['subject'];
         $customerId = 123;
         $customerEmail = 'email';

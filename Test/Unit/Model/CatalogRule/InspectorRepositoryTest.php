@@ -32,7 +32,7 @@ class InspectorRepositoryTest extends \PHPUnit\Framework\TestCase
         'product_type_2' => '\Type\Inspector\Two'
     ];
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->objectManagerMock = $this->getMockBuilder(ObjectManagerInterface::class)
             ->getMock();

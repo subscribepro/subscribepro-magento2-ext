@@ -13,7 +13,7 @@ class SalesRuleValidatorTest extends \PHPUnit\Framework\TestCase
      */
     protected $salesRuleValidatorHelper;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->salesRuleValidatorHelper = new SalesRuleValidator();
     }

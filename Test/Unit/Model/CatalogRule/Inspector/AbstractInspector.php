@@ -33,7 +33,7 @@ abstract class AbstractInspector extends \PHPUnit\Framework\TestCase
      */
     protected $rulePricesStorage;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->customerSession = $this->getMockBuilder(CustomerSession::class)
             ->disableOriginalConstructor()

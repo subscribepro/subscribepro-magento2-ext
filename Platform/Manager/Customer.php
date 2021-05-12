@@ -6,7 +6,6 @@ use SubscribePro\Service\Customer\CustomerInterface as PlatformCustomerInterface
 use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 
-
 class Customer
 {
     /**

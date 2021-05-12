@@ -21,8 +21,7 @@ class DebugLogger
     public function __construct(
         \Psr\Log\LoggerInterface $logger,
         \Swarming\SubscribePro\Model\Config\Advanced $config
-    )
-    {
+    ) {
         $this->logger = $logger;
         $this->config = $config;
     }
@@ -34,7 +33,7 @@ class DebugLogger
     {
         // Check if the configuration value is set for debugging
         if ($this->config->isDebuggingEnabled()) {
-            foreach($this->getStackTrace() as $line) {
+            foreach ($this->getStackTrace() as $line) {
                 $this->logger->info($line);
             }
         }

@@ -45,7 +45,7 @@ class ShipperMapperPlugin
             $shippingGroupSet = false;
 
             if (is_array($attributes)) {
-                foreach($attributes as $key => $attribute) {
+                foreach ($attributes as $key => $attribute) {
                     if (isset($attribute['name']) && $attribute['name'] === 'shipperhq_shipping_group') {
                         $shippingGroup = $attribute['value'] . '#' . $recurringShippingCode;
                         $shippingGroupSet = true;
@@ -77,4 +77,3 @@ class ShipperMapperPlugin
         return false;
     }
 }
-

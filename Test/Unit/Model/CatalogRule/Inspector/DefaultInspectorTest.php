@@ -11,7 +11,7 @@ class DefaultInspectorTest extends AbstractInspector
      */
     protected $defaultInspector;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -23,7 +23,8 @@ class DefaultInspectorTest extends AbstractInspector
         );
     }
 
-    public function testIsAppliedIfHasSpecialPrice() {
+    public function testIsAppliedIfHasSpecialPrice()
+    {
         $price = 100;
         $basePrice = 110;
 

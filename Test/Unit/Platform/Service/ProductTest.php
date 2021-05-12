@@ -18,7 +18,7 @@ class ProductTest extends AbstractService
      */
     protected $productPlatformService;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->platformMock = $this->createPlatformMock();
         $this->productPlatformService = $this->getMockBuilder(ProductService::class)
@@ -36,15 +36,16 @@ class ProductTest extends AbstractService
     public function testCreateProduct($websiteId, $expectedWebsiteId)
     {
         $platformProductMock = $this->createPlatformProductMock();
-        
+
         $this->initService($this->productPlatformService, $expectedWebsiteId);
         $this->productPlatformService->expects($this->once())
             ->method('createProduct')
             ->with(['product data'])
             ->willReturn($platformProductMock);
-        
+
         $this->assertSame(
-            $platformProductMock, $this->productService->createProduct(['product data'], $websiteId)
+            $platformProductMock,
+            $this->productService->createProduct(['product data'], $websiteId)
         );
     }
 
@@ -78,7 +79,8 @@ class ProductTest extends AbstractService
             ->willReturn($platformProductMock);
 
         $this->assertSame(
-            $platformProductMock, $this->productService->loadProduct($productId, $websiteId)
+            $platformProductMock,
+            $this->productService->loadProduct($productId, $websiteId)
         );
     }
 
@@ -94,7 +96,8 @@ class ProductTest extends AbstractService
             ->willReturn($platformProductMock);
 
         $this->assertSame(
-            $platformProductMock, $this->productService->saveProduct($platformProductMock, $websiteId)
+            $platformProductMock,
+            $this->productService->saveProduct($platformProductMock, $websiteId)
         );
     }
 
@@ -111,7 +114,8 @@ class ProductTest extends AbstractService
             ->willReturn($platformProductsMock);
 
         $this->assertEquals(
-            $platformProductsMock, $this->productService->loadProducts($sku, $websiteId)
+            $platformProductsMock,
+            $this->productService->loadProducts($sku, $websiteId)
         );
     }
 

@@ -30,7 +30,7 @@ class ProductOptionTest extends \PHPUnit\Framework\TestCase
      */
     protected $inputProcessorMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->reflectionObjectProcessorMock = $this->getMockBuilder(DataObjectProcessor::class)
             ->disableOriginalConstructor()->getMock();

@@ -70,7 +70,7 @@ class SubscriptionManagementTest extends \PHPUnit\Framework\TestCase
      */
     protected $loggerMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->platformProductManagerMock = $this->getMockBuilder(ProductManager::class)
             ->disableOriginalConstructor()->getMock();

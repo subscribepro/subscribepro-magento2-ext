@@ -164,4 +164,12 @@ class SubscriptionOption extends AbstractSimpleObject implements SubscriptionOpt
     {
         return $this->setData(self::FIXED_PRICE, $fixedPrice);
     }
+
+    /**
+     * @return mixed[]
+     */
+    public function toArray()
+    {
+        return parent::__toArray();
+    }
 }

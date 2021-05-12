@@ -84,6 +84,9 @@ class ConfigProvider
             $config = [
                 'vaultCode' => self::VAULT_CODE,
                 'isActive' => $this->gatewayConfig->isActive($storeId),
+                'isThreeDSActive' => $this->gatewayConfig->isThreeDSActive($storeId),
+                'browserSize' => $this->gatewayConfig->getBrowserSize($storeId),
+                'acceptHeader' => $this->gatewayConfig->getAcceptHeader($storeId),
                 'environmentKey' => $environmentKey,
                 'availableCardTypes' => $this->getCcAvailableTypes($storeId),
                 'ccTypesMapper' => $this->gatewayConfig->getCcTypesMapper($storeId),

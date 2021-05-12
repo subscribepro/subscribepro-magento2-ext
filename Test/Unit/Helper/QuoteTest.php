@@ -19,7 +19,7 @@ class QuoteTest extends \PHPUnit\Framework\TestCase
      */
     protected $quoteItemHelperMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->quoteItemHelperMock = $this->getMockBuilder(QuoteItemHelper::class)
             ->disableOriginalConstructor()->getMock();
@@ -33,7 +33,8 @@ class QuoteTest extends \PHPUnit\Framework\TestCase
      * @param null|array $items
      * @dataProvider hasSubscriptionIfNoItemsDataProvider
      */
-    public function testHasSubscriptionIfNoItems($items) {
+    public function testHasSubscriptionIfNoItems($items)
+    {
         $quoteMock = $this->createQuoteMock();
         $quoteMock->expects($this->once())->method('getItems')->willReturn($items);
 

@@ -2,20 +2,20 @@
 
 namespace Swarming\SubscribePro\Test\Unit\Gateway\Command;
 
+use Magento\Payment\Gateway\Data\OrderAdapterInterface;
+use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Payment\Gateway\Request\BuilderInterface;
 use Magento\Payment\Gateway\Response\HandlerInterface;
 use Magento\Payment\Gateway\Validator\ResultInterface;
 use Magento\Payment\Gateway\Validator\ValidatorInterface;
+use Magento\Store\Api\Data\StoreInterface;
+use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
 use SubscribePro\Service\Transaction\TransactionInterface;
+use Swarming\SubscribePro\Gateway\Helper\SubjectReader;
+use Swarming\SubscribePro\Platform\Platform;
 use Swarming\SubscribePro\Platform\Service\PaymentProfile as PaymentProfileService;
 use Swarming\SubscribePro\Platform\Service\Transaction as TransactionService;
-use Swarming\SubscribePro\Platform\Platform;
-use Magento\Store\Model\StoreManagerInterface;
-use Swarming\SubscribePro\Gateway\Helper\SubjectReader;
-use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
-use Magento\Payment\Gateway\Data\OrderAdapterInterface;
-use Magento\Store\Api\Data\StoreInterface;
 
 class AbstractCommand extends \PHPUnit\Framework\TestCase
 {
@@ -95,7 +95,7 @@ class AbstractCommand extends \PHPUnit\Framework\TestCase
             ->method('build')
             ->with($this->commandSubject)
             ->willReturn($requestData);
-        
+
         $this->loggerMock->expects($this->once())
             ->method('critical')
             ->with($exception);
@@ -113,17 +113,17 @@ class AbstractCommand extends \PHPUnit\Framework\TestCase
             ->method('build')
             ->with($this->commandSubject)
             ->willReturn($requestData);
-        
+
         $resultMock = $this->getMockBuilder(ResultInterface::class)->getMock();
         $resultMock->expects($this->once())
             ->method('isValid')
             ->willReturn(true);
-        
+
         $this->validatorMock->expects($this->once())
             ->method('validate')
             ->with(['subject' => 'commandSubject', 'transaction' => $transaction])
             ->willReturn($resultMock);
-        
+
         $this->handlerMock->expects($this->once())
             ->method('handle')
             ->with($this->commandSubject, ['transaction' => $transaction]);
