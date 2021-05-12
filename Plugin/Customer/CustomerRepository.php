@@ -13,14 +13,17 @@ class CustomerRepository
      * @var \Swarming\SubscribePro\Platform\Manager\Customer
      */
     protected $platformCustomerManager;
+
     /**
      * @var \Swarming\SubscribePro\Platform\Service\Customer
      */
     protected $platformCustomerService;
+
     /**
      * @var \Psr\Log\LoggerInterface
      */
     protected $logger;
+
     /**
      * @var \Swarming\SubscribePro\Model\Config\General
      */
