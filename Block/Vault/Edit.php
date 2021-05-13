@@ -176,11 +176,31 @@ class Edit extends \Magento\Directory\Block\Data
      */
     public function getSaveUrl()
     {
-        $params = ['_secure' => true];
-        if ($this->token) {
-            $params[PaymentTokenInterface::PUBLIC_HASH] = $this->token->getPublicHash();
-        }
-        return $this->getUrl('swarming_subscribepro/cards/save', $params);
+        return $this->token
+            ? $this->buildUpdatePaymentProfileUrl()
+            : $this->buildCreatePaymentProfileUrl();
+    }
+
+    /**
+     * @return string
+     */
+    private function buildCreatePaymentProfileUrl()
+    {
+        return $this->getUrl(
+            'swarming_subscribepro/cards/save',
+            ['_secure' => true]
+        );
+    }
+
+    /**
+     * @return string
+     */
+    private function buildUpdatePaymentProfileUrl()
+    {
+        return $this->getUrl(
+            'swarming_subscribepro/cards/update',
+            [PaymentTokenInterface::PUBLIC_HASH => $this->token->getPublicHash(), '_secure' => true]
+        );
     }
 
     /**

@@ -59,7 +59,7 @@ class Vault
         $token->setGatewayToken($profile->getId());
         $token->setIsActive(true);
         $token->setIsVisible(true);
-        if ($this->paymentProfileThreeDs->hasThreeDsStatus($profile)) {
+        if ($this->gatewayConfig->isThreeDSActive() && $this->paymentProfileThreeDs->hasThreeDsStatus($profile)) {
             $this->paymentProfileThreeDs->processThreeDsStatus($token, $profile);
         }
         $token->setCustomerId($profile->getMagentoCustomerId());
@@ -86,7 +86,7 @@ class Vault
         $tokenDetails['expirationDate'] = $profile->getCreditcardMonth() . '/' . $profile->getCreditcardYear();
         $token->setTokenDetails($this->encodeDetails($tokenDetails));
         $token->setExpiresAt($this->getExpirationDate($profile->getCreditcardYear(), $profile->getCreditcardMonth()));
-        if ($this->paymentProfileThreeDs->hasThreeDsStatus($profile)) {
+        if ($this->gatewayConfig->isThreeDSActive() && $this->paymentProfileThreeDs->hasThreeDsStatus($profile)) {
             $this->paymentProfileThreeDs->processThreeDsStatus($token, $profile);
         }
         return $token;

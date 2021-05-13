@@ -8,7 +8,7 @@ use Magento\Payment\Gateway\Request\BuilderInterface;
 use SubscribePro\Service\Transaction\TransactionInterface;
 use Swarming\SubscribePro\Gateway\Config\Config as GatewayConfig;
 
-class ThreeDSecure implements BuilderInterface
+class ThreeDSecureBuilder implements BuilderInterface
 {
     /**
      * @var \Swarming\SubscribePro\Gateway\Helper\SubjectReader

@@ -238,8 +238,22 @@
                 </field>
 
                 <field id="three_ds_active" translate="label" type="select" sortOrder="45" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Enable 3DS</label>
+                    <label>Enable 3DS2</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
+                <field id="wallet_authorization_active" translate="label" type="select" sortOrder="46" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Enable Authorization on Wallet</label>
+                    <comment>Enable or disable authorization of new cards added by customer on wallet page</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="three_ds_active">0</field>
+                    </depends>
+                </field>
+
+                <field id="wallet_authorization_amount" translate="label" type="text" sortOrder="47" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Authorization Amount on Wallet</label>
+                    <validate>validate-greater-than-zero validate-number required-entry</validate>
                 </field>
 
                 <field id="order_status" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0">

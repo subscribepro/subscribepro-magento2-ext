@@ -2,9 +2,10 @@
 
 namespace Swarming\SubscribePro\Controller\Cards;
 
-use Magento\Vault\Api\Data\PaymentTokenInterface;
+use Magento\Framework\DataObject;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Exception\LocalizedException;
+use SubscribePro\Service\PaymentProfile\PaymentProfileInterface;
 
 class Save extends \Magento\Customer\Controller\AbstractAccount
 {
@@ -29,65 +30,128 @@ class Save extends \Magento\Customer\Controller\AbstractAccount
     protected $platformVaultConfig;
 
     /**
+     * @var \Swarming\SubscribePro\Gateway\Config\Config
+     */
+    protected $gatewayConfig;
+
+    /**
+     * @var \Swarming\SubscribePro\Model\Vault\Validator
+     */
+    protected $vaultFormValidator;
+
+    /**
+     * @var \Swarming\SubscribePro\Gateway\Command\AuthorizeCommand
+     */
+    protected $walletAuthorizeCommand;
+
+    /**
+     * @var \Magento\Store\Model\StoreManagerInterface
+     */
+    protected $storeManager;
+
+    /**
      * @param \Magento\Framework\App\Action\Context $context
      * @param \Magento\Framework\Data\Form\FormKey\Validator $formKeyValidator
      * @param \Magento\Customer\Model\Session $customerSession
-     * @param \Swarming\SubscribePro\Model\Vault\Form $paymentProfileForm
+     * @param \Swarming\SubscribePro\Model\Vault\Form $vaultForm
      * @param \Swarming\SubscribePro\Gateway\Config\VaultConfig $platformVaultConfig
+     * @param \Swarming\SubscribePro\Gateway\Config\Config $gatewayConfig
+     * @param \Swarming\SubscribePro\Model\Vault\Validator $vaultFormValidator
+     * @param \Swarming\SubscribePro\Gateway\Command\AuthorizeCommand $walletAuthorizeCommand
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      */
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
         \Magento\Framework\Data\Form\FormKey\Validator $formKeyValidator,
         \Magento\Customer\Model\Session $customerSession,
-        \Swarming\SubscribePro\Model\Vault\Form $paymentProfileForm,
-        \Swarming\SubscribePro\Gateway\Config\VaultConfig $platformVaultConfig
+        \Swarming\SubscribePro\Model\Vault\Form $vaultForm,
+        \Swarming\SubscribePro\Gateway\Config\VaultConfig $platformVaultConfig,
+        \Swarming\SubscribePro\Gateway\Config\Config $gatewayConfig,
+        \Swarming\SubscribePro\Model\Vault\Validator $vaultFormValidator,
+        \Swarming\SubscribePro\Gateway\Command\AuthorizeCommand $walletAuthorizeCommand,
+        \Magento\Store\Model\StoreManagerInterface $storeManager
     ) {
         $this->formKeyValidator = $formKeyValidator;
         $this->customerSession = $customerSession;
-        $this->vaultForm = $paymentProfileForm;
+        $this->vaultForm = $vaultForm;
         $this->platformVaultConfig = $platformVaultConfig;
+        $this->gatewayConfig = $gatewayConfig;
+        $this->vaultFormValidator = $vaultFormValidator;
+        $this->walletAuthorizeCommand = $walletAuthorizeCommand;
+        $this->storeManager = $storeManager;
         parent::__construct($context);
     }
 
     /**
-     * @return \Magento\Framework\Controller\Result\Redirect
+     * @return \Magento\Framework\Controller\Result\Json
      */
     public function execute()
     {
-        /** @var \Magento\Framework\Controller\Result\Redirect $resultRedirect */
-        $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
+        /** @var \Magento\Framework\Controller\Result\Json $resultJson */
+        $resultJson = $this->resultFactory->create(ResultFactory::TYPE_JSON);
 
         if (!$this->formKeyValidator->validate($this->getRequest())
             || !$this->getRequest()->isPost()
             || !$this->platformVaultConfig->isActive()
         ) {
-            return $resultRedirect->setPath('vault/cards/listaction');
+            $resultJson->setData(['state' => 'failed']);
+            return $resultJson;
         }
 
-        $publicHash = $this->getRequest()->getParam(PaymentTokenInterface::PUBLIC_HASH);
+        $data = (array)$this->getRequest()->getParams();
+        unset($data['form_key']);
 
         try {
-            $data = (array)$this->getRequest()->getParams();
-            unset($data['form_key']);
-            if ($publicHash) {
-                unset($data[PaymentTokenInterface::PUBLIC_HASH]);
-                $this->vaultForm->updateProfile($publicHash, $data, $this->customerSession->getCustomerId());
+            $responseData = ['state' => 'succeeded', 'redirect' => '/'];
+
+            if ($this->gatewayConfig->isWalletAuthorizationActive()) {
+                $transfer = new DataObject();
+                $commandSubject = $this->prepareAuthorizeCommandSubject($data, $transfer);
+
+                $this->walletAuthorizeCommand->execute($commandSubject);
+
+                $responseData['state'] = $transfer->getData('state');
+                $responseData['token'] = $transfer->getData('token');
             } else {
                 $this->vaultForm->createProfile($data, $this->customerSession->getCustomerId());
             }
-            $this->messageManager->addSuccessMessage(__('The credit card is saved.'));
-            $resultRedirect->setPath('vault/cards/listaction');
+
+            $resultJson->setData($responseData);
         } catch (LocalizedException $e) {
             $this->messageManager->addErrorMessage($e->getMessage());
-            $resultRedirect->setPath(
-                '*/*/edit',
-                ($publicHash ? ['_query' => [PaymentTokenInterface::PUBLIC_HASH => $publicHash]] : [])
-            );
+            $resultJson->setData(['state' => 'failed']);
         } catch (\Exception $e) {
             $this->messageManager->addExceptionMessage($e, __('An error occurred while saving the card.'));
-            $resultRedirect->setPath('vault/cards/listaction');
+            $resultJson->setData(['state' => 'failed']);
         }
 
-        return $resultRedirect;
+        return $resultJson;
+    }
+
+    /**
+     * @param array $profileData
+     * @param \Magento\Framework\DataObject $transfer
+     * @return array
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    private function prepareAuthorizeCommandSubject(array $profileData, DataObject $transfer): array
+    {
+        if (empty($profileData['token'])) {
+            throw new LocalizedException(__('The credit card can be not saved.'));
+        }
+
+        $profileData = $this->vaultFormValidator->validate($profileData);
+        return [
+            'store_id' => $this->storeManager->getStore()->getId(),
+            'customer_id' => $this->customerSession->getCustomerId(),
+            'creditcard_month' => $profileData[PaymentProfileInterface::CREDITCARD_MONTH],
+            'creditcard_year' => $profileData[PaymentProfileInterface::CREDITCARD_YEAR],
+            'billing_address' => $profileData[PaymentProfileInterface::BILLING_ADDRESS],
+            'customer_email' => $this->customerSession->getCustomer()->getEmail(),
+            'browser_info' => ($profileData['browser_info'] ?? ''),
+            'token' => $profileData['token'],
+            'transfer' => $transfer
+        ];
     }
 }

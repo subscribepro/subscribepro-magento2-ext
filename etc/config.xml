@@ -50,6 +50,7 @@
                 <title>Credit or Debit Cards (SubscribePro)</title>
                 <active>1</active>
                 <is_gateway>1</is_gateway>
+                <wallet_authorization_amount>1</wallet_authorization_amount>
                 <can_use_checkout>1</can_use_checkout>
                 <can_use_internal>1</can_use_internal>
                 <can_authorize>1</can_authorize>

@@ -33,7 +33,7 @@ class PaymentProfileThreeDs
             $token->setIsActive(false);
             $token->setIsVisible(false);
         } else {
-            $token->setIsVisible($this->isThreeDsFailedAuthenticated($profile));
+            $token->setIsVisible($this->isThreeDsAuthenticated($profile));
         }
     }
 
@@ -59,7 +59,7 @@ class PaymentProfileThreeDs
      * @param \SubscribePro\Service\PaymentProfile\PaymentProfileInterface $profile
      * @return bool
      */
-    public function isThreeDsFailedAuthenticated(PaymentProfileInterface $profile)
+    public function isThreeDsAuthenticated(PaymentProfileInterface $profile)
     {
         return $profile->getThreeDsStatus() === PaymentProfileInterface::THREE_DS_AUTHENTICATED;
     }
