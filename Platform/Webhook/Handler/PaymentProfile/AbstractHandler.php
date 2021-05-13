@@ -43,15 +43,16 @@ abstract class AbstractHandler implements HandlerInterface
 
     /**
      * @param \SubscribePro\Service\Webhook\EventInterface $event
+     * @param string                                       $paymentMethodCode
      * @return \Magento\Vault\Api\Data\PaymentTokenInterface|null
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws NoSuchEntityException
      */
-    protected function getPaymentToken(EventInterface $event)
+    protected function getPaymentToken(EventInterface $event, string $paymentMethodCode = ConfigProvider::CODE)
     {
         $customerId = $this->getCustomerId($event);
         $paymentToken = $this->paymentTokenManagement->getByGatewayToken(
             $event->getEventData('payment_profile_id'),
-            ConfigProvider::CODE,
+            $paymentMethodCode,
             $customerId
         );
 
