@@ -74,6 +74,33 @@ class Customer
     }
 
     /**
+     * @param int  $customerId
+     * @param bool $createIfNotExist
+     * @param      $websiteId
+     * @return PlatformCustomerInterface
+     * @throws NoSuchEntityException
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function getCustomerByMagentoCustomerId(int $customerId, $createIfNotExist = false, $websiteId = null)
+    {
+        $platformCustomerList = $this->platformCustomerService->loadCustomers(
+            [PlatformCustomerInterface::MAGENTO_CUSTOMER_ID => $customerId],
+            $websiteId
+        );
+
+        if (!empty($platformCustomerList)) {
+            $platformCustomer = $platformCustomerList[0];
+        } elseif ($createIfNotExist) {
+            $customer = $this->customerRepository->getById($customerId);
+            $platformCustomer = $this->createPlatformCustomer($customer, $websiteId);
+        } else {
+            throw new NoSuchEntityException(__('Platform customer is not found.'));
+        }
+
+        return $platformCustomer;
+    }
+
+    /**
      * @param \Magento\Customer\Api\Data\CustomerInterface $customer
      * @param int|null $websiteId
      * @return \SubscribePro\Service\Customer\CustomerInterface
