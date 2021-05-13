@@ -122,10 +122,6 @@
         <plugin name="subscribepro_discount" type="Swarming\SubscribePro\Plugin\SalesRule\Validator" sortOrder="50" />
     </type>
 
-    <type name="Magento\Customer\Api\CustomerRepositoryInterface">
-        <plugin name="subscribepro_customer" type="Swarming\SubscribePro\Plugin\Customer\CustomerRepository" sortOrder="2"/>
-    </type>
-
     <type name="Magento\Quote\Model\Quote\Item\CartItemOptionsProcessor">
         <plugin name="subscribepro_subscription_option" type="Swarming\SubscribePro\Plugin\Quote\CartItemOptionsProcessor" />
     </type>
