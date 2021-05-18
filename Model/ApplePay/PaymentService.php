@@ -12,6 +12,7 @@ use Magento\Framework\Session\SessionManagerInterface;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\QuoteManagement;
 use Magento\Quote\Api\Data\AddressInterface;
+use SubscribePro\Service\Token\TokenInterface;
 use Swarming\SubscribePro\Helper\ApplePay\Vault as ApplePayVaultHelper;
 use Swarming\SubscribePro\Platform\Manager\Customer as PlatformCustomer;
 use Swarming\SubscribePro\Platform\Service\ApplePay\PaymentProfile as PlatformApplePayPaymentProfile;
@@ -467,12 +468,12 @@ class PaymentService
     /**
      * @param AddressInterface $billingAddress
      * @param array $applePayPaymentData
-     * @return string
+     * @return TokenInterface
      */
     protected function createApplePayPaymentVaultToken(
         AddressInterface $billingAddress,
         array $applePayPaymentData
-    ): string {
+    ): TokenInterface {
         return $this->applePayVaultHelper->createApplePayPaymentToken($billingAddress, $applePayPaymentData);
     }
 }

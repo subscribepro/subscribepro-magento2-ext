@@ -5,6 +5,7 @@ namespace Swarming\SubscribePro\Helper\ApplePay;
 
 use Magento\Quote\Api\Data\AddressInterface;
 use \Swarming\SubscribePro\Platform\Service\Token as PlatformServiceToken;
+use SubscribePro\Service\Token\TokenInterface;
 
 class Vault
 {
@@ -22,10 +23,12 @@ class Vault
     /**
      * @param AddressInterface $billingAddress
      * @param array $applePayPaymentData
-     * @return string
+     * @return TokenInterface
      */
-    public function createApplePayPaymentToken(AddressInterface $billingAddress, array $applePayPaymentData): string
-    {
+    public function createApplePayPaymentToken(
+        AddressInterface $billingAddress,
+        array $applePayPaymentData
+    ): TokenInterface {
         // Build request data
         $requestData = [
             'billing_address' => [
@@ -43,17 +46,18 @@ class Vault
             'phone' => 'telephone'
         ];
         foreach ($optionalFields as $fieldKey => $magentoFieldKey) {
-            if (strlen($billingAddress->getData($magentoFieldKey))) {
-                $requestData['billing_address'][$fieldKey] = $billingAddress->getData($magentoFieldKey);
+            $addressValue = $billingAddress->getData($magentoFieldKey);
+            if ($addressValue && strlen($addressValue)) {
+                $requestData['billing_address'][$fieldKey] = $addressValue;
             }
         }
-        if (strlen($billingAddress->getStreet1())) {
+        if ($billingAddress->getStreet1() && strlen($billingAddress->getStreet1())) {
             $requestData['billing_address']['street1'] = $billingAddress->getStreet1();
         }
-        if (strlen($billingAddress->getStreet2())) {
+        if ($billingAddress->getStreet2() && strlen($billingAddress->getStreet2())) {
             $requestData['billing_address']['street2'] = $billingAddress->getStreet2();
         }
-        if (strlen($billingAddress->getRegionCode())) {
+        if ($billingAddress->getRegionCode() && strlen($billingAddress->getRegionCode())) {
             $requestData['billing_address']['region'] = $billingAddress->getRegionCode();
         }
 
