@@ -56,6 +56,7 @@ class SaveAfterData implements ObserverInterface
         $websiteId = (int) $customerData->getWebsiteId();
         if (!$this->generalConfig->isEnabled($websiteId)
             || !$customerId
+            || !$origCustomerData
         ) {
             return;
         }
