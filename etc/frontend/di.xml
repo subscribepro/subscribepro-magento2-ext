@@ -24,6 +24,7 @@
     </type>
 
     <type name="Magento\Vault\Model\Ui\TokensConfigProvider">
+        <plugin name="subscribepro_filter_pending_vaults" type="Swarming\SubscribePro\Plugin\Vault\TokensConfigProvider"/>
         <arguments>
             <argument name="tokenUiComponentProviders" xsi:type="array">
                 <item name="subscribe_pro" xsi:type="object">Swarming\SubscribePro\Ui\ComponentProvider\VaultToken</item>

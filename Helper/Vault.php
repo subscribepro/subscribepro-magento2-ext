@@ -9,6 +9,8 @@ use Magento\Framework\App\ObjectManager;
 
 class Vault
 {
+    const STATE_PENDING = 'pending';
+
     /**
      * @var \Swarming\SubscribePro\Gateway\Config\Config
      */
@@ -63,17 +65,23 @@ class Vault
         $token->setGatewayToken($profile->getId());
         $token->setIsActive(true);
         $token->setIsVisible(true);
-        if ($this->gatewayConfig->isThreeDSActive() && $this->paymentProfileThreeDs->hasThreeDsStatus($profile)) {
-            $this->paymentProfileThreeDs->processThreeDsStatus($token, $profile);
-        }
         $token->setCustomerId($profile->getMagentoCustomerId());
-        $token->setTokenDetails($this->getTokenDetails(
+
+        $tokenDetails = $this->getTokenDetails(
             $profile->getCreditcardType(),
             $profile->getCreditcardLastDigits(),
             $profile->getCreditcardMonth(),
             $profile->getCreditcardYear(),
             $profile->getPaymentToken()
-        ));
+        );
+
+        if ($this->gatewayConfig->isThreeDSActive() && !$this->paymentProfileThreeDs->isThreeDsAuthenticated($profile)) {
+            $tokenDetails = $this->decodeDetails($tokenDetails);
+            $tokenDetails['state'] = self::STATE_PENDING;
+            $tokenDetails = $this->encodeDetails($tokenDetails);
+        }
+
+        $token->setTokenDetails($tokenDetails);
         $token->setExpiresAt($this->getExpirationDate($profile->getCreditcardYear(), $profile->getCreditcardMonth()));
         $token->setPublicHash($this->generatePublicHash($token));
         return $token;
@@ -88,11 +96,14 @@ class Vault
     {
         $tokenDetails = $this->decodeDetails($token->getTokenDetails());
         $tokenDetails['expirationDate'] = $profile->getCreditcardMonth() . '/' . $profile->getCreditcardYear();
+
+        unset($tokenDetails['state']);
+        if ($this->gatewayConfig->isThreeDSActive() && !$this->paymentProfileThreeDs->isThreeDsAuthenticated($profile)) {
+            $tokenDetails['state'] = self::STATE_PENDING;
+        }
+
         $token->setTokenDetails($this->encodeDetails($tokenDetails));
         $token->setExpiresAt($this->getExpirationDate($profile->getCreditcardYear(), $profile->getCreditcardMonth()));
-        if ($this->gatewayConfig->isThreeDSActive() && $this->paymentProfileThreeDs->hasThreeDsStatus($profile)) {
-            $this->paymentProfileThreeDs->processThreeDsStatus($token, $profile);
-        }
         return $token;
     }
 

@@ -9,6 +9,7 @@ $ccNumberView = $block->escapeHtml($block->getNumberLast4Digits());
 <tr>
     <td data-th="<?php echo $block->escapeHtml(__('Card Number')) ?>" class="col card-number">
         <span><?php echo $block->escapeHtml(__('ending')); ?></span> <?php echo $ccNumberView ?>
+        <?php if ($block->isPending()): ?><span>pending</span><?php endif; ?>
         <?php echo $block->getApplePayLabel() ?>
     </td>
     <td data-th="<?php echo $block->escapeHtml(__('Expiration Date')) ?>" class="col card-expire">
@@ -22,15 +23,17 @@ $ccNumberView = $block->escapeHtml($block->getNumberLast4Digits());
     </td>
     <td data-th="<?php echo $block->escapeHtml(__('Actions')) ?>" class="col actions">
 
-        <form class="form" action="<?php echo $block->escapeUrl($block->getUrl('swarming_subscribepro/cards/edit')); ?>" method="get">
-            <input name="<?php echo PaymentTokenInterface::PUBLIC_HASH?>"
-                   value="<?php echo $block->getToken()->getPublicHash()?>"
-                   type="hidden"/>
+        <?php if (!$block->isPending()): ?>
+            <form class="form" action="<?php echo $block->escapeUrl($block->getUrl('swarming_subscribepro/cards/edit')); ?>" method="get">
+                <input name="<?php echo PaymentTokenInterface::PUBLIC_HASH?>"
+                       value="<?php echo $block->getToken()->getPublicHash()?>"
+                       type="hidden"/>
 
-            <button type="submit" class="action edit">
-                <span><?php echo $block->escapeHtml(__('Edit')) ?></span>
-            </button>
-        </form>
+                <button type="submit" class="action edit">
+                    <span><?php echo $block->escapeHtml(__('Edit')) ?></span>
+                </button>
+            </form>
+        <?php endif; ?>
 
         <form
             class="form"

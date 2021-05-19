@@ -19,25 +19,6 @@ class PaymentProfileThreeDs
     ];
 
     /**
-     * @param \Magento\Vault\Api\Data\PaymentTokenInterface $token
-     * @param \SubscribePro\Service\PaymentProfile\PaymentProfileInterface $profile
-     * @return void
-     */
-    public function processThreeDsStatus(PaymentTokenInterface $token, PaymentProfileInterface $profile)
-    {
-        if (!$this->hasThreeDsStatus($profile)) {
-            throw new \InvalidArgumentException('The payment profile does not have 3DS status.');
-        }
-
-        if ($this->isThreeDsFailed($profile)) {
-            $token->setIsActive(false);
-            $token->setIsVisible(false);
-        } else {
-            $token->setIsVisible($this->isThreeDsAuthenticated($profile));
-        }
-    }
-
-    /**
      * @param \SubscribePro\Service\PaymentProfile\PaymentProfileInterface $profile
      * @return bool
      */

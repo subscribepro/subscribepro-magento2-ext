@@ -85,7 +85,7 @@ define(
                 this.show3DSiFrame(false);
                 customerData.get('messages')({
                     messages: [
-                        {text: 'The cart was successfully saved.', type: 'success'}
+                        {text: 'The card was successfully saved.', type: 'success'}
                     ]
                 });
             }
