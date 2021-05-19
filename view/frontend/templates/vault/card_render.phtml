@@ -9,6 +9,7 @@ $ccNumberView = $block->escapeHtml($block->getNumberLast4Digits());
 <tr>
     <td data-th="<?php echo $block->escapeHtml(__('Card Number')) ?>" class="col card-number">
         <span><?php echo $block->escapeHtml(__('ending')); ?></span> <?php echo $ccNumberView ?>
+        <?php echo $block->getApplePayLabel() ?>
     </td>
     <td data-th="<?php echo $block->escapeHtml(__('Expiration Date')) ?>" class="col card-expire">
         <?php echo $block->escapeHtml($block->getExpDate()); ?>

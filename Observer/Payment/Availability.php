@@ -10,6 +10,7 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Payment\Model\Method\Free;
 use Swarming\SubscribePro\Gateway\Config\Config;
 use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
+use Swarming\SubscribePro\Gateway\Config\ApplePayConfigProvider;
 use Swarming\SubscribePro\Helper\Quote;
 
 class Availability implements ObserverInterface
@@ -69,6 +70,7 @@ class Availability implements ObserverInterface
                     case Free::PAYMENT_METHOD_FREE_CODE:
                         $isAvailable = $this->quoteHelper->isRecurringQuote($quote);
                         break;
+                    case ApplePayConfigProvider::CODE:
                     case ConfigProvider::CODE:
                         $isAvailable = true;
                         break;

@@ -17,5 +17,14 @@
                 </arguments>
             </block>
         </referenceBlock>
+        <referenceContainer name="checkout.cart.methods">
+            <block
+                ifconfig="payment/subscribe_pro_apple_pay/active"
+                class="Swarming\SubscribePro\Block\Cart\ApplePay"
+                name="checkout.cart.subscribe-pro.apple-pay"
+                template="Swarming_SubscribePro::cart/apple-pay.phtml"
+                after="checkout.cart.methods.onepage.bottom"
+            />
+        </referenceContainer>
     </body>
 </page>

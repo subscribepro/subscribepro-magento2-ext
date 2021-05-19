@@ -2,9 +2,9 @@
 
 namespace Swarming\SubscribePro\Helper;
 
-use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
 use Magento\Vault\Api\Data\PaymentTokenInterface;
 use SubscribePro\Service\PaymentProfile\PaymentProfileInterface;
+use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
 use Magento\Framework\App\ObjectManager;
 
 class Vault
@@ -49,13 +49,17 @@ class Vault
     }
 
     /**
-     * @param \Magento\Vault\Api\Data\PaymentTokenInterface $token
+     * @param \Magento\Vault\Api\Data\PaymentTokenInterface                $token
      * @param \SubscribePro\Service\PaymentProfile\PaymentProfileInterface $profile
+     * @param string                                                       $paymentMethodCode
      * @return \Magento\Vault\Api\Data\PaymentTokenInterface
      */
-    public function initVault(PaymentTokenInterface $token, PaymentProfileInterface $profile)
-    {
-        $token->setPaymentMethodCode(ConfigProvider::CODE);
+    public function initVault(
+        PaymentTokenInterface $token,
+        PaymentProfileInterface $profile,
+        string $paymentMethodCode = ConfigProvider::CODE
+    ) {
+        $token->setPaymentMethodCode($paymentMethodCode);
         $token->setGatewayToken($profile->getId());
         $token->setIsActive(true);
         $token->setIsVisible(true);

@@ -65,17 +65,18 @@ class Transaction extends AbstractService
     }
 
     /**
-     * @param array $paymentProfileId
+     * @param array $paymentProfileData
      * @param \SubscribePro\Service\Transaction\TransactionInterface $transaction
      * @param int|null $websiteId
      * @return \SubscribePro\Service\Transaction\TransactionInterface
      * @throws \SubscribePro\Exception\EntityInvalidDataException
      * @throws \SubscribePro\Exception\HttpException
      */
-    public function authorizeByProfile($paymentProfileId, TransactionInterface $transaction, $websiteId = null)
+    public function authorizeByProfile($paymentProfileData, TransactionInterface $transaction, $websiteId = null)
     {
         $metadata = $this->metaService->getData();
-        return $this->getService($websiteId)->authorizeByProfile($paymentProfileId, $transaction, $metadata);
+        return $this->getService($websiteId)->authorizeByProfile($paymentProfileData, $transaction, $metadata);
+
     }
 
     /**
