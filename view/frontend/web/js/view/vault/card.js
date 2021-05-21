@@ -8,10 +8,11 @@ define(
         'Swarming_SubscribePro/js/model/payment/cc-form',
         'Swarming_SubscribePro/js/action/vault/save-cart',
         'Magento_Customer/js/customer-data',
+        'mage/url',
         'mage/translate',
         'Swarming_SubscribePro/js/lib/jquery.serializejson.min'
     ],
-    function ($, Component, config, CcForm, saveCart, customerData, $t) {
+    function ($, Component, config, CcForm, saveCart, customerData, urlBuilder, $t) {
         'use strict';
 
         return Component.extend(CcForm).extend({
@@ -83,11 +84,8 @@ define(
             onOrderSuccess: function () {
                 $(window).scrollTop(0);
                 this.show3DSiFrame(false);
-                customerData.get('messages')({
-                    messages: [
-                        {text: 'The card was successfully saved.', type: 'success'}
-                    ]
-                });
+                window.location.href = urlBuilder.build('vault/cards/listaction');
+                $.cookieStorage.set('mage-messages', [{'type': 'success', 'text': 'The card was successfully saved.'}]);
             }
         });
     }
