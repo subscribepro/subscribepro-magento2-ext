@@ -20,5 +20,5 @@
     window.subscribeProPaymentConfig = <?php echo $block->getPaymentConfig(); ?>;
 </script>
 <?php if ($block->isWalletAuthorizationActive()): ?>
-    <div><?= __('Authorization %amount will performed.', ['amount' => $block->getWalletAuthorizationAmount()]) ?></div>
+    <div class="wallet-authorize-info"><?= __('Authorization %amount will performed.', ['amount' => $block->getWalletAuthorizationAmount()]) ?></div>
 <?php endif; ?>
