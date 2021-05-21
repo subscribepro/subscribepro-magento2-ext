@@ -84,8 +84,8 @@ define(
             onOrderSuccess: function () {
                 $(window).scrollTop(0);
                 this.show3DSiFrame(false);
-                window.location.href = urlBuilder.build('vault/cards/listaction');
                 $.cookieStorage.set('mage-messages', [{'type': 'success', 'text': 'The card was successfully saved.'}]);
+                window.location.href = urlBuilder.build('vault/cards/listaction');
             }
         });
     }

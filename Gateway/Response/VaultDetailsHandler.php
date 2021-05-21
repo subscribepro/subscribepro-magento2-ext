@@ -74,19 +74,18 @@ class VaultDetailsHandler implements HandlerInterface
         $payment = $paymentDO->getPayment();
 
         if ($payment->getAdditionalInformation(VaultConfigProvider::IS_ACTIVE_CODE)) {
-            $paymentToken = $this->getVaultPaymentToken($transaction);
+            $paymentToken = $this->getVaultPaymentToken($transaction, $payment->getIsTransactionPending());
             $extensionAttributes = $this->getExtensionAttributes($payment);
             $extensionAttributes->setVaultPaymentToken($paymentToken);
-
-            $payment->setAdditionalInformation(VaultConfigProvider::IS_ACTIVE_CODE, !$payment->getIsTransactionPending());
         }
     }
 
     /**
      * @param \SubscribePro\Service\Transaction\TransactionInterface $transaction
+     * @param bool $isPending
      * @return \Magento\Vault\Api\Data\PaymentTokenInterface
      */
-    protected function getVaultPaymentToken(TransactionInterface $transaction)
+    protected function getVaultPaymentToken(TransactionInterface $transaction, $isPending = false)
     {
         $paymentToken = $this->paymentTokenFactory->create();
         $paymentToken->setGatewayToken($transaction->getRefPaymentProfileId());
@@ -100,13 +99,17 @@ class VaultDetailsHandler implements HandlerInterface
         $paymentProfile = $this->paymentProfileService->loadProfile($transaction->getRefPaymentProfileId());
         $vaultPaymentToken = $paymentProfile->getPaymentToken();
 
-        $paymentToken->setTokenDetails($this->vaultHelper->getTokenDetails(
+        $tokenDetails = $this->vaultHelper->getTokenDetails(
             $transaction->getCreditcardType(),
             $transaction->getCreditcardLastDigits(),
             $transaction->getCreditcardMonth(),
             $transaction->getCreditcardYear(),
             $vaultPaymentToken
-        ));
+        );
+        if ($isPending) {
+            $tokenDetails = $this->vaultHelper->markPendingTokenDetails($tokenDetails);
+        }
+        $paymentToken->setTokenDetails($tokenDetails);
 
         return $paymentToken;
     }

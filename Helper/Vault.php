@@ -76,9 +76,7 @@ class Vault
         );
 
         if ($this->gatewayConfig->isThreeDSActive() && !$this->paymentProfileThreeDs->isThreeDsAuthenticated($profile)) {
-            $tokenDetails = $this->decodeDetails($tokenDetails);
-            $tokenDetails['state'] = self::STATE_PENDING;
-            $tokenDetails = $this->encodeDetails($tokenDetails);
+            $tokenDetails = $this->markPendingTokenDetails($tokenDetails);
         }
 
         $token->setTokenDetails($tokenDetails);
@@ -123,6 +121,17 @@ class Vault
             'paymentToken' => $paymentToken,
         ];
         return $this->encodeDetails($tokenDetails);
+    }
+
+    /**
+     * @param string $tokenDetails
+     * @return string
+     */
+    public function markPendingTokenDetails($tokenDetails)
+    {
+        $tokenDetailsData = $this->decodeDetails($tokenDetails);
+        $tokenDetailsData['state'] = self::STATE_PENDING;
+        return $this->encodeDetails($tokenDetailsData);
     }
 
     /**
