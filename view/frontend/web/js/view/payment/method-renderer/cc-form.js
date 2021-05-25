@@ -9,11 +9,11 @@ define(
         'Swarming_SubscribePro/js/action/checkout/get-order-status',
         'Magento_Checkout/js/model/quote',
         'Magento_Customer/js/model/customer',
-        'Magento_Ui/js/modal/alert',
+
         'Magento_Checkout/js/action/redirect-on-success',
         'mage/translate'
     ],
-    function ($, Component, CcForm, config, getOrderStatus, quote, customer, alert, redirectOnSuccessAction, $t) {
+    function ($, Component, CcForm, config, getOrderStatus, quote, customer, redirectOnSuccessAction, $t) {
         'use strict';
 
         return Component.extend(CcForm).extend({

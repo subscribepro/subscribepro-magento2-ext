@@ -9,6 +9,7 @@ define(
         'Swarming_SubscribePro/js/model/payment/credit-card-validation/expiration-fields',
         'Swarming_SubscribePro/js/model/payment/credit-card-validation/hosted-fields',
         'Swarming_SubscribePro/js/model/payment/spreedly',
+        'Magento_Ui/js/modal/alert',
         'mage/translate'
     ],
     function(
@@ -20,6 +21,7 @@ define(
         expirationFields,
         hostedFields,
         spreedly,
+        alert,
         $t
     ) {
         'use strict';
