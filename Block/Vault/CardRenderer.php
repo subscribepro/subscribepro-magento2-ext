@@ -6,6 +6,7 @@ use Magento\Vault\Api\Data\PaymentTokenInterface;
 use Magento\Vault\Block\AbstractCardRenderer;
 use Swarming\SubscribePro\Gateway\Config\ApplePayConfigProvider;
 use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
+use Swarming\SubscribePro\Helper\Vault as VaultHelper;
 
 class CardRenderer extends AbstractCardRenderer
 {
@@ -56,6 +57,15 @@ class CardRenderer extends AbstractCardRenderer
     public function getIconWidth()
     {
         return $this->getIconForType($this->getTokenDetails()['type'])['width'];
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPending()
+    {
+        $state = $this->getTokenDetails()['state'] ?? null;
+        return $state === VaultHelper::STATE_PENDING;
     }
 
     /**

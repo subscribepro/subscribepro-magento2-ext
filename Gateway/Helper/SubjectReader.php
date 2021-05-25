@@ -17,7 +17,7 @@ class SubjectReader
     {
         return SubjectReaderHelper::readPayment($subject);
     }
-    
+
     /**
      * @param array $subject
      * @return mixed
@@ -28,7 +28,7 @@ class SubjectReader
     {
         return SubjectReaderHelper::readAmount($subject);
     }
-    
+
     /**
      * @param array $subject
      * @return \SubscribePro\Service\Transaction\TransactionInterface
@@ -45,5 +45,19 @@ class SubjectReader
         }
 
         return $subject['transaction'];
+    }
+
+    /**
+     * @param array $subject
+     * @return \Magento\Framework\DataObject
+     * @throws \InvalidArgumentException
+     */
+    public function readTransferObject(array $subject)
+    {
+        if (!$subject['transfer'] instanceof \Magento\Framework\DataObject) {
+            throw new \InvalidArgumentException('Transfer data object should be provided');
+        }
+
+        return $subject['transfer'];
     }
 }

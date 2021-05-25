@@ -9,37 +9,28 @@ define(
         'Swarming_SubscribePro/js/action/checkout/get-order-status',
         'Magento_Checkout/js/model/quote',
         'Magento_Customer/js/model/customer',
-        'Magento_Ui/js/modal/alert',
+
         'Magento_Checkout/js/action/redirect-on-success',
         'mage/translate'
     ],
-    function ($, Component, CcForm, config, getOrderStatus, quote, customer, alert, redirectOnSuccessAction, $t) {
+    function ($, Component, CcForm, config, getOrderStatus, quote, customer, redirectOnSuccessAction, $t) {
         'use strict';
 
         return Component.extend(CcForm).extend({
             defaults: {
                 template: 'Swarming_SubscribePro/payment/cc-form',
-                canPlaceOrder: false,
-                show3DSiFrame: false
+                canPlaceOrder: false
             },
 
             initObservable: function () {
                 this._super()
                     .observe([
-                        'canPlaceOrder',
-                        'show3DSiFrame'
+                        'canPlaceOrder'
                     ]);
 
                 if (config.isThreeDSActive()) {
                     $(document).on('subscribepro:orderPlaceAfter', $.proxy(this.onOrderPlaceAfter, this));
                 }
-                this.show3DSiFrame.subscribe(function (isActive) {
-                    if (isActive) {
-                        $('body').addClass('spro-3ds-active');
-                    } else {
-                        $('body').removeClass('spro-3ds-active');
-                    }
-                });
                 return this;
             },
 
@@ -63,56 +54,8 @@ define(
                 this._super();
 
                 if (config.isThreeDSActive()) {
-                    Spreedly.on('3ds:status', $.proxy(this.on3DSstatusUpdates, this));
                     this.redirectAfterPlaceOrder = false;
                 }
-            },
-
-            on3DSstatusUpdates: function (event) {
-                console.log('event.action', event.action)
-
-                switch (event.action) {
-                    case 'challenge':
-                        this.show3DSiFrame(true);
-                        break;
-                    case 'succeeded':
-                        redirectOnSuccessAction.execute();
-                        break;
-                    case 'finalization-timeout':
-                        this.process3DSFailure($t('Time-Out. User did not authenticate within expected timeout.'));
-                        break;
-                    case 'error':
-                        this.process3DSFailure(event.context);
-                        break;
-                    default:
-                        console.log('Event not handled', event);
-                }
-            },
-
-            initializeThreeDSLifecycle: function (token) {
-                var lifecycle = new Spreedly.ThreeDS.Lifecycle({
-                    environmentKey: config.getEnvironmentKey(),
-                    hiddenIframeLocation: 'spro-3ds-iframe',
-                    challengeIframeLocation: 'spro-3ds-challenge-container',
-                    transactionToken: token,
-                    challengeIframeClasses: '',
-                })
-
-                lifecycle.start()
-            },
-
-            process3DSFailure: function (errorMessage) {
-                this.show3DSiFrame(false);
-
-                alert({
-                    title: $t('Error'),
-                    content: errorMessage,
-                    actions: {
-                        always: function(){
-                            document.location.reload();
-                        }
-                    }
-                });
             },
 
             getData: function () {
@@ -125,7 +68,7 @@ define(
                 };
 
                 if (config.isThreeDSActive()) {
-                    data.additional_data.browser_info = Spreedly.ThreeDS.serialize(config.getBrowserSize(), config.getAcceptHeader());
+                    data.additional_data.browser_info = this.getThreeDSBrowserInfo();
                 }
                 return data;
             },
@@ -156,9 +99,13 @@ define(
                         if (response.state === 'pending') {
                             this.initializeThreeDSLifecycle(response.token);
                         } else {
-                            redirectOnSuccessAction.execute();
+                            this.onOrderSuccess();
                         }
                     }.bind(this));
+            },
+
+            onOrderSuccess: function () {
+                redirectOnSuccessAction.execute();
             }
         });
     }
