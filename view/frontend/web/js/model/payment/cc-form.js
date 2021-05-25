@@ -128,7 +128,7 @@ define(
 
                 alert({
                     title: $t('Error'),
-                    content: errorMessage,
+                    content: $t('Transaction has been declined. Please try again later.'),
                     actions: {
                         always: function(){
                             document.location.reload();
