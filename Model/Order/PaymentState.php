@@ -41,4 +41,23 @@ class PaymentState extends \Magento\Framework\DataObject implements OrderPayment
     {
         $this->setData(self::KEY_TOKEN, $token);
     }
+
+    /**
+     * @return mixed[]|null
+     */
+    public function getGatewaySpecificFields()
+    {
+        return $this->_getData(self::GATEWAY_SPECIFIC_FIELDS)
+            ? (array)$this->_getData(self::GATEWAY_SPECIFIC_FIELDS)
+            : null;
+    }
+
+    /**
+     * @param mixed[] $gatewaySpecificFields
+     * @return void
+     */
+    public function setGatewaySpecificFields($gatewaySpecificFields)
+    {
+        $this->setData(self::GATEWAY_SPECIFIC_FIELDS, $gatewaySpecificFields);
+    }
 }
