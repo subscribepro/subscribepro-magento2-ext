@@ -6,6 +6,7 @@ use Magento\Vault\Api\Data\PaymentTokenInterface;
 use SubscribePro\Service\PaymentProfile\PaymentProfileInterface;
 use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
 use Magento\Framework\App\ObjectManager;
+use Swarming\SubscribePro\Model\Config\Source\ThreeDsType;
 
 class Vault
 {
@@ -75,7 +76,7 @@ class Vault
             $profile->getPaymentToken()
         );
 
-        if ($this->gatewayConfig->isThreeDSActive() && !$this->paymentProfileThreeDs->isThreeDsAuthenticated($profile)) {
+        if ($this->gatewayConfig->isThreeDSActive() && $this->gatewayConfig->getThreeDsType() === ThreeDsType::GATEWAY_INDEPENDENT && !$this->paymentProfileThreeDs->isThreeDsAuthenticated($profile)) {
             $tokenDetails = $this->markPendingTokenDetails($tokenDetails);
         }
 
@@ -96,7 +97,7 @@ class Vault
         $tokenDetails['expirationDate'] = $profile->getCreditcardMonth() . '/' . $profile->getCreditcardYear();
 
         unset($tokenDetails['state']);
-        if ($this->gatewayConfig->isThreeDSActive() && !$this->paymentProfileThreeDs->isThreeDsAuthenticated($profile)) {
+        if ($this->gatewayConfig->isThreeDSActive() && $this->gatewayConfig->getThreeDsType() === ThreeDsType::GATEWAY_INDEPENDENT && !$this->paymentProfileThreeDs->isThreeDsAuthenticated($profile)) {
             $tokenDetails['state'] = self::STATE_PENDING;
         }
 
