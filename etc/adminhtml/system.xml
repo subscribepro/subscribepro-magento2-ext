@@ -242,7 +242,16 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
 
-                <field id="wallet_authorization_active" translate="label" type="select" sortOrder="46" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="three_ds_type" translate="label" type="select" sortOrder="46" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>3DS Type</label>
+                    <comment>In most cases Subscribe Pro uses a gateway-independent 3DS implementation. For integrations that require a gateway-specific implementation, this can be changed here.</comment>
+                    <source_model>Swarming\SubscribePro\Model\Config\Source\ThreeDsType</source_model>
+                    <depends>
+                        <field id="three_ds_active">1</field>
+                    </depends>
+                </field>
+
+                <field id="wallet_authorization_active" translate="label" type="select" sortOrder="47" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Enable Authorization on Wallet</label>
                     <comment>Enable or disable authorization of new cards added by customer on wallet page</comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -251,7 +260,7 @@
                     </depends>
                 </field>
 
-                <field id="wallet_authorization_amount" translate="label" type="text" sortOrder="47" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <field id="wallet_authorization_amount" translate="label" type="text" sortOrder="48" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Authorization Amount on Wallet</label>
                     <validate>validate-greater-than-zero validate-number required-entry</validate>
                 </field>

@@ -67,6 +67,7 @@
                 <useccv>1</useccv>
                 <payment_action>authorize</payment_action>
                 <three_ds_active>0</three_ds_active>
+                <three_ds_type>gateway_independent</three_ds_type>
                 <browser_size>04</browser_size>
                 <accept_header><![CDATA[text/html,application/xhtml+xml;q=0.9,*/*;q=0.8]]></accept_header>
                 <currency>USD</currency>
