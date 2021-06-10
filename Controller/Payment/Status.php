@@ -19,7 +19,7 @@ class Status extends Action implements CsrfAwareActionInterface, HttpPostActionI
         /** @var \Magento\Framework\Controller\Result\Redirect $resultRedirect */
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
         if ($this->getRequest()->getParam('TRANSACTION_STATUS')) {
-            $this->messageManager->addSuccessMessage(__('Order was place successfully.'));
+            $this->messageManager->addSuccessMessage(__('Order was placed successfully.'));
             $resultRedirect->setPath('checkout/onepage/success/');
         } else {
             $this->messageManager->addErrorMessage(__('Transaction has been declined. Please try again later.'));
