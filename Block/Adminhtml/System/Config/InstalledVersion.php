@@ -4,7 +4,7 @@ namespace Swarming\SubscribePro\Block\Adminhtml\System\Config;
 
 class InstalledVersion extends \Magento\Config\Block\System\Config\Form\Field
 {
-    const INSTALLED_VERSION = '1.5.1';
+    const INSTALLED_VERSION = '1.5.2';
 
     protected function _getElementHtml(\Magento\Framework\Data\Form\Element\AbstractElement $element)
     {
