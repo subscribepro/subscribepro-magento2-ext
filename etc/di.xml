@@ -557,4 +557,12 @@
         </arguments>
     </type>
     <!-- ApplePay Logger Handlers-->
+
+    <type name="Magento\Framework\Reflection\DataObjectProcessor">
+        <arguments>
+            <argument name="processors" xsi:type="array">
+                <item name="Swarming\SubscribePro\Model\Order\PaymentState" xsi:type="object">Swarming\SubscribePro\Webapi\OrderPaymentStateProcessor</item>
+            </argument>
+        </arguments>
+    </type>
 </config>

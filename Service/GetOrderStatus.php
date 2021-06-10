@@ -43,11 +43,16 @@ class GetOrderStatus implements \Swarming\SubscribePro\Api\GetOrderStatusInterfa
         $isOnReview = $order->getState() === Order::STATE_PAYMENT_REVIEW;
         $transactionState = $isOnReview ? 'pending' : 'processed';
         $transactionToken = $isOnReview ? $this->getToken($order) : '';
+        $gatewaySpecificFields = $isOnReview ? $this->getGatewaySpecificFields($order) : null;
 
         /** @var \Swarming\SubscribePro\Api\Data\OrderPaymentStateInterface $orderPaymentState */
         $orderPaymentState = $this->orderPaymentStateFactory->create();
         $orderPaymentState->setState($transactionState);
         $orderPaymentState->setToken($transactionToken);
+
+        if ($gatewaySpecificFields) {
+            $orderPaymentState->setGatewaySpecificFields($gatewaySpecificFields);
+        }
 
         return $orderPaymentState;
     }
@@ -60,5 +65,17 @@ class GetOrderStatus implements \Swarming\SubscribePro\Api\GetOrderStatusInterfa
     {
         $payment = $order->getPayment();
         return (string)$payment->getAdditionalInformation(TransactionInterface::TOKEN);
+    }
+
+    /**
+     * @param \Magento\Sales\Model\Order $order
+     * @return array|null
+     */
+    private function getGatewaySpecificFields(Order $order)
+    {
+        $payment = $order->getPayment();
+        $gatewaySpecificResponse = $payment->getAdditionalInformation(TransactionInterface::GATEWAY_SPECIFIC_RESPONSE);
+        $gatewaySpecificFields = $gatewaySpecificResponse['fields'] ?? null;
+        return $gatewaySpecificFields ? (array)$gatewaySpecificFields : null;
     }
 }

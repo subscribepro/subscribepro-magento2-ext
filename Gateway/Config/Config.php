@@ -6,6 +6,7 @@ class Config extends \Magento\Payment\Gateway\Config\Config
 {
     const KEY_ACTIVE = 'active';
     const KEY_THREE_DS_ACTIVE = 'three_ds_active';
+    const KEY_THREE_DS_TYPE = 'three_ds_type';
     const KEY_WALLET_AUTHORIZATION_ACTIVE = 'wallet_authorization_active';
     const KEY_WALLET_AUTHORIZATION_AMOUNT = 'wallet_authorization_amount';
     const KEY_BROWSER_SIZE = 'browser_size';
@@ -32,6 +33,15 @@ class Config extends \Magento\Payment\Gateway\Config\Config
     public function isThreeDSActive($storeId = null)
     {
         return (bool)$this->getValue(self::KEY_THREE_DS_ACTIVE, $storeId);
+    }
+
+    /**
+     * @param int|null $storeId
+     * @return string
+     */
+    public function getThreeDsType($storeId = null)
+    {
+        return $this->getValue(self::KEY_THREE_DS_TYPE, $storeId);
     }
 
     /**

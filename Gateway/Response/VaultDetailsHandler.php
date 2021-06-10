@@ -6,6 +6,7 @@ use SubscribePro\Service\Transaction\TransactionInterface;
 use Magento\Payment\Gateway\Response\HandlerInterface;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Vault\Model\Ui\VaultConfigProvider;
+use Swarming\SubscribePro\Model\Config\Source\ThreeDsType;
 
 class VaultDetailsHandler implements HandlerInterface
 {
@@ -106,7 +107,7 @@ class VaultDetailsHandler implements HandlerInterface
             $transaction->getCreditcardYear(),
             $vaultPaymentToken
         );
-        if ($isPending) {
+        if ($this->gatewayConfig->getThreeDsType() === ThreeDsType::GATEWAY_INDEPENDENT && $isPending) {
             $tokenDetails = $this->vaultHelper->markPendingTokenDetails($tokenDetails);
         }
         $paymentToken->setTokenDetails($tokenDetails);
