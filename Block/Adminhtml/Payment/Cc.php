@@ -51,4 +51,12 @@ class Cc extends \Magento\Payment\Block\Form\Cc
     {
         return ConfigProvider::CODE;
     }
+
+    /**
+     * @return bool
+     */
+    public function getQuoteHasCustomer()
+    {
+        return $this->quoteSession->getQuote()->getCustomerId() !== null;
+    }
 }

@@ -64,5 +64,5 @@ $code = $block->escapeHtml($block->getMethodCode());
     </div>
 
     <input type="hidden" id="<?php echo $code; ?>_payment_method_token" name="payment[payment_method_token]"/>
-    <input name="payment[is_active_payment_token_enabler]" type="hidden" value="true" />
+    <input name="payment[is_active_payment_token_enabler]" type="hidden" value="<?= $block->getQuoteHasCustomer() ? 'true' : 'false'; ?>" />
 </fieldset>
