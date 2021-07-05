@@ -33,7 +33,7 @@ class InstallData implements InstallDataInterface
     public function install(ModuleDataSetupInterface $setup, ModuleContextInterface $context)
     {
         $setup->startSetup();
-        
+
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
 
         $entityTypeId = $eavSetup->getEntityTypeId(Product::ENTITY);
@@ -49,7 +49,7 @@ class InstallData implements InstallDataInterface
                 'label' => 'Subscription Enabled',
                 'input' => 'select',
                 'class' => '',
-                'source' => 'Magento\Eav\Model\Entity\Attribute\Source\Boolean',
+                'source' => \Magento\Eav\Model\Entity\Attribute\Source\Boolean::class,
                 'global' => ScopedAttributeInterface::SCOPE_WEBSITE,
                 'visible' => true,
                 'required' => false,
@@ -64,7 +64,7 @@ class InstallData implements InstallDataInterface
                 'apply_to' => 'simple,configurable,bundle,virtual,downloadable'
             ]
         );
-        
+
         $setup->endSetup();
     }
 }

@@ -287,7 +287,6 @@ class PaymentRequestConfig extends DataObject
                 $data = $this->platformOAuth->getWidgetAccessTokenByGuest($websiteId);
             }
 
-
             return ($data && isset($data['access_token'])) ? $data['access_token'] : '';
         } catch (LocalizedException $e) {
             $this->logger->error('QuoteId: ' . $quote->getId());

@@ -6,7 +6,7 @@ use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
 ?>
 <script>
     //<![CDATA[
-    window.subscribeProPaymentConfig = <?php echo $block->getPaymentConfig(); ?>;
+    window.subscribeProPaymentConfig = <?= /** @noEscape */ $block->getPaymentConfig() ?>;
     require(
         [
             'Swarming_SubscribePro/js/cc',
@@ -14,7 +14,7 @@ use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
             'domReady!'
         ], function(SubscribePro, $) {
             var config = {};
-            var form = $('#payment_form_<?php echo ConfigProvider::CODE; ?>');
+            var form = $('#payment_form_<?= /** @noEscape */ ConfigProvider::CODE ?>');
 
             config.active = form.length > 0 && !form.is(':hidden');
             var payment = new SubscribePro(config);

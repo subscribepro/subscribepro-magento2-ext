@@ -48,7 +48,7 @@ class SubscriptionConfig
     protected function getCancellationContent()
     {
         $cmsBlock = $this->blockFactory->createBlock(
-            'Magento\Cms\Block\Block',
+            \Magento\Cms\Block\Block::class,
             ['data' => ['block_id' => self::BLOCK_NAME_CANCELLATION]]
         );
         $content = $cmsBlock->toHtml() ?: __('Are you sure you want to cancel the subscription?');

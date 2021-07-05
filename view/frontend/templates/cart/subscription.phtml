@@ -1,17 +1,15 @@
 <?php
-/**
- * @var $block \Swarming\SubscribePro\Block\Cart\Subscription
- */
+/** @var \Swarming\SubscribePro\Block\Cart\Subscription $block */
+/** @var \Magento\Framework\Escaper $escaper */
 ?>
-
-<div class="subscription-container" data-bind="scope: 'subscription-container-<?php echo $block->getItem()->getId(); ?>'">
+<div class="subscription-container" data-bind="scope: 'subscription-container-<?= (int)$block->getItem()->getId() ?>'">
     <!-- ko template: getTemplate() --><!-- /ko -->
 </div>
 
 <script type="text/x-magento-init">
     {
         "*": {
-            "Magento_Ui/js/core/app": <?php echo $block->getJsLayout();?>
+            "Magento_Ui/js/core/app": <?= $block->getJsLayout();?>
         }
     }
 </script>
