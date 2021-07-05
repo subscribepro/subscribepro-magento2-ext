@@ -6,10 +6,6 @@ use Magento\Rule\Model\Condition\Context;
 use Swarming\SubscribePro\Helper\DiscountRule as DiscountRuleHelper;
 use Swarming\SubscribePro\Helper\QuoteItem as QuoteItemHelper;
 
-/**
- * Class Status
- * @package Swarming\SubscribePro\Model\Rule\Condition
- */
 class Base extends \Magento\Rule\Model\Condition\AbstractCondition
 {
     const SUBSCRIPTION_STATUS_ANY = 0;
