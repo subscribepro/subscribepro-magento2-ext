@@ -1,68 +1,67 @@
 <?php
-/**
- * @var $block \Swarming\SubscribePro\Block\Vault\Edit\BillingAddress
- */
+/** @var \Swarming\SubscribePro\Block\Vault\Edit\BillingAddress $block */
+/** @var \Magento\Framework\Escaper $escaper */
 ?>
 <fieldset class="fieldset">
-    <legend class="legend"><span><?php echo __('Contact Information') ?></span></legend><br>
-    <?php echo $block->getBlockHtml('formkey')?>
+    <legend class="legend"><span><?= $escaper->escapeHtml(__('Contact Information')) ?></span></legend><br>
+    <?= $block->getBlockHtml('formkey')?>
     <div class="field field-name-firstname required">
-        <label class="label" for="first_name"><span><?php echo __('First Name') ?></span></label>
+        <label class="label" for="first_name"><span><?= $escaper->escapeHtml(__('First Name')) ?></span></label>
         <div class="control">
             <input type="text" id="first_name" name="billing_address[first_name]" class="input-text required-entry" data-validate="{required:true}"
-                   value="<?php echo $block->escapeHtml($block->getFirstName()) ?>"
-                   title="<?php echo __('First Name') ?>">
+                   value="<?= $escaper->escapeHtmlAttr($block->getFirstName()) ?>"
+                   title="<?= $escaper->escapeHtmlAttr(__('First Name')) ?>">
         </div>
     </div>
     <div class="field field-name-middlename">
-        <label class="label"  for="middle_name"><span><?php echo __('Middle Name') ?></span></label>
+        <label class="label"  for="middle_name"><span><?= $escaper->escapeHtml(__('Middle Name')) ?></span></label>
         <div class="control">
             <input type="text" id="middle_name" name="billing_address[middle_name]" class="input-text"
-                   value="<?php echo $block->escapeHtml($block->getMiddleName()) ?>"
-                   title="<?php echo __('Middle Name') ?>">
+                   value="<?= $escaper->escapeHtmlAttr($block->getMiddleName()) ?>"
+                   title="<?= $escaper->escapeHtmlAttr(__('Middle Name')) ?>">
         </div>
     </div>
     <div class="field field-name-lastname required">
-        <label class="label"  for="last_name"><span><?php echo __('Last Name') ?></span></label>
+        <label class="label"  for="last_name"><span><?= $escaper->escapeHtml(__('Last Name')) ?></span></label>
         <div class="control">
             <input type="text" id="last_name" name="billing_address[last_name]" class="input-text required-entry" data-validate="{required:true}"
-                   value="<?php echo $block->escapeHtml($block->getLastName()) ?>"
-                   title="<?php echo __('Last Name') ?>">
+                   value="<?= $escaper->escapeHtmlAttr($block->getLastName()) ?>"
+                   title="<?= $escaper->escapeHtmlAttr(__('Last Name')) ?>">
         </div>
     </div>
     <div class="field field-name-company">
-        <label class="label"  for="company"><span><?php echo __('Company') ?></span></label>
+        <label class="label"  for="company"><span><?= $escaper->escapeHtml(__('Company')) ?></span></label>
         <div class="control">
             <input type="text" id="company" name="billing_address[company]" class="input-text"
-                   value="<?php echo $block->escapeHtml($block->getCompany()) ?>"
-                   title="<?php echo __('Company') ?>">
+                   value="<?= $escaper->escapeHtmlAttr($block->getCompany()) ?>"
+                   title="<?= $escaper->escapeHtmlAttr(__('Company')) ?>">
         </div>
     </div>
     <div class="field telephone required">
-        <label class="label" for="telephone"><span><?php echo __('Phone Number') ?></span></label>
+        <label class="label" for="telephone"><span><?= $escaper->escapeHtml(__('Phone Number')) ?></span></label>
         <div class="control">
             <input type="text" id="telephone" name="billing_address[phone]" class="input-text required-entry" data-validate="{required:true}"
-                   value="<?php echo $block->escapeHtml($block->getTelephone()) ?>"
-                   title="<?php echo __('Phone Number') ?>">
+                   value="<?= $escaper->escapeHtmlAttr($block->getTelephone()) ?>"
+                   title="<?= $escaper->escapeHtmlAttr(__('Phone Number')) ?>">
         </div>
     </div>
 </fieldset>
 
 <fieldset class="fieldset">
-    <legend class="legend"><span><?php echo __('Address') ?></span></legend><br>
+    <legend class="legend"><span><?= $escaper->escapeHtml(__('Address')) ?></span></legend><br>
     <div class="field street required">
-        <label for="street1" class="label"><span><?php echo __('Street Address') ?></span></label>
+        <label for="street1" class="label"><span><?= $escaper->escapeHtml(__('Street Address')) ?></span></label>
         <div class="control">
             <input type="text" name="billing_address[street1]" id="street1" class="input-text required-entry"
-                   value="<?php echo $block->escapeHtml($block->getStreetLine1()) ?>"
-                   title="<?php echo __('Street Address') ?>" />
+                   value="<?= $escaper->escapeHtmlAttr($block->getStreetLine1()) ?>"
+                   title="<?= $escaper->escapeHtmlAttr(__('Street Address')) ?>" />
             <div class="nested">
                 <div class="field additional">
-                    <label class="label" for="street2"><span><?php echo __('Street Address 2') ?></span></label>
+                    <label class="label" for="street2"><span><?= $escaper->escapeHtml(__('Street Address 2')) ?></span></label>
                     <div class="control">
                         <input type="text" name="billing_address[street2]" id="street2" class="input-text"
-                               value="<?php echo $block->escapeHtml($block->getStreetLine2()) ?>"
-                               title="<?php echo __('Street Address 2') ?>">
+                               value="<?= $escaper->escapeHtmlAttr($block->getStreetLine2()) ?>"
+                               title="<?= $escaper->escapeHtmlAttr(__('Street Address 2')) ?>">
                     </div>
                 </div>
             </div>
@@ -70,39 +69,39 @@
     </div>
 
     <div class="field city required">
-        <label class="label" for="city"><span><?php echo __('City') ?></span></label>
+        <label class="label" for="city"><span><?= $escaper->escapeHtml(__('City')) ?></span></label>
         <div class="control">
             <input type="text" name="billing_address[city]" class="input-text required-entry" id="city"
-                   value="<?php echo $block->escapeHtml($block->getCity()) ?>"
-                   title="<?php echo __('City') ?>">
+                   value="<?= $escaper->escapeHtmlAttr($block->getCity()) ?>"
+                   title="<?= $escaper->escapeHtmlAttr(__('City')) ?>">
         </div>
     </div>
     <div class="field region required">
-        <label class="label" for="region_id"><span><?php echo __('State/Province') ?></span></label>
+        <label class="label" for="region_id"><span><?= $escaper->escapeHtml(__('State/Province')) ?></span></label>
         <div class="control">
             <select id="region_id" name="billing_address[region_id]"
-                    title="<?php echo __('State/Province') ?>"
-                    class="validate-select" <?php echo(!$block->getIsRegionDisplayAll()) ? ' disabled="disabled"' : '';?>>
-                <option value=""><?php echo __('Please select a region, state or province.') ?></option>
+                    title="<?= $escaper->escapeHtmlAttr(__('State/Province')) ?>"
+                    class="validate-select" <?=(!$block->getIsRegionDisplayAll()) ? ' disabled="disabled"' : '';?>>
+                <option value=""><?= $escaper->escapeHtml(__('Please select a region, state or province.')) ?></option>
             </select>
             <input type="text" id="region" name="billing_address[region]"
-                   value="<?php echo $block->escapeHtml($block->getRegion()) ?>"
-                   title="<?php echo __('State/Province') ?>"
-                   class="input-text"<?php echo(!$block->getIsRegionDisplayAll()) ? ' disabled="disabled"' : '';?>/>
+                   value="<?= $escaper->escapeHtmlAttr($block->getRegion()) ?>"
+                   title="<?= $escaper->escapeHtmlAttr(__('State/Province')) ?>"
+                   class="input-text"<?= (!$block->getIsRegionDisplayAll()) ? ' disabled="disabled"' : '' ?>/>
         </div>
     </div>
     <div class="field zip required">
-        <label class="label" for="postcode"><span><?php echo __('Zip/Postal Code') ?></span></label>
+        <label class="label" for="postcode"><span><?= $escaper->escapeHtml(__('Zip/Postal Code')) ?></span></label>
         <div class="control">
             <input type="text" name="billing_address[postcode]" id="postcode" class="input-text validate-zip-international"
-                   value="<?php echo $block->escapeHtml($block->getPostCode()) ?>"
-                   title="<?php echo __('Zip/Postal Code') ?>" >
+                   value="<?= $escaper->escapeHtmlAttr($block->getPostCode()) ?>"
+                   title="<?= $escaper->escapeHtmlAttr(__('Zip/Postal Code')) ?>" >
         </div>
     </div>
     <div class="field country required">
-        <label class="label" for="country"><span><?php echo __('Country') ?></span></label>
+        <label class="label" for="country"><span><?= $escaper->escapeHtml(__('Country')) ?></span></label>
         <div class="control">
-            <?php echo $block->getCountryHtmlSelect(null, 'billing_address[country]') ?>
+            <?= $block->getCountryHtmlSelect(null, 'billing_address[country]') ?>
         </div>
     </div>
 </fieldset>
@@ -111,14 +110,14 @@
     {
         "#country": {
             "regionUpdater": {
-                "optionalRegionAllowed": <?php echo($block->getIsRegionDisplayAll() ? 'true' : 'false'); ?>,
+                "optionalRegionAllowed": <?= ($block->getIsRegionDisplayAll() ? 'true' : 'false') ?>,
                 "regionListId": "#region_id",
                 "regionInputId": "#region",
                 "postcodeId": "#postcode",
                 "form": "#vault-edit",
-                "regionJson": <?php echo $this->helper('Magento\Directory\Helper\Data')->getRegionJson() ?>,
-                "defaultRegion": "<?php echo $block->getRegionId() ?>",
-                "countriesWithOptionalZip": <?php echo $this->helper('Magento\Directory\Helper\Data')->getCountriesWithOptionalZip(true) ?>
+                "regionJson": <?= /* @noEscape */ $this->helper(\Magento\Directory\Helper\Data::class)->getRegionJson() ?>,
+                "defaultRegion": "<?= /* @noEscape */ $block->getRegionId() ?>",
+                "countriesWithOptionalZip": <?= /* @noEscape */ $this->helper(\Magento\Directory\Helper\Data::class)->getCountriesWithOptionalZip(true) ?>
             }
         }
     }

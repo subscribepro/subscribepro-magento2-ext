@@ -2,10 +2,6 @@
 
 namespace Swarming\SubscribePro\Model\Rule\Condition;
 
-/**
- * Class Status
- * @package Swarming\SubscribePro\Model\Rule\Condition
- */
 class Interval extends Base
 {
     /**

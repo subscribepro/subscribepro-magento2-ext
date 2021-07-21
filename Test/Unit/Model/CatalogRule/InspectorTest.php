@@ -28,7 +28,6 @@ class InspectorTest extends \PHPUnit\Framework\TestCase
         $this->inspector = new Inspector($this->inspectorRepositoryMock);
     }
 
-
     /**
      * @param string $productType
      * @param bool $isApplied

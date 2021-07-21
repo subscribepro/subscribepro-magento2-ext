@@ -76,7 +76,6 @@ class Transaction extends AbstractService
     {
         $metadata = $this->metaService->getData();
         return $this->getService($websiteId)->authorizeByProfile($paymentProfileData, $transaction, $metadata);
-
     }
 
     /**

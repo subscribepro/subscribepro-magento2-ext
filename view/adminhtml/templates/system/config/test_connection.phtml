@@ -1,9 +1,10 @@
 <?php
-    /** @var $block \Swarming\SubscribePro\Block\Adminhtml\System\Config\TestConnection */
+/** @var \Swarming\SubscribePro\Block\Adminhtml\System\Config\TestConnection $block */
+/** @var \Magento\Framework\Escaper $escaper */
 ?>
 <div class="actions actions-test-connection">
-    <button onclick="testConnection(); return false;" class="action-test-connection" type="button" id="<?php echo $block->getHtmlId() ?>">
-        <span><?php echo $block->escapeHtml($block->getButtonLabel()) ?></span>
+    <button onclick="testConnection(); return false;" class="action-test-connection" type="button" id="<?= $block->getHtmlId() ?>">
+        <span><?= $escaper->escapeHtml($block->getButtonLabel()) ?></span>
     </button>
     &nbsp;
     <span id="test-connection-result" class="message-test-connection"></span>
@@ -22,11 +23,18 @@
                 .css('color', '')
                 .text('');
 
-            var baseUrl = $('#<?php echo $block->getBaseUrlSelectorId() ?>').val();
-            var clientId = $('#<?php echo $block->getClientIdSelectorId() ?>').val();
-            var clientSecret = $('#<?php echo $block->getClientSecretSelectorId() ?>').val();
+            var baseUrl = $('#<?= /** @noEscape */ $block->getBaseUrlSelectorId() ?>').val();
+            var clientId = $('#<?= /** @noEscape */ $block->getClientIdSelectorId() ?>').val();
+            var clientSecret = $('#<?= /** @noEscape */ $block->getClientSecretSelectorId() ?>').val();
 
-            $.getJSON('<?php echo $block->getAjaxUrl() ?>', {base_url: baseUrl, client_id: clientId, client_secret: clientSecret, website: '<?php echo $block->getWebsiteCode() ?>'})
+            $.getJSON(
+                '<?= $escaper->escapeUrl($block->getAjaxUrl()) ?>',
+                {
+                    base_url: baseUrl,
+                    client_id: clientId,
+                    client_secret: clientSecret,
+                    website: '<?= $escaper->escapeJs($block->getWebsiteCode()) ?>'
+                })
                 .done(function (result) {
                     console.log(result);
                     resultMessageBox

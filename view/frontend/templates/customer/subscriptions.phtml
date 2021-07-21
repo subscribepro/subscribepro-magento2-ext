@@ -1,14 +1,10 @@
 <?php
-/**
- * @var $block \Swarming\SubscribePro\Block\Customer\Subscriptions
- */
+/** @var \Swarming\SubscribePro\Block\Customer\Subscriptions $block */
+/** @var \Magento\Framework\Escaper $escaper */
 ?>
-
-<?php
-if ($block->isHostedWidgetEnabled() && false !== $block->getPlatformCustomerId()) {
-    ?>
+<?php if ($block->isHostedWidgetEnabled() && false !== $block->getPlatformCustomerId()): ?>
     <div id="sp-my-subscriptions" class="sp-my-subscriptions"></div>
-    <script src="<?php echo $block->getHostedWidgetUrl(); ?>"></script>
+    <script src="<?= $escaper->escapeUrl($block->getHostedWidgetUrl()) ?>"></script>
     <script>
         // Start with override-able defaults
         let finalWidgetConfig = {
@@ -16,16 +12,16 @@ if ($block->isHostedWidgetEnabled() && false !== $block->getPlatformCustomerId()
             element: "sp-my-subscriptions"
         };
         // Merge in custom configuration
-        let customWidgetConfig = <?php echo $block->getHostedWidgetConfig(); ?>;
+        let customWidgetConfig = <?= /** @noEscape */ $block->getHostedWidgetConfig() ?>;
         for (let key in customWidgetConfig) {
             finalWidgetConfig[key] = customWidgetConfig[key];
         }
 
         // Don't override the required widget config
         let originalWidgetConfig = {
-            apiBaseUrl: "<?php echo $block->getSubscribeProBaseApiUrl(); ?>",
-            apiAccessToken: "<?php echo $block->getWidgetAccessTokenForCurrentCustomer(); ?>",
-            customerId: <?php echo $block->getPlatformCustomerId(); ?>
+            apiBaseUrl: "<?= $escaper->escapeUrl($block->getSubscribeProBaseApiUrl()) ?>",
+            apiAccessToken: "<?= /** @noEscape */ $block->getWidgetAccessTokenForCurrentCustomer() ?>",
+            customerId: <?= /** @noEscape */ $block->getPlatformCustomerId() ?>
         };
         for (let key in originalWidgetConfig) {
             finalWidgetConfig[key] = originalWidgetConfig[key];
@@ -33,24 +29,20 @@ if ($block->isHostedWidgetEnabled() && false !== $block->getPlatformCustomerId()
 
         MySubscriptions.init(finalWidgetConfig);
     </script>
-<?php
-} else {
-        ?>
+<?php else: ?>
     <div id="subscriptions-container" data-bind="scope: 'subscriptions-container'">
         <!-- ko template: getTemplate() --><!-- /ko -->
     </div>
-    <?php
-    }
-?>
+<?php endif; ?>
 
 <script type="text/x-magento-init">
     {
         "*": {
-            "Magento_Ui/js/core/app": <?php echo $block->getJsLayout();?>
+            "Magento_Ui/js/core/app": <?= $block->getJsLayout() ?>
         }
     }
 </script>
 
 <script>
-    window.customerData = <?php echo \Zend_Json::encode($block->getCustomerData()); ?>;
+    window.customerData = <?= \Zend_Json::encode($block->getCustomerData()) ?>;
 </script>

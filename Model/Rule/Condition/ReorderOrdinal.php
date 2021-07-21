@@ -2,10 +2,6 @@
 
 namespace Swarming\SubscribePro\Model\Rule\Condition;
 
-/**
- * Class Status
- * @package Swarming\SubscribePro\Model\Rule\Condition
- */
 class ReorderOrdinal extends Base
 {
     /**
@@ -27,7 +23,9 @@ class ReorderOrdinal extends Base
      */
     public function validate(\Magento\Framework\Model\AbstractModel $model)
     {
-        $reorder_ordinal = $this->discountRuleHelper->validateReorderOrdinal($this->quoteItemHelper->getSubscriptionParams($model));
-        return false === $reorder_ordinal ? false : $this->validateAttribute($reorder_ordinal);
+        $reorderOrdinal = $this->discountRuleHelper->validateReorderOrdinal(
+            $this->quoteItemHelper->getSubscriptionParams($model)
+        );
+        return false === $reorderOrdinal ? false : $this->validateAttribute($reorderOrdinal);
     }
 }
