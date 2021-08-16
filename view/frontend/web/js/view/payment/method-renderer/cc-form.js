@@ -80,6 +80,7 @@ define(
                     'phone_number': quote.billingAddress().telephone,
                     'address1': quote.billingAddress().street[0],
                     'address2': quote.billingAddress().street[1] || '',
+                    'address3': quote.billingAddress().street[2] || '',
                     'city': quote.billingAddress().city,
                     'state': quote.billingAddress().regionCode,
                     'zip': quote.billingAddress().postcode,

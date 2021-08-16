@@ -163,6 +163,7 @@ define(
                     'phone_number': $('#order-billing_address_telephone').val(),
                     'address1': $('#order-billing_address_street0').val(),
                     'address2': $('#order-billing_address_street1').val(),
+                    'address3': $('#order-billing_address_street2').val(),
                     'city': $('#order-billing_address_city').val(),
                     'state': $("#order-billing_address_region_id option:selected").text(),
                     'zip': $('#order-billing_address_postcode').val(),

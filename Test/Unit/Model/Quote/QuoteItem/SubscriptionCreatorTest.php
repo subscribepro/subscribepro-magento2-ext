@@ -123,11 +123,12 @@ class SubscriptionCreatorTest extends \PHPUnit\Framework\TestCase
         $addressMock->expects($this->once())->method('getPostcode')->willReturn('111FFF');
         $addressMock->expects($this->once())->method('getCountryId')->willReturn('USA');
         $addressMock->expects($this->once())->method('getTelephone')->willReturn('999888');
-        $addressMock->expects($this->exactly(2))
+        $addressMock->expects($this->exactly(3))
             ->method('getStreetLine')
             ->willReturnMap([
                 [1, 'street 1'],
-                [2, 'street 2']
+                [2, 'street 2'],
+                [3, 'street 3']
             ]);
 
         $platformAddressMock = $this->createPlatformAddressMock();
@@ -135,6 +136,7 @@ class SubscriptionCreatorTest extends \PHPUnit\Framework\TestCase
         $platformAddressMock->expects($this->once())->method('setLastName')->with('Last-name');
         $platformAddressMock->expects($this->once())->method('setStreet1')->with('street 1');
         $platformAddressMock->expects($this->once())->method('setStreet2')->with('street 2');
+        $platformAddressMock->expects($this->once())->method('setStreet3')->with('street 3');
         $platformAddressMock->expects($this->once())->method('setCity')->with('New York');
         $platformAddressMock->expects($this->once())->method('setRegion')->with('region-code');
         $platformAddressMock->expects($this->once())->method('setPostcode')->with('111FFF');
@@ -238,11 +240,12 @@ class SubscriptionCreatorTest extends \PHPUnit\Framework\TestCase
         $addressMock->expects($this->once())->method('getPostcode')->willReturn('111FFF');
         $addressMock->expects($this->once())->method('getCountryId')->willReturn('USA');
         $addressMock->expects($this->once())->method('getTelephone')->willReturn('999888');
-        $addressMock->expects($this->exactly(2))
+        $addressMock->expects($this->exactly(3))
             ->method('getStreetLine')
             ->willReturnMap([
                 [1, 'street 1'],
-                [2, 'street 2']
+                [2, 'street 2'],
+                [3, 'street 3']
             ]);
 
         $platformAddressMock = $this->createPlatformAddressMock();
@@ -250,6 +253,7 @@ class SubscriptionCreatorTest extends \PHPUnit\Framework\TestCase
         $platformAddressMock->expects($this->once())->method('setLastName')->with('Last-name');
         $platformAddressMock->expects($this->once())->method('setStreet1')->with('street 1');
         $platformAddressMock->expects($this->once())->method('setStreet2')->with('street 2');
+        $platformAddressMock->expects($this->once())->method('setStreet3')->with('street 3');
         $platformAddressMock->expects($this->once())->method('setCity')->with('New York');
         $platformAddressMock->expects($this->once())->method('setRegion')->with('region-code');
         $platformAddressMock->expects($this->once())->method('setPostcode')->with('111FFF');
@@ -453,11 +457,12 @@ class SubscriptionCreatorTest extends \PHPUnit\Framework\TestCase
         $addressMock->expects($this->once())->method('getPostcode')->willReturn('111FFF');
         $addressMock->expects($this->once())->method('getCountryId')->willReturn('USA');
         $addressMock->expects($this->once())->method('getTelephone')->willReturn('999888');
-        $addressMock->expects($this->exactly(2))
+        $addressMock->expects($this->exactly(3))
             ->method('getStreetLine')
             ->willReturnMap([
                 [1, 'street 1'],
-                [2, 'street 2']
+                [2, 'street 2'],
+                [3, 'street 3']
             ]);
 
         $platformAddressMock = $this->createPlatformAddressMock();
@@ -465,6 +470,7 @@ class SubscriptionCreatorTest extends \PHPUnit\Framework\TestCase
         $platformAddressMock->expects($this->once())->method('setLastName')->with('Last-name');
         $platformAddressMock->expects($this->once())->method('setStreet1')->with('street 1');
         $platformAddressMock->expects($this->once())->method('setStreet2')->with('street 2');
+        $platformAddressMock->expects($this->once())->method('setStreet3')->with('street 3');
         $platformAddressMock->expects($this->once())->method('setCity')->with('New York');
         $platformAddressMock->expects($this->once())->method('setRegion')->with('region-code');
         $platformAddressMock->expects($this->once())->method('setPostcode')->with('111FFF');

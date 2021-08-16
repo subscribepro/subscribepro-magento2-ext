@@ -65,6 +65,16 @@
                     </div>
                 </div>
             </div>
+            <div class="nested">
+                <div class="field additional">
+                    <label class="label" for="street3"><span><?= $escaper->escapeHtml(__('Street Address 3')) ?></span></label>
+                    <div class="control">
+                        <input type="text" name="billing_address[street3]" id="street3" class="input-text"
+                               value="<?= $escaper->escapeHtmlAttr($block->getStreetLine3()) ?>"
+                               title="<?= $escaper->escapeHtmlAttr(__('Street Address 3')) ?>">
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 

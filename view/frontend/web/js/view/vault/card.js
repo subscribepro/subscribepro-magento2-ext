@@ -50,6 +50,7 @@ define(
                     'phone_number': $("#telephone").val(),
                     'address1': $("#street1").val(),
                     'address2': $("#street2").val(),
+                    'address3': $("#street3").val(),
                     'city': $("#city").val(),
                     'state': $("#region_id option:selected").text(),
                     'zip': $("#postcode").val(),

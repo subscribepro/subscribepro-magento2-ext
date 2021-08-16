@@ -59,6 +59,7 @@ class AddressDataReaderTest extends \PHPUnit\Framework\TestCase
                 AddressInterface::COMPANY => 'Starcraft',
                 AddressInterface::STREET1 => 'Some street',
                 AddressInterface::STREET2 => 'Metal st.',
+                AddressInterface::STREET3 => 'And another line',
                 AddressInterface::CITY => 'New York',
                 AddressInterface::REGION => 'ABB',
                 AddressInterface::POSTCODE => '101 01',
@@ -73,6 +74,7 @@ class AddressDataReaderTest extends \PHPUnit\Framework\TestCase
         $billingAddressMock->expects($this->once())->method('getCompany')->willReturn('Starcraft');
         $billingAddressMock->expects($this->once())->method('getStreetLine1')->willReturn('Some street');
         $billingAddressMock->expects($this->once())->method('getStreetLine2')->willReturn('Metal st.');
+        $billingAddressMock->expects($this->once())->method('getStreetLine3')->willReturn('And another line');
         $billingAddressMock->expects($this->once())->method('getCity')->willReturn('New York');
         $billingAddressMock->expects($this->once())->method('getRegionCode')->willReturn('ABB');
         $billingAddressMock->expects($this->once())->method('getPostcode')->willReturn('101 01');
