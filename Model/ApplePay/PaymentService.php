@@ -225,6 +225,11 @@ class PaymentService
         } else {
             $platformAddress->setStreet2(null);
         }
+        if (strlen($magentoAddress->getStreetLine(3))) {
+            $platformAddress->setStreet3((string) $magentoAddress->getStreetLine(3));
+        } else {
+            $platformAddress->setStreet3(null);
+        }
         $platformAddress->setCity($magentoAddress->getData('city'));
         $platformAddress->setRegion($magentoAddress->getRegionCode());
         $platformAddress->setPostcode($magentoAddress->getData('postcode'));

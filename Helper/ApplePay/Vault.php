@@ -57,6 +57,9 @@ class Vault
         if ($billingAddress->getStreet2() && strlen($billingAddress->getStreet2())) {
             $requestData['billing_address']['street2'] = $billingAddress->getStreet2();
         }
+        if ($billingAddress->getStreet3() && strlen($billingAddress->getStreet3())) {
+            $requestData['billing_address']['street3'] = $billingAddress->getStreet3();
+        }
         if ($billingAddress->getRegionCode() && strlen($billingAddress->getRegionCode())) {
             $requestData['billing_address']['region'] = $billingAddress->getRegionCode();
         }

@@ -123,6 +123,14 @@ class BillingAddress extends \Magento\Directory\Block\Data
     /**
      * @return string
      */
+    public function getStreetLine3()
+    {
+        return $this->profile ? $this->profile->getBillingAddress()->getStreet3() : '';
+    }
+
+    /**
+     * @return string
+     */
     public function getCity()
     {
         return $this->profile ? $this->profile->getBillingAddress()->getCity() : '';

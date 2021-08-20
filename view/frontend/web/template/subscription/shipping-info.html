@@ -17,6 +17,9 @@
     <!-- ko if: shippingAddress().street2 && shippingAddress().street2.length > 0 -->
         <div><!-- ko text: shippingAddress().street2 --><!-- /ko --></div>
     <!-- /ko -->
+    <!-- ko if: shippingAddress().street3 && shippingAddress().street3.length > 0 -->
+        <div><!-- ko text: shippingAddress().street3 --><!-- /ko --></div>
+    <!-- /ko -->
     <div><!-- ko text: cityRegionPostcodeText --><!-- /ko --></div>
 </address>
 

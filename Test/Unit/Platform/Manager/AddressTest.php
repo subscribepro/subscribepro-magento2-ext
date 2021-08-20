@@ -47,6 +47,10 @@ class AddressTest extends \PHPUnit\Framework\TestCase
             ->method('getStreetLine')
             ->with(2)
             ->willReturn('line 2');
+        $addressMock->expects($this->at(6))
+            ->method('getStreetLine')
+            ->with(3)
+            ->willReturn('line 3');
         $addressMock->expects($this->once())->method('getPostcode')->willReturn('000');
         $addressMock->expects($this->once())->method('getTelephone')->willReturn('066');
         $addressMock->expects($this->once())->method('getFirstname')->willReturn('first');
@@ -60,6 +64,7 @@ class AddressTest extends \PHPUnit\Framework\TestCase
         $platformAddressMock->expects($this->once())->method('setRegion')->with('region')->willReturnSelf();
         $platformAddressMock->expects($this->at(4))->method('setStreet1')->with('line 1')->willReturnSelf();
         $platformAddressMock->expects($this->at(5))->method('setStreet2')->with('line 2')->willReturnSelf();
+        $platformAddressMock->expects($this->at(6))->method('setStreet3')->with('line 3')->willReturnSelf();
         $platformAddressMock->expects($this->once())
             ->method('setCustomerId')
             ->with($platformCustomerId)
