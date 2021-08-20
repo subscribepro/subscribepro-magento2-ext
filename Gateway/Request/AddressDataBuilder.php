@@ -35,6 +35,7 @@ class AddressDataBuilder implements BuilderInterface
         $result = [];
 
         $billingAddress = $order->getBillingAddress();
+
         if ($billingAddress) {
             $result[PaymentProfileInterface::BILLING_ADDRESS] = [
                 AddressInterface::FIRST_NAME => $billingAddress->getFirstname(),
@@ -42,7 +43,7 @@ class AddressDataBuilder implements BuilderInterface
                 AddressInterface::COMPANY => $billingAddress->getCompany(),
                 AddressInterface::STREET1 => $billingAddress->getStreetLine1(),
                 AddressInterface::STREET2 => $billingAddress->getStreetLine2(),
-                AddressInterface::STREET3 => $billingAddress->getStreet(2),
+                AddressInterface::STREET3 => $billingAddress->getStreetLine3(),
                 AddressInterface::CITY => $billingAddress->getCity(),
                 AddressInterface::REGION => $billingAddress->getRegionCode(),
                 AddressInterface::POSTCODE => $billingAddress->getPostcode(),
