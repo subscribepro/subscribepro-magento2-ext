@@ -45,9 +45,19 @@ class Save extends \Magento\Customer\Controller\AbstractAccount
     protected $walletAuthorizeCommand;
 
     /**
+     * @var \Swarming\SubscribePro\Platform\Service\Transaction
+     */
+    protected $platformTransactionService;
+
+    /**
      * @var \Magento\Store\Model\StoreManagerInterface
      */
     protected $storeManager;
+
+    /**
+     * @var \Psr\Log\LoggerInterface
+     */
+    protected $logger;
 
     /**
      * @param \Magento\Framework\App\Action\Context $context
@@ -59,18 +69,23 @@ class Save extends \Magento\Customer\Controller\AbstractAccount
      * @param \Swarming\SubscribePro\Model\Vault\Validator $vaultFormValidator
      * @param \Swarming\SubscribePro\Gateway\Command\AuthorizeCommand $walletAuthorizeCommand
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     * @param \Swarming\SubscribePro\Platform\Service\Transaction $platformTransactionService
+     * @param \Psr\Log\LoggerInterface $logger
      */
     public function __construct(
-        \Magento\Framework\App\Action\Context $context,
-        \Magento\Framework\Data\Form\FormKey\Validator $formKeyValidator,
-        \Magento\Customer\Model\Session $customerSession,
-        \Swarming\SubscribePro\Model\Vault\Form $vaultForm,
-        \Swarming\SubscribePro\Gateway\Config\VaultConfig $platformVaultConfig,
-        \Swarming\SubscribePro\Gateway\Config\Config $gatewayConfig,
-        \Swarming\SubscribePro\Model\Vault\Validator $vaultFormValidator,
+        \Magento\Framework\App\Action\Context                   $context,
+        \Magento\Framework\Data\Form\FormKey\Validator          $formKeyValidator,
+        \Magento\Customer\Model\Session                         $customerSession,
+        \Swarming\SubscribePro\Model\Vault\Form                 $vaultForm,
+        \Swarming\SubscribePro\Gateway\Config\VaultConfig       $platformVaultConfig,
+        \Swarming\SubscribePro\Gateway\Config\Config            $gatewayConfig,
+        \Swarming\SubscribePro\Model\Vault\Validator            $vaultFormValidator,
         \Swarming\SubscribePro\Gateway\Command\AuthorizeCommand $walletAuthorizeCommand,
-        \Magento\Store\Model\StoreManagerInterface $storeManager
-    ) {
+        \Magento\Store\Model\StoreManagerInterface              $storeManager,
+        \Swarming\SubscribePro\Platform\Service\Transaction     $platformTransactionService,
+        \Psr\Log\LoggerInterface                                $logger
+    )
+    {
         $this->formKeyValidator = $formKeyValidator;
         $this->customerSession = $customerSession;
         $this->vaultForm = $vaultForm;
@@ -79,6 +94,9 @@ class Save extends \Magento\Customer\Controller\AbstractAccount
         $this->vaultFormValidator = $vaultFormValidator;
         $this->walletAuthorizeCommand = $walletAuthorizeCommand;
         $this->storeManager = $storeManager;
+        $this->platformTransactionService = $platformTransactionService;
+        $this->logger = $logger;
+
         parent::__construct($context);
     }
 
@@ -108,10 +126,18 @@ class Save extends \Magento\Customer\Controller\AbstractAccount
                 $transfer = new DataObject();
                 $commandSubject = $this->prepareAuthorizeCommandSubject($data, $transfer);
 
-                $this->walletAuthorizeCommand->execute($commandSubject);
+                $transaction = $this->walletAuthorizeCommand->execute($commandSubject);
 
                 $responseData['state'] = $transfer->getData('state');
                 $responseData['token'] = $transfer->getData('token');
+
+                if ($this->gatewayConfig->isWalletAuthorizationSuccess($transfer)) {
+                    try {
+                        $this->platformTransactionService->void($transfer->getData('transaction_id'));
+                    } catch (Exception $e) {
+                        $this->logger->error('Could not void transaction: ' . $e->getMessage());
+                    }
+                }
             } else {
                 $this->vaultForm->createProfile($data, $this->customerSession->getCustomerId());
             }
@@ -124,6 +150,7 @@ class Save extends \Magento\Customer\Controller\AbstractAccount
             $this->messageManager->addExceptionMessage($e, __('An error occurred while saving the card.'));
             $resultJson->setData(['state' => 'failed']);
         }
+
 
         return $resultJson;
     }

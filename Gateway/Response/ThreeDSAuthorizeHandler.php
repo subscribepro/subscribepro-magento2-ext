@@ -76,6 +76,8 @@ class ThreeDSAuthorizeHandler implements HandlerInterface
 
         $transfer->setData('state', $transaction->getState());
         $transfer->setData('token', $transaction->getToken());
+        $transfer->setData('amount', $transaction->getAmount());
+        $transfer->setData('transaction_id', $transaction->getRealTransactionId());
     }
 
     /**

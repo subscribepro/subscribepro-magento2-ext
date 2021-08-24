@@ -16,6 +16,7 @@ class Config extends \Magento\Payment\Gateway\Config\Config
     const KEY_CC_TYPES = 'cctypes';
     const KEY_CC_TYPES_MAPPER = 'cctypes_mapper';
     const KEY_CC_USE_CCV = 'useccv';
+    const KEY_WALLET_AUTHORIZATION_SUCCESS = 'succeeded';
 
     /**
      * @param int|null $storeId
@@ -133,5 +134,15 @@ class Config extends \Magento\Payment\Gateway\Config\Config
     {
         $mapper = $this->getCcTypesMapper($storeId);
         return $cardType && isset($mapper[$cardType]) ? $mapper[$cardType] : $cardType;
+    }
+
+    /**
+     * @param string $state
+     * @return bool
+     */
+    public function isWalletAuthorizationSuccess($transfer): bool
+    {
+        return $transfer->getData('state') === self::KEY_WALLET_AUTHORIZATION_SUCCESS &&
+            $transfer->getData('amount') == ($this->getWalletAuthorizationAmount() * 100);
     }
 }
