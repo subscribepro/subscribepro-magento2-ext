@@ -11,6 +11,7 @@
     <preference for="Swarming\SubscribePro\Api\GetOrderStatusInterface" type="Swarming\SubscribePro\Service\GetOrderStatus" />
     <preference for="Swarming\SubscribePro\Api\Data\OrderPaymentStateInterface" type="Swarming\SubscribePro\Model\Order\PaymentState" />
     <preference for="Magento\Payment\Gateway\Data\Order\AddressAdapter" type="Swarming\SubscribePro\Payment\Gateway\Data\Order\AddressAdapter"/>
+    <preference for="Swarming\SubscribePro\Service\Payment\PaymentProfileDataBuilderInterface" type="Swarming\SubscribePro\Service\Payment\PaymentProfileDataBuilderPool" />
 
     <type name="Swarming\SubscribePro\Model\MetaService">
         <arguments>

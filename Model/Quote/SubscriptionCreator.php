@@ -2,6 +2,9 @@
 
 namespace Swarming\SubscribePro\Model\Quote;
 
+use Magento\Framework\App\ObjectManager;
+use Swarming\SubscribePro\Model\Quote\Payment\GetPaymentProfileId;
+
 class SubscriptionCreator
 {
     const CREATED_SUBSCRIPTION_IDS = 'created_subscription_ids';
@@ -38,24 +41,35 @@ class SubscriptionCreator
     protected $quoteItemSubscriptionCreator;
 
     /**
+     * @var \Swarming\SubscribePro\Model\Quote\Payment\GetPaymentProfileId
+     */
+    private $getPaymentProfileId;
+
+    /**
+     * @param \Swarming\SubscribePro\Platform\Service\Subscription $platformSubscriptionService
      * @param \Swarming\SubscribePro\Platform\Manager\Customer $platformCustomerManager
      * @param \Magento\Vault\Api\PaymentTokenManagementInterface $tokenManagement
      * @param \Swarming\SubscribePro\Helper\QuoteItem $quoteItemHelper
      * @param \Swarming\SubscribePro\Helper\OrderItem $orderItemHelper
      * @param \Swarming\SubscribePro\Model\Quote\QuoteItem\SubscriptionCreator $quoteItemSubscriptionCreator
+     * @param \Swarming\SubscribePro\Model\Quote\Payment\GetPaymentProfileId $getPaymentProfileId
      */
     public function __construct(
+        \Swarming\SubscribePro\Platform\Service\Subscription $platformSubscriptionService,
         \Swarming\SubscribePro\Platform\Manager\Customer $platformCustomerManager,
         \Magento\Vault\Api\PaymentTokenManagementInterface $tokenManagement,
         \Swarming\SubscribePro\Helper\QuoteItem $quoteItemHelper,
         \Swarming\SubscribePro\Helper\OrderItem $orderItemHelper,
-        \Swarming\SubscribePro\Model\Quote\QuoteItem\SubscriptionCreator $quoteItemSubscriptionCreator
+        \Swarming\SubscribePro\Model\Quote\QuoteItem\SubscriptionCreator $quoteItemSubscriptionCreator,
+        \Swarming\SubscribePro\Model\Quote\Payment\GetPaymentProfileId $getPaymentProfileId
     ) {
+        $this->platformSubscriptionService = $platformSubscriptionService;
         $this->platformCustomerManager = $platformCustomerManager;
         $this->tokenManagement = $tokenManagement;
         $this->quoteItemHelper = $quoteItemHelper;
         $this->orderItemHelper = $orderItemHelper;
         $this->quoteItemSubscriptionCreator = $quoteItemSubscriptionCreator;
+        $this->getPaymentProfileId = $getPaymentProfileId;
     }
 
     /**
@@ -65,8 +79,8 @@ class SubscriptionCreator
      */
     public function createSubscriptions($quote, $order)
     {
-        $paymentProfileId = $this->getPaymentProfileId($order->getPayment());
-        $platformCustomer = $this->platformCustomerManager->getCustomerById($quote->getCustomerId());
+        $platformCustomer = $this->platformCustomerManager->getCustomerById($quote->getCustomerId(), true);
+        $paymentProfileId = $this->getPaymentProfileId->execute($order->getPayment(), (int)$platformCustomer->getId());
 
         $subscriptionsSuccess = [];
         $subscriptionsFail = 0;
@@ -128,19 +142,5 @@ class SubscriptionCreator
     {
         return $this->quoteItemHelper->getCreateNewSubscriptionAtCheckout($quoteItem)
             && !$this->quoteItemHelper->isItemFulfilsSubscription($quoteItem);
-    }
-
-    /**
-     * @param \Magento\Sales\Api\Data\OrderPaymentInterface $payment
-     * @return string
-     * @throws \Exception
-     */
-    protected function getPaymentProfileId($payment)
-    {
-        $vault = $this->tokenManagement->getByPaymentId($payment->getEntityId());
-        if (!$vault || !$vault->getIsActive()) {
-            throw new \Exception('The vault is not found.');
-        }
-        return $vault->getGatewayToken();
     }
 }

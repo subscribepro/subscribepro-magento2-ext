@@ -77,6 +77,27 @@
                 </field>
             </group>
 
+            <group id="third_party_payment" translate="label" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="0">
+                <label>Payment Configuration</label>
+
+                <field id="is_allowed" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                    <label>Allow Third Party</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="swarming_subscribepro/general/enabled">1</field>
+                    </depends>
+                </field>
+
+                <field id="allowed_methods" translate="label comment" type="multiselect" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Allowed Third Party</label>
+                    <source_model>Swarming\SubscribePro\Model\Config\Source\ThirdPartyPaymentMethod</source_model>
+                    <depends>
+                        <field id="swarming_subscribepro/general/enabled">1</field>
+                        <field id="is_allowed">1</field>
+                    </depends>
+                </field>
+            </group>
+
             <group id="subscription_options" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Subscription Options</label>
 

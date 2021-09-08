@@ -39,6 +39,16 @@ class PaymentProfile extends AbstractService
     }
 
     /**
+     * @param array $paymentProfileData
+     * @param int|null $websiteId
+     * @return \SubscribePro\Service\PaymentProfile\PaymentProfileInterface
+     */
+    public function createExternalVaultProfile(array $paymentProfileData = [], $websiteId = null)
+    {
+        return $this->getService($websiteId)->createExternalVaultProfile($paymentProfileData);
+    }
+
+    /**
      * @param \SubscribePro\Service\PaymentProfile\PaymentProfileInterface $paymentProfile
      * @param int|null $websiteId
      * @return \SubscribePro\Service\PaymentProfile\PaymentProfileInterface
@@ -97,7 +107,7 @@ class PaymentProfile extends AbstractService
      */
     public function saveThirdPartyToken(PaymentProfileInterface $paymentProfile, $websiteId = null)
     {
-        return $this->getService($websiteId)->saveThirdPartyToken($paymentProfile);
+        return $this->getService($websiteId)->saveThirdPartyTokenProfile($paymentProfile);
     }
 
     /**
