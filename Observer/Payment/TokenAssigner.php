@@ -5,7 +5,6 @@ namespace Swarming\SubscribePro\Observer\Payment;
 use Magento\Framework\Event\Observer;
 use Magento\Quote\Api\Data\PaymentInterface;
 use Magento\Vault\Api\Data\PaymentTokenInterface;
-use Magento\Vault\Model\Method\Vault;
 use SubscribePro\Service\Transaction\TransactionInterface;
 use Swarming\SubscribePro\Gateway\Request\VaultDataBuilder;
 use Swarming\SubscribePro\Gateway\Config\ConfigProvider;

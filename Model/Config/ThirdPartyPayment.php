@@ -37,18 +37,29 @@ class ThirdPartyPayment
 
     /**
      * @param int|null $storeId
-     * @return array
+     * @return string|null
      */
-    public function getAllowedMethods(int $storeId = null): array
+    public function getAllowedMethod(int $storeId = null): ?string
     {
         $allowedThirdPartyValue = $this->scopeConfig->getValue(
-            'swarming_subscribepro/third_party_payment/allowed_methods',
+            'swarming_subscribepro/third_party_payment/allowed_method',
             ScopeInterface::SCOPE_STORE,
             $storeId
         );
 
-        return $this->isAllowed($storeId) && !empty($allowedThirdPartyValue)
-            ? explode(',', $allowedThirdPartyValue)
-            : [];
+        return $this->isAllowed($storeId) ? $allowedThirdPartyValue : null;
+    }
+
+    /**
+     * @param int|null $storeId
+     * @return string|null
+     */
+    public function getAllowedVault(int $storeId = null): ?string
+    {
+        $allowedMethod = $this->getAllowedMethod($storeId);
+
+        return $allowedMethod
+            ? $this->scopeConfig->getValue('swarming_subscribepro/third_party_payment/' . $allowedMethod)
+            : null;
     }
 }

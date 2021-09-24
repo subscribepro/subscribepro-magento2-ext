@@ -88,12 +88,24 @@
                     </depends>
                 </field>
 
-                <field id="allowed_methods" translate="label comment" type="multiselect" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="allowed_method" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Allowed Third Party</label>
                     <source_model>Swarming\SubscribePro\Model\Config\Source\ThirdPartyPaymentMethod</source_model>
                     <depends>
                         <field id="swarming_subscribepro/general/enabled">1</field>
                         <field id="is_allowed">1</field>
+                    </depends>
+                </field>
+            </group>
+
+            <group id="order_callback" translate="label" type="text" sortOrder="28" showInDefault="1" showInWebsite="1" showInStore="0">
+                <label>Order Callback Configuration</label>
+
+                <field id="shared_secret" translate="label" type="obscure" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Shared Secret</label>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                    <depends>
+                        <field id="swarming_subscribepro/general/enabled">1</field>
                     </depends>
                 </field>
             </group>

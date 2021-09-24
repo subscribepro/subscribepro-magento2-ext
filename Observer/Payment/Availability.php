@@ -79,11 +79,7 @@ class Availability implements ObserverInterface
                         $isAvailable = true;
                         break;
                     default:
-                        $isAvailable = in_array(
-                            $methodCode,
-                            $this->thirdPartyPaymentConfig->getAllowedMethods((int)$quote->getStoreId()),
-                            true
-                        );
+                        $isAvailable = $this->isThirdPartyPaymentMethodAllowed($methodCode, (int)$quote->getStoreId());
                         break;
                 }
             } elseif (ConfigProvider::CODE === $methodCode && !$isActiveNonSubscription) {
@@ -92,5 +88,15 @@ class Availability implements ObserverInterface
 
             $result->setData('is_available', $isAvailable);
         }
+    }
+
+    /**
+     * @param string $methodCode
+     * @param int $storeId
+     * @return bool
+     */
+    private function isThirdPartyPaymentMethodAllowed(string $methodCode, int $storeId): bool
+    {
+        return $methodCode === $this->thirdPartyPaymentConfig->getAllowedMethod($storeId);
     }
 }

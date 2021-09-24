@@ -151,6 +151,6 @@ class SubmitAllAfter implements ObserverInterface
      */
     private function isThirdPartyPaymentMethodAllowed(string $methodCode, int $storeId): bool
     {
-        return in_array($methodCode, $this->thirdPartyPaymentConfig->getAllowedMethods($storeId), true);
+        return $methodCode === $this->thirdPartyPaymentConfig->getAllowedMethod($storeId);
     }
 }
