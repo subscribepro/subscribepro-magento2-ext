@@ -122,7 +122,17 @@ class Order implements HttpPostActionInterface, CsrfAwareActionInterface
      */
     public function createCsrfValidationException(RequestInterface $request): ?InvalidRequestException
     {
-        return null;
+        /** @var \Magento\Framework\Controller\Result\Json $jsonResult */
+        $jsonResult = $this->resultFactory->create(ResultFactory::TYPE_JSON);
+        $jsonResult->setHttpResponseCode(self::HTTP_STATUS_FAIL);
+        $jsonResult->setData(
+            [
+                'errorMessage' => 'Invalid order callback configuration. Invalid callback shared secret.',
+                'errorClass' => 'Technology'
+            ]
+        );
+
+        return new InvalidRequestException($jsonResult);
     }
 
     /**
