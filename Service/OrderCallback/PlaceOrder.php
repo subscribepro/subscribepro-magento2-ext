@@ -91,7 +91,7 @@ class PlaceOrder
             } catch (\Exception $e) {
                 $subscriptionData = (array)$this->orderCallbackDataBuilder->getValue($productData, 'subscription', []);
                 $errorMessages[] = [
-                    'subscriptionId' => $this->orderCallbackDataBuilder->getValue($subscriptionData, 'id'),
+                    'subscriptionId' => (string)$this->orderCallbackDataBuilder->getValue($subscriptionData, 'id'),
                     'errorMessage' => $e->getMessage(),
                 ];
             }

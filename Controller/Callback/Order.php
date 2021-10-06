@@ -16,6 +16,7 @@ class Order implements HttpPostActionInterface, CsrfAwareActionInterface
     private const HMAC_SIGNATURE_HEADER = 'Sp-Hmac';
 
     private const HTTP_STATUS_SUCCESS = 201;
+    private const HTTP_STATUS_PARTIAL_SUCCESS = 202;
     private const HTTP_STATUS_FAIL = 409;
 
     /**
@@ -81,7 +82,7 @@ class Order implements HttpPostActionInterface, CsrfAwareActionInterface
 
         try {
             $responseData = $this->placeOrderService->execute($orderRequest);
-            $responseCode = !empty($responseData['orderNumber']) ? self::HTTP_STATUS_SUCCESS : self::HTTP_STATUS_FAIL;
+            $responseCode = $this->getResponseCode($responseData);
         } catch (\Exception $e) {
             $this->logger->critical($e);
             $responseData = ['errorMessage' => (string)$e->getMessage()];
@@ -97,6 +98,22 @@ class Order implements HttpPostActionInterface, CsrfAwareActionInterface
         $jsonResult->setHttpResponseCode($responseCode);
         $jsonResult->setData($responseData);
         return $jsonResult;
+    }
+
+    /**
+     * @param array $responseData
+     * @return int
+     */
+    private function getResponseCode(array $responseData): int
+    {
+        if (!empty($responseData['orderNumber']) && empty($responseData['errorItems'])) {
+            $responseCode = self::HTTP_STATUS_SUCCESS;
+        } else if (!empty($responseData['orderNumber'])) {
+            $responseCode = self::HTTP_STATUS_PARTIAL_SUCCESS;
+        } else {
+            $responseCode = self::HTTP_STATUS_FAIL;
+        }
+        return $responseCode;
     }
 
     /**
