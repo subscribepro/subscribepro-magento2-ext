@@ -15,6 +15,9 @@ class Order implements HttpPostActionInterface, CsrfAwareActionInterface
 {
     private const HMAC_SIGNATURE_HEADER = 'Sp-Hmac';
 
+    private const HTTP_STATUS_SUCCESS = 201;
+    private const HTTP_STATUS_FAIL = 409;
+
     /**
      * @var \Magento\Framework\App\RequestInterface|\Magento\Framework\App\Request\Http
      */
@@ -78,14 +81,16 @@ class Order implements HttpPostActionInterface, CsrfAwareActionInterface
 
         try {
             $responseData = $this->placeOrderService->execute($orderRequest);
-            $responseCode = 201;
+            $responseCode = !empty($responseData['orderNumber']) ? self::HTTP_STATUS_SUCCESS : self::HTTP_STATUS_FAIL;
         } catch (\Exception $e) {
             $this->logger->critical($e);
             $responseData = ['errorMessage' => (string)$e->getMessage()];
-            $responseCode = 409;
+            $responseCode = self::HTTP_STATUS_FAIL;
         }
 
-        $this->logger->debug(print_r(['orderRequest' => $orderRequest, 'response' => $responseData], true));
+        if ($this->orderCallbackConfig->isLogEnabled()) {
+            $this->logger->debug(print_r(['orderRequest' => $orderRequest, 'response' => $responseData], true));
+        }
 
         /** @var \Magento\Framework\Controller\Result\Json $jsonResult */
         $jsonResult = $this->resultFactory->create(ResultFactory::TYPE_JSON);

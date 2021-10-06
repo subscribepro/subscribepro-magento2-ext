@@ -77,7 +77,7 @@ class ResponseProcessor
             $successResponse['errorItems'] = $errorMessages;
         }
 
-        foreach ($order->getItems() as $orderItem) {
+        foreach ($order->getAllVisibleItems() as $orderItem) {
             $successResponse['orderDetails']['items'][] = $this->prepareOrderItemData($orderItem);
         }
 

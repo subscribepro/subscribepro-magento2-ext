@@ -34,4 +34,17 @@ class OrderCallback
             $websiteCode
         );
     }
+
+    /**
+     * @param string|null $websiteCode
+     * @return bool
+     */
+    public function isLogEnabled(string $websiteCode = null): bool
+    {
+        return $this->scopeConfig->isSetFlag(
+            'swarming_subscribepro/order_callback/log_enabled',
+            ScopeInterface::SCOPE_WEBSITE,
+            $websiteCode
+        );
+    }
 }

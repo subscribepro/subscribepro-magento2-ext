@@ -108,6 +108,15 @@
                         <field id="swarming_subscribepro/general/enabled">1</field>
                     </depends>
                 </field>
+
+                <field id="log_enabled" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                    <label>Enable Logging</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>If enabled all requests and responses are logged to var/log/debug.log</comment>
+                    <depends>
+                        <field id="swarming_subscribepro/general/enabled">1</field>
+                    </depends>
+                </field>
             </group>
 
             <group id="subscription_options" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
