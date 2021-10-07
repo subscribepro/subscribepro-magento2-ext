@@ -11,6 +11,9 @@
                 <log_enabled>0</log_enabled>
                 <log_filename>log/subscribepro/log.log</log_filename>
             </platform>
+            <order_callback>
+                <shared_secret backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
+            </order_callback>
             <subscription_options>
                 <allow_coupon>0</allow_coupon>
                 <allow_cancel>1</allow_cancel>

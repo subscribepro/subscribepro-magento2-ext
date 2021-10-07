@@ -2,46 +2,50 @@
 
 namespace Swarming\SubscribePro\Observer\Payment;
 
-use Magento\Checkout\Model\Session;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
-use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Payment\Model\Method\Free;
 use Swarming\SubscribePro\Gateway\Config\Config;
 use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
 use Swarming\SubscribePro\Gateway\Config\ApplePayConfigProvider;
-use Swarming\SubscribePro\Helper\Quote;
 
 class Availability implements ObserverInterface
 {
     /**
-     * @var Session
+     * @var \Magento\Checkout\Model\Session
      */
     protected $checkoutSession;
 
     /**
-     * @var Quote
+     * @var \Swarming\SubscribePro\Helper\Quote
      */
     protected $quoteHelper;
 
     /**
-     * @param Session $checkoutSession
-     * @param Quote $quoteHelper
+     * @var \Swarming\SubscribePro\Model\Config\ThirdPartyPayment
+     */
+    private $thirdPartyPaymentConfig;
+
+    /**
+     * @param \Magento\Checkout\Model\Session $checkoutSession
+     * @param \Swarming\SubscribePro\Helper\Quote $quoteHelper
+     * @param \Swarming\SubscribePro\Model\Config\ThirdPartyPayment $thirdPartyPaymentConfig
      */
     public function __construct(
-        Session $checkoutSession,
-        Quote $quoteHelper
+        \Magento\Checkout\Model\Session $checkoutSession,
+        \Swarming\SubscribePro\Helper\Quote $quoteHelper,
+        \Swarming\SubscribePro\Model\Config\ThirdPartyPayment $thirdPartyPaymentConfig
     ) {
         $this->checkoutSession = $checkoutSession;
         $this->quoteHelper = $quoteHelper;
+        $this->thirdPartyPaymentConfig = $thirdPartyPaymentConfig;
     }
 
     /**
-     * @param Observer $observer
+     * @param \Magento\Framework\Event\Observer $observer
      * @return void
-     * @throws LocalizedException
-     * @throws NoSuchEntityException
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function execute(Observer $observer)
     {
@@ -75,14 +79,24 @@ class Availability implements ObserverInterface
                         $isAvailable = true;
                         break;
                     default:
-                        $isAvailable = false;
+                        $isAvailable = $this->isThirdPartyPaymentMethodAllowed($methodCode, (int)$quote->getStoreId());
                         break;
                 }
-            } elseif (ConfigProvider::CODE == $methodCode && !$isActiveNonSubscription) {
+            } elseif (ConfigProvider::CODE === $methodCode && !$isActiveNonSubscription) {
                 $isAvailable = false;
             }
 
             $result->setData('is_available', $isAvailable);
         }
+    }
+
+    /**
+     * @param string $methodCode
+     * @param int $storeId
+     * @return bool
+     */
+    private function isThirdPartyPaymentMethodAllowed(string $methodCode, int $storeId): bool
+    {
+        return $methodCode === $this->thirdPartyPaymentConfig->getAllowedMethod($storeId);
     }
 }

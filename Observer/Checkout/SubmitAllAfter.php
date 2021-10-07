@@ -4,10 +4,11 @@ namespace Swarming\SubscribePro\Observer\Checkout;
 
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
-use Swarming\SubscribePro\Gateway\Config\ApplePayConfigProvider;
 use Magento\Sales\Model\Order;
-use Swarming\SubscribePro\Model\Quote\SubscriptionCreator;
+use Magento\Sales\Api\Data\OrderInterface;
+use Swarming\SubscribePro\Gateway\Config\ApplePayConfigProvider;
 use Swarming\SubscribePro\Gateway\Config\ConfigProvider as GatewayConfigProvider;
+use Swarming\SubscribePro\Model\Quote\SubscriptionCreator;
 
 class SubmitAllAfter implements ObserverInterface
 {
@@ -37,31 +38,47 @@ class SubmitAllAfter implements ObserverInterface
     protected $logger;
 
     /**
+     * @var \Swarming\SubscribePro\Model\Config\ThirdPartyPayment
+     */
+    private $thirdPartyPaymentConfig;
+
+    /**
+     * @var array
+     */
+    private $builtInMethods = [
+        GatewayConfigProvider::CODE,
+        ApplePayConfigProvider::CODE
+    ];
+
+    /**
      * @param \Swarming\SubscribePro\Model\Config\General $generalConfig
      * @param \Magento\Checkout\Model\Session $checkoutSession
      * @param \Swarming\SubscribePro\Model\Quote\SubscriptionCreator $subscriptionCreator
      * @param \Magento\Quote\Model\Quote\Item\CartItemOptionsProcessor $cartItemOptionProcessor
      * @param \Psr\Log\LoggerInterface $logger
+     * @param \Swarming\SubscribePro\Model\Config\ThirdPartyPayment $thirdPartyPaymentConfig
      */
     public function __construct(
         \Swarming\SubscribePro\Model\Config\General $generalConfig,
         \Magento\Checkout\Model\Session $checkoutSession,
         \Swarming\SubscribePro\Model\Quote\SubscriptionCreator $subscriptionCreator,
         \Magento\Quote\Model\Quote\Item\CartItemOptionsProcessor $cartItemOptionProcessor,
-        \Psr\Log\LoggerInterface $logger
+        \Psr\Log\LoggerInterface $logger,
+        \Swarming\SubscribePro\Model\Config\ThirdPartyPayment $thirdPartyPaymentConfig
     ) {
         $this->generalConfig = $generalConfig;
         $this->checkoutSession = $checkoutSession;
         $this->subscriptionCreator = $subscriptionCreator;
         $this->cartItemOptionProcessor = $cartItemOptionProcessor;
         $this->logger = $logger;
+        $this->thirdPartyPaymentConfig = $thirdPartyPaymentConfig;
     }
 
     /**
      * @param \Magento\Framework\Event\Observer $observer
      * @return void
      */
-    public function execute(Observer $observer)
+    public function execute(Observer $observer): void
     {
         /** @var \Magento\Quote\Model\Quote $quote */
         $quote = $observer->getData('quote');
@@ -72,12 +89,8 @@ class SubmitAllAfter implements ObserverInterface
 
         $websiteCode = $quote->getStore()->getWebsite()->getCode();
         if (!$this->generalConfig->isEnabled($websiteCode)
-            || $order->getState() === Order::STATE_PAYMENT_REVIEW
-            || (
-                $order->getPayment()->getMethod() != GatewayConfigProvider::CODE
-                && $order->getPayment()->getMethod() != ApplePayConfigProvider::CODE
-            )
             || !$quote->getCustomerId()
+            || !$this->canOrderBeProcessed($order)
         ) {
             return;
         }
@@ -107,5 +120,37 @@ class SubmitAllAfter implements ObserverInterface
             $item = $this->cartItemOptionProcessor->addProductOptions($quoteItem->getProductType(), $quoteItem);
             $this->cartItemOptionProcessor->applyCustomOptions($item);
         }
+    }
+
+    /**
+     * @param \Magento\Sales\Api\Data\OrderInterface $order
+     * @return bool
+     */
+    private function canOrderBeProcessed(OrderInterface $order): bool
+    {
+        $storeId = (int)$order->getStoreId();
+        $methodCode = $order->getPayment()->getMethod();
+
+        return ($this->isPaymentMethodAllowed($methodCode) && $order->getState() !== Order::STATE_PAYMENT_REVIEW)
+            || $this->isThirdPartyPaymentMethodAllowed($methodCode, $storeId);
+    }
+
+    /**
+     * @param string $methodCode
+     * @return bool
+     */
+    private function isPaymentMethodAllowed(string $methodCode): bool
+    {
+        return in_array($methodCode, $this->builtInMethods, true);
+    }
+
+    /**
+     * @param string $methodCode
+     * @param int $storeId
+     * @return bool
+     */
+    private function isThirdPartyPaymentMethodAllowed(string $methodCode, int $storeId): bool
+    {
+        return $methodCode === $this->thirdPartyPaymentConfig->getAllowedMethod($storeId);
     }
 }
