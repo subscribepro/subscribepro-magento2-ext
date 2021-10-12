@@ -52,6 +52,6 @@ class Subscription extends PlatformSubscription implements SubscriptionInterface
 
     public function getUserDefinedFields()
     {
-       return json_encode(parent::getUserDefinedFields());
+        return json_encode(parent::getUserDefinedFields());
     }
 }

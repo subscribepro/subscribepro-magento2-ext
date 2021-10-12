@@ -116,14 +116,23 @@ abstract class AbstractCommand implements CommandInterface
      * @param array $commandSubject
      * @return void
      */
-    protected function setPlatformWebsite($commandSubject)
+    protected function setPlatformWebsite(array $commandSubject)
     {
-        $paymentDO = $this->subjectReader->readPayment($commandSubject);
+        $storeId = $commandSubject['store_id'] ?? $this->getStoreIdFromOrder($commandSubject);
 
-        $storeId = $paymentDO->getOrder()->getStoreId();
         $websiteId = $this->storeManager->getStore($storeId)->getWebsiteId();
 
         $this->platform->setDefaultWebsite($websiteId);
+    }
+
+    /**
+     * @param array $commandSubject
+     * @return int
+     */
+    protected function getStoreIdFromOrder(array $commandSubject)
+    {
+        $paymentDO = $this->subjectReader->readPayment($commandSubject);
+        return $paymentDO->getOrder()->getStoreId();
     }
 
     /**

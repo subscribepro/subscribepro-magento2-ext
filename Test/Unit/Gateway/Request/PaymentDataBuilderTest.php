@@ -20,7 +20,7 @@ class PaymentDataBuilderTest extends \PHPUnit\Framework\TestCase
      */
     protected $paymentDataBuilder;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->subjectReaderMock = $this->getMockBuilder(SubjectReader::class)
             ->disableOriginalConstructor()->getMock();
@@ -28,7 +28,8 @@ class PaymentDataBuilderTest extends \PHPUnit\Framework\TestCase
         $this->paymentDataBuilder = new PaymentDataBuilder($this->subjectReaderMock);
     }
 
-    public function testBuild() {
+    public function testBuild()
+    {
         $subject = ['subject'];
         $result = [
             PaymentDataBuilder::PAYMENT_METHOD_TOKEN => ['info'],

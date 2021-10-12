@@ -24,6 +24,7 @@
     </type>
 
     <type name="Magento\Vault\Model\Ui\TokensConfigProvider">
+        <plugin name="subscribepro_filter_pending_vaults" type="Swarming\SubscribePro\Plugin\Vault\TokensConfigProvider"/>
         <arguments>
             <argument name="tokenUiComponentProviders" xsi:type="array">
                 <item name="subscribe_pro" xsi:type="object">Swarming\SubscribePro\Ui\ComponentProvider\VaultToken</item>
@@ -51,6 +52,22 @@
             <argument name="layoutProcessors" xsi:type="array">
                 <item name="subscriptionsDirectoryDataDataProcessor" xsi:type="object">Swarming\SubscribePro\Block\Customer\SubscriptionsDirectoryDataProcessor</item>
             </argument>
+        </arguments>
+    </type>
+
+    <type name="Swarming\SubscribePro\Model\ApplePay\PaymentRequestConfig">
+        <arguments>
+            <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session</argument>
+        </arguments>
+    </type>
+    <type name="Swarming\SubscribePro\Model\ApplePay\Shipping">
+        <arguments>
+            <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session</argument>
+        </arguments>
+    </type>
+    <type name="Swarming\SubscribePro\Model\ApplePay\PaymentService">
+        <arguments>
+            <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session</argument>
         </arguments>
     </type>
 </config>

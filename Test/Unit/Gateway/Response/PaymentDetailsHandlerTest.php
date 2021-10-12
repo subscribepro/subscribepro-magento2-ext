@@ -20,7 +20,7 @@ class PaymentDetailsHandlerTest extends \PHPUnit\Framework\TestCase
      */
     protected $subjectReaderMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->subjectReaderMock = $this->getMockBuilder(SubjectReader::class)
             ->disableOriginalConstructor()->getMock();
@@ -74,10 +74,10 @@ class PaymentDetailsHandlerTest extends \PHPUnit\Framework\TestCase
         $paymentInfoMock->expects($this->at(11))
             ->method('setAdditionalInformation')
             ->with(TransactionInterface::RESPONSE_MESSAGE, 'response message');
-        
+
         $paymentDOMock = $this->getMockBuilder(PaymentDataObjectInterface::class)->getMock();
         $paymentDOMock->expects($this->once())->method('getPayment')->willReturn($paymentInfoMock);
-        
+
         $this->subjectReaderMock->expects($this->once())
             ->method('readPayment')
             ->with($handlingSubject)
@@ -87,7 +87,7 @@ class PaymentDetailsHandlerTest extends \PHPUnit\Framework\TestCase
             ->method('readTransaction')
             ->with($response)
             ->willReturn($transactionMock);
-        
+
         $this->paymentDetailsHandler->handle($handlingSubject, $response);
     }
 }

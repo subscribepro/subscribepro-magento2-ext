@@ -13,5 +13,4 @@ class VaultConfig extends \Magento\Payment\Gateway\Config\Config
     {
         return (bool) $this->getValue(self::KEY_ACTIVE);
     }
-
 }

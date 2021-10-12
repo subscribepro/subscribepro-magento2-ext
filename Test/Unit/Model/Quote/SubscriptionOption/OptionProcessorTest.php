@@ -40,7 +40,7 @@ class OptionProcessorTest extends \PHPUnit\Framework\TestCase
      */
     protected $subscriptionOptionFactoryMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->objectFactoryMock = $this->getMockBuilder(DataObjectFactory::class)
             ->disableOriginalConstructor()->getMock();

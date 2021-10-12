@@ -2,16 +2,16 @@
 
 namespace Swarming\SubscribePro\Plugin\SalesRule;
 
+use Magento\SalesRule\Model\Rule\Condition\Product\Combine as ProductCombineRule;
+
 class Conditions
 {
-
-
     /**
      * @param \Magento\SalesRule\Model\Rule\Condition\Product\Combine $subject
      * @param callable $proceed
      * @return array
      */
-    public function aroundGetNewChildSelectOptions(\Magento\SalesRule\Model\Rule\Condition\Product\Combine $subject, callable $proceed)
+    public function aroundGetNewChildSelectOptions(ProductCombineRule $subject, callable $proceed)
     {
         $conditions = $proceed();
 
@@ -46,5 +46,4 @@ class Conditions
             ],
         ];
     }
-
 }

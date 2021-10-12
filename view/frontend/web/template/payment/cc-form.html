@@ -23,10 +23,7 @@
             <!-- ko template: 'Swarming_SubscribePro/payment/cc-fieldset' --><!-- /ko -->
         </form>
 
-        <div class="spro-3ds-wrapper" data-bind="css: {'active': show3DSiFrame()}">
-            <div id="spro-3ds-iframe"></div>
-            <div id="spro-3ds-challenge"><div id="spro-3ds-challenge-container"></div></div>
-        </div>
+        <!-- ko template: 'Swarming_SubscribePro/payment/three-ds' --><!-- /ko -->
 
         <div class="checkout-agreements-block">
             <!-- ko foreach: $parent.getRegion('before-place-order') -->

@@ -24,7 +24,7 @@ class UpdaterTest extends \PHPUnit\Framework\TestCase
      */
     protected $quoteItemHelperMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->quoteItemHelperMock = $this->getMockBuilder(QuoteItemHelper::class)
             ->disableOriginalConstructor()->getMock();
@@ -117,7 +117,8 @@ class UpdaterTest extends \PHPUnit\Framework\TestCase
      * @expectedException \Magento\Framework\Exception\LocalizedException
      * @expectedExceptionMessage The product is not configured properly, please contact customer support.
      */
-    public function testFailToUpdateIfSubscriptionOnlyAndEmptyIntervals() {
+    public function testFailToUpdateIfSubscriptionOnlyAndEmptyIntervals()
+    {
         $subscriptionInterval = 'daily';
         $productIntervals = [];
         $subscriptionOption = 'any_option';

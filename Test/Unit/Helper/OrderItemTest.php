@@ -23,7 +23,7 @@ class OrderItemTest extends \PHPUnit\Framework\TestCase
      */
     protected $orderItemRepositoryMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->orderItemRepositoryMock = $this->getMockBuilder(OrderItemRepositoryInterface::class)->getMock();
 
@@ -34,7 +34,8 @@ class OrderItemTest extends \PHPUnit\Framework\TestCase
      * @param array $buyRequestParams
      * @dataProvider updateAdditionalOptionsIfEmptySubscriptionOptionDataProvider
      */
-    public function testUpdateAdditionalOptionsIfEmptySubscriptionOption($buyRequestParams) {
+    public function testUpdateAdditionalOptionsIfEmptySubscriptionOption($buyRequestParams)
+    {
         $orderItemMock = $this->createOrderItemMock();
         $orderItemMock->expects($this->once())
             ->method('getProductOptionByCode')
@@ -72,7 +73,8 @@ class OrderItemTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    public function testUpdateAdditionalOptionsIfNotOneTimePurchaseOption() {
+    public function testUpdateAdditionalOptionsIfNotOneTimePurchaseOption()
+    {
         $subscriptionOption = 'some_unknown_option';
         $buyRequestParams = [
             OptionProcessor::KEY_SUBSCRIPTION_OPTION => [
@@ -93,7 +95,8 @@ class OrderItemTest extends \PHPUnit\Framework\TestCase
         $this->orderItemHelper->updateAdditionalOptions($orderItemMock);
     }
 
-    public function testUpdateAdditionalOptionsIfOneTimePurchaseOption() {
+    public function testUpdateAdditionalOptionsIfOneTimePurchaseOption()
+    {
         $subscriptionOption = PlatformProductInterface::SO_ONETIME_PURCHASE;
         $buyRequestParams = [
             OptionProcessor::KEY_SUBSCRIPTION_OPTION => [
@@ -213,7 +216,8 @@ class OrderItemTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    public function testUpdateOrderItem() {
+    public function testUpdateOrderItem()
+    {
         $quoteItemId = 32315;
         $subscriptionId = null;
         $subscriptionOption = PlatformProductInterface::SO_ONETIME_PURCHASE;
@@ -256,7 +260,8 @@ class OrderItemTest extends \PHPUnit\Framework\TestCase
         $this->orderItemHelper->updateOrderItem($order, $quoteItemId, $subscriptionId);
     }
 
-    public function testCleanSubscriptionParamsIfEmptySubscriptionParams() {
+    public function testCleanSubscriptionParamsIfEmptySubscriptionParams()
+    {
         $subscriptionParams = [];
         $buyRequestParams = [
             'option' => ['params'],
@@ -354,7 +359,8 @@ class OrderItemTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    public function testCleanAdditionalOptions() {
+    public function testCleanAdditionalOptions()
+    {
         $productOptions = [
             'key' => 'val',
             'additional_options' => [

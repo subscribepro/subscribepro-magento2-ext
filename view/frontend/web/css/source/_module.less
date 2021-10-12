@@ -152,18 +152,38 @@
 .vault-cards-listaction {
 	.my-credit-cards {
 		.table-credit-cards {
-			.col.actions {
-				form {
-					display: inline;
-					margin-left: 15px;
+			.col {
+                &.actions {
+                    form {
+                        display: inline;
+                        margin-left: 15px;
 
-					&:first-child {
-						margin-left: 0;
-					}
-				}
+                        &:first-child {
+                            margin-left: 0;
+                        }
+                    }
+                }
+
+                &.card-number {
+                    sub.card-pending {
+                        .lib-css(background-color, @color-yellow-light1);
+                        font-weight: 600;
+                        bottom: 0;
+                        margin-left: 5px;
+                        padding: 2px 5px;
+                        text-transform: uppercase;
+                    }
+                }
 			}
 		}
 	}
+}
+
+.wallet-authorize-info {
+    .lib-message(warning);
+	clear: both;
+    margin-bottom: 20px;
+    margin-top: 20px;
 }
 
 //

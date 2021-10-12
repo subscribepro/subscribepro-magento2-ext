@@ -39,6 +39,11 @@ class ThreeDSecure implements HandlerInterface
         $payment->setAdditionalInformation(TransactionInterface::STATE, $transaction->getState());
         $payment->setAdditionalInformation(TransactionInterface::TOKEN, $transaction->getToken());
 
+        $gatewaySpecificResponse = $transaction->getGatewaySpecificResponse();
+        if (!empty($gatewaySpecificResponse)) {
+            $payment->setAdditionalInformation(TransactionInterface::GATEWAY_SPECIFIC_RESPONSE, $gatewaySpecificResponse);
+        }
+
         if ($transaction->getState() === TransactionInterface::STATE_PENDING) {
             $payment->setIsTransactionPending(true);
         }

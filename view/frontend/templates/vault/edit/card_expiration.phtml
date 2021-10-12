@@ -1,21 +1,20 @@
 <?php
-/**
- * @var $block \Swarming\SubscribePro\Block\Vault\Edit\CardExpiration
- */
+/** @var \Swarming\SubscribePro\Block\Vault\Edit\CardExpiration $block */
+/** @var \Magento\Framework\Escaper $escaper */
 ?>
 <fieldset class="fieldset" data-bind="scope: 'subscribe-pro-vault-card-expiration'">
-    <legend class="legend"><span><?php echo __('Payment Information') ?></span></legend><br>
+    <legend class="legend"><span><?= $escaper->escapeHtml(__('Payment Information')) ?></span></legend><br>
 
     <div class="card-number-type">
-        <img src="<?php /* @noEscape */ echo $block->getIconUrl(); ?>"
-             width="<?php /* @noEscape */ echo $block->getIconWidth(); ?>"
-             height="<?php /* @noEscape */ echo $block->getIconHeight(); ?>">
-        <span><?php echo $block->escapeHtml(__('ending')); ?> <?php echo $block->escapeHtml($block->getNumberLast4Digits()) ?></span>
+        <img src="<?= /* @noEscape */ $block->getIconUrl() ?>"
+             width="<?= /* @noEscape */ $block->getIconWidth() ?>"
+             height="<?= /* @noEscape */ $block->getIconHeight() ?>">
+        <span><?= $escaper->escapeHtml(__('ending')) ?> <?= $escaper->escapeHtml($block->getNumberLast4Digits()) ?></span>
     </div>
 
     <div class="field date required expiration-date">
         <label for="creditcard_month" class="label">
-            <span><?php echo __('Expiration Date') ?></span>
+            <span><?= $escaper->escapeHtml(__('Expiration Date')) ?></span>
         </label>
         <div class="control">
             <div class="date-wrap">
@@ -28,7 +27,7 @@
                            placeholder="MM"
                            class="input-text required-entry validate-expiration-date"
                            autocomplete="off"
-                           value="<?php echo $block->escapeHtml($block->getExpirationMonth()) ?>"
+                           value="<?= $escaper->escapeHtmlAttr($block->getExpirationMonth()) ?>"
                     >
                 </div>
                 <div class="child-control year">
@@ -40,7 +39,7 @@
                            placeholder="YYYY"
                            class="input-text required-entry"
                            autocomplete="off"
-                           value="<?php echo $block->escapeHtml($block->getExpirationYear()) ?>"
+                           value="<?= $escaper->escapeHtmlAttr($block->getExpirationYear()) ?>"
                     >
                 </div>
                 <div class="error"><!-- ko i18n: 'Please, enter valid Expiration Date'--><!-- /ko --></div>
@@ -52,7 +51,7 @@
 <script type="text/x-magento-init">
     {
         "*": {
-            "Magento_Ui/js/core/app": <?php echo $block->getJsLayout();?>
+            "Magento_Ui/js/core/app": <?= $block->getJsLayout() ?>
         }
     }
 </script>

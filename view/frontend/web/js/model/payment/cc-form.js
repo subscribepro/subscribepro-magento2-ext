@@ -9,6 +9,7 @@ define(
         'Swarming_SubscribePro/js/model/payment/credit-card-validation/expiration-fields',
         'Swarming_SubscribePro/js/model/payment/credit-card-validation/hosted-fields',
         'Swarming_SubscribePro/js/model/payment/spreedly',
+        'Magento_Ui/js/modal/alert',
         'mage/translate'
     ],
     function(
@@ -20,6 +21,7 @@ define(
         expirationFields,
         hostedFields,
         spreedly,
+        alert,
         $t
     ) {
         'use strict';
@@ -33,7 +35,8 @@ define(
                 creditCardExpMonthFocus: null,
                 creditCardExpYearFocus: null,
                 paymentMethodToken: null,
-                selectedCardType: null
+                selectedCardType: null,
+                show3DSiFrame: false
             },
 
             initObservable: function () {
@@ -44,8 +47,17 @@ define(
                         'creditCardExpMonthFocus',
                         'creditCardExpYearFocus',
                         'paymentMethodToken',
-                        'selectedCardType'
+                        'selectedCardType',
+                        'show3DSiFrame'
                     ]);
+
+                this.show3DSiFrame.subscribe(function (isActive) {
+                    if (isActive) {
+                        $('body').addClass('spro-3ds-active');
+                    } else {
+                        $('body').removeClass('spro-3ds-active');
+                    }
+                });
                 return this;
             },
 
@@ -68,6 +80,61 @@ define(
                     $.proxy(this.validationPaymentData, this),
                     $.proxy(this.onErrors, this)
                 );
+
+                if (config.isThreeDSActive()) {
+                    Spreedly.on('3ds:status', $.proxy(this.on3DSstatusUpdates, this));
+                }
+            },
+
+            on3DSstatusUpdates: function (event) {
+                console.log('event.action', event.action, event)
+
+                switch (event.action) {
+                    case 'challenge':
+                        this.show3DSiFrame(true);
+                        break;
+                    case 'succeeded':
+                        this.onOrderSuccess();
+                        break;
+                    case 'finalization-timeout':
+                        this.process3DSFailure($t('Time-Out. User did not authenticate within expected timeout.'));
+                        break;
+                    case 'error':
+                        this.process3DSFailure(event.context);
+                        break;
+                    default:
+                        console.log('Event not handled', event);
+                }
+            },
+
+            initializeThreeDSLifecycle: function (token) {
+                var lifecycle = new Spreedly.ThreeDS.Lifecycle({
+                    environmentKey: config.getEnvironmentKey(),
+                    hiddenIframeLocation: 'spro-3ds-iframe',
+                    challengeIframeLocation: 'spro-3ds-challenge-container',
+                    transactionToken: token,
+                    challengeIframeClasses: '',
+                })
+
+                lifecycle.start()
+            },
+
+            getThreeDSBrowserInfo: function () {
+                return Spreedly.ThreeDS.serialize(config.getBrowserSize(), config.getAcceptHeader());
+            },
+
+            process3DSFailure: function (errorMessage) {
+                this.show3DSiFrame(false);
+
+                alert({
+                    title: $t('Error'),
+                    content: $t('Transaction has been declined. Please try again later.'),
+                    actions: {
+                        always: function(){
+                            document.location.reload();
+                        }
+                    }
+                });
             },
 
             onFieldEvent: function (name, event, activeElement, inputData) {
@@ -135,6 +202,8 @@ define(
             },
 
             submitPayment: function () {},
+
+            onOrderSuccess: function () {},
 
             onErrors: function (errors) {
                 this.paymentMethodToken(null);

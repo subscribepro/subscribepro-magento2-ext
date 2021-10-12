@@ -2,9 +2,11 @@
 
 namespace Swarming\SubscribePro\Block\Vault;
 
-use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
 use Magento\Vault\Api\Data\PaymentTokenInterface;
 use Magento\Vault\Block\AbstractCardRenderer;
+use Swarming\SubscribePro\Gateway\Config\ApplePayConfigProvider;
+use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
+use Swarming\SubscribePro\Helper\Vault as VaultHelper;
 
 class CardRenderer extends AbstractCardRenderer
 {
@@ -14,7 +16,7 @@ class CardRenderer extends AbstractCardRenderer
      */
     public function canRender(PaymentTokenInterface $token)
     {
-        return $token->getPaymentMethodCode() === ConfigProvider::CODE;
+        return ($token->getPaymentMethodCode() === ConfigProvider::CODE);
     }
 
     /**
@@ -55,5 +57,26 @@ class CardRenderer extends AbstractCardRenderer
     public function getIconWidth()
     {
         return $this->getIconForType($this->getTokenDetails()['type'])['width'];
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPending()
+    {
+        $state = $this->getTokenDetails()['state'] ?? null;
+        return $state === VaultHelper::STATE_PENDING;
+    }
+
+    /**
+     * @return string
+     */
+    public function getApplePayLabel()
+    {
+        $label = '';
+        if ($this->getToken()->getPaymentMethodCode() === ApplePayConfigProvider::CODE) {
+            $label = '(' . __('ApplePay') . ')';
+        }
+        return $label;
     }
 }

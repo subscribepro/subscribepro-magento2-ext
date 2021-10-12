@@ -11,7 +11,7 @@ class CaptureCommandTest extends AbstractCommand
      */
     protected $captureCommand;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->initProperties();
         $this->captureCommand = new CaptureCommand(

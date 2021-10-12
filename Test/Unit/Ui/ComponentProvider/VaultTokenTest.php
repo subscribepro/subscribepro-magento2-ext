@@ -21,7 +21,7 @@ class VaultTokenTest extends \PHPUnit\Framework\TestCase
      */
     protected $componentFactoryMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->componentFactoryMock = $this->getMockBuilder(TokenUiComponentInterfaceFactory::class)
             ->disableOriginalConstructor()

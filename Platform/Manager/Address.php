@@ -35,6 +35,7 @@ class Address
             ->setRegion($address->getRegionCode())
             ->setStreet1($address->getStreetLine(1))
             ->setStreet2($address->getStreetLine(2))
+            ->setStreet3($address->getStreetLine(3))
             ->setPostcode($address->getPostcode())
             ->setPhone($address->getTelephone())
             ->setCustomerId($platformCustomerId)

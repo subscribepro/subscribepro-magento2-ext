@@ -15,6 +15,10 @@ use Magento\Framework\Controller\Result\Redirect as ResultRedirect;
 use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\Data\Form\FormKey\Validator as FormKeyValidator;
 use Swarming\SubscribePro\Model\Vault\Form as VaultForm;
+use Swarming\SubscribePro\Gateway\Config\Config as GatewayConfig;
+use Swarming\SubscribePro\Model\Vault\Validator as VaultFormValidator;
+use Swarming\SubscribePro\Gateway\Command\AuthorizeCommand as WalletAuthorizeCommand;
+use \Magento\Store\Model\StoreManagerInterface as StoreManager;
 
 class SaveTest extends \PHPUnit\Framework\TestCase
 {
@@ -44,6 +48,27 @@ class SaveTest extends \PHPUnit\Framework\TestCase
     protected $platformVaultConfigMock;
 
     /**
+     * @var \PHPUnit_Framework_MockObject_MockObject|\Swarming\SubscribePro\Gateway\Config\Config
+     */
+    protected $gatewayConfig;
+
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject|\Swarming\SubscribePro\Model\Vault\Validator
+     */
+    protected $vaultFormValidator;
+
+     /**
+     * @var \PHPUnit_Framework_MockObject_MockObject|\Swarming\SubscribePro\Gateway\Command\AuthorizeCommand
+     */
+    protected $walletAuthorizeCommand;
+
+     /**
+     * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Store\Model\StoreManagerInterface
+     */
+    protected $storeManager;
+
+
+    /**
      * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Framework\Message\ManagerInterface
      */
     protected $messageManagerMock;
@@ -58,7 +83,7 @@ class SaveTest extends \PHPUnit\Framework\TestCase
      */
     protected $requestMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->requestMock = $this->getMockBuilder(RequestInterface::class)
             ->setMethods(['getParam', 'getParams', 'isPost'])
@@ -79,13 +104,25 @@ class SaveTest extends \PHPUnit\Framework\TestCase
             ->disableOriginalConstructor()->getMock();
         $this->platformVaultConfigMock = $this->getMockBuilder(VaultConfig::class)
             ->disableOriginalConstructor()->getMock();
+        $this->gatewayConfig = $this->getMockBuilder(GatewayConfig::class)
+            ->disableOriginalConstructor()->getMock();
+        $this->vaultFormValidator = $this->getMockBuilder(VaultFormValidator::class)
+            ->disableOriginalConstructor()->getMock();
+        $this->walletAuthorizeCommand = $this->getMockBuilder(WalletAuthorizeCommand::class)
+            ->disableOriginalConstructor()->getMock();
+        $this->storeManager = $this->getMockBuilder(StoreManager::class)
+            ->disableOriginalConstructor()->getMock();
 
         $this->saveController = new Save(
             $contextMock,
             $this->formKeyValidatorMock,
             $this->customerSessionMock,
             $this->vaultFormMock,
-            $this->platformVaultConfigMock
+            $this->platformVaultConfigMock,
+            $this->gatewayConfig,
+            $this->vaultFormValidator,
+            $this->walletAuthorizeCommand,
+            $this->storeManager
         );
     }
 

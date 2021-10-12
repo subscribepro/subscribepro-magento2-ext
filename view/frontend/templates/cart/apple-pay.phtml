@@ -1,0 +1,31 @@
+<?php
+/** @var \Swarming\SubscribePro\Block\Cart\ApplePay $block */
+/** @var \Magento\Framework\Escaper $escaper */
+?>
+<div class="subscriber-pro-apple-pay-button-container"
+     id="subscriber-pro-apple-pay-bottom-button-container" style="display:none;">
+    <div class="apple-pay-button" style="-webkit-appearance: -apple-pay-button;
+    -apple-pay-button-type: plain;
+    -apple-pay-button-style: black;
+    border-top-left-radius: 3px; border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px; border-bottom-left-radius: 3px;
+    height: 45px;
+    width: 100%;
+    display: block;"
+         lang=en></div>
+</div>
+<script type="text/x-magento-init">
+{
+     "#subscriber-pro-apple-pay-bottom-button-container": {
+         "Swarming_SubscribePro/js/cart/sp-apple-pay": {
+            "createSessionUrl": "<?= $escaper->escapeHtml($block->getCreateSessionUrl()) ?>",
+            "merchantDomainName": "<?= $escaper->escapeHtml($block->getMerchantDomainName()) ?>",
+            "apiAccessToken": "<?= $escaper->escapeHtml($block->getApiAccessToken()) ?>",
+            "paymentRequest": <?= /** @noEscape */ $block->getApplePayPaymentRequest() ?>,
+            "onShippingContactSelectedUrl": "<?= $escaper->escapeHtml($block->getShippingSelectedUrl()) ?>",
+            "onShippingMethodSelectedUrl": "<?= $escaper->escapeHtml($block->onShippingMethodSelected()) ?>",
+            "onPaymentAuthorizedUrl": "<?= $escaper->escapeHtml($block->getPaymentAuthorizedUrl()) ?>"
+         }
+     }
+}
+</script>

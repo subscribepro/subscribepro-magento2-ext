@@ -32,7 +32,7 @@ class VaultTest extends \PHPUnit\Framework\TestCase
      */
     protected $dateTimeFactoryMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->gatewayConfigMock = $this->getMockBuilder(GatewayConfig::class)
             ->disableOriginalConstructor()->getMock();
@@ -196,7 +196,8 @@ class VaultTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    public function testUpdateVaultIfNoTokenDetails() {
+    public function testUpdateVaultIfNoTokenDetails()
+    {
         $year = '2019';
         $month = '11';
         $updatedTokenDetails = ['expirationDate' => "{$month}/{$year}"];
@@ -226,7 +227,8 @@ class VaultTest extends \PHPUnit\Framework\TestCase
         $this->assertSame($tokenMock, $this->vaultHelper->updateVault($tokenMock, $profileMock));
     }
 
-    public function testUpdateVault() {
+    public function testUpdateVault()
+    {
         $year = '2019';
         $month = '11';
         $tokenDetails = [
@@ -267,7 +269,8 @@ class VaultTest extends \PHPUnit\Framework\TestCase
         $this->assertSame($tokenMock, $this->vaultHelper->updateVault($tokenMock, $profileMock));
     }
 
-    public function testGetTokenDetails() {
+    public function testGetTokenDetails()
+    {
         $year = '2019';
         $month = '11';
         $cardType = 'card_type';
@@ -292,7 +295,8 @@ class VaultTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testGetExpirationDate() {
+    public function testGetExpirationDate()
+    {
         $year = '2019';
         $month = '11';
         $expirationDate = '2025-05-01 00:00:00';

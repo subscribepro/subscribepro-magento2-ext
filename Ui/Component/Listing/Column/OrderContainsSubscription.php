@@ -28,8 +28,8 @@ class OrderContainsSubscription extends \Magento\Ui\Component\Listing\Columns\Co
         \Magento\Sales\Api\OrderRepositoryInterface $orderRepository,
         \Swarming\SubscribePro\Helper\Order $orderHelper,
         array $components = [],
-        array $data = [])
-    {
+        array $data = []
+    ) {
         $this->orderRepository = $orderRepository;
         $this->orderHelper = $orderHelper;
         parent::__construct($context, $uiComponentFactory, $components, $data);
@@ -44,7 +44,7 @@ class OrderContainsSubscription extends \Magento\Ui\Component\Listing\Columns\Co
 
                 if ($this->orderHelper->isNewSubscriptionOrder($order)) {
                     $value = 'New';
-                } else if ($this->orderHelper->isRecurringOrder($order)) {
+                } elseif ($this->orderHelper->isRecurringOrder($order)) {
                     $value = 'Recurring';
                 }
                 $item[$this->getData('name')] = $value;

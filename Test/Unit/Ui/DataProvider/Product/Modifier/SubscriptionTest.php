@@ -31,7 +31,7 @@ class SubscriptionTest extends \PHPUnit\Framework\TestCase
      */
     protected $arrayManagerMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->locatorMock = $this->getMockBuilder(LocatorInterface::class)->getMock();
         $this->scopeConfigMock = $this->getMockBuilder(ScopeConfigInterface::class)->getMock();

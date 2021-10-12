@@ -19,7 +19,7 @@ class ProcessorTest extends \PHPUnit\Framework\TestCase
      */
     protected $webhookHandlerPoolMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->webhookHandlerPoolMock = $this->getMockBuilder(HandlerPool::class)
             ->disableOriginalConstructor()->getMock();

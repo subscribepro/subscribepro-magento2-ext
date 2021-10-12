@@ -11,6 +11,9 @@
                 <log_enabled>0</log_enabled>
                 <log_filename>log/subscribepro/log.log</log_filename>
             </platform>
+            <order_callback>
+                <shared_secret backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
+            </order_callback>
             <subscription_options>
                 <allow_coupon>0</allow_coupon>
                 <allow_cancel>1</allow_cancel>
@@ -51,6 +54,7 @@
                 <title>Credit or Debit Cards (SubscribePro)</title>
                 <active>1</active>
                 <is_gateway>1</is_gateway>
+                <wallet_authorization_amount>1</wallet_authorization_amount>
                 <can_use_checkout>1</can_use_checkout>
                 <can_use_internal>1</can_use_internal>
                 <can_authorize>1</can_authorize>
@@ -67,6 +71,7 @@
                 <useccv>1</useccv>
                 <payment_action>authorize</payment_action>
                 <three_ds_active>0</three_ds_active>
+                <three_ds_type>gateway_independent</three_ds_type>
                 <browser_size>04</browser_size>
                 <accept_header><![CDATA[text/html,application/xhtml+xml;q=0.9,*/*;q=0.8]]></accept_header>
                 <currency>USD</currency>
@@ -86,6 +91,25 @@
                     <additionalInformation>Swarming\SubscribePro\Model\InstantPurchase\PaymentAdditionalInformationProvider</additionalInformation>
                 </instant_purchase>
             </subscribe_pro_vault>
+            <subscribe_pro_apple_pay>
+                <title>Subscribe Pro | Apple Pay</title>
+                <model>SubscribeProApplePayAdapter</model>
+                <active>0</active>
+                <active_non_subscription>0</active_non_subscription>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
+                <is_gateway>1</is_gateway>
+                <can_use_checkout>1</can_use_checkout>
+                <can_use_internal>1</can_use_internal>
+                <can_authorize>1</can_authorize>
+                <can_capture>1</can_capture>
+                <can_capture_partial>1</can_capture_partial>
+                <can_refund>1</can_refund>
+                <can_cancel>1</can_cancel>
+                <can_void>1</can_void>
+                <payment_action>authorize</payment_action>
+                <currency>USD</currency>
+                <order_status>processing</order_status>
+            </subscribe_pro_apple_pay>
         </payment>
     </default>
 </config>

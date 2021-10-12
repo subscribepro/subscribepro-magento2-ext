@@ -77,6 +77,48 @@
                 </field>
             </group>
 
+            <group id="third_party_payment" translate="label" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="0">
+                <label>Payment Configuration</label>
+
+                <field id="is_allowed" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                    <label>Allow Third Party</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="swarming_subscribepro/general/enabled">1</field>
+                    </depends>
+                </field>
+
+                <field id="allowed_method" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Allowed Third Party</label>
+                    <source_model>Swarming\SubscribePro\Model\Config\Source\ThirdPartyPaymentMethod</source_model>
+                    <depends>
+                        <field id="swarming_subscribepro/general/enabled">1</field>
+                        <field id="is_allowed">1</field>
+                    </depends>
+                </field>
+            </group>
+
+            <group id="order_callback" translate="label" type="text" sortOrder="28" showInDefault="1" showInWebsite="1" showInStore="0">
+                <label>Order Callback Configuration</label>
+
+                <field id="shared_secret" translate="label" type="obscure" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Shared Secret</label>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                    <depends>
+                        <field id="swarming_subscribepro/general/enabled">1</field>
+                    </depends>
+                </field>
+
+                <field id="log_enabled" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                    <label>Enable Logging</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>If enabled all requests and responses are logged to var/log/debug.log</comment>
+                    <depends>
+                        <field id="swarming_subscribepro/general/enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+
             <group id="subscription_options" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Subscription Options</label>
 
@@ -247,8 +289,31 @@
                 </field>
 
                 <field id="three_ds_active" translate="label" type="select" sortOrder="45" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Enable 3DS</label>
+                    <label>Enable 3DS2</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
+                <field id="three_ds_type" translate="label" type="select" sortOrder="46" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>3DS Type</label>
+                    <comment>In most cases Subscribe Pro uses a gateway-independent 3DS implementation. For integrations that require a gateway-specific implementation, this can be changed here.</comment>
+                    <source_model>Swarming\SubscribePro\Model\Config\Source\ThreeDsType</source_model>
+                    <depends>
+                        <field id="three_ds_active">1</field>
+                    </depends>
+                </field>
+
+                <field id="wallet_authorization_active" translate="label" type="select" sortOrder="47" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Enable Authorization on Wallet</label>
+                    <comment>Enable or disable authorization of new cards added by customer on wallet page</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="three_ds_active">0</field>
+                    </depends>
+                </field>
+
+                <field id="wallet_authorization_amount" translate="label" type="text" sortOrder="48" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Authorization Amount on Wallet</label>
+                    <validate>validate-greater-than-zero validate-number required-entry</validate>
                 </field>
 
                 <field id="order_status" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0">
@@ -293,6 +358,68 @@
                     <label>Sort Order</label>
                     <frontend_class>validate-number</frontend_class>
                 </field>
+            </group>
+
+            <group id="subscribe_pro_apple_pay" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0">
+                <label>Subscribe Pro | Apple Pay</label>
+
+                <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
+                <field id="active_non_subscription" translate="label" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Allow Non-Subscription Transactions</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
+                <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Title</label>
+                </field>
+
+                <field id="domain" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Domain</label>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+
+                <field id="payment_action" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Payment Action</label>
+                    <source_model>Swarming\SubscribePro\Model\Config\Source\PaymentAction</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+
+                <field id="order_status" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>New Order Status</label>
+                    <source_model>Magento\Sales\Model\Config\Source\Order\Status\Processing</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+
+                <field id="currency" translate="label" type="select" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Accepted Currency</label>
+                    <source_model>Magento\Config\Model\Config\Source\Locale\Currency</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+
+<!--                <field id="min_order_total" translate="label" type="text" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="0">-->
+<!--                    <label>Minimum Order Total</label>-->
+<!--                </field>-->
+
+<!--                <field id="max_order_total" translate="label" type="text" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="0">-->
+<!--                    <label>Maximum Order Total</label>-->
+<!--                </field>-->
+
+<!--                <field id="sort_order" translate="label" type="text" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="0">-->
+<!--                    <label>Sort Order</label>-->
+<!--                    <frontend_class>validate-number</frontend_class>-->
+<!--                </field>-->
             </group>
         </section>
     </system>

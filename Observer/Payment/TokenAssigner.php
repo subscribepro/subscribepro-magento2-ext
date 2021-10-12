@@ -5,7 +5,6 @@ namespace Swarming\SubscribePro\Observer\Payment;
 use Magento\Framework\Event\Observer;
 use Magento\Quote\Api\Data\PaymentInterface;
 use Magento\Vault\Api\Data\PaymentTokenInterface;
-use Magento\Vault\Model\Method\Vault;
 use SubscribePro\Service\Transaction\TransactionInterface;
 use Swarming\SubscribePro\Gateway\Request\VaultDataBuilder;
 use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
@@ -64,12 +63,17 @@ class TokenAssigner extends \Magento\Payment\Observer\AbstractDataAssignObserver
         $paymentModel->setAdditionalInformation(PaymentTokenInterface::PUBLIC_HASH, $paymentToken->getPublicHash());
 
         if (!empty($additionalData[TransactionInterface::UNIQUE_ID])) {
-            $paymentModel->setAdditionalInformation(TransactionInterface::UNIQUE_ID, $additionalData[TransactionInterface::UNIQUE_ID]);
+            $paymentModel->setAdditionalInformation(
+                TransactionInterface::UNIQUE_ID,
+                $additionalData[TransactionInterface::UNIQUE_ID]
+            );
         }
 
         if (!empty($additionalData[TransactionInterface::SUBSCRIBE_PRO_ORDER_TOKEN])) {
-            $paymentModel->setAdditionalInformation(TransactionInterface::SUBSCRIBE_PRO_ORDER_TOKEN, $additionalData[TransactionInterface::SUBSCRIBE_PRO_ORDER_TOKEN]);
+            $paymentModel->setAdditionalInformation(
+                TransactionInterface::SUBSCRIBE_PRO_ORDER_TOKEN,
+                $additionalData[TransactionInterface::SUBSCRIBE_PRO_ORDER_TOKEN]
+            );
         }
-
     }
 }

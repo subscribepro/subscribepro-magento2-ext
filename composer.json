@@ -5,7 +5,7 @@
   "license": [
     "MIT"
   ],
-  "version": "1.4.1",
+  "version": "1.5.4",
   "authors": [
     {
       "name": "Swarming Technology",
@@ -28,7 +28,7 @@
     "magento/module-theme": "^100.2.0|^101.0.0|^101.1.0",
     "magento/module-ui": "^101.0.0|^101.1.0|^101.2.0",
     "magento/framework": "^101.0.0|^102.0.0|^103.0.0",
-    "subscribepro/subscribepro-php": "~1.0.17"
+    "subscribepro/subscribepro-php": "~1.0.23"
  },
   "require-dev": {
     "magento/zendframework1": "1.12.16",

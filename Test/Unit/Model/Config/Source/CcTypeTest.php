@@ -17,7 +17,7 @@ class CcTypeTest extends \PHPUnit\Framework\TestCase
      */
     protected $paymentConfigMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->paymentConfigMock = $this->getMockBuilder(PaymentConfig::class)
             ->disableOriginalConstructor()->getMock();

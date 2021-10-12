@@ -29,6 +29,11 @@ class Config
     protected $advancedConfig;
 
     /**
+     * @var \Magento\Framework\Serialize\SerializerInterface
+     */
+    protected $serializer;
+
+    /**
      * @var array[]
      */
     private $configByWebsite = [];
@@ -38,17 +43,20 @@ class Config
      * @param \Magento\Framework\App\Cache\StateInterface $state
      * @param \Swarming\SubscribePro\Model\Config\Advanced $advancedConfig
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     * @param \Magento\Framework\Serialize\SerializerInterface $serializer
      */
     public function __construct(
         \Magento\Framework\Cache\FrontendInterface $cache,
         \Magento\Framework\App\Cache\StateInterface $state,
         \Swarming\SubscribePro\Model\Config\Advanced $advancedConfig,
-        \Magento\Store\Model\StoreManagerInterface $storeManager
+        \Magento\Store\Model\StoreManagerInterface $storeManager,
+        \Magento\Framework\Serialize\SerializerInterface $serializer
     ) {
         $this->cache = $cache;
         $this->state = $state;
         $this->advancedConfig = $advancedConfig;
         $this->storeManager = $storeManager;
+        $this->serializer = $serializer;
     }
 
     /**
@@ -71,7 +79,7 @@ class Config
             return null;
         }
 
-        $config = unserialize($configData);
+        $config = $this->serializer->unserialize($configData);
         $this->configByWebsite[$cacheKey] = $config;
 
         return $config;
@@ -92,8 +100,8 @@ class Config
             return true;
         }
 
-        $lifeTime = $lifeTime ?: $this->advancedConfig->getCacheLifeTime($websiteId);
-        return $this->cache->save(serialize($config), $cacheKey, [], $lifeTime);
+        $lifeTime = $lifeTime ?: (int)$this->advancedConfig->getCacheLifeTime($websiteId);
+        return $this->cache->save($this->serializer->serialize($config), $cacheKey, [], $lifeTime);
     }
 
     /**

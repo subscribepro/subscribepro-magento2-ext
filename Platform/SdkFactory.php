@@ -10,7 +10,7 @@ class SdkFactory
      * @param array $data
      * @return \SubscribePro\Sdk
      */
-    public function create(array $data = array())
+    public function create(array $data = [])
     {
         $config = isset($data['config']) && is_array($data['config'])
             ? $data['config']

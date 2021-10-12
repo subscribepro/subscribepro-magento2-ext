@@ -130,5 +130,5 @@ interface SubscriptionOptionInterface
     /**
      * @return mixed[]
      */
-    public function __toArray();
+    public function toArray();
 }

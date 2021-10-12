@@ -39,8 +39,8 @@ class PaymentTokenManagementTest extends \PHPUnit\Framework\TestCase
      * @var \Magento\Framework\Intl\DateTimeFactory|\PHPUnit_Framework_MockObject_MockObject
      */
     private $dateTimeFactoryMock;
-    
-    protected function setUp()
+
+    protected function setUp(): void
     {
         $this->paymentTokenRepositoryMock = $this->getMockBuilder(PaymentTokenRepositoryInterface::class)->getMock();
         $this->filterBuilderMock = $this->getMockBuilder(FilterBuilder::class)
@@ -49,7 +49,7 @@ class PaymentTokenManagementTest extends \PHPUnit\Framework\TestCase
             ->disableOriginalConstructor()->getMock();
         $this->dateTimeFactoryMock = $this->getMockBuilder(DateTimeFactory::class)
             ->disableOriginalConstructor()->getMock();
-        
+
         $this->paymentTokenManagement = new PaymentTokenManagement(
             $this->paymentTokenRepositoryMock,
             $this->filterBuilderMock,
@@ -84,12 +84,12 @@ class PaymentTokenManagementTest extends \PHPUnit\Framework\TestCase
             ->method('format')
             ->with('Y-m-d 00:00:00')
             ->willReturn('2018-01-01 00:00:00');
-        
+
         $this->filterBuilderMock->expects($this->once())
             ->method('setConditionType')
             ->with('gt')
             ->willReturnSelf();
-        
+
         $this->dateTimeFactoryMock->expects($this->once())
             ->method('create')
             ->with("now", new \DateTimeZone('UTC'))

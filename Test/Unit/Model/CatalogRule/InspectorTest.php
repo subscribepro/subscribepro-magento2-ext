@@ -19,7 +19,7 @@ class InspectorTest extends \PHPUnit\Framework\TestCase
      */
     protected $inspectorRepositoryMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->inspectorRepositoryMock = $this->getMockBuilder(InspectorRepository::class)
             ->disableOriginalConstructor()
@@ -27,7 +27,6 @@ class InspectorTest extends \PHPUnit\Framework\TestCase
 
         $this->inspector = new Inspector($this->inspectorRepositoryMock);
     }
-
 
     /**
      * @param string $productType

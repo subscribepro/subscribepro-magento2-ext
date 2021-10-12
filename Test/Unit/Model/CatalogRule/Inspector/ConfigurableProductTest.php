@@ -12,7 +12,7 @@ class ConfigurableProductTest extends AbstractInspector
      */
     protected $configurableProduct;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -24,7 +24,8 @@ class ConfigurableProductTest extends AbstractInspector
         );
     }
 
-    public function testIsAppliedIfChildHasSpecialPrice() {
+    public function testIsAppliedIfChildHasSpecialPrice()
+    {
         $price = 100;
         $basePrice = 110;
 
@@ -49,7 +50,8 @@ class ConfigurableProductTest extends AbstractInspector
         $this->assertTrue($this->configurableProduct->isApplied($product));
     }
 
-    public function testIsAppliedIfHasSpecialPrice() {
+    public function testIsAppliedIfHasSpecialPrice()
+    {
         $price = 100;
         $basePrice = 110;
 

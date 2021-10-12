@@ -154,6 +154,7 @@ class SubscriptionCreator
         $shippingAddress->setLastName($address->getLastname());
         $shippingAddress->setStreet1($address->getStreetLine(1));
         $shippingAddress->setStreet2($address->getStreetLine(2));
+        $shippingAddress->setStreet3($address->getStreetLine(3));
         $shippingAddress->setCity($address->getCity());
         $shippingAddress->setRegion($address->getRegionCode());
         $shippingAddress->setPostcode($address->getPostcode());

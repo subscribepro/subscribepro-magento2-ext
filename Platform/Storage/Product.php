@@ -29,6 +29,16 @@ class Product
     protected $advancedConfig;
 
     /**
+     * @var \Swarming\SubscribePro\Api\Data\ProductInterfaceFactory
+     */
+    protected $platformProductFactory;
+
+    /**
+     * @var \Magento\Framework\Serialize\SerializerInterface
+     */
+    protected $serializer;
+
+    /**
      * @var \Swarming\SubscribePro\Api\Data\ProductInterface[]
      */
     private $platformProducts = [];
@@ -38,23 +48,29 @@ class Product
      * @param \Magento\Framework\App\Cache\StateInterface $state
      * @param \Swarming\SubscribePro\Model\Config\Advanced $advancedConfig
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     * @param \Swarming\SubscribePro\Api\Data\ProductInterfaceFactory $platformProductFactory
+     * @param \Magento\Framework\Serialize\SerializerInterface $serializer
      */
     public function __construct(
         \Magento\Framework\Cache\FrontendInterface $cache,
         \Magento\Framework\App\Cache\StateInterface $state,
         \Swarming\SubscribePro\Model\Config\Advanced $advancedConfig,
-        \Magento\Store\Model\StoreManagerInterface $storeManager
+        \Magento\Store\Model\StoreManagerInterface $storeManager,
+        \Swarming\SubscribePro\Api\Data\ProductInterfaceFactory $platformProductFactory,
+        \Magento\Framework\Serialize\SerializerInterface $serializer
     ) {
         $this->cache = $cache;
         $this->state = $state;
         $this->advancedConfig = $advancedConfig;
         $this->storeManager = $storeManager;
+        $this->platformProductFactory = $platformProductFactory;
+        $this->serializer = $serializer;
     }
 
     /**
      * @param string $sku
-     * @param null|int $websiteId
-     * @return null|\Swarming\SubscribePro\Api\Data\ProductInterface
+     * @param int|null $websiteId
+     * @return \Swarming\SubscribePro\Api\Data\ProductInterface|null
      */
     public function load($sku, $websiteId = null)
     {
@@ -72,16 +88,16 @@ class Product
             return null;
         }
 
-        $platformProduct = unserialize($platformProductData);
-        $this->platformProducts[$cacheKey] = $platformProduct;
+        $platformProductData = $this->serializer->unserialize($platformProductData);
+        $this->platformProducts[$cacheKey] = $this->platformProductFactory->create(['data' => $platformProductData]);
 
-        return $platformProduct;
+        return $this->platformProducts[$cacheKey];
     }
 
     /**
      * @param \Swarming\SubscribePro\Api\Data\ProductInterface $platformProduct
-     * @param null|int $websiteId
-     * @param null|int $lifeTime
+     * @param int|null $websiteId
+     * @param int|null $lifeTime
      * @return void
      */
     public function save($platformProduct, $websiteId, $lifeTime = null)
@@ -93,8 +109,8 @@ class Product
             return;
         }
 
-        $lifeTime = $lifeTime ?: $this->advancedConfig->getCacheLifeTime($websiteId);
-        $this->cache->save(serialize($platformProduct), $cacheKey, [], $lifeTime);
+        $lifeTime = $lifeTime ?: (int)$this->advancedConfig->getCacheLifeTime($websiteId);
+        $this->cache->save($this->serializer->serialize($platformProduct->toArray()), $cacheKey, [], $lifeTime);
     }
 
     /**
@@ -122,6 +138,6 @@ class Product
     protected function getCacheKey($sku, $websiteId = null)
     {
         $websiteCode = $this->storeManager->getWebsite($websiteId)->getCode();
-        return self::PRODUCT_CACHE_KEY . '_' . md5(serialize([$sku, $websiteCode]));
+        return self::PRODUCT_CACHE_KEY . '_' . hash('sha256', $this->serializer->serialize([$sku, $websiteCode]));
     }
 }

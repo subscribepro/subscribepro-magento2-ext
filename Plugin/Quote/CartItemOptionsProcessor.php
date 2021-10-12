@@ -45,7 +45,7 @@ class CartItemOptionsProcessor
 
         if ($buyRequest instanceof DataObject) {
             $buyRequest->addData($subscriptionBuyRequest->getData());
-        } else if (is_numeric($buyRequest)) {
+        } elseif (is_numeric($buyRequest)) {
             $subscriptionBuyRequest->setData('qty', $buyRequest);
             $buyRequest = $subscriptionBuyRequest;
         }

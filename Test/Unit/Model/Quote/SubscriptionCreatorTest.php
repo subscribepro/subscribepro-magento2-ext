@@ -48,7 +48,7 @@ class SubscriptionCreatorTest extends \PHPUnit\Framework\TestCase
      */
     protected $orderItemHelperMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->platformCustomerManagerMock = $this->getMockBuilder(CustomerManager::class)
             ->disableOriginalConstructor()
@@ -158,7 +158,8 @@ class SubscriptionCreatorTest extends \PHPUnit\Framework\TestCase
      * @param bool $isItemFulfilsSubscription
      * @dataProvider createSubscriptionsIfNotSubscriptionItemDataProvider
      */
-    public function testCreateSubscriptionsIfNoSubscriptionShippingItems($isVirtual, $isSubscriptionEnabled, $isItemFulfilsSubscription) {
+    public function testCreateSubscriptionsIfNoSubscriptionShippingItems($isVirtual, $isSubscriptionEnabled, $isItemFulfilsSubscription)
+    {
         $customerId = 233;
         $paymentEntityId = 1235;
         $paymentProfileId = 1232;
@@ -323,11 +324,15 @@ class SubscriptionCreatorTest extends \PHPUnit\Framework\TestCase
 
         $this->quoteItemHelperMock->expects($this->exactly(count($quoteItems)))
             ->method('isSubscriptionEnabled')
-            ->willReturnMap(array_map(function($quoteItem) {return [$quoteItem, true];}, $quoteItems));
+            ->willReturnMap(array_map(function ($quoteItem) {
+                return [$quoteItem, true];
+            }, $quoteItems));
 
         $this->quoteItemHelperMock->expects($this->exactly(count($quoteItems)))
             ->method('isItemFulfilsSubscription')
-            ->willReturnMap(array_map(function($quoteItem) {return [$quoteItem, false];}, $quoteItems));
+            ->willReturnMap(array_map(function ($quoteItem) {
+                return [$quoteItem, false];
+            }, $quoteItems));
 
         $this->quoteItemSubscriptionCreatorMock->expects($this->exactly(count($quoteItems)))
             ->method('create')
@@ -464,10 +469,14 @@ class SubscriptionCreatorTest extends \PHPUnit\Framework\TestCase
             $virtualSubscriptionId
         ];
 
-        $isSubscriptionEnabledMap = array_map(function($quoteItem) {return [$quoteItem, true];}, $quoteItems);
+        $isSubscriptionEnabledMap = array_map(function ($quoteItem) {
+            return [$quoteItem, true];
+        }, $quoteItems);
         $isSubscriptionEnabledMap[] = [$virtualQuoteItemMock, true];
 
-        $isItemFulfilsSubscriptionMap = array_map(function($quoteItem) {return [$quoteItem, false];}, $quoteItems);
+        $isItemFulfilsSubscriptionMap = array_map(function ($quoteItem) {
+            return [$quoteItem, false];
+        }, $quoteItems);
         $isItemFulfilsSubscriptionMap[] = [$virtualQuoteItemMock, false];
 
         $this->platformCustomerManagerMock->expects($this->once())

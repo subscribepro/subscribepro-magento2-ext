@@ -6,9 +6,13 @@ class Config extends \Magento\Payment\Gateway\Config\Config
 {
     const KEY_ACTIVE = 'active';
     const KEY_THREE_DS_ACTIVE = 'three_ds_active';
+    const KEY_THREE_DS_TYPE = 'three_ds_type';
+    const KEY_WALLET_AUTHORIZATION_ACTIVE = 'wallet_authorization_active';
+    const KEY_WALLET_AUTHORIZATION_AMOUNT = 'wallet_authorization_amount';
     const KEY_BROWSER_SIZE = 'browser_size';
     const KEY_ACCEPT_HEADER = 'accept_header';
     const KEY_ACTIVE_NON_SUBSCRIPTION = 'active_non_subscription';
+    const KEY_CURRENCY = 'currency';
     const KEY_CC_TYPES = 'cctypes';
     const KEY_CC_TYPES_MAPPER = 'cctypes_mapper';
     const KEY_CC_USE_CCV = 'useccv';
@@ -33,6 +37,34 @@ class Config extends \Magento\Payment\Gateway\Config\Config
 
     /**
      * @param int|null $storeId
+     * @return string
+     */
+    public function getThreeDsType($storeId = null)
+    {
+        return $this->getValue(self::KEY_THREE_DS_TYPE, $storeId);
+    }
+
+    /**
+     * @param int|null $storeId
+     * @return bool
+     */
+    public function isWalletAuthorizationActive($storeId = null)
+    {
+        return $this->isThreeDSActive($storeId)
+            || $this->getValue(self::KEY_WALLET_AUTHORIZATION_ACTIVE, $storeId);
+    }
+
+    /**
+     * @param int|null $storeId
+     * @return float
+     */
+    public function getWalletAuthorizationAmount($storeId = null)
+    {
+        return (float)$this->getValue(self::KEY_WALLET_AUTHORIZATION_AMOUNT, $storeId);
+    }
+
+    /**
+     * @param int|null $storeId
      * @return string|null
      */
     public function getBrowserSize($storeId = null)
@@ -47,6 +79,15 @@ class Config extends \Magento\Payment\Gateway\Config\Config
     public function getAcceptHeader($storeId = null)
     {
         return $this->getValue(self::KEY_ACCEPT_HEADER, $storeId);
+    }
+
+    /**
+     * @param int|null $storeId
+     * @return string
+     */
+    public function getCurrency($storeId = null)
+    {
+        return $this->getValue(self::KEY_CURRENCY, $storeId);
     }
 
     /**

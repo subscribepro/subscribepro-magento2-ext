@@ -42,7 +42,7 @@ class ItemSubscriptionDiscountTest extends \PHPUnit\Framework\TestCase
      */
     protected $priceCurrencyMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->subscriptionDiscountConfigMock = $this->getMockBuilder(SubscriptionDiscountConfig::class)
             ->disableOriginalConstructor()->getMock();
@@ -349,7 +349,8 @@ class ItemSubscriptionDiscountTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    public function testProcessSubscriptionDiscountIfCombineDiscounts() {
+    public function testProcessSubscriptionDiscountIfCombineDiscounts()
+    {
         $storeId = 54231;
         $productSku = 'productSku';
         $itemBasePrice = 100;

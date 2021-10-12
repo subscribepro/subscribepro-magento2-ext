@@ -1,18 +1,23 @@
 <?php
-/**
- * @var $block \Swarming\SubscribePro\Block\Vault\Edit\Card
- */
+/** @var \Swarming\SubscribePro\Block\Vault\Edit\Card $block */
+/** @var \Magento\Framework\Escaper $escaper */
 ?>
 <div data-bind="scope: 'subscribe-pro-vault-card'" class="checkout-payment-method subscribe-pro-vault-card">
-    <!-- ko template: 'Swarming_SubscribePro/payment/cc-fieldset' --><!-- /ko -->
+    <div data-bind="blockLoader: isLoading">
+        <!-- ko template: 'Swarming_SubscribePro/payment/cc-fieldset' --><!-- /ko -->
+        <!-- ko template: 'Swarming_SubscribePro/payment/three-ds' --><!-- /ko -->
+    </div>
 </div>
 <script type="text/x-magento-init">
     {
         "*": {
-            "Magento_Ui/js/core/app": <?php echo $block->getJsLayout();?>
+            "Magento_Ui/js/core/app": <?= $block->getJsLayout() ?>
         }
     }
 </script>
 <script>
-    window.subscribeProPaymentConfig = <?php echo $block->getPaymentConfig(); ?>;
+    window.subscribeProPaymentConfig = <?= /** @noEscape */ $block->getPaymentConfig() ?>;
 </script>
+<?php if ($block->isWalletAuthorizationActive()): ?>
+    <div class="wallet-authorize-info"><?= $escaper->escapeHtml(__('You may see a %amount pre-authorization on your credit card account.', ['amount' => $block->getWalletAuthorizationAmount()])) ?></div>
+<?php endif; ?>

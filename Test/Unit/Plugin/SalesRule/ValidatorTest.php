@@ -61,7 +61,7 @@ class ValidatorTest extends \PHPUnit\Framework\TestCase
      */
     protected $validatorMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->subscriptionDiscountConfigMock = $this->getMockBuilder(SubscriptionDiscountConfig::class)
             ->disableOriginalConstructor()->getMock();

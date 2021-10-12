@@ -2,14 +2,18 @@
 
 namespace Swarming\SubscribePro\Test\Unit\Platform\Storage;
 
+use Magento\Framework\App\Cache\StateInterface as CacheStateInterface;
+use Magento\Framework\Cache\FrontendInterface as CacheFrontendInterface;
+use Magento\Framework\Serialize\SerializerInterface;
 use Magento\Store\Api\Data\WebsiteInterface;
 use Magento\Store\Model\StoreManagerInterface;
-use Swarming\SubscribePro\Platform\Storage\Config as ConfigStorage;
-use Magento\Framework\Cache\FrontendInterface as CacheFrontendInterface;
-use Magento\Framework\App\Cache\StateInterface as CacheStateInterface;
+use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use Swarming\SubscribePro\Model\Config\Advanced as CacheConfig;
+use Swarming\SubscribePro\Platform\Cache\Type\Config;
+use Swarming\SubscribePro\Platform\Storage\Config as ConfigStorage;
 
-class ConfigTest extends \PHPUnit\Framework\TestCase
+class ConfigTest extends TestCase
 {
     /**
      * @var \Swarming\SubscribePro\Platform\Storage\Config
@@ -17,180 +21,209 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
     protected $configStorage;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Framework\Cache\FrontendInterface
+     * @var \Magento\Framework\Cache\FrontendInterface|MockObject
      */
     protected $cacheMock;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Framework\App\Cache\StateInterface
+     * @var \Magento\Framework\App\Cache\StateInterface|MockObject
      */
     protected $stateMock;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Store\Model\StoreManagerInterface
+     * @var \Magento\Store\Model\StoreManagerInterface|MockObject
      */
     protected $storeManagerMock;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|\Swarming\SubscribePro\Model\Config\Advanced
+     * @var \Swarming\SubscribePro\Model\Config\Advanced|MockObject
      */
     protected $advancedConfigMock;
 
-    protected function setUp()
+    /**
+     * @var \Magento\Framework\Serialize\SerializerInterface|MockObject
+     */
+    protected $serializerMock;
+
+    protected function setUp(): void
     {
         $this->cacheMock = $this->getMockBuilder(CacheFrontendInterface::class)->getMock();
         $this->stateMock = $this->getMockBuilder(CacheStateInterface::class)->getMock();
         $this->storeManagerMock = $this->getMockBuilder(StoreManagerInterface::class)->getMock();
         $this->advancedConfigMock = $this->getMockBuilder(CacheConfig::class)
-            ->disableOriginalConstructor()->getMock();
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->serializerMock = $this->getMockBuilder(SerializerInterface::class)->getMock();
 
         $this->configStorage = new ConfigStorage(
             $this->cacheMock,
             $this->stateMock,
             $this->advancedConfigMock,
-            $this->storeManagerMock
+            $this->storeManagerMock,
+            $this->serializerMock
         );
     }
 
-    public function testLoadIfConfigCacheDisabled()
+    public function testLoadIfConfigCacheDisabled(): void
     {
         $websiteId = 23;
+        $websiteCode = 'website_23';
 
         $websiteMock = $this->createWebsiteMock();
-        $websiteMock->expects($this->any())->method('getCode')->willReturn('code');
+        $websiteMock->method('getCode')->willReturn($websiteCode);
 
-        $this->storeManagerMock->expects($this->once())
+        $this->storeManagerMock->expects(self::once())
             ->method('getWebsite')
             ->with($websiteId)
             ->willReturn($websiteMock);
 
-        $this->stateMock->expects($this->once())
+        $this->stateMock->expects(self::once())
             ->method('isEnabled')
-            ->with(\Swarming\SubscribePro\Platform\Cache\Type\Config::TYPE_IDENTIFIER)
+            ->with(Config::TYPE_IDENTIFIER)
             ->willReturn(false);
 
-        $this->cacheMock->expects($this->never())->method('load');
+        $this->cacheMock->expects(self::never())->method('load');
 
-        $this->assertNull($this->configStorage->load($websiteId));
+        $this->serializerMock->expects(self::never())->method('unserialize');
+
+        self::assertNull($this->configStorage->load($websiteId));
     }
 
-    public function testLoadIfConfigCacheNotLoaded()
+    public function testLoadIfConfigCacheNotLoaded(): void
     {
         $websiteId = 23;
         $websiteCode = 'web_code';
         $cacheKey = ConfigStorage::CONFIG_CACHE_KEY . '_' . $websiteCode;
 
         $websiteMock = $this->createWebsiteMock();
-        $websiteMock->expects($this->once())->method('getCode')->willReturn($websiteCode);
+        $websiteMock->expects(self::once())
+            ->method('getCode')
+            ->willReturn($websiteCode);
 
-        $this->stateMock->expects($this->once())
+        $this->stateMock->expects(self::once())
             ->method('isEnabled')
-            ->with(\Swarming\SubscribePro\Platform\Cache\Type\Config::TYPE_IDENTIFIER)
+            ->with(Config::TYPE_IDENTIFIER)
             ->willReturn(true);
 
-        $this->storeManagerMock->expects($this->once())
+        $this->storeManagerMock->expects(self::once())
             ->method('getWebsite')
             ->with($websiteId)
             ->willReturn($websiteMock);
 
-        $this->cacheMock->expects($this->once())
+        $this->cacheMock->expects(self::once())
             ->method('load')
             ->with($cacheKey)
             ->willReturn(null);
 
-        $this->assertNull($this->configStorage->load($websiteId));
+        $this->serializerMock->expects(self::never())->method('unserialize');
+
+        self::assertNull($this->configStorage->load($websiteId));
     }
 
-    public function testLoad()
+    public function testLoad(): void
     {
         $websiteId = 23;
         $websiteCode = 'web_code';
         $cacheKey = ConfigStorage::CONFIG_CACHE_KEY . '_' . $websiteCode;
         $configData = ['config'];
+        $configDataSerialized = json_encode($configData);
 
         $websiteMock = $this->createWebsiteMock();
-        $websiteMock->expects($this->any())->method('getCode')->willReturn($websiteCode);
+        $websiteMock->method('getCode')->willReturn($websiteCode);
 
-        $this->stateMock->expects($this->once())
+        $this->stateMock->expects(self::once())
             ->method('isEnabled')
-            ->with(\Swarming\SubscribePro\Platform\Cache\Type\Config::TYPE_IDENTIFIER)
+            ->with(Config::TYPE_IDENTIFIER)
             ->willReturn(true);
 
-        $this->storeManagerMock->expects($this->exactly(2))
+        $this->storeManagerMock->expects(self::exactly(2))
             ->method('getWebsite')
             ->with($websiteId)
             ->willReturn($websiteMock);
 
-        $this->cacheMock->expects($this->once())
+        $this->cacheMock->expects(self::once())
             ->method('load')
             ->with($cacheKey)
-            ->willReturn(serialize($configData));
+            ->willReturn($configDataSerialized);
 
-        $this->assertEquals(
+        $this->serializerMock->expects(self::once())
+            ->method('unserialize')
+            ->with($configDataSerialized)
+            ->willReturn($configData);
+
+        self::assertEquals(
             $configData,
             $this->configStorage->load($websiteId),
             'Fail to test config storage load from cache'
         );
-        $this->assertEquals(
+        self::assertEquals(
             $configData,
             $this->configStorage->load($websiteId),
             'Fail to test config storage load from internal cache'
         );
     }
 
-    public function testSaveIfConfigCacheDisabled()
+    public function testSaveIfConfigCacheDisabled(): void
     {
         $websiteId = 23;
         $configData = ['config'];
 
         $websiteMock = $this->createWebsiteMock();
-        $websiteMock->expects($this->any())->method('getCode')->willReturn('code');
+        $websiteMock->method('getCode')->willReturn('code');
 
-        $this->storeManagerMock->expects($this->once())
+        $this->storeManagerMock->expects(self::once())
             ->method('getWebsite')
             ->with($websiteId)
             ->willReturn($websiteMock);
 
-        $this->stateMock->expects($this->once())
+        $this->stateMock->expects(self::once())
             ->method('isEnabled')
-            ->with(\Swarming\SubscribePro\Platform\Cache\Type\Config::TYPE_IDENTIFIER)
+            ->with(Config::TYPE_IDENTIFIER)
             ->willReturn(false);
 
-        $this->cacheMock->expects($this->never())->method('save');
+        $this->serializerMock->expects(self::never())->method('serialize');
+
+        $this->cacheMock->expects(self::never())->method('save');
 
         $this->configStorage->save($configData, $websiteId);
     }
 
-    public function testSaveWithoutLifeTime()
+    public function testSaveWithoutLifeTime(): void
     {
         $websiteId = 2020;
         $lifeTime = 1010;
         $websiteCode = 'my_code';
         $cacheKey = ConfigStorage::CONFIG_CACHE_KEY . '_' . $websiteCode;
         $config = ['key' => 'val'];
+        $configSerialized = json_encode($config);
 
         $websiteMock = $this->createWebsiteMock();
-        $websiteMock->expects($this->any())->method('getCode')->willReturn($websiteCode);
+        $websiteMock->method('getCode')->willReturn($websiteCode);
 
-        $this->stateMock->expects($this->once())
+        $this->stateMock->expects(self::once())
             ->method('isEnabled')
-            ->with(\Swarming\SubscribePro\Platform\Cache\Type\Config::TYPE_IDENTIFIER)
+            ->with(Config::TYPE_IDENTIFIER)
             ->willReturn(true);
 
-        $this->storeManagerMock->expects($this->once())
+        $this->storeManagerMock->expects(self::once())
             ->method('getWebsite')
             ->with($websiteId)
             ->willReturn($websiteMock);
 
-        $this->advancedConfigMock->expects($this->once())
+        $this->advancedConfigMock->expects(self::once())
             ->method('getCacheLifeTime')
             ->with($websiteId)
             ->willReturn($lifeTime);
 
-        $this->cacheMock->expects($this->once())
+        $this->serializerMock->expects(self::once())
+            ->method('serialize')
+            ->with($config)
+            ->willReturn($configSerialized);
+
+        $this->cacheMock->expects(self::once())
             ->method('save')
             ->with(
-                serialize($config),
+                $configSerialized,
                 $cacheKey,
                 [],
                 $lifeTime
@@ -199,33 +232,39 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
         $this->configStorage->save($config, $websiteId);
     }
 
-    public function testSaveWithLifeTime()
+    public function testSaveWithLifeTime(): void
     {
-        $websiteId = 2020;
-        $lifeTime = 1010;
-        $websiteCode = 'my_code';
+        $websiteId = 2121;
+        $lifeTime = 1212;
+        $websiteCode = 'website_code';
         $cacheKey = ConfigStorage::CONFIG_CACHE_KEY . '_' . $websiteCode;
-        $config = ['key' => 'val'];
+        $config = ['key1' => 'val1', 'key2' => 'val2'];
+        $configSerialized = json_encode($config);
 
         $websiteMock = $this->createWebsiteMock();
-        $websiteMock->expects($this->any())->method('getCode')->willReturn($websiteCode);
+        $websiteMock->method('getCode')->willReturn($websiteCode);
 
-        $this->stateMock->expects($this->once())
+        $this->stateMock->expects(self::once())
             ->method('isEnabled')
-            ->with(\Swarming\SubscribePro\Platform\Cache\Type\Config::TYPE_IDENTIFIER)
+            ->with(Config::TYPE_IDENTIFIER)
             ->willReturn(true);
 
-        $this->storeManagerMock->expects($this->once())
+        $this->storeManagerMock->expects(self::once())
             ->method('getWebsite')
             ->with($websiteId)
             ->willReturn($websiteMock);
 
-        $this->advancedConfigMock->expects($this->never())->method('getCacheLifeTime');
+        $this->advancedConfigMock->expects(self::never())->method('getCacheLifeTime');
 
-        $this->cacheMock->expects($this->once())
+        $this->serializerMock->expects(self::once())
+            ->method('serialize')
+            ->with($config)
+            ->willReturn($configSerialized);
+
+        $this->cacheMock->expects(self::once())
             ->method('save')
             ->with(
-                serialize($config),
+                $configSerialized,
                 $cacheKey,
                 [],
                 $lifeTime
@@ -235,7 +274,7 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|\Magento\Store\Api\Data\WebsiteInterface
+     * @return \Magento\Store\Api\Data\WebsiteInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     private function createWebsiteMock()
     {

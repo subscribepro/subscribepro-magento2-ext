@@ -24,7 +24,7 @@ class SubscriptionOptionsTest extends \PHPUnit\Framework\TestCase
      */
     protected $dateTimeFactoryMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->scopeConfigMock = $this->getMockBuilder(ScopeConfigInterface::class)->getMock();
         $this->dateTimeFactoryMock = $this->getMockBuilder(DateTimeFactory::class)

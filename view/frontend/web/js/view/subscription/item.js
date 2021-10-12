@@ -41,6 +41,10 @@ define(
                 this.interval(this.subscription.interval);
                 this.selectedInterval(this.subscription.interval);
                 this.status(this.subscription.status);
+
+                this.selectedNextOrderDate.subscribe(function (nextOrderDate) {
+                    this.nextOrderDateChanged(nextOrderDate);
+                }, this);
             },
 
             initObservable: function () {
@@ -163,15 +167,16 @@ define(
                     .always(this.scrollToTop);
             },
 
-            nextOrderDateChanged: function () {
+            nextOrderDateChanged: function (nextOrderDate) {
                 var subscriptionId = this.getSubscriptionId();
+
                 var deferred = $.Deferred();
-                changeNextOrderDate(subscriptionId, this.selectedNextOrderDate(), deferred);
+                changeNextOrderDate(subscriptionId, nextOrderDate, deferred);
 
                 var self = this;
                 $.when(deferred)
                     .done(function () {
-                        self.nextOrderDate(self.selectedNextOrderDate());
+                        self.nextOrderDate(nextOrderDate);
                     })
                     .fail(function () {
                         $('#subscription-'+subscriptionId+' .next-order-date').datepicker('setDate', self.nextOrderDate());
