@@ -1,11 +1,11 @@
 <?php
 /** @var \Swarming\SubscribePro\Block\Vault\AddButton $block */
-/** @var \Magento\Framework\Escaper $escaper */
+/** @var \Magento\Framework\Escaper $block */
 ?>
 <div class="actions vault-list-action">
     <button class="action primary"
-            data-mage-init='{"redirectUrl":{"url":"<?= $escaper->escapeUrl($block->getUrl('swarming_subscribepro/cards/new')) ?>"}}'
-            type="button" title="<?= $escaper->escapeHtmlAttr(__('Add New Card')) ?>">
-        <span><?= $escaper->escapeHtml(__('Add New Card')) ?></span>
+            data-mage-init='{"redirectUrl":{"url":"<?= $block->escapeUrl($block->getUrl('swarming_subscribepro/cards/new')) ?>"}}'
+            type="button" title="<?= $block->escapeHtmlAttr(__('Add New Card')) ?>">
+        <span><?= $block->escapeHtml(__('Add New Card')) ?></span>
     </button>
 </div>

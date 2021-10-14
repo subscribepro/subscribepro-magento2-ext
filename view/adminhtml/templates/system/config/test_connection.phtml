@@ -1,10 +1,10 @@
 <?php
 /** @var \Swarming\SubscribePro\Block\Adminhtml\System\Config\TestConnection $block */
-/** @var \Magento\Framework\Escaper $escaper */
+/** @var \Magento\Framework\Escaper $block */
 ?>
 <div class="actions actions-test-connection">
     <button onclick="testConnection(); return false;" class="action-test-connection" type="button" id="<?= $block->getHtmlId() ?>">
-        <span><?= $escaper->escapeHtml($block->getButtonLabel()) ?></span>
+        <span><?= $block->escapeHtml($block->getButtonLabel()) ?></span>
     </button>
     &nbsp;
     <span id="test-connection-result" class="message-test-connection"></span>
@@ -28,12 +28,12 @@
             var clientSecret = $('#<?= /** @noEscape */ $block->getClientSecretSelectorId() ?>').val();
 
             $.getJSON(
-                '<?= $escaper->escapeUrl($block->getAjaxUrl()) ?>',
+                '<?= $block->escapeUrl($block->getAjaxUrl()) ?>',
                 {
                     base_url: baseUrl,
                     client_id: clientId,
                     client_secret: clientSecret,
-                    website: '<?= $escaper->escapeJs($block->getWebsiteCode()) ?>'
+                    website: '<?= $block->escapeJs($block->getWebsiteCode()) ?>'
                 })
                 .done(function (result) {
                     console.log(result);

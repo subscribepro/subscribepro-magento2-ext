@@ -1,6 +1,6 @@
 <?php
 /** @var \Swarming\SubscribePro\Block\Vault\Edit\Card $block */
-/** @var \Magento\Framework\Escaper $escaper */
+/** @var \Magento\Framework\Escaper $block */
 ?>
 <div data-bind="scope: 'subscribe-pro-vault-card'" class="checkout-payment-method subscribe-pro-vault-card">
     <div data-bind="blockLoader: isLoading">
@@ -19,5 +19,5 @@
     window.subscribeProPaymentConfig = <?= /** @noEscape */ $block->getPaymentConfig() ?>;
 </script>
 <?php if ($block->isWalletAuthorizationActive()): ?>
-    <div class="wallet-authorize-info"><?= $escaper->escapeHtml(__('You may see a %amount pre-authorization on your credit card account.', ['amount' => $block->getWalletAuthorizationAmount()])) ?></div>
+    <div class="wallet-authorize-info"><?= $block->escapeHtml(__('You may see a %amount pre-authorization on your credit card account.', ['amount' => $block->getWalletAuthorizationAmount()])) ?></div>
 <?php endif; ?>

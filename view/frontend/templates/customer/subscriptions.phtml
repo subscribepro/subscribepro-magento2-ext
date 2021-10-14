@@ -1,10 +1,10 @@
 <?php
 /** @var \Swarming\SubscribePro\Block\Customer\Subscriptions $block */
-/** @var \Magento\Framework\Escaper $escaper */
+/** @var \Magento\Framework\Escaper $block */
 ?>
 <?php if ($block->isHostedWidgetEnabled() && false !== $block->getPlatformCustomerId()): ?>
     <div id="sp-my-subscriptions" class="sp-my-subscriptions"></div>
-    <script src="<?= $escaper->escapeUrl($block->getHostedWidgetUrl()) ?>"></script>
+    <script src="<?= $block->escapeUrl($block->getHostedWidgetUrl()) ?>"></script>
     <script>
         // Start with override-able defaults
         let finalWidgetConfig = {
@@ -19,7 +19,7 @@
 
         // Don't override the required widget config
         let originalWidgetConfig = {
-            apiBaseUrl: "<?= $escaper->escapeUrl($block->getSubscribeProBaseApiUrl()) ?>",
+            apiBaseUrl: "<?= $block->escapeUrl($block->getSubscribeProBaseApiUrl()) ?>",
             apiAccessToken: "<?= /** @noEscape */ $block->getWidgetAccessTokenForCurrentCustomer() ?>",
             customerId: <?= /** @noEscape */ $block->getPlatformCustomerId() ?>
         };

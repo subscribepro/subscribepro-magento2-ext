@@ -1,13 +1,13 @@
 <?php
 /** @var \Swarming\SubscribePro\Block\Vault\Edit $block */
-/** @var \Magento\Framework\Escaper $escaper */
+/** @var \Magento\Framework\Escaper $block */
 ?>
 <form class="form-address-edit form-vault-edit"
-      action="<?= $escaper->escapeUrl($block->getSaveUrl()) ?>"
+      action="<?= $block->escapeUrl($block->getSaveUrl()) ?>"
       method="post"
       id="vault-edit"
       enctype="multipart/form-data"
-      data-hasrequired="<?= $escaper->escapeHtml(__('* Required Fields')) ?>">
+      data-hasrequired="<?= $block->escapeHtml(__('* Required Fields')) ?>">
 
     <?= /** @noEscape */ $block->renderBillingAddress() ?>
 
@@ -15,12 +15,12 @@
 
     <div class="actions-toolbar">
         <div class="primary">
-            <button type="submit" class="action save primary" data-action="save-vault" title="<?= $escaper->escapeHtml(__('Save Card')) ?>">
-                <span><?= $escaper->escapeHtml(__('Save Card')) ?></span>
+            <button type="submit" class="action save primary" data-action="save-vault" title="<?= $block->escapeHtml(__('Save Card')) ?>">
+                <span><?= $block->escapeHtml(__('Save Card')) ?></span>
             </button>
         </div>
         <div class="secondary">
-            <a class="action back" href="<?= $escaper->escapeUrl($block->getBackUrl()) ?>"><span><?= $escaper->escapeHtml(__('Go back')) ?></span></a>
+            <a class="action back" href="<?= $block->escapeUrl($block->getBackUrl()) ?>"><span><?= $block->escapeHtml(__('Go back')) ?></span></a>
         </div>
     </div>
 </form>
