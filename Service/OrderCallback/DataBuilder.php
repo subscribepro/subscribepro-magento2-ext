@@ -113,9 +113,16 @@ class DataBuilder
      */
     public function importPaymentData(QuotePayment $quotePayment, array $paymentData, int $storeId): void
     {
+        $paymentMethodCode = $this->getPaymentMethodCode($this->getValue($paymentData, 'paymentProfileType'), $storeId);
+
+        $quotePayment->unsMethodInstance();
+        $quotePayment->setPaymentMethod($paymentMethodCode);
+        $quotePayment->setMethod($paymentMethodCode);
+        $quotePayment->getMethodInstance();
+
         $quotePayment->importData(
             [
-                'method' => $this->getPaymentMethodCode($this->getValue($paymentData, 'paymentProfileType'), $storeId),
+                'method' => $paymentMethodCode,
                 'additional_data' => [
                     'profile_id' => $this->getValue($paymentData, 'paymentProfileId'),
                     'payment_method_token' => $this->getValue($paymentData, 'paymentToken'),
