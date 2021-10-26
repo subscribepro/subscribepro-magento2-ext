@@ -68,10 +68,14 @@ class ResponseProcessor
                 'taxTotal' => (string)$order->getBaseTaxAmount(),
                 'total' => (string)$order->getBaseGrandTotal(),
                 'billingAddress' => $this->prepareAddressData($order->getBillingAddress()),
-                'shippingAddress' => $this->prepareAddressData($order->getShippingAddress()),
                 'items' => []
             ]
         ];
+
+        $shippingAddress = $order->getShippingAddress();
+        if ($shippingAddress) {
+            $successResponse['orderDetails']['shippingAddress'] = $this->prepareAddressData($shippingAddress);
+        }
 
         if (!empty($errorMessages)) {
             $successResponse['errorItems'] = $errorMessages;

@@ -1,20 +1,19 @@
 <?php
 /** @var \Swarming\SubscribePro\Block\Vault\Edit\CardExpiration $block */
-/** @var \Magento\Framework\Escaper $escaper */
 ?>
 <fieldset class="fieldset" data-bind="scope: 'subscribe-pro-vault-card-expiration'">
-    <legend class="legend"><span><?= $escaper->escapeHtml(__('Payment Information')) ?></span></legend><br>
+    <legend class="legend"><span><?= $block->escapeHtml(__('Payment Information')) ?></span></legend><br>
 
     <div class="card-number-type">
         <img src="<?= /* @noEscape */ $block->getIconUrl() ?>"
              width="<?= /* @noEscape */ $block->getIconWidth() ?>"
              height="<?= /* @noEscape */ $block->getIconHeight() ?>">
-        <span><?= $escaper->escapeHtml(__('ending')) ?> <?= $escaper->escapeHtml($block->getNumberLast4Digits()) ?></span>
+        <span><?= $block->escapeHtml(__('ending')) ?> <?= $block->escapeHtml($block->getNumberLast4Digits()) ?></span>
     </div>
 
     <div class="field date required expiration-date">
         <label for="creditcard_month" class="label">
-            <span><?= $escaper->escapeHtml(__('Expiration Date')) ?></span>
+            <span><?= $block->escapeHtml(__('Expiration Date')) ?></span>
         </label>
         <div class="control">
             <div class="date-wrap">
@@ -27,7 +26,7 @@
                            placeholder="MM"
                            class="input-text required-entry validate-expiration-date"
                            autocomplete="off"
-                           value="<?= $escaper->escapeHtmlAttr($block->getExpirationMonth()) ?>"
+                           value="<?= $block->escapeHtmlAttr($block->getExpirationMonth()) ?>"
                     >
                 </div>
                 <div class="child-control year">
@@ -39,7 +38,7 @@
                            placeholder="YYYY"
                            class="input-text required-entry"
                            autocomplete="off"
-                           value="<?= $escaper->escapeHtmlAttr($block->getExpirationYear()) ?>"
+                           value="<?= $block->escapeHtmlAttr($block->getExpirationYear()) ?>"
                     >
                 </div>
                 <div class="error"><!-- ko i18n: 'Please, enter valid Expiration Date'--><!-- /ko --></div>
