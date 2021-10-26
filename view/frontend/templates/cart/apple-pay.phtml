@@ -1,6 +1,5 @@
 <?php
 /** @var \Swarming\SubscribePro\Block\Cart\ApplePay $block */
-/** @var \Magento\Framework\Escaper $escaper */
 ?>
 <div class="subscriber-pro-apple-pay-button-container"
      id="subscriber-pro-apple-pay-bottom-button-container" style="display:none;">
@@ -18,13 +17,13 @@
 {
      "#subscriber-pro-apple-pay-bottom-button-container": {
          "Swarming_SubscribePro/js/cart/sp-apple-pay": {
-            "createSessionUrl": "<?= $escaper->escapeHtml($block->getCreateSessionUrl()) ?>",
-            "merchantDomainName": "<?= $escaper->escapeHtml($block->getMerchantDomainName()) ?>",
-            "apiAccessToken": "<?= $escaper->escapeHtml($block->getApiAccessToken()) ?>",
+            "createSessionUrl": "<?= $block->escapeHtml($block->getCreateSessionUrl()) ?>",
+            "merchantDomainName": "<?= $block->escapeHtml($block->getMerchantDomainName()) ?>",
+            "apiAccessToken": "<?= $block->escapeHtml($block->getApiAccessToken()) ?>",
             "paymentRequest": <?= /** @noEscape */ $block->getApplePayPaymentRequest() ?>,
-            "onShippingContactSelectedUrl": "<?= $escaper->escapeHtml($block->getShippingSelectedUrl()) ?>",
-            "onShippingMethodSelectedUrl": "<?= $escaper->escapeHtml($block->onShippingMethodSelected()) ?>",
-            "onPaymentAuthorizedUrl": "<?= $escaper->escapeHtml($block->getPaymentAuthorizedUrl()) ?>"
+            "onShippingContactSelectedUrl": "<?= $block->escapeHtml($block->getShippingSelectedUrl()) ?>",
+            "onShippingMethodSelectedUrl": "<?= $block->escapeHtml($block->onShippingMethodSelected()) ?>",
+            "onPaymentAuthorizedUrl": "<?= $block->escapeHtml($block->getPaymentAuthorizedUrl()) ?>"
          }
      }
 }

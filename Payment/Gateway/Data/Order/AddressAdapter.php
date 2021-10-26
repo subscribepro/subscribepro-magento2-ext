@@ -27,4 +27,15 @@ class AddressAdapter extends \Magento\Payment\Gateway\Data\Order\AddressAdapter
         $street = $this->address->getStreet();
         return isset($street[2]) ? $street[2] : '';
     }
+
+    /**
+     * Get street line 4
+     *
+     * @return string
+     */
+    public function getStreetLine4()
+    {
+        $street = $this->address->getStreet();
+        return isset($street[3]) ? $street[3] : '';
+    }
 }

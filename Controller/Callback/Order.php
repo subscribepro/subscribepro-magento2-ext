@@ -141,7 +141,7 @@ class Order implements HttpPostActionInterface, CsrfAwareActionInterface
      */
     public function validateForCsrf(RequestInterface $request): ?bool
     {
-        $hmacSignature = $request->getHeader(self::HMAC_SIGNATURE_HEADER);
+        $hmacSignature = (string)$request->getHeader(self::HMAC_SIGNATURE_HEADER);
 
         $sharedSecret = $this->orderCallbackConfig->getSharedSecret();
         $body = $request->getContent();
