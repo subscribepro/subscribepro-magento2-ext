@@ -3,6 +3,7 @@
 namespace Swarming\SubscribePro\Model\Quote\QuoteItem;
 
 use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\ConfigurableProduct\Model\Product\Type\Configurable as ConfigurableProductType;
 
 class SubscriptionCreator
 {
@@ -133,13 +134,15 @@ class SubscriptionCreator
      */
     protected function getProductSku($quoteItem)
     {
-        if ($this->subscriptionOptionsConfig->isChildSkuForConfigurableEnabled() &&
-            $option = $quoteItem->getOptionByCode('simple_product')
+        $product = $quoteItem->getProduct();
+
+        if ($quoteItem->getProductType() === ConfigurableProductType::TYPE_CODE
+            && $this->subscriptionOptionsConfig->isChildSkuForConfigurableEnabled()
+            && $quoteItem->getOptionByCode('simple_product')
         ) {
-            $product = $option->getProduct();
-        } else {
-            $product = $quoteItem->getProduct();
+            $product = $quoteItem->getOptionByCode('simple_product')->getProduct();
         }
+
         return $product->getData(ProductInterface::SKU);
     }
 
