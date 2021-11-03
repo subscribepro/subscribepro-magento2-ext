@@ -68,14 +68,13 @@ class AddressDataBuilder implements BuilderInterface
      */
     private function getStreetLine(int $line, object $billingAddress)
     {
-        $result = null;
+        $streetLine = null;
         if (is_a($billingAddress, AddressAdapterInterface::class)) {
             $adapterMethod = 'getStreetLine' . $line;
-            $result = $billingAddress->$adapterMethod();
+            $streetLine = method_exists($billingAddress, $adapterMethod) ? $billingAddress->$adapterMethod() : null;
+        } elseif (is_a($billingAddress, OrderAddressInterface::class)) {
+            $streetLine = $billingAddress->getStreetLine($line);
         };
-        if (is_a($billingAddress, OrderAddressInterface::class)) {
-            $result = $billingAddress->getStreetLine($line);
-        };
-        return $result;
+        return $streetLine;
     }
 }
