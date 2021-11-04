@@ -46,13 +46,17 @@ class Config extends \Magento\Framework\View\Element\Template
      */
     public function getPaymentConfig()
     {
-        $storeId = $this->quoteSession->getStoreId();
+        $config = [];
+        $stores = $this->_storeManager->getStores();
 
-        try {
-            $config = $this->gatewayConfigProvider->getConfig($storeId);
-        } catch (InvalidArgumentException $e) {
-            $config = null;
-            $this->logger->debug('Cannot retrieve Subscribe Pro payment config: ' . $e->getMessage());
+        foreach ($stores as $store) {
+            $storeId = $store->getId();
+            try {
+                $config[$storeId] = $this->gatewayConfigProvider->getConfig($storeId);
+            } catch (InvalidArgumentException $e) {
+                $config = null;
+                $this->logger->debug('Cannot retrieve Subscribe Pro payment config: ' . $e->getMessage());
+            }
         }
 
         return json_encode($config);

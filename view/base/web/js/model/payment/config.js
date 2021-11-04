@@ -57,10 +57,11 @@ define(
 
             getConfig: function () {
                 var config = {};
+                let storeId = window.order.storeId;
                 if (window['checkoutConfig'] != undefined) {
                     config = window.checkoutConfig.payment[code];
                 } else if (window['subscribeProPaymentConfig'] != undefined) {
-                    config = window.subscribeProPaymentConfig;
+                    config = window.subscribeProPaymentConfig[storeId];
                 }
                 return config;
             }
