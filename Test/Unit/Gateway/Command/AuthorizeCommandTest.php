@@ -41,7 +41,7 @@ class AuthorizeCommandTest extends AbstractProfileCreatorCommand
      */
     public function testExecuteIfFailToProcessTransaction(array $requestData)
     {
-        $exception = new \Exception('Payment token is not passed');
+        $exception = new \InvalidArgumentException('Payment token is not passed');
         $this->executeSetPlatformWebsite($this->subjectReaderMock, $this->storeManagerMock, $this->platformMock);
         $this->processTransactionFail($requestData, $exception);
         $this->authorizeCommand->execute($this->commandSubject);

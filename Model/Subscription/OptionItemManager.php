@@ -87,7 +87,11 @@ class OptionItemManager
 
         $buyRequest = $this->cartItemOptionProcessor->getBuyRequest($product->getTypeId(), $cartItem);
         $buyRequest = $this->processBuyRequestObject($buyRequest);
-        $product->getTypeInstance()->processConfiguration($buyRequest, $product, ProductAbstractType::PROCESS_MODE_FULL);
+        $product->getTypeInstance()->processConfiguration(
+            $buyRequest,
+            $product,
+            ProductAbstractType::PROCESS_MODE_FULL
+        );
         return $product->getCustomOptions();
     }
 

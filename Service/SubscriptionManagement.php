@@ -125,7 +125,11 @@ class SubscriptionManagement implements SubscriptionManagementInterface
     protected function getSubscriptionByCustomerId($customerId, $count = 25)
     {
         $platformCustomer = $this->platformCustomerManager->getCustomerById($customerId);
-        $subscriptions = $this->platformSubscriptionService->loadSubscriptionsByCustomer($platformCustomer->getId(), null, $count);
+        $subscriptions = $this->platformSubscriptionService->loadSubscriptionsByCustomer(
+            $platformCustomer->getId(),
+            null,
+            $count
+        );
         $subscriptions = $this->subscriptionUtils->filterAndSortSubscriptionListForDisplay($subscriptions);
 
         return $subscriptions;

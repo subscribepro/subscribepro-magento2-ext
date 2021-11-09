@@ -69,7 +69,20 @@ class Grid extends \Magento\Sales\Block\Adminhtml\Order\Create\Items\Grid
         $this->quoteItemHelper = $quoteItemHelper;
         $this->platformProductManager = $platformProductManager;
         $this->sessionQuote = $sessionQuote;
-        parent::__construct($context, $sessionQuote, $orderCreate, $priceCurrency, $wishlistFactory, $giftMessageSave, $taxConfig, $taxData, $messageHelper, $stockRegistry, $stockState, $data);
+        parent::__construct(
+            $context,
+            $sessionQuote,
+            $orderCreate,
+            $priceCurrency,
+            $wishlistFactory,
+            $giftMessageSave,
+            $taxConfig,
+            $taxData,
+            $messageHelper,
+            $stockRegistry,
+            $stockState,
+            $data
+        );
     }
 
     /**
@@ -94,7 +107,10 @@ class Grid extends \Magento\Sales\Block\Adminhtml\Order\Create\Items\Grid
     {
         $sku = $quoteItem->getProduct()->getData(ProductInterface::SKU);
 
-        $subscriptionProduct = $this->platformProductManager->getProduct($sku, $this->sessionQuote->getStore()->getWebsiteId());
+        $subscriptionProduct = $this->platformProductManager->getProduct(
+            $sku,
+            $this->sessionQuote->getStore()->getWebsiteId()
+        );
         return $subscriptionProduct->toArray();
     }
 
@@ -108,7 +124,8 @@ class Grid extends \Magento\Sales\Block\Adminhtml\Order\Create\Items\Grid
     {
         return [
             SubscriptionOptionInterface::OPTION => $this->quoteItemHelper->getSubscriptionOption($quoteItem),
-            SubscriptionOptionInterface::CREATE_NEW_SUBSCRIPTION_AT_CHECKOUT => $this->quoteItemHelper->getCreateNewSubscriptionAtCheckout($quoteItem),
+            SubscriptionOptionInterface::CREATE_NEW_SUBSCRIPTION_AT_CHECKOUT =>
+                $this->quoteItemHelper->getCreateNewSubscriptionAtCheckout($quoteItem),
             SubscriptionOptionInterface::INTERVAL => $this->quoteItemHelper->getSubscriptionInterval($quoteItem)
         ];
     }

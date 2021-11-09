@@ -158,8 +158,11 @@ class SubscriptionCreatorTest extends \PHPUnit\Framework\TestCase
      * @param bool $isItemFulfilsSubscription
      * @dataProvider createSubscriptionsIfNotSubscriptionItemDataProvider
      */
-    public function testCreateSubscriptionsIfNoSubscriptionShippingItems($isVirtual, $isSubscriptionEnabled, $isItemFulfilsSubscription)
-    {
+    public function testCreateSubscriptionsIfNoSubscriptionShippingItems(
+        $isVirtual,
+        $isSubscriptionEnabled,
+        $isItemFulfilsSubscription
+    ) {
         $customerId = 233;
         $paymentEntityId = 1235;
         $paymentProfileId = 1232;
@@ -587,7 +590,15 @@ class SubscriptionCreatorTest extends \PHPUnit\Framework\TestCase
     {
         return $this->getMockBuilder(Quote::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getCustomerId', 'getAllShippingAddresses', 'getBillingAddress', 'getAllVisibleItems', '__wakeup'])
+            ->setMethods(
+                [
+                    'getCustomerId',
+                    'getAllShippingAddresses',
+                    'getBillingAddress',
+                    'getAllVisibleItems',
+                    '__wakeup'
+                ]
+            )
             ->getMock();
     }
 

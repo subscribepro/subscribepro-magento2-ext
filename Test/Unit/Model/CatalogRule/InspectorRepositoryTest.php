@@ -91,6 +91,7 @@ class InspectorRepositoryTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @expectedException \InvalidArgumentException
+     * phpcs:ignore Generic.Files.LineLength.TooLong
      * @expectedExceptionMessage Catalog rule inspector must implement Swarming\SubscribePro\Model\CatalogRule\InspectorInterface interface
      */
     public function testGetInspectorIfWrongClass()

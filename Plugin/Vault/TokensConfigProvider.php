@@ -2,7 +2,7 @@
 
 namespace Swarming\SubscribePro\Plugin\Vault;
 
-use Magento\Vault\Model\Ui\TokenUiComponentProviderInterface;
+use Magento\Vault\Model\Ui\TokenUiComponentProviderInterface as TokenUICompProvider;
 use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
 use Swarming\SubscribePro\Helper\Vault as VaultHelper;
 
@@ -20,7 +20,7 @@ class TokensConfigProvider
                 $result['payment']['vault'],
                 static function ($vaultPayment) {
                     $paymentCode = $vaultPayment['config']['code'] ?? '';
-                    $paymentState = $vaultPayment['config'][TokenUiComponentProviderInterface::COMPONENT_DETAILS]['state'] ?? '';
+                    $paymentState = $vaultPayment['config'][TokenUICompProvider::COMPONENT_DETAILS]['state'] ?? '';
 
                     return $paymentCode !== ConfigProvider::VAULT_CODE || $paymentState !== VaultHelper::STATE_PENDING;
                 }

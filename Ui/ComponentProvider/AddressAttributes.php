@@ -97,6 +97,7 @@ class AddressAttributes
             if (!in_array($code, $codes)) {
                 continue;
             }
+            // phpcs:ignore Magento2.Functions.DiscouragedFunction.Discouraged
             $options = call_user_func($attributesToConvert[$code]);
             if (!is_array($options)) {
                 continue;

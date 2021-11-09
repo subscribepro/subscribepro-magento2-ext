@@ -21,7 +21,11 @@ class ShipperHQ extends General
      */
     public function getRecurringOrderGroup($websiteCode = null)
     {
-        return $this->scopeConfig->getValue('swarming_subscribepro/shipperhq/recurring_order_group', ScopeInterface::SCOPE_WEBSITE, $websiteCode);
+        return $this->scopeConfig->getValue(
+            'swarming_subscribepro/shipperhq/recurring_order_group',
+            ScopeInterface::SCOPE_WEBSITE,
+            $websiteCode
+        );
     }
 
     /**
@@ -30,6 +34,10 @@ class ShipperHQ extends General
      */
     public function getSubscriptionProductGroup($websiteCode = null)
     {
-        return $this->scopeConfig->getValue('swarming_subscribepro/shipperhq/frontend_subscription_product_group', ScopeInterface::SCOPE_WEBSITE, $websiteCode);
+        return $this->scopeConfig->getValue(
+            'swarming_subscribepro/shipperhq/frontend_subscription_product_group',
+            ScopeInterface::SCOPE_WEBSITE,
+            $websiteCode
+        );
     }
 }

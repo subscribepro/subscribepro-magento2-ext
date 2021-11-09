@@ -48,6 +48,7 @@ class CaptureDataBuilder implements BuilderInterface
         try {
             $amount = $this->formatPrice($this->subjectReader->readAmount($buildSubject))*100;
             $currency = $order->getCurrencyCode();
+            // phpcs:ignore Magento2.CodeAnalysis.EmptyBlock.DetectedCatch
         } catch (\InvalidArgumentException $e) {
             // pass
         }

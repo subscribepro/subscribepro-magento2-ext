@@ -36,7 +36,9 @@ class PaymentDataBuilder implements BuilderInterface
 
         return [
             self::PAYMENT_METHOD_TOKEN => $payment->getAdditionalInformation(self::PAYMENT_METHOD_TOKEN),
-            VaultConfigProvider::IS_ACTIVE_CODE => $payment->getAdditionalInformation(VaultConfigProvider::IS_ACTIVE_CODE)
+            VaultConfigProvider::IS_ACTIVE_CODE => $payment->getAdditionalInformation(
+                VaultConfigProvider::IS_ACTIVE_CODE
+            )
         ];
     }
 }

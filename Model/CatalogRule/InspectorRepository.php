@@ -50,7 +50,9 @@ class InspectorRepository
         $inspector = $this->objectManager->get($inspector);
 
         if (!$inspector instanceof InspectorInterface) {
-            throw new \InvalidArgumentException('Catalog rule inspector must implement ' . InspectorInterface::class . ' interface');
+            throw new \InvalidArgumentException(
+                'Catalog rule inspector must implement ' . InspectorInterface::class . ' interface'
+            );
         }
 
         return $inspector;

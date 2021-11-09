@@ -10,6 +10,10 @@ class InstalledVersion extends \Magento\Config\Block\System\Config\Form\Field
     {
         $element->setValue(self::INSTALLED_VERSION);
 
-        return '<strong>' . $element->getEscapedValue() . '</strong> - [<a href="https://github.com/subscribepro/subscribepro-magento2-ext/releases">' . 'View Releases' . '</a>]';
+        return '<strong>'
+            . $element->getEscapedValue()
+            . '</strong> - [<a href="https://github.com/subscribepro/subscribepro-magento2-ext/releases">'
+            . 'View Releases'
+            . '</a>]';
     }
 }

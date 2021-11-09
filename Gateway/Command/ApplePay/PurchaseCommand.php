@@ -16,7 +16,7 @@ class PurchaseCommand extends AbstractProfileCreatorCommand implements CommandIn
     /**
      * @param array $requestData
      * @return \SubscribePro\Service\Transaction\TransactionInterface
-     * @throws Exception
+     * @throws \InvalidArgumentException
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \SubscribePro\Exception\EntityInvalidDataException
      * @throws \SubscribePro\Exception\HttpException
@@ -24,7 +24,7 @@ class PurchaseCommand extends AbstractProfileCreatorCommand implements CommandIn
     protected function processTransaction(array $requestData)
     {
         if (empty($requestData[PaymentDataBuilder::PAYMENT_METHOD_TOKEN])) {
-            throw new Exception('Payment token is not passed');
+            throw new \InvalidArgumentException(__('Payment token is not passed'));
         }
         $transaction = $this->platformTransactionService->createTransaction($requestData);
         if (!empty($requestData[VaultConfigProvider::IS_ACTIVE_CODE])

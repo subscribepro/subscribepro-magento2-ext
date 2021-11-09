@@ -159,4 +159,3 @@ class PlaceOrder
         $this->quoteRepository->save($quote);
     }
 }
-

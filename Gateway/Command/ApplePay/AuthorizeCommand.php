@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Swarming\SubscribePro\Gateway\Command\ApplePay;
 
-use Exception;
 use Magento\Payment\Gateway\CommandInterface;
 use Magento\Vault\Model\Ui\VaultConfigProvider;
 use Swarming\SubscribePro\Gateway\Command\AbstractProfileCreatorCommand;
@@ -15,12 +14,12 @@ class AuthorizeCommand extends AbstractProfileCreatorCommand implements CommandI
     /**
      * @param array $requestData
      * @return \SubscribePro\Service\Transaction\TransactionInterface
-     * @throws Exception
+     * @throws \InvalidArgumentException
      */
     protected function processTransaction(array $requestData)
     {
         if (empty($requestData[PaymentDataBuilder::PAYMENT_METHOD_TOKEN])) {
-            throw new Exception('ApplePay Payment token is not passed');
+            throw new \InvalidArgumentException(__('ApplePay Payment token is not passed'));
         }
 
         $transaction = $this->platformTransactionService->createTransaction($requestData);

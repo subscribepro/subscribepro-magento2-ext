@@ -109,7 +109,7 @@ class IndexTest extends \PHPUnit\Framework\TestCase
 
     public function testExecuteIfFailToProcessEvent()
     {
-        $exception = new \Exception('error');
+        $exception = new \InvalidArgumentException('error');
 
         $ip = '10.10.15.232';
         $webhookEvent = $this->createWebhookEventMock();

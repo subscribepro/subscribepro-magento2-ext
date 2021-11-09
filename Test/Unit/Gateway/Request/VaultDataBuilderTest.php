@@ -87,7 +87,11 @@ class VaultDataBuilderTest extends \PHPUnit\Framework\TestCase
         $uniqueId = 'unique_id';
         $orderToken = 'orderToken1234';
         $subject = ['subject'];
-        $result = [VaultDataBuilder::PAYMENT_PROFILE_ID => $profileId, TransactionInterface::UNIQUE_ID => $uniqueId, TransactionInterface::SUBSCRIBE_PRO_ORDER_TOKEN => $orderToken];
+        $result = [
+            VaultDataBuilder::PAYMENT_PROFILE_ID => $profileId,
+            TransactionInterface::UNIQUE_ID => $uniqueId,
+            TransactionInterface::SUBSCRIBE_PRO_ORDER_TOKEN => $orderToken
+        ];
 
         $paymentTokenMock = $this->getMockBuilder(PaymentTokenInterface::class)->getMock();
         $paymentTokenMock->expects($this->once())
@@ -140,7 +144,10 @@ class VaultDataBuilderTest extends \PHPUnit\Framework\TestCase
         $profileId = 'token';
         $orderToken = 'orderToken4567';
         $subject = ['subject'];
-        $result = [VaultDataBuilder::PAYMENT_PROFILE_ID => $profileId, TransactionInterface::SUBSCRIBE_PRO_ORDER_TOKEN => $orderToken];
+        $result = [
+            VaultDataBuilder::PAYMENT_PROFILE_ID => $profileId,
+            TransactionInterface::SUBSCRIBE_PRO_ORDER_TOKEN => $orderToken
+        ];
 
         $paymentTokenMock = $this->getMockBuilder(PaymentTokenInterface::class)->getMock();
         $paymentTokenMock->expects($this->once())
