@@ -74,7 +74,7 @@ class AddressDataBuilder implements BuilderInterface
             $streetLine = method_exists($billingAddress, $adapterMethod) ? $billingAddress->$adapterMethod() : null;
         } elseif (is_a($billingAddress, OrderAddressInterface::class)) {
             $streetLine = $billingAddress->getStreetLine($line);
-        };
+        }
         return $streetLine;
     }
 }
