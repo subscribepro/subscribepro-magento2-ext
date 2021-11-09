@@ -3,6 +3,7 @@
 namespace Swarming\SubscribePro\Block\Adminhtml\System\Config;
 
 use SubscribePro\Exception\InvalidArgumentException;
+use Swarming\SubscribePro\Gateway\Config\Config as SubscribeProConfig;
 
 class Config extends \Magento\Framework\View\Element\Template
 {
@@ -22,8 +23,14 @@ class Config extends \Magento\Framework\View\Element\Template
     protected $logger;
 
     /**
+     * @var Swarming\SubscribePro\Gateway\Config\Config
+     */
+    private $sProConfig;
+
+    /**
      * @param \Magento\Framework\View\Element\Template\Context $context
      * @param \Swarming\SubscribePro\Gateway\Config\ConfigProvider $gatewayConfigProvider
+     * @param \Swarming\SubscribePro\Gateway\Config\Config $sProConfig
      * @param \Magento\Backend\Model\Session\Quote $quoteSession
      * @param \Psr\Log\LoggerInterface $logger
      * @param array $data
@@ -31,6 +38,7 @@ class Config extends \Magento\Framework\View\Element\Template
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
         \Swarming\SubscribePro\Gateway\Config\ConfigProvider $gatewayConfigProvider,
+        SubscribeProConfig $sProConfig,
         \Magento\Backend\Model\Session\Quote $quoteSession,
         \Psr\Log\LoggerInterface $logger,
         array $data = []
@@ -38,6 +46,7 @@ class Config extends \Magento\Framework\View\Element\Template
         $this->gatewayConfigProvider = $gatewayConfigProvider;
         $this->quoteSession = $quoteSession;
         $this->logger = $logger;
+        $this->sProConfig = $sProConfig;
         parent::__construct($context, $data);
     }
 
@@ -51,6 +60,9 @@ class Config extends \Magento\Framework\View\Element\Template
 
         foreach ($stores as $store) {
             $storeId = $store->getId();
+            if (!$this->sProConfig->isActive($storeId)) {
+                continue;
+            }
             try {
                 $config[$storeId] = $this->gatewayConfigProvider->getConfig($storeId);
             } catch (InvalidArgumentException $e) {
