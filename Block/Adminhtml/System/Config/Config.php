@@ -51,9 +51,17 @@ class Config extends \Magento\Framework\View\Element\Template
     }
 
     /**
+     * Returns Subscribe Pro payment configs for multiple stores
+     *
+     * Having the configs for multiple stores is needed for multistore order creation in admin to work correctly
+     * Similarily named methods exist that retrn settings for a single store,
+     * but their names are in the singular
+     * @see \Swarming\SubscribePro\Block\Adminhtml\Payment\Cc
+     * @see \Swarming\SubscribePro\Block\Vault\Edit\Card
+     *
      * @return string
      */
-    public function getPaymentConfig()
+    public function getPaymentConfigs()
     {
         $config = [];
         $stores = $this->_storeManager->getStores();

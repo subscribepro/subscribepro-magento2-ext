@@ -59,9 +59,9 @@ define(
                 var config = {};
                 if (window['checkoutConfig'] != undefined) { // frontend checkout
                     config = window.checkoutConfig.payment[code];
-                } else if (window['subscribeProPaymentConfig'] != undefined && window.order) { // backend checkout
-                    config = window.subscribeProPaymentConfig[window.order.storeId];
-                } else if (window['subscribeProPaymentConfig'] != undefined ) { // ading a card in My Stored Methods
+                } else if (window['subscribeProPaymentConfigs'] != undefined && window.order) { // backend checkout
+                    config = window.subscribeProPaymentConfigs[window.order.storeId];
+                } else if (window['subscribeProPaymentConfig'] != undefined ) { // adding a card in My Stored Methods
                     config = window.subscribeProPaymentConfig;
                 }
                 return config;
