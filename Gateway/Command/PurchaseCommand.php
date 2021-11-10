@@ -4,7 +4,6 @@ namespace Swarming\SubscribePro\Gateway\Command;
 
 use Magento\Payment\Gateway\CommandInterface;
 use Magento\Vault\Model\Ui\VaultConfigProvider;
-use Magento\Framework\Exception\LocalizedException;
 use Swarming\SubscribePro\Gateway\Request\PaymentDataBuilder;
 use Swarming\SubscribePro\Gateway\Request\VaultDataBuilder;
 

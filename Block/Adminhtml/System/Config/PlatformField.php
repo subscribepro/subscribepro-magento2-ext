@@ -17,8 +17,8 @@ class PlatformField extends \Magento\Config\Block\System\Config\Form\Field
             Share::XML_PATH_CUSTOMER_ACCOUNT_SHARE,
             ScopeInterface::SCOPE_STORE
         );
-        $isScopeGrobal = ($scope == Share::SHARE_GLOBAL
-            && $this->getRequest()->getParam('website') == '');
+        $isScopeGrobal = ($scope == Share::SHARE_GLOBAL && $this->getRequest()->getParam('website') == '');
+
         return $isScopeGrobal
             || $this->getRequest()->getParam('website')
             || $this->_storeManager->isSingleStoreMode();

@@ -3,7 +3,6 @@
 namespace Swarming\SubscribePro\Gateway\Command;
 
 use Magento\Payment\Gateway\CommandInterface;
-use Magento\Framework\Exception\LocalizedException;
 use SubscribePro\Service\Transaction\TransactionInterface;
 
 class VoidCommand extends AbstractCommand implements CommandInterface

@@ -165,8 +165,8 @@ class Subscription extends \Magento\Checkout\Block\Cart\Additional\Info
             $subscriptionProduct->setDefaultInterval($intervalOption);
         }
 
-        $subscriptionOption = $this->quoteItemHelper->getCreateNewSubscriptionAtCheckout($this->getItem()) ?
-            PlatformProductInterface::SO_SUBSCRIPTION
+        $subscriptionOption = $this->quoteItemHelper->getCreateNewSubscriptionAtCheckout($this->getItem())
+            ? PlatformProductInterface::SO_SUBSCRIPTION
             : PlatformProductInterface::SO_ONETIME_PURCHASE;
         $subscriptionProduct->setDefaultSubscriptionOption($subscriptionOption);
 

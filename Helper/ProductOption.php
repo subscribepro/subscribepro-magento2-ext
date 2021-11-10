@@ -133,8 +133,8 @@ class ProductOption
             $productOptions[ExtensibleDataInterface::EXTENSION_ATTRIBUTES_KEY][OptionProcessor::KEY_SUBSCRIPTION_OPTION]
         )) {
             unset(
-                // phpcs:ignore Generic.Files.LineLength.TooLong
-                $productOptions[ExtensibleDataInterface::EXTENSION_ATTRIBUTES_KEY][OptionProcessor::KEY_SUBSCRIPTION_OPTION]
+                $productOptions[ExtensibleDataInterface::EXTENSION_ATTRIBUTES_KEY]
+                [OptionProcessor::KEY_SUBSCRIPTION_OPTION]
             );
         }
 

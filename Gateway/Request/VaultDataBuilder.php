@@ -3,7 +3,6 @@
 namespace Swarming\SubscribePro\Gateway\Request;
 
 use Magento\Payment\Gateway\Request\BuilderInterface;
-use Magento\Framework\Exception\LocalizedException;
 use SubscribePro\Service\Transaction\TransactionInterface;
 
 class VaultDataBuilder implements BuilderInterface

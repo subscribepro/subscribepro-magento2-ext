@@ -4,7 +4,6 @@ namespace Swarming\SubscribePro\Gateway\Command;
 
 use Magento\Payment\Gateway\CommandInterface;
 use Magento\Vault\Model\Ui\VaultConfigProvider;
-use Magento\Framework\Exception\LocalizedException;
 use Swarming\SubscribePro\Gateway\Request\PaymentDataBuilder;
 use Swarming\SubscribePro\Gateway\Request\VaultDataBuilder;
 
@@ -14,7 +13,6 @@ class AuthorizeCommand extends AbstractProfileCreatorCommand implements CommandI
      * @param array $requestData
      * @return \SubscribePro\Service\Transaction\TransactionInterface
      * @throws \InvalidArgumentException
-     * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \SubscribePro\Exception\EntityInvalidDataException
      * @throws \SubscribePro\Exception\HttpException
      */

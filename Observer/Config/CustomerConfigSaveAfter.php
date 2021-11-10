@@ -45,11 +45,11 @@ class CustomerConfigSaveAfter implements ObserverInterface
      */
     public function execute(Observer $observer)
     {
-        $scope = $this->scopeConfig->getValue(
+        $accountShareScope = $this->scopeConfig->getValue(
             Share::XML_PATH_CUSTOMER_ACCOUNT_SHARE,
             ScopeInterface::SCOPE_STORE
         );
-        if ($scope == Share::SHARE_GLOBAL) {
+        if ($accountShareScope == Share::SHARE_GLOBAL) {
             return;
         }
 
