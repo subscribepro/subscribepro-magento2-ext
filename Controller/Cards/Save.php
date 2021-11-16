@@ -40,9 +40,9 @@ class Save extends \Magento\Customer\Controller\AbstractAccount
     protected $vaultFormValidator;
 
     /**
-     * @var \Swarming\SubscribePro\Gateway\Command\AuthorizeCommand
+     * @var \Swarming\SubscribePro\Gateway\Command\VerifyCommand
      */
-    protected $walletAuthorizeCommand;
+    protected $walletVerifyCommand;
 
     /**
      * @var \Magento\Store\Model\StoreManagerInterface
@@ -57,7 +57,7 @@ class Save extends \Magento\Customer\Controller\AbstractAccount
      * @param \Swarming\SubscribePro\Gateway\Config\VaultConfig $platformVaultConfig
      * @param \Swarming\SubscribePro\Gateway\Config\Config $gatewayConfig
      * @param \Swarming\SubscribePro\Model\Vault\Validator $vaultFormValidator
-     * @param \Swarming\SubscribePro\Gateway\Command\AuthorizeCommand $walletAuthorizeCommand
+     * @param \Swarming\SubscribePro\Gateway\Command\VerifyCommand $walletVerifyCommand
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      */
     public function __construct(
@@ -68,7 +68,7 @@ class Save extends \Magento\Customer\Controller\AbstractAccount
         \Swarming\SubscribePro\Gateway\Config\VaultConfig $platformVaultConfig,
         \Swarming\SubscribePro\Gateway\Config\Config $gatewayConfig,
         \Swarming\SubscribePro\Model\Vault\Validator $vaultFormValidator,
-        \Swarming\SubscribePro\Gateway\Command\AuthorizeCommand $walletAuthorizeCommand,
+        \Swarming\SubscribePro\Gateway\Command\VerifyCommand $walletVerifyCommand,
         \Magento\Store\Model\StoreManagerInterface $storeManager
     ) {
         $this->formKeyValidator = $formKeyValidator;
@@ -77,7 +77,7 @@ class Save extends \Magento\Customer\Controller\AbstractAccount
         $this->platformVaultConfig = $platformVaultConfig;
         $this->gatewayConfig = $gatewayConfig;
         $this->vaultFormValidator = $vaultFormValidator;
-        $this->walletAuthorizeCommand = $walletAuthorizeCommand;
+        $this->walletVerifyCommand = $walletVerifyCommand;
         $this->storeManager = $storeManager;
         parent::__construct($context);
     }
@@ -106,9 +106,9 @@ class Save extends \Magento\Customer\Controller\AbstractAccount
 
             if ($this->gatewayConfig->isWalletAuthorizationActive()) {
                 $transfer = new DataObject();
-                $commandSubject = $this->prepareAuthorizeCommandSubject($data, $transfer);
+                $commandSubject = $this->prepareVerifyCommandSubject($data, $transfer);
 
-                $this->walletAuthorizeCommand->execute($commandSubject);
+                $this->walletVerifyCommand->execute($commandSubject);
 
                 $responseData['state'] = $transfer->getData('state');
                 $responseData['token'] = $transfer->getData('token');
@@ -135,10 +135,10 @@ class Save extends \Magento\Customer\Controller\AbstractAccount
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    private function prepareAuthorizeCommandSubject(array $profileData, DataObject $transfer): array
+    private function prepareVerifyCommandSubject(array $profileData, DataObject $transfer): array
     {
         if (empty($profileData['token'])) {
-            throw new LocalizedException(__('The credit card can be not saved.'));
+            throw new LocalizedException(__('The credit card can not be saved.'));
         }
 
         $profileData = $this->vaultFormValidator->validate($profileData);

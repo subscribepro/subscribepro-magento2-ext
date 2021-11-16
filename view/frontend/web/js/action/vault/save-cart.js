@@ -7,7 +7,7 @@ define([
 
     return function saveCart(payload) {
         return $.ajax({
-            url: urlBuilder.build('/subscribepro/cards/save'),
+            url: urlBuilder.build('subscribepro/cards/save'),
             data: payload,
             type: 'post'
         });
