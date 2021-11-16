@@ -3,11 +3,8 @@ declare(strict_types=1);
 
 namespace Swarming\SubscribePro\Observer\Customer;
 
-use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
-use Magento\Framework\Exception\NoSuchEntityException;
-use Psr\Log\LoggerInterface;
 use SubscribePro\Service\Customer\CustomerInterface as PlatformCustomerInterface;
 use Swarming\SubscribePro\Model\Config\General as SpGeneralConfig;
 use Swarming\SubscribePro\Platform\Manager\Customer as PlatformManagerCustomer;
@@ -19,24 +16,33 @@ class SaveAfterData implements ObserverInterface
      * @var SpGeneralConfig
      */
     private $generalConfig;
+
     /**
      * @var PlatformManagerCustomer
      */
     private $platformCustomerManager;
+
     /**
      * @var PlatformServiceCustomer
      */
     private $platformCustomerService;
+
     /**
-     * @var LoggerInterface
+     * @var \Psr\Log\LoggerInterface
      */
     private $logger;
 
+    /**
+     * @param \Swarming\SubscribePro\Model\Config\General $generalConfig
+     * @param \Swarming\SubscribePro\Platform\Manager\Customer $platformCustomerManager
+     * @param \Swarming\SubscribePro\Platform\Service\Customer $platformCustomerService
+     * @param \Psr\Log\LoggerInterface $logger
+     */
     public function __construct(
         SpGeneralConfig $generalConfig,
         PlatformManagerCustomer $platformCustomerManager,
         PlatformServiceCustomer $platformCustomerService,
-        LoggerInterface $logger
+        \Psr\Log\LoggerInterface $logger
     ) {
         $this->generalConfig = $generalConfig;
         $this->platformCustomerManager = $platformCustomerManager;
@@ -45,19 +51,22 @@ class SaveAfterData implements ObserverInterface
     }
 
     /**
-     * @param Observer $observer
+     * @param \Magento\Framework\Event\Observer $observer
+     * @return void
      */
     public function execute(Observer $observer): void
     {
-        $origCustomerData = $observer->getData('orig_customer_data_object');
         $customerData = $observer->getData('customer_data_object');
-        $customerId = (int) $customerData->getId();
-
+        // typecast is needed here because config implicitly treats a string as a website code, and int as an id
         $websiteId = (int) $customerData->getWebsiteId();
         if (!$this->generalConfig->isEnabled($websiteId)
-            || !$customerId
-            || !$origCustomerData
         ) {
+            return;
+        }
+
+        $origCustomerData = $observer->getData('orig_customer_data_object');
+        // When a new customer is created, $origCustomerData is null, therefore nothing is saved to S-Pro
+        if (!$origCustomerData) {
             return;
         }
 
@@ -70,64 +79,35 @@ class SaveAfterData implements ObserverInterface
             return;
         }
 
-        $platformCustomer = $this->getPlatformCustomerByMagentoCustomerId($customerId, $websiteId);
-        if ($platformCustomer) {
-            $this->updatePlatformCustomer($customerData, $platformCustomer);
-        }
-    }
-
-    /**
-     * @param int $customerId
-     * @param int $websiteId
-     * @return PlatformCustomerInterface|null
-     */
-    protected function getPlatformCustomerByMagentoCustomerId(
-        int $customerId,
-        int $websiteId
-    ): ?PlatformCustomerInterface {
+        $customerId = (int) $customerData->getId();
         try {
             $platformCustomer = $this->platformCustomerManager->getCustomerByMagentoCustomerId(
                 $customerId,
                 true,
                 $websiteId
             );
-        } catch (NoSuchEntityException $e) {
-            $platformCustomer = null;
+            $this->savePlatformCustomer($customerData, $platformCustomer);
         } catch (\Exception $e) {
             $this->logger->critical($e);
-            $platformCustomer = null;
         }
-
-        return $platformCustomer;
     }
 
     /**
-     * @param CustomerInterface $customer
-     * @param PlatformCustomerInterface $platformCustomer
+     * @param \Magento\Customer\Api\Data\CustomerInterface $customer
+     * @param \SubscribePro\Service\Customer\CustomerInterface $platformCustomer\
+     * @return void
+     * @throws \SubscribePro\Exception\EntityInvalidDataException
+     * @throws \SubscribePro\Exception\HttpException
      */
-    protected function updatePlatformCustomer(
-        CustomerInterface $customer,
+    private function savePlatformCustomer(
+        \Magento\Customer\Api\Data\CustomerInterface $customer,
         PlatformCustomerInterface $platformCustomer
-    ): void {
-        try {
-            $this->importCustomerData($platformCustomer, $customer);
-            $this->platformCustomerService->saveCustomer($platformCustomer, $customer->getWebsiteId());
-        } catch (\Exception $e) {
-            $this->logger->critical($e);
-        }
-    }
-
-    /**
-     * @param PlatformCustomerInterface $platformCustomer
-     * @param CustomerInterface $customer
-     */
-    protected function importCustomerData(
-        PlatformCustomerInterface $platformCustomer,
-        CustomerInterface $customer
     ): void {
         $platformCustomer->setFirstName($customer->getFirstname());
         $platformCustomer->setLastName($customer->getLastname());
         $platformCustomer->setEmail($customer->getEmail());
         $platformCustomer->setMagentoCustomerGroupId($customer->getGroupId());
+
+        $this->platformCustomerService->saveCustomer($platformCustomer, $customer->getWebsiteId());
     }
 }
