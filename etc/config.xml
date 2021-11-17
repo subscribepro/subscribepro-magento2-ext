@@ -18,6 +18,7 @@
                 <allow_coupon>0</allow_coupon>
                 <allow_cancel>1</allow_cancel>
                 <my_subscriptions_count>25</my_subscriptions_count>
+                <use_child_sku_when_configurable>0</use_child_sku_when_configurable>
             </subscription_options>
             <subscription_discount>
                 <apply_discount_to_catalog_price>0</apply_discount_to_catalog_price>
