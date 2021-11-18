@@ -76,7 +76,7 @@ class Customer
     /**
      * @param int  $customerId
      * @param bool $createIfNotExist
-     * @param      $websiteId
+     * @param int|null $websiteId
      * @return PlatformCustomerInterface
      * @throws NoSuchEntityException
      * @throws \Magento\Framework\Exception\LocalizedException
