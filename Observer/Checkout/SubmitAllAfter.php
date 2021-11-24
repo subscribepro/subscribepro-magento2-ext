@@ -43,6 +43,11 @@ class SubmitAllAfter implements ObserverInterface
     private $thirdPartyPaymentConfig;
 
     /**
+     * @var \Swarming\SubscribePro\Model\Order\DetailsCreator
+     */
+    private $orderDetailsCreator;
+
+    /**
      * @var array
      */
     private $builtInMethods = [
@@ -57,6 +62,7 @@ class SubmitAllAfter implements ObserverInterface
      * @param \Magento\Quote\Model\Quote\Item\CartItemOptionsProcessor $cartItemOptionProcessor
      * @param \Psr\Log\LoggerInterface $logger
      * @param \Swarming\SubscribePro\Model\Config\ThirdPartyPayment $thirdPartyPaymentConfig
+     * @param \Swarming\SubscribePro\Model\Order\DetailsCreator $orderDetailsCreator
      */
     public function __construct(
         \Swarming\SubscribePro\Model\Config\General $generalConfig,
@@ -64,7 +70,8 @@ class SubmitAllAfter implements ObserverInterface
         \Swarming\SubscribePro\Model\Quote\SubscriptionCreator $subscriptionCreator,
         \Magento\Quote\Model\Quote\Item\CartItemOptionsProcessor $cartItemOptionProcessor,
         \Psr\Log\LoggerInterface $logger,
-        \Swarming\SubscribePro\Model\Config\ThirdPartyPayment $thirdPartyPaymentConfig
+        \Swarming\SubscribePro\Model\Config\ThirdPartyPayment $thirdPartyPaymentConfig,
+        \Swarming\SubscribePro\Model\Order\DetailsCreator $orderDetailsCreator
     ) {
         $this->generalConfig = $generalConfig;
         $this->checkoutSession = $checkoutSession;
@@ -72,6 +79,7 @@ class SubmitAllAfter implements ObserverInterface
         $this->cartItemOptionProcessor = $cartItemOptionProcessor;
         $this->logger = $logger;
         $this->thirdPartyPaymentConfig = $thirdPartyPaymentConfig;
+        $this->orderDetailsCreator = $orderDetailsCreator;
     }
 
     /**
@@ -97,12 +105,25 @@ class SubmitAllAfter implements ObserverInterface
 
         try {
             $result = $this->subscriptionCreator->createSubscriptions($quote, $order);
-            $this->checkoutSession->setData(SubscriptionCreator::CREATED_SUBSCRIPTION_IDS, $result[SubscriptionCreator::CREATED_SUBSCRIPTION_IDS]);
-            $this->checkoutSession->setData(SubscriptionCreator::FAILED_SUBSCRIPTION_COUNT, $result[SubscriptionCreator::FAILED_SUBSCRIPTION_COUNT]);
+            $this->checkoutSession->setData(
+                SubscriptionCreator::CREATED_SUBSCRIPTION_IDS,
+                $result[SubscriptionCreator::CREATED_SUBSCRIPTION_IDS]
+            );
+            $this->checkoutSession->setData(
+                SubscriptionCreator::FAILED_SUBSCRIPTION_COUNT,
+                $result[SubscriptionCreator::FAILED_SUBSCRIPTION_COUNT]
+            );
         } catch (\Exception $e) {
             $this->logger->critical($e);
             $this->checkoutSession->setData(SubscriptionCreator::CREATED_SUBSCRIPTION_IDS, []);
             $this->checkoutSession->setData(SubscriptionCreator::FAILED_SUBSCRIPTION_COUNT, 0);
+        }
+
+        // store order details in SubscribePro. This should not impact order success or customer experience
+        try {
+            $this->processOrderDetails($order, $result);
+        } catch (\Exception $e) {
+            $this->logger->critical($e);
         }
     }
 
@@ -152,5 +173,18 @@ class SubmitAllAfter implements ObserverInterface
     private function isThirdPartyPaymentMethodAllowed(string $methodCode, int $storeId): bool
     {
         return $methodCode === $this->thirdPartyPaymentConfig->getAllowedMethod($storeId);
+    }
+
+    /**
+     * @param \Magento\Sales\Api\Data\OrderInterface $order
+     * @param array $result
+     * @return void
+     */
+    private function processOrderDetails(OrderInterface $order, array $result): void
+    {
+        if (empty($result[SubscriptionCreator::CREATED_SUBSCRIPTION_IDS])) {
+            return;
+        }
+        $this->orderDetailsCreator->createOrderDetails($order);
     }
 }

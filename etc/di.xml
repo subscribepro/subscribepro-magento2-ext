@@ -81,6 +81,11 @@
             <argument name="name" xsi:type="const">SubscribePro\Service\Webhook\WebhookService::NAME</argument>
         </arguments>
     </type>
+    <type name="Swarming\SubscribePro\Platform\Service\OrderDetails">
+        <arguments>
+            <argument name="name" xsi:type="const">SubscribePro\Service\OrderDetails\OrderDetailsService::NAME</argument>
+        </arguments>
+    </type>
     <type name="Swarming\SubscribePro\Platform\Tool\Config">
         <arguments>
             <argument name="name" xsi:type="const">SubscribePro\Tools\Config::NAME</argument>
