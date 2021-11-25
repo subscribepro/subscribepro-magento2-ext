@@ -22,3 +22,18 @@ You can install our Subscribe Pro Magento 2 extension via [Composer](http://getc
  php bin/magento module:enable Swarming_SubscribePro
  php bin/magento setup:upgrade
  ```
+
+## Coding Standards
+
+Subscribe Pro team follows the standards described in https://devdocs.magento.com
+ - https://devdocs.magento.com/guides/v2.4/coding-standards/bk-coding-standards.html - this document's purpose is to explain how the code should be formatted and the main idea for PHP developers is **"use codesniffer"**. Very helpful and concise instructions on how to set it up are provided. The rules imposed by codesniffer are based on **PSR12** standard (see https://www.php-fig.org/psr/psr-1/ https://www.php-fig.org/psr/psr-2/ https://www.php-fig.org/psr/psr-12/) and are arguably too numerous for humans to remember and consistently apply, so official Magento team does not provide a human-readable description anyway
+ - https://devdocs.magento.com/guides/v2.4/coding-standards/technical-guidelines.html - this document describes semantic requirements and best coding practices
+ - https://devdocs.magento.com/guides/v2.4/coding-standards/code-standard-javascript.html - JS coding standard
+ - https://devdocs.magento.com/guides/v2.4/coding-standards/code-standard-less.html - less coding standard
+ - https://devdocs.magento.com/guides/v2.4/coding-standards/code-standard-html.html - HTML coding standard
+ 
+### Subscribe Pro's internal coding standards
+ - Use fully-qualified class names in PHPDoc
+ - No space after type cast, e.g., `(int)$variable`
+
+ 
