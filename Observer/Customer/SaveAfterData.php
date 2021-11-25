@@ -5,7 +5,6 @@ namespace Swarming\SubscribePro\Observer\Customer;
 
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
-use SubscribePro\Service\Customer\CustomerInterface as PlatformCustomerInterface;
 use Swarming\SubscribePro\Model\Config\General as SpGeneralConfig;
 use Swarming\SubscribePro\Platform\Manager\Customer as PlatformManagerCustomer;
 use Swarming\SubscribePro\Platform\Service\Customer as PlatformServiceCustomer;
@@ -56,58 +55,59 @@ class SaveAfterData implements ObserverInterface
      */
     public function execute(Observer $observer): void
     {
-        $customerData = $observer->getData('customer_data_object');
+        /** @var \Magento\Customer\Api\Data\CustomerInterface $customer */
+        $customer = $observer->getData('customer_data_object');
         // typecast is needed here because config implicitly treats a string as a website code, and int as an id
-        $websiteId = (int) $customerData->getWebsiteId();
+        $websiteId = (int)$customer->getWebsiteId();
         if (!$this->generalConfig->isEnabled($websiteId)
         ) {
             return;
         }
-
-        $origCustomerData = $observer->getData('orig_customer_data_object');
-        // When a new customer is created, $origCustomerData is null, therefore nothing is saved to S-Pro
-        if (!$origCustomerData) {
-            return;
-        }
-
-        // If there are no required changes, just return.
-        if ($origCustomerData->getEmail() === $customerData->getEmail()
-            && $origCustomerData->getFirstname() === $customerData->getFirstname()
-            && $origCustomerData->getLastname() === $customerData->getLastname()
-            && $origCustomerData->getGroupId() === $customerData->getGroupId()
+        /** @var \Magento\Customer\Api\Data\CustomerInterface $origCustomer */
+        $origCustomer = $observer->getData('orig_customer_data_object');
+        // When a new customer is created, $origCustomer is null
+        // If there are no required changes, return.
+        if ($origCustomer
+            && $origCustomer->getEmail() === $customer->getEmail()
+            && $origCustomer->getFirstname() === $customer->getFirstname()
+            && $origCustomer->getLastname() === $customer->getLastname()
+            && $origCustomer->getGroupId() === $customer->getGroupId()
         ) {
             return;
         }
 
-        $customerId = (int) $customerData->getId();
-        try {
-            $platformCustomer = $this->platformCustomerManager->getCustomerByMagentoCustomerId(
-                $customerId,
-                true,
-                $websiteId
-            );
-            $this->savePlatformCustomer($customerData, $platformCustomer);
-        } catch (\Exception $e) {
-            $this->logger->critical($e);
-        }
+        $this->savePlatformCustomer($customer);
     }
 
     /**
      * @param \Magento\Customer\Api\Data\CustomerInterface $customer
-     * @param \SubscribePro\Service\Customer\CustomerInterface $platformCustomer\
      * @return void
-     * @throws \SubscribePro\Exception\EntityInvalidDataException
-     * @throws \SubscribePro\Exception\HttpException
      */
-    private function savePlatformCustomer(
-        \Magento\Customer\Api\Data\CustomerInterface $customer,
-        PlatformCustomerInterface $platformCustomer
-    ): void {
-        $platformCustomer->setFirstName($customer->getFirstname());
-        $platformCustomer->setLastName($customer->getLastname());
-        $platformCustomer->setEmail($customer->getEmail());
-        $platformCustomer->setMagentoCustomerGroupId($customer->getGroupId());
+    private function savePlatformCustomer($customer): void
+    {
+        $websiteId = $customer->getWebsiteId();
+        // Apple Pay will not work for new customers if they are not available on the S-Pro end,
+        // but it is not necessary to keep new customers for the other gateways
+        $createIfNotExist = $this->generalConfig->isApplePayEnabled($websiteId);
+        $customerId = (int)$customer->getId();
+        try {
+            $platformCustomer = $this->platformCustomerManager->getCustomerByMagentoCustomerId(
+                $customerId,
+                $createIfNotExist,
+                $websiteId
+            );
+            if (!$platformCustomer) {
+                return;
+            }
 
-        $this->platformCustomerService->saveCustomer($platformCustomer, $customer->getWebsiteId());
+            $platformCustomer->setFirstName($customer->getFirstname());
+            $platformCustomer->setLastName($customer->getLastname());
+            $platformCustomer->setEmail($customer->getEmail());
+            $platformCustomer->setMagentoCustomerGroupId($customer->getGroupId());
+
+            $this->platformCustomerService->saveCustomer($platformCustomer, $websiteId);
+        } catch (\Exception $e) {
+            $this->logger->critical($e);
+        }
     }
 }

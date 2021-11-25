@@ -77,8 +77,7 @@ class Customer
      * @param int  $customerId
      * @param bool $createIfNotExist
      * @param int|null $websiteId
-     * @return PlatformCustomerInterface
-     * @throws NoSuchEntityException
+     * @return PlatformCustomerInterface|null
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function getCustomerByMagentoCustomerId(int $customerId, $createIfNotExist = false, $websiteId = null)
@@ -93,8 +92,9 @@ class Customer
         } elseif ($createIfNotExist) {
             $customer = $this->customerRepository->getById($customerId);
             $platformCustomer = $this->createPlatformCustomer($customer, $websiteId);
-        } else {
-            throw new NoSuchEntityException(__('Platform customer is not found.'));
+        } elseif (!$createIfNotExist && empty($platformCustomerList)) {
+            // if there is no customer and we did not ask to create one, returning null is ok
+            $platformCustomer = null;
         }
 
         return $platformCustomer;
