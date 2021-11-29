@@ -57,9 +57,11 @@ define(
 
             getConfig: function () {
                 var config = {};
-                if (window['checkoutConfig'] != undefined) {
+                if (window['checkoutConfig'] != undefined) { // frontend checkout
                     config = window.checkoutConfig.payment[code];
-                } else if (window['subscribeProPaymentConfig'] != undefined) {
+                } else if (window['subscribeProPaymentConfigs'] != undefined && window.order) { // backend checkout
+                    config = window.subscribeProPaymentConfigs[window.order.storeId];
+                } else if (window['subscribeProPaymentConfig'] != undefined ) { // adding a card in My Stored Methods
                     config = window.subscribeProPaymentConfig;
                 }
                 return config;
