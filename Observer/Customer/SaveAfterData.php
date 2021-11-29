@@ -82,14 +82,10 @@ class SaveAfterData implements ObserverInterface
      */
     private function isCustomerChanged(CustomerInterface $customer, CustomerInterface $origCustomer): bool
     {
-        if ($origCustomer->getEmail() === $customer->getEmail()
-            && $origCustomer->getFirstname() === $customer->getFirstname()
-            && $origCustomer->getLastname() === $customer->getLastname()
-            && $origCustomer->getGroupId() === $customer->getGroupId()
-        ) {
-            return false;
-        }
-        return true;
+        return $origCustomer->getEmail() !== $customer->getEmail()
+            || $origCustomer->getFirstname() !== $customer->getFirstname()
+            || $origCustomer->getLastname() !== $customer->getLastname()
+            || $origCustomer->getGroupId() !== $customer->getGroupId();
     }
 
     /**
