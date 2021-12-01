@@ -27,18 +27,26 @@ class Availability implements ObserverInterface
     private $thirdPartyPaymentConfig;
 
     /**
+     * @var \Swarming\SubscribePro\Helper\ThirdPartyPayment
+     */
+    private $thirdPartyPayment;
+
+    /**
      * @param \Magento\Checkout\Model\Session $checkoutSession
      * @param \Swarming\SubscribePro\Helper\Quote $quoteHelper
      * @param \Swarming\SubscribePro\Model\Config\ThirdPartyPayment $thirdPartyPaymentConfig
+     * @param \Swarming\SubscribePro\Helper\ThirdPartyPayment $thirdPartyPayment
      */
     public function __construct(
         \Magento\Checkout\Model\Session $checkoutSession,
         \Swarming\SubscribePro\Helper\Quote $quoteHelper,
-        \Swarming\SubscribePro\Model\Config\ThirdPartyPayment $thirdPartyPaymentConfig
+        \Swarming\SubscribePro\Model\Config\ThirdPartyPayment $thirdPartyPaymentConfig,
+        \Swarming\SubscribePro\Helper\ThirdPartyPayment $thirdPartyPayment
     ) {
         $this->checkoutSession = $checkoutSession;
         $this->quoteHelper = $quoteHelper;
         $this->thirdPartyPaymentConfig = $thirdPartyPaymentConfig;
+        $this->thirdPartyPayment = $thirdPartyPayment;
     }
 
     /**
@@ -79,7 +87,10 @@ class Availability implements ObserverInterface
                         $isAvailable = true;
                         break;
                     default:
-                        $isAvailable = $this->isThirdPartyPaymentMethodAllowed($methodCode, (int)$quote->getStoreId());
+                        $isAvailable = $this->thirdPartyPayment->isThirdPartyPaymentMethodAllowed(
+                            $methodCode,
+                            (int)$quote->getStoreId()
+                        );
                         break;
                 }
             } elseif (ConfigProvider::CODE === $methodCode && !$isActiveNonSubscription) {
@@ -90,13 +101,4 @@ class Availability implements ObserverInterface
         }
     }
 
-    /**
-     * @param string $methodCode
-     * @param int $storeId
-     * @return bool
-     */
-    private function isThirdPartyPaymentMethodAllowed(string $methodCode, int $storeId): bool
-    {
-        return $methodCode === $this->thirdPartyPaymentConfig->getAllowedMethod($storeId);
-    }
 }
