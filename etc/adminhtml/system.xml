@@ -96,6 +96,14 @@
                         <field id="is_allowed">1</field>
                     </depends>
                 </field>
+                <field id="method_vault" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Third Party Payment Method Vault</label>
+                    <source_model>Swarming\SubscribePro\Model\Config\Source\ThirdPartyPaymentVault</source_model>
+                    <depends>
+                        <field id="swarming_subscribepro/general/enabled">1</field>
+                        <field id="is_allowed">1</field>
+                    </depends>
+                </field>
             </group>
 
             <group id="order_callback" translate="label" type="text" sortOrder="28" showInDefault="1" showInWebsite="1" showInStore="0">
