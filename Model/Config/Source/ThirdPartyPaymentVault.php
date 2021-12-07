@@ -12,11 +12,19 @@ class ThirdPartyPaymentVault implements \Magento\Framework\Data\OptionSourceInte
     private $supportedVaults;
 
     /**
+     * @var \Swarming\SubscribePro\Model\Config\Source\ThirdPartyOptionArray
+     */
+    private $optionArray;
+
+    /**
+     * @param \Swarming\SubscribePro\Model\Config\Source\ThirdPartyOptionArray $optionArray
      * @param array $supportedVaults
      */
     public function __construct(
+        \Swarming\SubscribePro\Model\Config\Source\ThirdPartyOptionArray $optionArray,
         array $supportedVaults = []
     ) {
+        $this->optionArray = $optionArray;
         $this->supportedVaults = $supportedVaults;
     }
 
@@ -25,12 +33,6 @@ class ThirdPartyPaymentVault implements \Magento\Framework\Data\OptionSourceInte
      */
     public function toOptionArray(): array
     {
-        $options = [];
-
-        foreach ($this->supportedVaults as $vault) {
-            $options[] = ['value' => $vault['code'], 'label' => $vault['name']];
-        }
-
-        return $options;
+        return $this->optionArray->getOptions($this->supportedVaults);
     }
 }
