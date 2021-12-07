@@ -46,8 +46,9 @@ class ThirdPartyPayment
             ScopeInterface::SCOPE_STORE,
             $storeId
         );
-        $allowedThirdPartyArray = explode(',', $allowedThirdPartyValue);
-
+        $allowedThirdPartyArray = (!empty($allowedThirdPartyValue) && is_string($allowedThirdPartyValue))
+            ? explode(',', $allowedThirdPartyValue)
+            : [];
         return $this->isAllowed($storeId) ? $allowedThirdPartyArray : [];
     }
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Swarming\SubscribePro\Helper;
 
 class ThirdPartyPayment
@@ -25,6 +27,6 @@ class ThirdPartyPayment
      */
     public function isThirdPartyPaymentMethodAllowed(string $methodCode, int $storeId): bool
     {
-        return in_array($methodCode, $this->thirdPartyPaymentConfig->getAllowedMethods($storeId));
+        return in_array($methodCode, $this->thirdPartyPaymentConfig->getAllowedMethods($storeId), true);
     }
 }
