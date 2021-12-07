@@ -92,7 +92,7 @@ class SaveAfterData implements ObserverInterface
      * @param \Magento\Customer\Api\Data\CustomerInterface $customer
      * @return void
      */
-    private function savePlatformCustomer($customer): void
+    private function savePlatformCustomer(CustomerInterface $customer): void
     {
         $websiteId = $customer->getWebsiteId();
 
