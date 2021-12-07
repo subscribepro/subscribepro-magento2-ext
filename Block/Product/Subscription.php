@@ -113,7 +113,8 @@ class Subscription extends \Magento\Catalog\Block\Product\AbstractProduct
     protected function _beforeToHtml()
     {
         if ($this->subscriptionDiscountConfig->isEnabled()
-            && $this->productHelper->isSubscriptionEnabled($this->getProduct())) {
+            && $this->productHelper->isSubscriptionEnabled($this->getProduct())
+        ) {
             $this->initJsLayout();
         } else {
             $this->setTemplate('');
