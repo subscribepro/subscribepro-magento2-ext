@@ -100,5 +100,4 @@ class Availability implements ObserverInterface
             $result->setData('is_available', $isAvailable);
         }
     }
-
 }
