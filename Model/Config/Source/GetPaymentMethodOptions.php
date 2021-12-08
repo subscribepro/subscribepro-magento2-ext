@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Swarming\SubscribePro\Model\Config\Source;
 
-class ThirdPartyOptionArray
+class GetPaymentMethodOptions
 {
     /**
      * @var \Magento\Payment\Api\PaymentMethodListInterface
@@ -29,16 +29,16 @@ class ThirdPartyOptionArray
     }
 
     /**
-     * @param array $supportedItems
+     * @param string[] $allowedMethodCodes
      * @return array
      */
-    public function getOptions(array $supportedItems): array
+    public function execute(array $allowedMethodCodes): array
     {
         $options = [];
         $storeId = $this->getCurrentStoreId->execute();
 
         $paymentMethodList = $this->paymentMethodList->getList($storeId);
-        $supportedPaymentMethods = $this->filterSupportedMethods($paymentMethodList, $supportedItems);
+        $supportedPaymentMethods = $this->filterSupportedMethods($paymentMethodList, $allowedMethodCodes);
         $duplicatedMethodNames = $this->getDuplicatedMethodNames($supportedPaymentMethods);
 
         foreach ($supportedPaymentMethods as $method) {
@@ -61,24 +61,23 @@ class ThirdPartyOptionArray
     }
 
     /**
-     * @param array $paymentMethodList
-     * @param array $supportedItems
-     * @return array
+     * @param \Magento\Payment\Api\Data\PaymentMethodInterface[] $paymentMethodList
+     * @param string[] $allowedMethodCodes
+     * @return \Magento\Payment\Api\Data\PaymentMethodInterface[]
      */
-    private function filterSupportedMethods(array $paymentMethodList, array $supportedItems): array
+    private function filterSupportedMethods(array $paymentMethodList, array $allowedMethodCodes): array
     {
         return array_filter(
             $paymentMethodList,
-            function ($paymentMethod) use ($supportedItems) {
-                /** @var \Magento\Payment\Api\Data\PaymentMethodInterface $paymentMethod */
-                return in_array($paymentMethod->getCode(), $supportedItems, true);
+            static function ($paymentMethod) use ($allowedMethodCodes) {
+                return in_array($paymentMethod->getCode(), $allowedMethodCodes, true);
             }
         );
     }
 
     /**
-     * @param array $paymentMethodList
-     * @return array
+     * @param \Magento\Payment\Api\Data\PaymentMethodInterface[] $paymentMethodList
+     * @return string[]
      */
     private function getDuplicatedMethodNames(array $paymentMethodList): array
     {

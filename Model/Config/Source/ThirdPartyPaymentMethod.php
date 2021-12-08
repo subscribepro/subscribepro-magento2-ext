@@ -7,24 +7,24 @@ namespace Swarming\SubscribePro\Model\Config\Source;
 class ThirdPartyPaymentMethod implements \Magento\Framework\Data\OptionSourceInterface
 {
     /**
-     * @var array
+     * @var \Swarming\SubscribePro\Model\Config\Source\GetPaymentMethodOptions
+     */
+    private $getPaymentMethodOptions;
+
+    /**
+     * @var string[]
      */
     private $supportedMethods;
 
     /**
-     * @var \Swarming\SubscribePro\Model\Config\Source\ThirdPartyOptionArray
-     */
-    private $optionArray;
-
-    /**
-     * @param \Swarming\SubscribePro\Model\Config\Source\ThirdPartyOptionArray $optionArray
-     * @param array $supportedMethods
+     * @param \Swarming\SubscribePro\Model\Config\Source\GetPaymentMethodOptions $getPaymentMethodOptions
+     * @param string[] $supportedMethods
      */
     public function __construct(
-        \Swarming\SubscribePro\Model\Config\Source\ThirdPartyOptionArray $optionArray,
+        \Swarming\SubscribePro\Model\Config\Source\GetPaymentMethodOptions $getPaymentMethodOptions,
         array $supportedMethods = []
     ) {
-        $this->optionArray = $optionArray;
+        $this->getPaymentMethodOptions = $getPaymentMethodOptions;
         $this->supportedMethods = $supportedMethods;
     }
 
@@ -33,6 +33,6 @@ class ThirdPartyPaymentMethod implements \Magento\Framework\Data\OptionSourceInt
      */
     public function toOptionArray(): array
     {
-        return $this->optionArray->getOptions($this->supportedMethods);
+        return $this->getPaymentMethodOptions->execute($this->supportedMethods);
     }
 }
