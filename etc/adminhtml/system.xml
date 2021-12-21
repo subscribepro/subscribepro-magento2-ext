@@ -88,7 +88,7 @@
                     </depends>
                 </field>
 
-                <field id="allowed_method" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="allowed_method" translate="label comment" type="multiselect" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Allowed Third Party</label>
                     <source_model>Swarming\SubscribePro\Model\Config\Source\ThirdPartyPaymentMethod</source_model>
                     <depends>
