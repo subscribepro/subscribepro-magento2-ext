@@ -47,4 +47,8 @@ Subscribe Pro team follows the standards described in https://devdocs.magento.co
     ```
       None of the existing PHP standards stipulates this at the moment of writing, so "no space" was elected.
 
- 
+### To confirm project is compliant with standards
+
+```bash
+vendor/bin/phpcs --standard=Magento2 app/code/Swarming/SubscribePro
+```
