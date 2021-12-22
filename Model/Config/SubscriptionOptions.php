@@ -67,6 +67,23 @@ class SubscriptionOptions extends General
      */
     public function getMySubscriptionsLoadCount($websiteCode = null)
     {
-        return (int) $this->scopeConfig->getValue('swarming_subscribepro/subscription_options/my_subscriptions_count', ScopeInterface::SCOPE_WEBSITE, $websiteCode);
+        return (int) $this->scopeConfig->getValue(
+            'swarming_subscribepro/subscription_options/my_subscriptions_count',
+            ScopeInterface::SCOPE_WEBSITE,
+            $websiteCode
+        );
+    }
+
+    /**
+     * @param string|null $websiteCode
+     * @return bool
+     */
+    public function isChildSkuForConfigurableEnabled($websiteCode = null)
+    {
+        return $this->scopeConfig->isSetFlag(
+            'swarming_subscribepro/subscription_options/use_child_sku_when_configurable',
+            ScopeInterface::SCOPE_WEBSITE,
+            $websiteCode
+        );
     }
 }

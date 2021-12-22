@@ -112,6 +112,7 @@ class ResponseProcessor
             'company' => $orderAddress->getCompany(),
             'street1' => $orderAddress->getStreetLine(1),
             'street2' => $orderAddress->getStreetLine(2),
+            'street3' => $orderAddress->getStreetLine(3),
             'city' => $orderAddress->getCity(),
             'region' => $orderAddress->getRegionCode(),
             'postcode' => $orderAddress->getPostcode(),
