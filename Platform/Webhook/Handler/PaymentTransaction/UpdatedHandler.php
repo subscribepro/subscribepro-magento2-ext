@@ -76,7 +76,13 @@ class UpdatedHandler implements HandlerInterface
     {
         $transaction = $this->platformTransactionService->createTransaction($event->getEventData('transaction'));
 
-        $order = $this->getOrderByIncrementId((string)$transaction->getOrderId());
+        // no order id is set when verifying a card
+        $orderId = $transaction->getOrderId();
+        if (!$orderId) {
+            return;
+        }
+
+        $order = $this->getOrderByIncrementId((string)$orderId);
         if ($order->getStatus() !== Order::STATE_PAYMENT_REVIEW) {
             return;
         }
