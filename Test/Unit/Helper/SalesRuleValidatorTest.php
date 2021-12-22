@@ -25,9 +25,20 @@ class SalesRuleValidatorTest extends \PHPUnit\Framework\TestCase
      * @param string $combineType
      * @dataProvider getIsOnlySubscriptionDiscountDataProvider
      */
-    public function testIsOnlySubscriptionDiscount($expected, $baseSubscriptionDiscount, $baseCartDiscount, $combineType)
-    {
-        $this->assertEquals($expected, $this->salesRuleValidatorHelper->isOnlySubscriptionDiscount($baseSubscriptionDiscount, $baseCartDiscount, $combineType));
+    public function testIsOnlySubscriptionDiscount(
+        $expected,
+        $baseSubscriptionDiscount,
+        $baseCartDiscount,
+        $combineType
+    ) {
+        $this->assertEquals(
+            $expected,
+            $this->salesRuleValidatorHelper->isOnlySubscriptionDiscount(
+                $baseSubscriptionDiscount,
+                $baseCartDiscount,
+                $combineType
+            )
+        );
     }
 
     /**
@@ -101,9 +112,22 @@ class SalesRuleValidatorTest extends \PHPUnit\Framework\TestCase
      * @param int $qty
      * @dataProvider getGetBaseSubscriptionDiscountDataProvider
      */
-    public function testGetBaseSubscriptionDiscount($expected, $isDiscountPercentage, $discountAmount, $itemBasePrice, $qty)
-    {
-        $this->assertEquals($expected, $this->salesRuleValidatorHelper->getBaseSubscriptionDiscount($isDiscountPercentage, $discountAmount, $itemBasePrice, $qty));
+    public function testGetBaseSubscriptionDiscount(
+        $expected,
+        $isDiscountPercentage,
+        $discountAmount,
+        $itemBasePrice,
+        $qty
+    ) {
+        $this->assertEquals(
+            $expected,
+            $this->salesRuleValidatorHelper->getBaseSubscriptionDiscount(
+                $isDiscountPercentage,
+                $discountAmount,
+                $itemBasePrice,
+                $qty
+            )
+        );
     }
 
     /**

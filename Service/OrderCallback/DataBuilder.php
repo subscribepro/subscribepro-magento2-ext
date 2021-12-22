@@ -6,6 +6,7 @@ namespace Swarming\SubscribePro\Service\OrderCallback;
 
 use Magento\Quote\Model\Quote\Address as QuoteAddress;
 use Magento\Quote\Model\Quote\Payment as QuotePayment;
+use Magento\Vault\Api\Data\PaymentTokenInterface;
 use Swarming\SubscribePro\Gateway\Config\ConfigProvider as GatewayConfigProvider;
 
 class DataBuilder
@@ -21,15 +22,23 @@ class DataBuilder
     private $thirdPartyPaymentConfig;
 
     /**
+     * @var \Magento\Vault\Api\PaymentTokenManagementInterface
+     */
+    private $paymentTokenManagement;
+
+    /**
      * @param \Magento\Framework\Webapi\ServiceInputProcessor $serviceInputProcessor
      * @param \Swarming\SubscribePro\Model\Config\ThirdPartyPayment $thirdPartyPaymentConfig
+     * @param \Magento\Vault\Api\PaymentTokenManagementInterface $paymentTokenManagement
      */
     public function __construct(
         \Magento\Framework\Webapi\ServiceInputProcessor $serviceInputProcessor,
-        \Swarming\SubscribePro\Model\Config\ThirdPartyPayment $thirdPartyPaymentConfig
+        \Swarming\SubscribePro\Model\Config\ThirdPartyPayment $thirdPartyPaymentConfig,
+        \Magento\Vault\Api\PaymentTokenManagementInterface $paymentTokenManagement
     ) {
         $this->serviceInputProcessor = $serviceInputProcessor;
         $this->thirdPartyPaymentConfig = $thirdPartyPaymentConfig;
+        $this->paymentTokenManagement = $paymentTokenManagement;
     }
 
     /**
@@ -76,7 +85,10 @@ class DataBuilder
 
         if (!empty($productOptionExtensionAttributes)) {
             $quoteItemData['product_option']['extension_attributes'] =
-                array_merge($quoteItemData['product_option']['extension_attributes'], $productOptionExtensionAttributes);
+                array_merge(
+                    $quoteItemData['product_option']['extension_attributes'],
+                    $productOptionExtensionAttributes
+                );
         }
 
         return $this->serviceInputProcessor->convertValue(
@@ -111,46 +123,80 @@ class DataBuilder
      * @param array $paymentData
      * @return void
      */
-    public function importPaymentData(QuotePayment $quotePayment, array $paymentData, int $storeId): void
-    {
-        $paymentMethodCode = $this->getPaymentMethodCode($this->getValue($paymentData, 'paymentProfileType'), $storeId);
+    public function importPaymentData(
+        QuotePayment $quotePayment,
+        array $paymentData,
+        int $customerId,
+        int $storeId
+    ): void {
+        $paymentMethodVault = GatewayConfigProvider::VAULT_CODE;
+        $paymentAdditionalData = [];
+
+        if ($this->getValue($paymentData, 'paymentProfileType') === 'external_vault') {
+            $paymentToken = $this->getPaymentTokenObject(
+                $this->getValue($paymentData, 'paymentToken'),
+                $customerId,
+                $storeId
+            );
+
+            $paymentMethodCode = $paymentToken->getPaymentMethodCode();
+            $paymentMethodVault = $this->thirdPartyPaymentConfig->getVaultCodeByPaymentCode($paymentMethodCode);
+
+            $paymentAdditionalData[PaymentTokenInterface::CUSTOMER_ID] = $customerId;
+            $paymentAdditionalData[PaymentTokenInterface::PUBLIC_HASH] = $paymentToken->getPublicHash();
+        }
 
         $quotePayment->unsMethodInstance();
-        $quotePayment->setPaymentMethod($paymentMethodCode);
-        $quotePayment->setMethod($paymentMethodCode);
+        $quotePayment->setPaymentMethod($paymentMethodVault);
+        $quotePayment->setMethod($paymentMethodVault);
         $quotePayment->getMethodInstance();
+
+        $paymentAdditionalData['profile_id'] = $this->getValue($paymentData, 'paymentProfileId');
+        $paymentAdditionalData['cc_type'] = $this->getValue($paymentData, 'creditcardType');
+        $paymentAdditionalData['cc_number'] = $this->getValue($paymentData, 'creditcardLastDigits');
+        $paymentAdditionalData['cc_exp_year'] = $this->getValue($paymentData, 'creditcardYear');
+        $paymentAdditionalData['cc_exp_month'] = $this->getValue($paymentData, 'creditcardMonth');
 
         $quotePayment->importData(
             [
-                'method' => $paymentMethodCode,
-                'additional_data' => [
-                    'profile_id' => $this->getValue($paymentData, 'paymentProfileId'),
-                    'payment_method_token' => $this->getValue($paymentData, 'paymentToken'),
-                    'cc_type' => $this->getValue($paymentData, 'creditcardType'),
-                    'cc_number' => $this->getValue($paymentData, 'creditcardLastDigits'),
-                    'cc_exp_year' => $this->getValue($paymentData, 'creditcardYear'),
-                    'cc_exp_month' => $this->getValue($paymentData, 'creditcardMonth'),
-                ]
+                'method' => $paymentMethodVault,
+                'additional_data' => $paymentAdditionalData
             ]
         );
     }
 
     /**
-     * @param string $paymentProfileType
+     * @param string $paymentTokenValue
+     * @param int $customerId
      * @param int $storeId
-     * @return string
+     * @return \Magento\Vault\Api\Data\PaymentTokenInterface
      */
-    private function getPaymentMethodCode(string $paymentProfileType, int $storeId): string
-    {
-        $paymentMethodCode = $paymentProfileType === 'external_vault'
-            ? $this->thirdPartyPaymentConfig->getAllowedVault($storeId)
-            : GatewayConfigProvider::VAULT_CODE;
+    private function getPaymentTokenObject(
+        string $paymentTokenValue,
+        int $customerId,
+        int $storeId
+    ): PaymentTokenInterface {
+        $allowedPaymentCodes = $this->thirdPartyPaymentConfig->getAllowedMethods($storeId);
 
-        if (empty($paymentMethodCode)) {
-            throw new \UnexpectedValueException('No third party method configured');
+        $paymentToken = null;
+        foreach ($allowedPaymentCodes as $paymentCode) {
+            /** @var Magento\Vault\Api\Data\PaymentTokenInterface $paymentToken */
+            $paymentToken = $this->paymentTokenManagement->getByGatewayToken(
+                $paymentTokenValue,
+                $paymentCode,
+                $customerId
+            );
+
+            if ($paymentToken) {
+                break;
+            }
         }
 
-        return $paymentMethodCode;
+        if (!$paymentToken instanceof PaymentTokenInterface) {
+            throw new \UnexpectedValueException('Third party token is not found');
+        }
+
+        return $paymentToken;
     }
 
     /**

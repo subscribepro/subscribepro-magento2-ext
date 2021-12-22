@@ -134,7 +134,10 @@ class QuoteItemUpdater
     protected function getPlatformProduct($product, $websiteId = null)
     {
         try {
-            $platformProduct = $this->platformProductManager->getProduct($product->getData(ProductInterface::SKU), $websiteId);
+            $platformProduct = $this->platformProductManager->getProduct(
+                $product->getData(ProductInterface::SKU),
+                $websiteId
+            );
         } catch (NoSuchEntityException $e) {
             if ($this->appState->getMode() === AppState::MODE_DEVELOPER) {
                 throw $e;

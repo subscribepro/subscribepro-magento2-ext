@@ -48,7 +48,12 @@ class CartItemOptionsProcessorTest extends \PHPUnit\Framework\TestCase
 
         $this->assertSame(
             $buyRequestMock,
-            $this->cartItemOptionsProcessorPlugin->aroundGetBuyRequest($subjectMock, $proceed, $productType, $cartItemMock)
+            $this->cartItemOptionsProcessorPlugin->aroundGetBuyRequest(
+                $subjectMock,
+                $proceed,
+                $productType,
+                $cartItemMock
+            )
         );
     }
 
@@ -69,7 +74,12 @@ class CartItemOptionsProcessorTest extends \PHPUnit\Framework\TestCase
 
         $this->assertSame(
             $subscriptionBuyRequestMock,
-            $this->cartItemOptionsProcessorPlugin->aroundGetBuyRequest($subjectMock, $proceed, $productType, $cartItemMock)
+            $this->cartItemOptionsProcessorPlugin->aroundGetBuyRequest(
+                $subjectMock,
+                $proceed,
+                $productType,
+                $cartItemMock
+            )
         );
     }
 
@@ -95,7 +105,12 @@ class CartItemOptionsProcessorTest extends \PHPUnit\Framework\TestCase
 
         $this->assertSame(
             $buyRequestMock,
-            $this->cartItemOptionsProcessorPlugin->aroundGetBuyRequest($subjectMock, $proceed, $productType, $cartItemMock)
+            $this->cartItemOptionsProcessorPlugin->aroundGetBuyRequest(
+                $subjectMock,
+                $proceed,
+                $productType,
+                $cartItemMock
+            )
         );
     }
 
@@ -120,7 +135,12 @@ class CartItemOptionsProcessorTest extends \PHPUnit\Framework\TestCase
 
         $this->assertSame(
             $subscriptionBuyRequestMock,
-            $this->cartItemOptionsProcessorPlugin->aroundGetBuyRequest($subjectMock, $proceed, $productType, $cartItemMock)
+            $this->cartItemOptionsProcessorPlugin->aroundGetBuyRequest(
+                $subjectMock,
+                $proceed,
+                $productType,
+                $cartItemMock
+            )
         );
     }
 

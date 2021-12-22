@@ -90,6 +90,7 @@ class Order implements HttpPostActionInterface, CsrfAwareActionInterface
         }
 
         if ($this->orderCallbackConfig->isLogEnabled()) {
+            // phpcs:ignore Magento2.Functions.DiscouragedFunction.Discouraged
             $this->logger->debug(print_r(['orderRequest' => $orderRequest, 'response' => $responseData], true));
         }
 
@@ -108,7 +109,7 @@ class Order implements HttpPostActionInterface, CsrfAwareActionInterface
     {
         if (!empty($responseData['orderNumber']) && empty($responseData['errorItems'])) {
             $responseCode = self::HTTP_STATUS_SUCCESS;
-        } else if (!empty($responseData['orderNumber'])) {
+        } elseif (!empty($responseData['orderNumber'])) {
             $responseCode = self::HTTP_STATUS_PARTIAL_SUCCESS;
         } else {
             $responseCode = self::HTTP_STATUS_FAIL;

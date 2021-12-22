@@ -378,7 +378,8 @@ class QuoteItemTest extends \PHPUnit\Framework\TestCase
     {
         $buyRequestValue = json_encode([
             OptionProcessor::KEY_SUBSCRIPTION_OPTION => [
-                SubscriptionOptionInterface::CREATE_NEW_SUBSCRIPTION_AT_CHECKOUT => $subscriptionOption == PlatformProductInterface::SO_SUBSCRIPTION
+                SubscriptionOptionInterface::CREATE_NEW_SUBSCRIPTION_AT_CHECKOUT
+                    => $subscriptionOption == PlatformProductInterface::SO_SUBSCRIPTION
             ]
         ]);
 
@@ -480,7 +481,17 @@ class QuoteItemTest extends \PHPUnit\Framework\TestCase
     {
         return $this->getMockBuilder(QuoteItemModel::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getOptionByCode', 'addOption', 'getProduct', 'isObjectNew', 'setUpdatedAt', '__sleep', '__wakeup'])
+            ->setMethods(
+                [
+                    'getOptionByCode',
+                    'addOption',
+                    'getProduct',
+                    'isObjectNew',
+                    'setUpdatedAt',
+                    '__sleep',
+                    '__wakeup'
+                ]
+            )
             ->getMock();
     }
 

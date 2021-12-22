@@ -7,7 +7,8 @@
     <div class="field field-name-firstname required">
         <label class="label" for="first_name"><span><?= $block->escapeHtml(__('First Name')) ?></span></label>
         <div class="control">
-            <input type="text" id="first_name" name="billing_address[first_name]" class="input-text required-entry" data-validate="{required:true}"
+            <input type="text" id="first_name" name="billing_address[first_name]" class="input-text required-entry"
+                   data-validate="{required:true}"
                    value="<?= $block->escapeHtmlAttr($block->getFirstName()) ?>"
                    title="<?= $block->escapeHtmlAttr(__('First Name')) ?>">
         </div>
@@ -23,7 +24,8 @@
     <div class="field field-name-lastname required">
         <label class="label"  for="last_name"><span><?= $block->escapeHtml(__('Last Name')) ?></span></label>
         <div class="control">
-            <input type="text" id="last_name" name="billing_address[last_name]" class="input-text required-entry" data-validate="{required:true}"
+            <input type="text" id="last_name" name="billing_address[last_name]" class="input-text required-entry"
+                   data-validate="{required:true}"
                    value="<?= $block->escapeHtmlAttr($block->getLastName()) ?>"
                    title="<?= $block->escapeHtmlAttr(__('Last Name')) ?>">
         </div>
@@ -39,7 +41,8 @@
     <div class="field telephone required">
         <label class="label" for="telephone"><span><?= $block->escapeHtml(__('Phone Number')) ?></span></label>
         <div class="control">
-            <input type="text" id="telephone" name="billing_address[phone]" class="input-text required-entry" data-validate="{required:true}"
+            <input type="text" id="telephone" name="billing_address[phone]" class="input-text required-entry"
+                   data-validate="{required:true}"
                    value="<?= $block->escapeHtmlAttr($block->getTelephone()) ?>"
                    title="<?= $block->escapeHtmlAttr(__('Phone Number')) ?>">
         </div>
@@ -56,7 +59,8 @@
                    title="<?= $block->escapeHtmlAttr(__('Street Address')) ?>" />
             <div class="nested">
                 <div class="field additional">
-                    <label class="label" for="street2"><span><?= $block->escapeHtml(__('Street Address 2')) ?></span></label>
+                    <label class="label" for="street2">
+                        <span><?= $block->escapeHtml(__('Street Address 2')) ?></span></label>
                     <div class="control">
                         <input type="text" name="billing_address[street2]" id="street2" class="input-text"
                                value="<?= $block->escapeHtmlAttr($block->getStreetLine2()) ?>"
@@ -66,7 +70,9 @@
             </div>
             <div class="nested">
                 <div class="field additional">
-                    <label class="label" for="street3"><span><?= $block->escapeHtml(__('Street Address 3')) ?></span></label>
+                    <label class="label" for="street3">
+                        <span><?= $block->escapeHtml(__('Street Address 3')) ?></span>
+                    </label>
                     <div class="control">
                         <input type="text" name="billing_address[street3]" id="street3" class="input-text"
                                value="<?= $block->escapeHtmlAttr($block->getStreetLine3()) ?>"
@@ -102,7 +108,8 @@
     <div class="field zip required">
         <label class="label" for="postcode"><span><?= $block->escapeHtml(__('Zip/Postal Code')) ?></span></label>
         <div class="control">
-            <input type="text" name="billing_address[postcode]" id="postcode" class="input-text validate-zip-international"
+            <input type="text" name="billing_address[postcode]" id="postcode"
+                   class="input-text validate-zip-international"
                    value="<?= $block->escapeHtmlAttr($block->getPostCode()) ?>"
                    title="<?= $block->escapeHtmlAttr(__('Zip/Postal Code')) ?>" >
         </div>
@@ -124,9 +131,14 @@
                 "regionInputId": "#region",
                 "postcodeId": "#postcode",
                 "form": "#vault-edit",
-                "regionJson": <?= /* @noEscape */ $this->helper(\Magento\Directory\Helper\Data::class)->getRegionJson() ?>,
+                "regionJson": <?=
+                    // phpcs:ignore Magento2.Templates.ThisInTemplate.FoundHelper
+                    /* @noEscape */ $this->helper(\Magento\Directory\Helper\Data::class)->getRegionJson() ?>,
                 "defaultRegion": "<?= /* @noEscape */ $block->getRegionId() ?>",
-                "countriesWithOptionalZip": <?= /* @noEscape */ $this->helper(\Magento\Directory\Helper\Data::class)->getCountriesWithOptionalZip(true) ?>
+                "countriesWithOptionalZip": <?=
+                    // phpcs:ignore Magento2.Templates.ThisInTemplate.FoundHelper
+                    /* @noEscape */ $this->helper(\Magento\Directory\Helper\Data::class)
+                                        ->getCountriesWithOptionalZip(true) ?>
             }
         }
     }

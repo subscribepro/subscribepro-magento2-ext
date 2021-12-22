@@ -20,6 +20,7 @@ class PlatformMessage extends PlatformField
      */
     protected function _getElementHtml(AbstractElement $element)
     {
+        // phpcs:ignore Generic.Files.LineLength.TooLong
         return __('Global Subscribe Pro account cannot be configured because "Share Customer Accounts" setting is set to "Per Website".')
             . ' '
             . __('It is necessary to set up separate Subscribe Pro account for each website.');

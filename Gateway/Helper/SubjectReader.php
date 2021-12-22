@@ -41,7 +41,9 @@ class SubjectReader
         }
 
         if (!$subject['transaction'] instanceof TransactionInterface) {
-            throw new \InvalidArgumentException('The object is not a class \SubscribePro\Service\Transaction\TransactionInterface.');
+            throw new \InvalidArgumentException(
+                'The object is not a class \SubscribePro\Service\Transaction\TransactionInterface.'
+            );
         }
 
         return $subject['transaction'];

@@ -85,7 +85,9 @@ class Base extends \Magento\Rule\Model\Condition\AbstractCondition
      */
     protected function isItemFulfilsSubscription(\Magento\Framework\Model\AbstractModel $model)
     {
-        return $this->discountRuleHelper->isItemFulfilsSubscription($this->quoteItemHelper->getSubscriptionParams($model));
+        return $this->discountRuleHelper->isItemFulfilsSubscription(
+            $this->quoteItemHelper->getSubscriptionParams($model)
+        );
     }
 
     /**
@@ -149,6 +151,8 @@ class Base extends \Magento\Rule\Model\Condition\AbstractCondition
      */
     protected function subscriptionOptionsAreFalse(\Magento\Framework\Model\AbstractModel $model)
     {
-        return $this->discountRuleHelper->subscriptionOptionsAreFalse($this->quoteItemHelper->getSubscriptionParams($model));
+        return $this->discountRuleHelper->subscriptionOptionsAreFalse(
+            $this->quoteItemHelper->getSubscriptionParams($model)
+        );
     }
 }

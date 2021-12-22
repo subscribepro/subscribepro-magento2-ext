@@ -89,10 +89,6 @@ class InspectorRepositoryTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Catalog rule inspector must implement Swarming\SubscribePro\Model\CatalogRule\InspectorInterface interface
-     */
     public function testGetInspectorIfWrongClass()
     {
         $inspectorMock = $this->getMockBuilder(stdClass::class)
@@ -104,6 +100,10 @@ class InspectorRepositoryTest extends \PHPUnit\Framework\TestCase
             ->with($this->defaultInspector)
             ->willReturn($inspectorMock);
 
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            'Catalog rule inspector must implement Swarming\SubscribePro\Model\CatalogRule\InspectorInterface interface'
+        );
         $this->assertSame($inspectorMock, $this->inspectorRepository->get('product_type'));
     }
 }

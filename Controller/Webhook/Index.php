@@ -82,7 +82,9 @@ class Index extends Action implements CsrfAwareActionInterface
         // Get secret key from config
         if (!$this->validateWebhookHash()) {
             $result->setHttpResponseCode(Exception::HTTP_FORBIDDEN);
-            $result->setData(['error_message' => __('Could not validate webhook source using hash. Check secret key.')]);
+            $result->setData(
+                ['error_message' => __('Could not validate webhook source using hash. Check secret key.')]
+            );
             return $result;
         }
 
