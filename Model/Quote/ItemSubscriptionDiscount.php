@@ -67,7 +67,10 @@ class ItemSubscriptionDiscount
         $baseCartDiscount = $item->getBaseDiscountAmount();
 
         $platformProduct = $this->getPlatformProduct($item);
-        $baseSubscriptionDiscount = $subscriptionDiscount = $this->priceCurrency->convertAndRound($this->getBaseSubscriptionDiscount($platformProduct, $itemBasePrice, $item->getQty()), $storeId);
+        $baseSubscriptionDiscount = $subscriptionDiscount = $this->priceCurrency->convertAndRound(
+            $this->getBaseSubscriptionDiscount($platformProduct, $itemBasePrice, $item->getQty()),
+            $storeId
+        );
 
         if ($this->isOnlySubscriptionDiscount($baseSubscriptionDiscount, $baseCartDiscount, $storeId)) {
             $rollbackCallback($item);

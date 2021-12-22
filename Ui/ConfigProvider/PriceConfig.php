@@ -45,8 +45,10 @@ class PriceConfig
             'discountTax' => $this->taxConfig->discountTax(),
             'applyTaxAfterDiscount' => $this->taxConfig->applyTaxAfterDiscount(),
             'priceIncludesTax' => $this->taxConfig->priceIncludesTax(),
-            'displayPriceExcludingTax' => $this->taxConfig->getPriceDisplayType() == TaxConfig::DISPLAY_TYPE_EXCLUDING_TAX,
-            'displayPriceIncludingTax' => $this->taxConfig->getPriceDisplayType() == TaxConfig::DISPLAY_TYPE_INCLUDING_TAX,
+            'displayPriceExcludingTax'
+                => $this->taxConfig->getPriceDisplayType() == TaxConfig::DISPLAY_TYPE_EXCLUDING_TAX,
+            'displayPriceIncludingTax'
+                => $this->taxConfig->getPriceDisplayType() == TaxConfig::DISPLAY_TYPE_INCLUDING_TAX,
             'displayPriceBoth' => $this->taxConfig->getPriceDisplayType() == TaxConfig::DISPLAY_TYPE_BOTH,
             'applyDiscountToCatalogPrice' => $this->subscriptionDiscountConfig->isApplyDiscountToCatalogPrice(),
             'discountMessage' => $this->subscriptionDiscountConfig->getDiscountMessage(),

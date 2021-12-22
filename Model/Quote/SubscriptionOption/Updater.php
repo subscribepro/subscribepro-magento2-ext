@@ -40,7 +40,9 @@ class Updater
     public function update($quoteItem, $platformProduct, $subscriptionOption, $subscriptionInterval)
     {
         $createNewSubscriptionAtCheckout = false;
-        if (PlatformProductInterface::SO_SUBSCRIPTION == $this->getSubscriptionOption($platformProduct, $subscriptionOption)) {
+        
+        $subscriptionOption = $this->getSubscriptionOption($platformProduct, $subscriptionOption);
+        if (PlatformProductInterface::SO_SUBSCRIPTION == $subscriptionOption) {
             $this->validateIntervals($platformProduct);
             $this->validateQuantity($quoteItem, $platformProduct);
             $subscriptionInterval = $this->getSubscriptionInterval($quoteItem, $platformProduct, $subscriptionInterval);
@@ -51,9 +53,21 @@ class Updater
             $subscriptionInterval = null;
         }
 
-        $this->quoteItemHelper->setSubscriptionParam($quoteItem, SubscriptionOptionInterface::OPTION, $subscriptionOption);
-        $this->quoteItemHelper->setSubscriptionParam($quoteItem, SubscriptionOptionInterface::CREATE_NEW_SUBSCRIPTION_AT_CHECKOUT, $createNewSubscriptionAtCheckout);
-        $this->quoteItemHelper->setSubscriptionParam($quoteItem, SubscriptionOptionInterface::INTERVAL, $subscriptionInterval);
+        $this->quoteItemHelper->setSubscriptionParam(
+            $quoteItem,
+            SubscriptionOptionInterface::OPTION,
+            $subscriptionOption
+        );
+        $this->quoteItemHelper->setSubscriptionParam(
+            $quoteItem,
+            SubscriptionOptionInterface::CREATE_NEW_SUBSCRIPTION_AT_CHECKOUT,
+            $createNewSubscriptionAtCheckout
+        );
+        $this->quoteItemHelper->setSubscriptionParam(
+            $quoteItem,
+            SubscriptionOptionInterface::INTERVAL,
+            $subscriptionInterval
+        );
 
         return $this->getWarnings();
     }

@@ -53,7 +53,7 @@ class General
     public function isApplePayEnabled($websiteCode = null)
     {
         return $this->scopeConfig->isSetFlag(
-            'payment/subscribe_pro_apple_pay/enabled',
+            'payment/subscribe_pro_apple_pay/active',
             ScopeInterface::SCOPE_WEBSITE,
             $websiteCode
         );

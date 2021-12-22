@@ -40,13 +40,25 @@ class OrderItem
      */
     public function updateAdditionalOptions($orderItem, $subscriptionId = null)
     {
-        $createNewSubscriptionAtCheckout = $this->getSubscriptionParam($orderItem, SubscriptionOptionInterface::CREATE_NEW_SUBSCRIPTION_AT_CHECKOUT);
-        $itemFulfilsSubscription = $this->getSubscriptionParam($orderItem, SubscriptionOptionInterface::ITEM_FULFILS_SUBSCRIPTION);
-        $subscriptionId = $subscriptionId ?: $this->getSubscriptionParam($orderItem, SubscriptionOptionInterface::SUBSCRIPTION_ID);
+        $createNewSubscriptionAtCheckout = $this->getSubscriptionParam(
+            $orderItem,
+            SubscriptionOptionInterface::CREATE_NEW_SUBSCRIPTION_AT_CHECKOUT
+        );
+        $itemFulfilsSubscription = $this->getSubscriptionParam(
+            $orderItem,
+            SubscriptionOptionInterface::ITEM_FULFILS_SUBSCRIPTION
+        );
+        $subscriptionId = $subscriptionId ?: $this->getSubscriptionParam(
+            $orderItem,
+            SubscriptionOptionInterface::SUBSCRIPTION_ID
+        );
 
-        // getSubscriptionParam() returns null if the parameter isn't set, which would be the case for all of these for non-subscription product
-        // Whereas a subscription product that isn't selected for subscription would contain a false value for subscription-related parameters
-        // And a subscription product that is selected for subscription would contain non-false values for subscription-related parameters
+        // getSubscriptionParam() returns null if the parameter isn't set,
+        // which would be the case for all of these for non-subscription product
+        // Whereas a subscription product that isn't selected for subscription would contain
+        // a false value for subscription-related parameters
+        // And a subscription product that is selected for subscription would contain
+        // non-false values for subscription-related parameters
         if ($createNewSubscriptionAtCheckout === null
             && $itemFulfilsSubscription === null
             && $subscriptionId === null
@@ -97,7 +109,10 @@ class OrderItem
     {
         $additionalOptions = $this->getAdditionalOptions($orderItem);
         $additionalOptions = array_filter($additionalOptions, function ($option) {
-            return !in_array($option['label'], [(string)__('Delivery'), (string)__('Regular Delivery'), (string)__('Subscription Id')]);
+            return !in_array(
+                $option['label'],
+                [(string)__('Delivery'), (string)__('Regular Delivery'), (string)__('Subscription Id')]
+            );
         });
         sort($additionalOptions);
         $this->setAdditionalOptions($orderItem, $additionalOptions);
@@ -143,7 +158,9 @@ class OrderItem
     protected function getSubscriptionParams($orderItem)
     {
         $buyRequest = $orderItem->getProductOptionByCode('info_buyRequest');
-        return isset($buyRequest[OptionProcessor::KEY_SUBSCRIPTION_OPTION]) ? $buyRequest[OptionProcessor::KEY_SUBSCRIPTION_OPTION] : [];
+        return isset($buyRequest[OptionProcessor::KEY_SUBSCRIPTION_OPTION])
+            ? $buyRequest[OptionProcessor::KEY_SUBSCRIPTION_OPTION]
+            : [];
     }
 
     /**

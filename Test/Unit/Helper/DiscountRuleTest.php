@@ -127,7 +127,10 @@ class DiscountRuleTest extends \PHPUnit\Framework\TestCase
      */
     public function testIsItemNewOrFulfillingSubscription($expected, $subscriptionParams)
     {
-        $this->assertEquals($expected, $this->discountRuleHelper->isItemNewOrFulfillingSubscription($subscriptionParams));
+        $this->assertEquals(
+            $expected,
+            $this->discountRuleHelper->isItemNewOrFulfillingSubscription($subscriptionParams)
+        );
     }
 
     /**
@@ -354,7 +357,10 @@ class DiscountRuleTest extends \PHPUnit\Framework\TestCase
      */
     public function testValidateStatus($expected, $subscriptionParams, $conditionValue, $op)
     {
-        $this->assertEquals($expected, $this->discountRuleHelper->validateStatus($subscriptionParams, $conditionValue, $op));
+        $this->assertEquals(
+            $expected,
+            $this->discountRuleHelper->validateStatus($subscriptionParams, $conditionValue, $op)
+        );
     }
 
     /**

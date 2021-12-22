@@ -76,7 +76,8 @@ class Availability implements ObserverInterface
         if ($isAvailable) {
             $isActiveNonSubscription = $methodInstance->getConfigData(Config::KEY_ACTIVE_NON_SUBSCRIPTION);
 
-            // For a subscription order, we filter out all payment methods except the Subscribe Pro and (sometimes) free methods
+            // For a subscription order, we filter out all payment methods
+            // except the Subscribe Pro and (sometimes) free methods
             if ($this->quoteHelper->hasSubscription($quote)) {
                 switch ($methodCode) {
                     case Free::PAYMENT_METHOD_FREE_CODE:

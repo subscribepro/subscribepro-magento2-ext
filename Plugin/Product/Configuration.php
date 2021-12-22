@@ -41,7 +41,9 @@ class Configuration
         \Magento\Catalog\Model\Product\Configuration\Item\ItemInterface $item
     ) {
         $options = [];
-        if ($this->productHelper->isSubscriptionEnabled($item->getProduct()) && !$item instanceof SubscriptionOptionItem) {
+        if ($this->productHelper->isSubscriptionEnabled($item->getProduct())
+            && !$item instanceof SubscriptionOptionItem
+        ) {
             $options = $this->getSubscriptionOptions($item);
         }
 

@@ -140,7 +140,10 @@ class ConfigProviderTest extends \PHPUnit\Framework\TestCase
         $this->generalConfigMock->expects($this->once())->method('isEnabled')->willReturn(true);
 
         $this->gatewayConfigMock->expects($this->once())->method('isActive')->willReturn($isActive);
-        $this->gatewayConfigMock->expects($this->once())->method('getAvailableCardTypes')->willReturn($availableCardTypes);
+        $this->gatewayConfigMock
+            ->expects($this->once())
+            ->method('getAvailableCardTypes')
+            ->willReturn($availableCardTypes);
         $this->gatewayConfigMock->expects($this->once())->method('getCcTypesMapper')->willReturn($ccTypesMapper);
         $this->gatewayConfigMock->expects($this->once())->method('hasVerification')->willReturn($hasVerification);
 

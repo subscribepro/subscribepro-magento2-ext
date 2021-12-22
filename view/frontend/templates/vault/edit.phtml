@@ -14,12 +14,16 @@
 
     <div class="actions-toolbar">
         <div class="primary">
-            <button type="submit" class="action save primary" data-action="save-vault" title="<?= $block->escapeHtml(__('Save Card')) ?>">
+            <button type="submit"
+                    class="action save primary"
+                    data-action="save-vault"
+                    title="<?= $block->escapeHtml(__('Save Card')) ?>">
                 <span><?= $block->escapeHtml(__('Save Card')) ?></span>
             </button>
         </div>
         <div class="secondary">
-            <a class="action back" href="<?= $block->escapeUrl($block->getBackUrl()) ?>"><span><?= $block->escapeHtml(__('Go back')) ?></span></a>
+            <a class="action back" href="<?=
+            $block->escapeUrl($block->getBackUrl()) ?>"><span><?= $block->escapeHtml(__('Go back')) ?></span></a>
         </div>
     </div>
 </form>

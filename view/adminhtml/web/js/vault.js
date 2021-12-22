@@ -2,7 +2,7 @@
 define([
     'jquery',
     'uiComponent'
-], function ($, Class) {
+], function($, Class) {
     'use strict';
 
     return Class.extend({

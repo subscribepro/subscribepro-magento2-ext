@@ -112,7 +112,9 @@ class Subscription extends \Magento\Catalog\Block\Product\AbstractProduct
      */
     protected function _beforeToHtml()
     {
-        if ($this->subscriptionDiscountConfig->isEnabled() && $this->productHelper->isSubscriptionEnabled($this->getProduct())) {
+        if ($this->subscriptionDiscountConfig->isEnabled()
+            && $this->productHelper->isSubscriptionEnabled($this->getProduct())
+        ) {
             $this->initJsLayout();
         } else {
             $this->setTemplate('');
@@ -154,7 +156,8 @@ class Subscription extends \Magento\Catalog\Block\Product\AbstractProduct
 
         $jsLayout = array_merge_recursive($this->jsLayout, $data);
         if ($this->isPriceHidden()) {
-            $jsLayout['components']['subscription-container']['component'] = 'Swarming_SubscribePro/js/view/product/subscription-msrp';
+            $class = 'Swarming_SubscribePro/js/view/product/subscription-msrp';
+            $jsLayout['components']['subscription-container']['component'] = $class;
             $jsLayout['components']['subscription-container']['config']['msrpPrice'] = $this->getMsrpPrice();
         }
 
@@ -177,7 +180,11 @@ class Subscription extends \Magento\Catalog\Block\Product\AbstractProduct
         $platformProduct->setPrice($priceInfo->getPrice(RegularPrice::PRICE_CODE)->getValue());
         $platformProduct->setFinalPrice($priceInfo->getPrice(FinalPrice::PRICE_CODE)->getValue());
         $platformProduct->setTaxRate(
-            $this->taxCalculation->getCalculatedRate($this->getProduct()->getCustomAttribute(self::TAX_CLASS_ID)->getValue())
+            $this->taxCalculation->getCalculatedRate(
+                $this->getProduct()
+                    ->getCustomAttribute(self::TAX_CLASS_ID)
+                    ->getValue()
+            )
         );
 
         if ($this->isCart()) {

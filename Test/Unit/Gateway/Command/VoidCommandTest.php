@@ -36,7 +36,7 @@ class VoidCommandTest extends AbstractCommand
      */
     public function testExecuteIfFailToProcessTransaction(array $requestData)
     {
-        $exception = new \Exception('Referenced transaction id is not passed');
+        $exception = new \InvalidArgumentException('Referenced transaction id is not passed');
         $this->executeSetPlatformWebsite($this->subjectReaderMock, $this->storeManagerMock, $this->platformMock);
         $this->processTransactionFail($requestData, $exception);
         $this->voidCommand->execute($this->commandSubject);

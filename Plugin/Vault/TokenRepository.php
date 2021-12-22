@@ -38,8 +38,11 @@ class TokenRepository
      * @param \Magento\Vault\Api\Data\PaymentTokenInterface $paymentToken
      * @return bool
      */
-    public function aroundDelete(PaymentTokenRepositoryInterface $subject, \Closure $proceed, PaymentTokenInterface $paymentToken)
-    {
+    public function aroundDelete(
+        PaymentTokenRepositoryInterface $subject,
+        \Closure $proceed,
+        PaymentTokenInterface $paymentToken
+    ) {
         $result = $proceed($paymentToken);
 
         if ($paymentToken->getPaymentMethodCode() == ConfigProvider::CODE && $paymentToken->getGatewayToken()) {

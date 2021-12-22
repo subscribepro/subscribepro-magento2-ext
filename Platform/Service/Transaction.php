@@ -101,8 +101,12 @@ class Transaction extends AbstractService
      * @throws \SubscribePro\Exception\EntityInvalidDataException
      * @throws \SubscribePro\Exception\HttpException
      */
-    public function authorizeByToken($token, TransactionInterface $transaction, AddressInterface $platformAddress = null, $websiteId = null)
-    {
+    public function authorizeByToken(
+        $token,
+        TransactionInterface $transaction,
+        AddressInterface $platformAddress = null,
+        $websiteId = null
+    ) {
         $metadata = $this->metaService->getData();
         return $this->getService($websiteId)->authorizeByToken($token, $transaction, $platformAddress, $metadata);
     }
@@ -116,8 +120,12 @@ class Transaction extends AbstractService
      * @throws \SubscribePro\Exception\EntityInvalidDataException
      * @throws \SubscribePro\Exception\HttpException
      */
-    public function purchaseByToken($token, TransactionInterface $transaction, AddressInterface $platformAddress = null, $websiteId = null)
-    {
+    public function purchaseByToken(
+        $token,
+        TransactionInterface $transaction,
+        AddressInterface $platformAddress = null,
+        $websiteId = null
+    ) {
         $metadata = $this->metaService->getData();
         return $this->getService($websiteId)->purchaseByToken($token, $transaction, $platformAddress, $metadata);
     }

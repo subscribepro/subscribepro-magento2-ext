@@ -50,8 +50,10 @@ class SalesRuleValidator
         }
 
         // That may sound wrong but:
-        // For a flat discount of course, if the amount is 5 and a quantity is 4 we want to discount 20, and we don't care what the base price is.
-        // And for a percentage if the amount is 5% (0.05) and the quantity is 4 and the item base price is 20, we want to multiply 4*20 (80) and then multiply 80*.05 (4)
+        // For a flat discount of course, if the amount is 5 and a quantity is 4 we want to discount 20,
+        // and we don't care what the base price is.
+        // And for a percentage if the amount is 5% (0.05) and the quantity is 4 and the item base price is 20,
+        // we want to multiply 4*20 (80) and then multiply 80*.05 (4)
         // Since multiple multiplication operations can be done in any order it works out using the above logic
         return $subscriptionDiscount;
     }

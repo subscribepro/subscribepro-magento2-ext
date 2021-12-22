@@ -42,7 +42,10 @@ class TransactionIdHandler implements HandlerInterface
             $orderPayment->setIsTransactionClosed($this->shouldCloseTransaction());
             $orderPayment->setShouldCloseParentTransaction($this->shouldCloseParentTransaction($orderPayment));
 
-            $orderPayment->setTransactionAdditionalInfo(Transaction::RAW_DETAILS, $this->getTransactionDetails($transaction));
+            $orderPayment->setTransactionAdditionalInfo(
+                Transaction::RAW_DETAILS,
+                $this->getTransactionDetails($transaction)
+            );
         }
     }
 

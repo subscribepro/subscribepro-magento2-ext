@@ -58,7 +58,11 @@ abstract class AbstractHandler implements HandlerInterface
 
         if (!$paymentToken) {
             throw new NoSuchEntityException(
-                __('Saved card is not found for payment_id=%1 and customer_id=%2', $event->getEventData('payment_profile_id'), $customerId)
+                __(
+                    'Saved card is not found for payment_id=%1 and customer_id=%2',
+                    $event->getEventData('payment_profile_id'),
+                    $customerId
+                )
             );
         }
 

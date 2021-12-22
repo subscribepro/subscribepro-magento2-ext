@@ -121,7 +121,7 @@ class PaymentAuthorized implements HttpPostActionInterface, CsrfAwareActionInter
                 'redirectUrl' => $urlToRedirect
             ];
             $result->setData($response);
-
+            // phpcs:ignore Magento2.Exceptions.ThrowCatch.ThrowCatch
         } catch (LocalizedException $e) {
             if (isset($quoteId)) {
                 $this->logger->error('QuoteId: ' . $quoteId);

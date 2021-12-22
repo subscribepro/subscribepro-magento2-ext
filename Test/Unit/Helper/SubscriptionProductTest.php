@@ -211,7 +211,10 @@ class SubscriptionProductTest extends \PHPUnit\Framework\TestCase
         $platformProductMock->expects($this->once())->method('setImageUrl')->with($imageUrl)->willReturnSelf();
         $platformProductMock->expects($this->once())->method('setPrice')->with($convertedFinalPrice)->willReturnSelf();
         $platformProductMock->expects($this->once())->method('setTaxRate')->with($taxRate)->willReturnSelf();
-        $platformProductMock->expects($this->once())->method('setIsCatalogRuleApplied')->with($isCatalogRuleApplied)->willReturnSelf();
+        $platformProductMock->expects($this->once())
+            ->method('setIsCatalogRuleApplied')
+            ->with($isCatalogRuleApplied)
+            ->willReturnSelf();
         $platformProductMock->expects($this->once())->method('setOptionList')->with($options)->willReturnSelf();
 
         $subscriptionMock = $this->createSubscriptionMock();
@@ -307,7 +310,10 @@ class SubscriptionProductTest extends \PHPUnit\Framework\TestCase
         $platformProductMock->expects($this->once())->method('setImageUrl')->with($imageUrl)->willReturnSelf();
         $platformProductMock->expects($this->once())->method('setPrice')->with($convertedFinalPrice)->willReturnSelf();
         $platformProductMock->expects($this->once())->method('setTaxRate')->with($taxRate)->willReturnSelf();
-        $platformProductMock->expects($this->once())->method('setIsCatalogRuleApplied')->with($isCatalogRuleApplied)->willReturnSelf();
+        $platformProductMock->expects($this->once())
+            ->method('setIsCatalogRuleApplied')
+            ->with($isCatalogRuleApplied)
+            ->willReturnSelf();
         $platformProductMock->expects($this->once())->method('setOptionList')->with($options)->willReturnSelf();
 
         $subscriptionMock = $this->createSubscriptionMock();
@@ -407,7 +413,10 @@ class SubscriptionProductTest extends \PHPUnit\Framework\TestCase
         $platformProductMock->expects($this->once())->method('setImageUrl')->with($imageUrl)->willReturnSelf();
         $platformProductMock->expects($this->once())->method('setPrice')->with($convertedFinalPrice)->willReturnSelf();
         $platformProductMock->expects($this->once())->method('setTaxRate')->with($taxRate)->willReturnSelf();
-        $platformProductMock->expects($this->once())->method('setIsCatalogRuleApplied')->with($isCatalogRuleApplied)->willReturnSelf();
+        $platformProductMock->expects($this->once())
+            ->method('setIsCatalogRuleApplied')
+            ->with($isCatalogRuleApplied)
+            ->willReturnSelf();
         $platformProductMock->expects($this->once())->method('setOptionList')->with($options)->willReturnSelf();
 
         $subscriptionMock = $this->createSubscriptionMock();
@@ -502,7 +511,10 @@ class SubscriptionProductTest extends \PHPUnit\Framework\TestCase
         $platformProduct1Mock->expects($this->once())->method('setImageUrl')->with($imageUrl)->willReturnSelf();
         $platformProduct1Mock->expects($this->once())->method('setPrice')->with($convertedFinalPrice)->willReturnSelf();
         $platformProduct1Mock->expects($this->once())->method('setTaxRate')->with($taxRate)->willReturnSelf();
-        $platformProduct1Mock->expects($this->once())->method('setIsCatalogRuleApplied')->with($isCatalogRuleApplied)->willReturnSelf();
+        $platformProduct1Mock->expects($this->once())
+            ->method('setIsCatalogRuleApplied')
+            ->with($isCatalogRuleApplied)
+            ->willReturnSelf();
         $platformProduct1Mock->expects($this->once())->method('setOptionList')->with($options1)->willReturnSelf();
 
         $product2Sku = 'product2_sku';

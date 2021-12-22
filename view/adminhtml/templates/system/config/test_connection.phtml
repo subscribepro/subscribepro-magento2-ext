@@ -2,7 +2,8 @@
 /** @var \Swarming\SubscribePro\Block\Adminhtml\System\Config\TestConnection $block */
 ?>
 <div class="actions actions-test-connection">
-    <button onclick="testConnection(); return false;" class="action-test-connection" type="button" id="<?= $block->getHtmlId() ?>">
+    <button onclick="testConnection(); return false;
+        " class="action-test-connection" type="button" id="<?= $block->getHtmlId() ?>">
         <span><?= $block->escapeHtml($block->getButtonLabel()) ?></span>
     </button>
     &nbsp;

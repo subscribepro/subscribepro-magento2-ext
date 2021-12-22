@@ -76,7 +76,10 @@ class Vault
             $profile->getPaymentToken()
         );
 
-        if ($this->gatewayConfig->isThreeDSActive() && $this->gatewayConfig->getThreeDsType() === ThreeDsType::GATEWAY_INDEPENDENT && !$this->paymentProfileThreeDs->isThreeDsAuthenticated($profile)) {
+        if ($this->gatewayConfig->isThreeDSActive()
+            && $this->gatewayConfig->getThreeDsType() === ThreeDsType::GATEWAY_INDEPENDENT
+            && !$this->paymentProfileThreeDs->isThreeDsAuthenticated($profile)
+        ) {
             $tokenDetails = $this->markPendingTokenDetails($tokenDetails);
         }
 
@@ -97,7 +100,10 @@ class Vault
         $tokenDetails['expirationDate'] = $profile->getCreditcardMonth() . '/' . $profile->getCreditcardYear();
 
         unset($tokenDetails['state']);
-        if ($this->gatewayConfig->isThreeDSActive() && $this->gatewayConfig->getThreeDsType() === ThreeDsType::GATEWAY_INDEPENDENT && !$this->paymentProfileThreeDs->isThreeDsAuthenticated($profile)) {
+        if ($this->gatewayConfig->isThreeDSActive()
+            && $this->gatewayConfig->getThreeDsType() === ThreeDsType::GATEWAY_INDEPENDENT
+            && !$this->paymentProfileThreeDs->isThreeDsAuthenticated($profile)
+        ) {
             $tokenDetails['state'] = self::STATE_PENDING;
         }
 

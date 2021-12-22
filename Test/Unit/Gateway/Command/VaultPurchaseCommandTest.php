@@ -36,7 +36,7 @@ class VaultPurchaseCommandTest extends AbstractCommand
      */
     public function testExecuteIfFailToProcessTransaction(array $requestData)
     {
-        $exception = new \Exception('Payment profile was not passed');
+        $exception = new \InvalidArgumentException('Payment profile was not passed');
         $this->executeSetPlatformWebsite($this->subjectReaderMock, $this->storeManagerMock, $this->platformMock);
         $this->processTransactionFail($requestData, $exception);
         $this->vaultPurchaseCommand->execute($this->commandSubject);

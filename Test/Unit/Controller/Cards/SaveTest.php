@@ -58,15 +58,14 @@ class SaveTest extends \PHPUnit\Framework\TestCase
     protected $vaultFormValidator;
 
      /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|\Swarming\SubscribePro\Gateway\Command\AuthorizeCommand
-     */
+      * @var \PHPUnit_Framework_MockObject_MockObject|\Swarming\SubscribePro\Gateway\Command\AuthorizeCommand
+      */
     protected $walletAuthorizeCommand;
 
      /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Store\Model\StoreManagerInterface
-     */
+      * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Store\Model\StoreManagerInterface
+      */
     protected $storeManager;
-
 
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Framework\Message\ManagerInterface
@@ -242,7 +241,7 @@ class SaveTest extends \PHPUnit\Framework\TestCase
 
     public function testExecuteIfFailToCreateProfileWithGeneralException()
     {
-        $exception = new \Exception('error message');
+        $exception = new \InvalidArgumentException('error message');
 
         $params = ['request params'];
         $customerId = 53445;
@@ -413,7 +412,7 @@ class SaveTest extends \PHPUnit\Framework\TestCase
 
     public function testExecuteIfFailToUpdateProfileWithGeneralException()
     {
-        $exception = new \Exception('error message');
+        $exception = new \InvalidArgumentException('error message');
 
         $publicHash = 'hash';
         $params = [

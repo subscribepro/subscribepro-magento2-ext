@@ -85,7 +85,10 @@ class DataBuilder
 
         if (!empty($productOptionExtensionAttributes)) {
             $quoteItemData['product_option']['extension_attributes'] =
-                array_merge($quoteItemData['product_option']['extension_attributes'], $productOptionExtensionAttributes);
+                array_merge(
+                    $quoteItemData['product_option']['extension_attributes'],
+                    $productOptionExtensionAttributes
+                );
         }
 
         return $this->serviceInputProcessor->convertValue(

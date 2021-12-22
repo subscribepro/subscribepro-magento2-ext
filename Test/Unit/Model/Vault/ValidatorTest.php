@@ -97,8 +97,12 @@ class ValidatorTest extends \PHPUnit\Framework\TestCase
      * @expectedException \Magento\Framework\Exception\LocalizedException
      * @expectedExceptionMessage Not all billing address fields are filled.
      */
-    public function testValidateIfNotValidAddressWithoutRegionUpdate($profileData, $country, $isRegionRequired, $isZipCodeOptional)
-    {
+    public function testValidateIfNotValidAddressWithoutRegionUpdate(
+        $profileData,
+        $country,
+        $isRegionRequired,
+        $isZipCodeOptional
+    ) {
         $this->directoryDataMock->expects($this->any())->method('isRegionRequired')
             ->with($country)
             ->willReturn($isRegionRequired);
@@ -266,8 +270,12 @@ class ValidatorTest extends \PHPUnit\Framework\TestCase
      * @param bool $isZipCodeOptional
      * @dataProvider validateIfValidAddressWithoutRegionUpdateDataProvider
      */
-    public function testValidateIfValidAddressWithoutRegionUpdate($profileData, $country, $isRegionRequired, $isZipCodeOptional)
-    {
+    public function testValidateIfValidAddressWithoutRegionUpdate(
+        $profileData,
+        $country,
+        $isRegionRequired,
+        $isZipCodeOptional
+    ) {
         $this->directoryDataMock->expects($this->any())->method('isRegionRequired')
             ->with($country)
             ->willReturn($isRegionRequired);
