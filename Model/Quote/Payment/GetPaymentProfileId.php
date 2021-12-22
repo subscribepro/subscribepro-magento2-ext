@@ -127,6 +127,7 @@ class GetPaymentProfileId
             AddressInterface::COMPANY => $billingAddress->getCompany(),
             AddressInterface::STREET1 => $billingAddress->getStreetLine(1),
             AddressInterface::STREET2 => $billingAddress->getStreetLine(2),
+            AddressInterface::STREET3 => $billingAddress->getStreetLine(3),
             AddressInterface::CITY => $billingAddress->getCity(),
             AddressInterface::REGION => $billingAddress->getRegionCode(),
             AddressInterface::POSTCODE => $billingAddress->getPostcode(),

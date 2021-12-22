@@ -77,7 +77,8 @@ class Subscription extends \Magento\Checkout\Block\Cart\Additional\Info
     protected function _beforeToHtml()
     {
         if (!$this->generalConfig->isEnabled()
-            || !$this->productHelper->isSubscriptionEnabled($this->getItem()->getProduct())) {
+            || !$this->productHelper->isSubscriptionEnabled($this->getItem()->getProduct())
+        ) {
             $this->canRender = false;
         } else {
             $this->initJsLayout();

@@ -88,7 +88,7 @@
                     </depends>
                 </field>
 
-                <field id="allowed_method" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="allowed_method" translate="label comment" type="multiselect" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Allowed Third Party</label>
                     <source_model>Swarming\SubscribePro\Model\Config\Source\ThirdPartyPaymentMethod</source_model>
                     <depends>
@@ -148,6 +148,15 @@
                         <field id="swarming_subscribepro/general/enabled">1</field>
                     </depends>
                     <validate>validate-number validate-greater-than-zero</validate>
+                </field>
+
+                <field id="use_child_sku_when_configurable" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                    <label>Use Child Sku For Subscription When Configurable</label>
+                    <comment>When enabled, creating a subscription for a configurable product uses the child SKU instead of the configurable product SKU</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="swarming_subscribepro/general/enabled">1</field>
+                    </depends>
                 </field>
             </group>
             <group id="subscription_discount" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
