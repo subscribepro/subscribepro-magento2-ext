@@ -1,14 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Swarming\SubscribePro\Observer\Payment;
 
 use Magento\Framework\Event\Observer;
 use Magento\Quote\Api\Data\PaymentInterface;
-use Magento\Vault\Api\Data\PaymentTokenInterface;
-use SubscribePro\Service\Transaction\TransactionInterface;
-use Swarming\SubscribePro\Gateway\Request\VaultDataBuilder;
-use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
 use Magento\Quote\Model\Quote\Payment as QuotePayment;
+use Magento\Vault\Api\Data\PaymentTokenInterface;
+use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
+use Swarming\SubscribePro\Gateway\Config\ApplePayConfigProvider;
+use SubscribePro\Service\Transaction\TransactionInterface;
 
 class TokenAssigner extends \Magento\Payment\Observer\AbstractDataAssignObserver
 {
@@ -36,11 +38,10 @@ class TokenAssigner extends \Magento\Payment\Observer\AbstractDataAssignObserver
 
         $additionalData = $dataObject->getData(PaymentInterface::KEY_ADDITIONAL_DATA);
 
-        if (!is_array($additionalData) || !isset($additionalData[VaultDataBuilder::PAYMENT_PROFILE_ID])) {
+        $paymentProfileId = $additionalData['profile_id'] ?? null;
+        if (empty($paymentProfileId)) {
             return;
         }
-
-        $profileId = $additionalData[VaultDataBuilder::PAYMENT_PROFILE_ID];
 
         /** @var \Magento\Quote\Model\Quote\Payment $paymentModel */
         $paymentModel = $this->readPaymentModelArgument($observer);
@@ -54,7 +55,11 @@ class TokenAssigner extends \Magento\Payment\Observer\AbstractDataAssignObserver
             return;
         }
 
-        $paymentToken = $this->paymentTokenManagement->getByGatewayToken($profileId, ConfigProvider::CODE, $customerId);
+        $paymentToken = $this->paymentTokenManagement->getByGatewayToken(
+            $paymentProfileId,
+            $this->getPaymentMethodCode($additionalData),
+            $customerId
+        );
         if ($paymentToken === null) {
             return;
         }
@@ -75,5 +80,27 @@ class TokenAssigner extends \Magento\Payment\Observer\AbstractDataAssignObserver
                 $additionalData[TransactionInterface::SUBSCRIBE_PRO_ORDER_TOKEN]
             );
         }
+    }
+
+    /**
+     * @param array $additionalData
+     * @return string
+     */
+    private function getPaymentMethodCode(array $additionalData): string
+    {
+        $paymentMethodType = $additionalData['payment_method_type'] ?? '';
+
+        switch ($paymentMethodType) {
+            case 'apple_pay':
+                $paymentMethodCode = ApplePayConfigProvider::CODE;
+                break;
+            case 'credit_card':
+            default:
+                $paymentMethodCode = ConfigProvider::CODE;
+                break;
+
+        }
+
+        return $paymentMethodCode;
     }
 }

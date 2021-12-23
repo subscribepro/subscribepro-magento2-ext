@@ -151,6 +151,7 @@ class DataBuilder
         $quotePayment->setMethod($paymentMethodVault);
         $quotePayment->getMethodInstance();
 
+        $paymentAdditionalData['payment_method_type'] = $this->getValue($paymentData, 'paymentMethodType');
         $paymentAdditionalData['profile_id'] = $this->getValue($paymentData, 'paymentProfileId');
         $paymentAdditionalData['cc_type'] = $this->getValue($paymentData, 'creditcardType');
         $paymentAdditionalData['cc_number'] = $this->getValue($paymentData, 'creditcardLastDigits');
@@ -180,7 +181,7 @@ class DataBuilder
 
         $paymentToken = null;
         foreach ($allowedPaymentCodes as $paymentCode) {
-            /** @var Magento\Vault\Api\Data\PaymentTokenInterface $paymentToken */
+            /** @var \Magento\Vault\Api\Data\PaymentTokenInterface $paymentToken */
             $paymentToken = $this->paymentTokenManagement->getByGatewayToken(
                 $paymentTokenValue,
                 $paymentCode,
