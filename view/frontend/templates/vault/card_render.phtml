@@ -12,7 +12,6 @@ $ccNumberView = $block->escapeHtml($block->getNumberLast4Digits());
         <?php if ($block->isPending()): ?>
             <sub class="card-pending"><?= $block->escapeHtml(__('pending')) ?></sub>
         <?php endif; ?>
-        <?= $block->escapeHtml($block->getApplePayLabel()) ?>
     </td>
     <td data-th="<?= $block->escapeHtml(__('Expiration Date')) ?>" class="col card-expire">
         <?= $block->escapeHtml($block->getExpDate()) ?>
