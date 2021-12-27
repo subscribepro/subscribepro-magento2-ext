@@ -36,8 +36,12 @@ class ShipperMapperPlugin
      * @param \Swarming\SubscribePro\Helper\QuoteItem $item
      * @return array
      */
-    public function aroundPopulateAttributes(\ShipperHQ\Shipper\Model\Carrier\Processor\ShipperMapper $mapper, callable $proceed, $reqdAttributeNames, $item)
-    {
+    public function aroundPopulateAttributes(
+        \ShipperHQ\Shipper\Model\Carrier\Processor\ShipperMapper $mapper,
+        callable $proceed,
+        $reqdAttributeNames,
+        $item
+    ) {
         $attributes = $proceed($reqdAttributeNames, $item);
 
         if ($recurringShippingCode = $this->determineSubscriptionCode($item)) {

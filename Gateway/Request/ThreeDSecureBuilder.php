@@ -56,9 +56,13 @@ class ThreeDSecureBuilder implements BuilderInterface
         $data = [];
         if ($paymentMethod->getConfigData(GatewayConfig::KEY_THREE_DS_ACTIVE)) {
             $data[TransactionInterface::USE_THREE_DS] = true;
-            $data[TransactionInterface::THREE_DS_REDIRECT_URL] = $this->urlBuilder->getUrl('subscribepro/payment/status');
+            $data[TransactionInterface::THREE_DS_REDIRECT_URL] = $this->urlBuilder->getUrl(
+                'subscribepro/payment/status'
+            );
             $data[TransactionInterface::THREE_DS_TYPE] = $this->gatewayConfig->getThreeDsType();
-            $data[TransactionInterface::BROWSER_INFO] = $payment->getAdditionalInformation(TransactionInterface::BROWSER_INFO);
+            $data[TransactionInterface::BROWSER_INFO] = $payment->getAdditionalInformation(
+                TransactionInterface::BROWSER_INFO
+            );
         }
         return $data;
     }

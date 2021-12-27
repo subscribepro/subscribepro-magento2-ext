@@ -3,14 +3,21 @@
 ?>
 <?php if ($block->hasFailedSubscriptions()): ?>
     <p>
-        <?= $block->escapeHtml(__('Failed to create some of your product subscriptions! Please contact support for assistance.')) ?>
+        <?= $block->escapeHtml(__(
+            'Failed to create some of your product subscriptions! Please contact support for assistance.'
+        )) ?>
     </p>
 <?php endif; ?>
 
 <?php if ($block->getCountSubscriptions()): ?>
     <p>
-        <?= $block->escapeHtml(__('You will receive a separate email confirmation for your product subscription(s).')) ?>
-        <?= $block->escapeHtml(__('Click here to <a href="%1">manage your product subscriptions</a>.', $block->getUrl('swarming_subscribepro/customer/subscriptions')), ['a']) ?>
+        <?= $block->escapeHtml(__(
+            'You will receive a separate email confirmation for your product subscription(s).'
+        )) ?>
+        <?= $block->escapeHtml(__(
+            'Click here to <a href="%1">manage your product subscriptions</a>.',
+            $block->getUrl('swarming_subscribepro/customer/subscriptions')
+        ), ['a']) ?>
     </p>
 <?php endif; ?>
 <?php

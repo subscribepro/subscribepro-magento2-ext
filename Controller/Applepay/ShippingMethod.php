@@ -91,6 +91,7 @@ class ShippingMethod implements HttpPostActionInterface, CsrfAwareActionInterfac
             $result->setData($response);
 
             return $result;
+            // phpcs:ignore Magento2.Exceptions.ThrowCatch.ThrowCatch
         } catch (LocalizedException $e) {
             $this->logger->error($e->getMessage());
             $response = [

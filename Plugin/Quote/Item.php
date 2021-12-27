@@ -34,8 +34,12 @@ class Item
      */
     protected function compareOptions($options1, $options2)
     {
-        $subscriptionOption1 = isset($options1['info_buyRequest']) ? $this->getParam($options1['info_buyRequest'], SubscriptionOptionInterface::OPTION) : null;
-        $subscriptionOption2 = isset($options2['info_buyRequest']) ? $this->getParam($options2['info_buyRequest'], SubscriptionOptionInterface::OPTION) : null;
+        $subscriptionOption1 = isset($options1['info_buyRequest'])
+            ? $this->getParam($options1['info_buyRequest'], SubscriptionOptionInterface::OPTION)
+            : null;
+        $subscriptionOption2 = isset($options2['info_buyRequest'])
+            ? $this->getParam($options2['info_buyRequest'], SubscriptionOptionInterface::OPTION)
+            : null;
 
         // If neither quote item has a subscription flag (non-subscribable product)
         if (empty($subscriptionOption1) && empty($subscriptionOption2)) {
@@ -80,7 +84,11 @@ class Item
      */
     protected function getSubscriptionParams($buyRequest)
     {
-        $buyRequest = $buyRequest ? json_decode($buyRequest->getValue(), true) : [];
-        return isset($buyRequest[OptionProcessor::KEY_SUBSCRIPTION_OPTION]) ? $buyRequest[OptionProcessor::KEY_SUBSCRIPTION_OPTION] : [];
+        $buyRequest = $buyRequest
+            ? json_decode($buyRequest->getValue(), true)
+            : [];
+        return isset($buyRequest[OptionProcessor::KEY_SUBSCRIPTION_OPTION])
+            ? $buyRequest[OptionProcessor::KEY_SUBSCRIPTION_OPTION]
+            : [];
     }
 }

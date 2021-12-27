@@ -20,7 +20,9 @@
                 <div class="child-control month">
                     <input type="text"
                            name="creditcard_month"
-                           data-bind="attr: {id: getCode() + '_expiration'}, value: creditCardExpMonth, hasFocus: creditCardExpMonthFocus"
+                           data-bind="attr: {id: getCode() + '_expiration'},
+                               value: creditCardExpMonth,
+                               hasFocus: creditCardExpMonthFocus"
                            size="3"
                            maxlength="2"
                            placeholder="MM"
@@ -32,7 +34,9 @@
                 <div class="child-control year">
                     <input type="text"
                            name="creditcard_year"
-                           data-bind="attr: {id: getCode() + '_expiration_yr'}, value: creditCardExpYear, hasFocus: creditCardExpYearFocus"
+                           data-bind="attr: {id: getCode() + '_expiration_yr'},
+                               value: creditCardExpYear,
+                               hasFocus: creditCardExpYearFocus"
                            size="5"
                            maxlength="4"
                            placeholder="YYYY"

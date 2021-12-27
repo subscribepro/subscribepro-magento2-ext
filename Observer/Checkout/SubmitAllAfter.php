@@ -43,6 +43,11 @@ class SubmitAllAfter implements ObserverInterface
     private $thirdPartyPaymentConfig;
 
     /**
+     * @var \Swarming\SubscribePro\Helper\ThirdPartyPayment
+     */
+    private $thirdPartyPayment;
+
+    /**
      * @var \Swarming\SubscribePro\Model\Order\DetailsCreator
      */
     private $orderDetailsCreator;
@@ -62,6 +67,7 @@ class SubmitAllAfter implements ObserverInterface
      * @param \Magento\Quote\Model\Quote\Item\CartItemOptionsProcessor $cartItemOptionProcessor
      * @param \Psr\Log\LoggerInterface $logger
      * @param \Swarming\SubscribePro\Model\Config\ThirdPartyPayment $thirdPartyPaymentConfig
+     * @param \Swarming\SubscribePro\Helper\ThirdPartyPayment $thirdPartyPayment
      * @param \Swarming\SubscribePro\Model\Order\DetailsCreator $orderDetailsCreator
      */
     public function __construct(
@@ -71,6 +77,7 @@ class SubmitAllAfter implements ObserverInterface
         \Magento\Quote\Model\Quote\Item\CartItemOptionsProcessor $cartItemOptionProcessor,
         \Psr\Log\LoggerInterface $logger,
         \Swarming\SubscribePro\Model\Config\ThirdPartyPayment $thirdPartyPaymentConfig,
+        \Swarming\SubscribePro\Helper\ThirdPartyPayment $thirdPartyPayment,
         \Swarming\SubscribePro\Model\Order\DetailsCreator $orderDetailsCreator
     ) {
         $this->generalConfig = $generalConfig;
@@ -79,6 +86,7 @@ class SubmitAllAfter implements ObserverInterface
         $this->cartItemOptionProcessor = $cartItemOptionProcessor;
         $this->logger = $logger;
         $this->thirdPartyPaymentConfig = $thirdPartyPaymentConfig;
+        $this->thirdPartyPayment = $thirdPartyPayment;
         $this->orderDetailsCreator = $orderDetailsCreator;
     }
 
@@ -153,7 +161,7 @@ class SubmitAllAfter implements ObserverInterface
         $methodCode = $order->getPayment()->getMethod();
 
         return ($this->isPaymentMethodAllowed($methodCode) && $order->getState() !== Order::STATE_PAYMENT_REVIEW)
-            || $this->isThirdPartyPaymentMethodAllowed($methodCode, $storeId);
+            || $this->thirdPartyPayment->isThirdPartyPaymentMethodAllowed($methodCode, $storeId);
     }
 
     /**
@@ -163,16 +171,6 @@ class SubmitAllAfter implements ObserverInterface
     private function isPaymentMethodAllowed(string $methodCode): bool
     {
         return in_array($methodCode, $this->builtInMethods, true);
-    }
-
-    /**
-     * @param string $methodCode
-     * @param int $storeId
-     * @return bool
-     */
-    private function isThirdPartyPaymentMethodAllowed(string $methodCode, int $storeId): bool
-    {
-        return $methodCode === $this->thirdPartyPaymentConfig->getAllowedMethod($storeId);
     }
 
     /**

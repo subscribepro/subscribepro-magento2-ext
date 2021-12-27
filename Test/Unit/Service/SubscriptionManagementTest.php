@@ -716,7 +716,13 @@ class SubscriptionManagementTest extends \PHPUnit\Framework\TestCase
             ->method('saveSubscription')
             ->with($subscriptionMock);
 
-        $this->assertTrue($this->subscriptionManagement->updateNextOrderDate($customerId, $subscriptionId, $nextOrderDate));
+        $this->assertTrue(
+            $this->subscriptionManagement->updateNextOrderDate(
+                $customerId,
+                $subscriptionId,
+                $nextOrderDate
+            )
+        );
     }
 
     /**
@@ -842,7 +848,14 @@ class SubscriptionManagementTest extends \PHPUnit\Framework\TestCase
             ->with($subscriptionMock)
             ->willReturn($subscriptionMock);
 
-        $this->assertSame($profileMock, $this->subscriptionManagement->updatePaymentProfile($customerId, $subscriptionId, $paymentProfileId));
+        $this->assertSame(
+            $profileMock,
+            $this->subscriptionManagement->updatePaymentProfile(
+                $customerId,
+                $subscriptionId,
+                $paymentProfileId
+            )
+        );
     }
 
     public function testUpdatePaymentProfileWithApplyToOther()
@@ -903,7 +916,15 @@ class SubscriptionManagementTest extends \PHPUnit\Framework\TestCase
             ->with($platformCustomerId)
             ->willReturn($subscriptions);
 
-        $this->assertSame($profileMock, $this->subscriptionManagement->updatePaymentProfile($customerId, $subscriptionId, $paymentProfileId, true));
+        $this->assertSame(
+            $profileMock,
+            $this->subscriptionManagement->updatePaymentProfile(
+                $customerId,
+                $subscriptionId,
+                $paymentProfileId,
+                true
+            )
+        );
     }
 
     /**

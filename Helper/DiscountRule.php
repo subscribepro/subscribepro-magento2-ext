@@ -107,7 +107,8 @@ class DiscountRule
         if (empty($params) || (isset($params['option']) && $params['option'] == 'onetime_purchase')) {
             return $return;
         }
-        // The third of four possibilities: The cart item is a new subscription as denoted by the create_new_subscription_at_checkout
+        // The third of four possibilities:
+        // The cart item is a new subscription as denoted by the create_new_subscription_at_checkout
         // parameter set to subscription. We then set the ordinal to 0, as it is the first order, and set
         // the interval if it exists. (It really should exist here as a subscription without an interval
         // makes no sense.
@@ -221,7 +222,7 @@ class DiscountRule
     /**
      * @param string $op
      * @return bool
-     * @throws \Exception
+     * @throws \InvalidArgumentException
      */
     public function isNegateOperation($op)
     {
@@ -231,7 +232,7 @@ class DiscountRule
             case '!=':
                 return true;
             default:
-                throw new \Exception('Invalid cart rule operation ' . $op);
+                throw new \InvalidArgumentException('Invalid cart rule operation ' . $op);
         }
     }
 

@@ -26,6 +26,7 @@ class Processor
         try {
             $handler = $this->handlerPool->getHandler($event->getType());
             $handler->execute($event);
+            // phpcs:ignore Magento2.CodeAnalysis.EmptyBlock.DetectedCatch
         } catch (\DomainException $e) {
             /* Do nothing */
         }

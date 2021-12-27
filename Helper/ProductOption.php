@@ -89,7 +89,10 @@ class ProductOption
         $this->processProductOptions($quoteItem);
         $productOptions = $quoteItem->getProductOption();
         if ($productOptions) {
-            $productOptions = $this->reflectionObjectProcessor->buildOutputDataArray($productOptions, ProductOptionInterface::class);
+            $productOptions = $this->reflectionObjectProcessor->buildOutputDataArray(
+                $productOptions,
+                ProductOptionInterface::class
+            );
             $productOptions = $this->cleanSubscriptionOption($productOptions);
         } else {
             $productOptions = [];
@@ -126,8 +129,13 @@ class ProductOption
      */
     protected function cleanSubscriptionOption($productOptions)
     {
-        if (isset($productOptions[ExtensibleDataInterface::EXTENSION_ATTRIBUTES_KEY][OptionProcessor::KEY_SUBSCRIPTION_OPTION])) {
-            unset($productOptions[ExtensibleDataInterface::EXTENSION_ATTRIBUTES_KEY][OptionProcessor::KEY_SUBSCRIPTION_OPTION]);
+        if (isset(
+            $productOptions[ExtensibleDataInterface::EXTENSION_ATTRIBUTES_KEY][OptionProcessor::KEY_SUBSCRIPTION_OPTION]
+        )) {
+            unset(
+                $productOptions[ExtensibleDataInterface::EXTENSION_ATTRIBUTES_KEY]
+                [OptionProcessor::KEY_SUBSCRIPTION_OPTION]
+            );
         }
 
         if (empty($productOptions[ExtensibleDataInterface::EXTENSION_ATTRIBUTES_KEY])) {

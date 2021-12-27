@@ -76,7 +76,9 @@ class Subscription extends \Magento\Checkout\Block\Cart\Additional\Info
      */
     protected function _beforeToHtml()
     {
-        if (!$this->generalConfig->isEnabled() || !$this->productHelper->isSubscriptionEnabled($this->getItem()->getProduct())) {
+        if (!$this->generalConfig->isEnabled()
+            || !$this->productHelper->isSubscriptionEnabled($this->getItem()->getProduct())
+        ) {
             $this->canRender = false;
         } else {
             $this->initJsLayout();
@@ -140,7 +142,10 @@ class Subscription extends \Magento\Checkout\Block\Cart\Additional\Info
                 'qtyFieldSelector' => '#cart-' . $this->getItem()->getId() . '-qty'
             ]
         ];
-        $subscriptionContainerComponent = array_merge_recursive($subscriptionContainerComponent, (array)$this->getData('subscription-container-component'));
+        $subscriptionContainerComponent = array_merge_recursive(
+            $subscriptionContainerComponent,
+            (array)$this->getData('subscription-container-component')
+        );
 
         $jsLayout = [
             'components' => [$subscriptionContainerId => $subscriptionContainerComponent]
@@ -161,7 +166,9 @@ class Subscription extends \Magento\Checkout\Block\Cart\Additional\Info
             $subscriptionProduct->setDefaultInterval($intervalOption);
         }
 
-        $subscriptionOption = $this->quoteItemHelper->getCreateNewSubscriptionAtCheckout($this->getItem()) ? PlatformProductInterface::SO_SUBSCRIPTION : PlatformProductInterface::SO_ONETIME_PURCHASE;
+        $subscriptionOption = $this->quoteItemHelper->getCreateNewSubscriptionAtCheckout($this->getItem())
+            ? PlatformProductInterface::SO_SUBSCRIPTION
+            : PlatformProductInterface::SO_ONETIME_PURCHASE;
         $subscriptionProduct->setDefaultSubscriptionOption($subscriptionOption);
 
         return $subscriptionProduct;

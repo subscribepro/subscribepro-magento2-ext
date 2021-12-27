@@ -59,9 +59,24 @@ class DebugLogger
             $entry['file'] = $entry['file'] ? : '-';
             $entry['line'] = $entry['line'] ? : '-';
             if (empty($entry['class'])) {
-                $traceArray[] = sprintf('%s %3s. %s() %s:%s', $function_name, $entry_id + 1, $entry['function'], $entry['file'], $entry['line']);
+                $traceArray[] = sprintf(
+                    '%s %3s. %s() %s:%s',
+                    $function_name,
+                    $entry_id + 1,
+                    $entry['function'],
+                    $entry['file'],
+                    $entry['line']
+                );
             } else {
-                $traceArray[] = sprintf('%s %3s. %s->%s() %s:%s', $function_name, $entry_id + 1, $entry['class'], $entry['function'], $entry['file'], $entry['line']);
+                $traceArray[] = sprintf(
+                    '%s %3s. %s->%s() %s:%s',
+                    $function_name,
+                    $entry_id + 1,
+                    $entry['class'],
+                    $entry['function'],
+                    $entry['file'],
+                    $entry['line']
+                );
             }
         }
         return $traceArray;

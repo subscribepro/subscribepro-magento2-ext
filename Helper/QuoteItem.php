@@ -154,7 +154,9 @@ class QuoteItem
     {
         $buyRequest = $item->getOptionByCode('info_buyRequest');
         $buyRequest = $buyRequest ? json_decode($buyRequest->getValue(), true) : [];
-        return isset($buyRequest[OptionProcessor::KEY_SUBSCRIPTION_OPTION]) ? $buyRequest[OptionProcessor::KEY_SUBSCRIPTION_OPTION] : [];
+        return isset($buyRequest[OptionProcessor::KEY_SUBSCRIPTION_OPTION])
+            ? $buyRequest[OptionProcessor::KEY_SUBSCRIPTION_OPTION]
+            : [];
     }
 
     /**

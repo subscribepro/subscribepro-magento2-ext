@@ -70,7 +70,10 @@ abstract class AbstractProfileCreatorCommand extends AbstractCommand
 
         $profile = $this->platformPaymentProfileService->createProfile($requestData);
         $profile->setCustomerId($platformCustomer->getId());
-        $this->platformPaymentProfileService->saveToken($requestData[PaymentDataBuilder::PAYMENT_METHOD_TOKEN], $profile);
+        $this->platformPaymentProfileService->saveToken(
+            $requestData[PaymentDataBuilder::PAYMENT_METHOD_TOKEN],
+            $profile
+        );
 
         return $profile;
     }

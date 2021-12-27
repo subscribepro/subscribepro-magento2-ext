@@ -76,7 +76,9 @@ class Validator
         }
 
         $storeCode = $item->getQuote()->getStore()->getCode();
-        if ($this->catalogRuleInspector->isApplied($item->getProduct()) && !$this->subscriptionDiscountConfig->isApplyDiscountToCatalogPrice($storeCode)) {
+        if ($this->catalogRuleInspector->isApplied($item->getProduct())
+            && !$this->subscriptionDiscountConfig->isApplyDiscountToCatalogPrice($storeCode)
+        ) {
             return $result;
         }
 

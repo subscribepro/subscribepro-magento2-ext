@@ -14,7 +14,7 @@ class OrderDetails extends AbstractService
      * @param int|null $websiteId
      * @return \SubscribePro\Service\OrderDetails\OrderDetailsInterface
      */
-    public function createOrderDetails(array $orderDetailsData = [], $websiteId = null)
+    public function createOrderDetails(array $orderDetailsData = [], $websiteId = null): OrderDetailsInterface
     {
         return $this->getService($websiteId)->createOrderDetails($orderDetailsData);
     }
@@ -26,7 +26,7 @@ class OrderDetails extends AbstractService
      * @throws \SubscribePro\Exception\EntityInvalidDataException
      * @throws \SubscribePro\Exception\HttpException
      */
-    public function saveOrderDetails(OrderDetailsInterface $orderDetails, $websiteId = null)
+    public function saveOrderDetails(OrderDetailsInterface $orderDetails, $websiteId = null): OrderDetailsInterface
     {
         return $this->getService($websiteId)->saveNewOrderDetails($orderDetails);
     }

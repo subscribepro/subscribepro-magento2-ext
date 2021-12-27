@@ -31,7 +31,11 @@ class Platform extends General
      */
     public function getClientId($websiteCode = null)
     {
-        return $this->scopeConfig->getValue('swarming_subscribepro/platform/client_id', ScopeInterface::SCOPE_WEBSITE, $websiteCode);
+        return $this->scopeConfig->getValue(
+            'swarming_subscribepro/platform/client_id',
+            ScopeInterface::SCOPE_WEBSITE,
+            $websiteCode
+        );
     }
 
     /**
@@ -50,7 +54,11 @@ class Platform extends General
      */
     public function isLogEnabled($websiteCode = null)
     {
-        return $this->scopeConfig->isSetFlag('swarming_subscribepro/platform/log_enabled', ScopeInterface::SCOPE_WEBSITE, $websiteCode);
+        return $this->scopeConfig->isSetFlag(
+            'swarming_subscribepro/platform/log_enabled',
+            ScopeInterface::SCOPE_WEBSITE,
+            $websiteCode
+        );
     }
 
     /**
@@ -59,7 +67,11 @@ class Platform extends General
      */
     public function getLogFilename($websiteCode = null)
     {
-        $fileName = $this->scopeConfig->getValue('swarming_subscribepro/platform/log_filename', ScopeInterface::SCOPE_WEBSITE, $websiteCode);
+        $fileName = $this->scopeConfig->getValue(
+            'swarming_subscribepro/platform/log_filename',
+            ScopeInterface::SCOPE_WEBSITE,
+            $websiteCode
+        );
         $varDir = $this->directoryList->getPath(DirectoryList::VAR_DIR);
         return $varDir . DIRECTORY_SEPARATOR . ltrim($fileName, DIRECTORY_SEPARATOR);
     }

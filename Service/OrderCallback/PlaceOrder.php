@@ -128,6 +128,7 @@ class PlaceOrder
             $this->orderCallbackDataBuilder->importPaymentData(
                 $quote->getPayment(),
                 (array)$this->orderCallbackDataBuilder->getValue($orderRequest, 'payment', []),
+                (int)$customer->getId(),
                 (int)$store->getId()
             );
             $quote->collectTotals();
@@ -159,4 +160,3 @@ class PlaceOrder
         $this->quoteRepository->save($quote);
     }
 }
-

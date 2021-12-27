@@ -48,7 +48,7 @@ class AbstractCommandTest extends TestAbstractCommand
      */
     public function testExecuteIfFailToProcessTransaction()
     {
-        $exception = new \Exception('message');
+        $exception = new \InvalidArgumentException('message');
 
         $this->executeSetPlatformWebsite($this->subjectReaderMock, $this->storeManagerMock, $this->platformMock);
 
