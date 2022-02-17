@@ -81,6 +81,7 @@ class SubscriptionCreator
         $quote = $quoteItem->getQuote();
         $store = $quote->getStore();
         $productSku = $this->getProductSku($quoteItem);
+        $storeTimezone = new \DateTimeZone($store->getConfig('general/locale/timezone'));
         try {
             $subscription = $this->platformSubscriptionService->createSubscription();
             $subscription->setCustomerId($platformCustomerId);
@@ -90,7 +91,7 @@ class SubscriptionCreator
             $subscription->setQty($quoteItem->getQty());
             $subscription->setUseFixedPrice(false);
             $subscription->setInterval($this->quoteItemHelper->getSubscriptionInterval($quoteItem));
-            $subscription->setNextOrderDate($this->dateTimeFactory->create()->format('Y-m-d'));
+            $subscription->setNextOrderDate($this->dateTimeFactory->create('now', $storeTimezone)->format('Y-m-d'));
             $subscription->setFirstOrderAlreadyCreated(true);
             $subscription->setMagentoStoreCode($store->getCode());
             $subscription->setSendCustomerNotificationEmail(true);
