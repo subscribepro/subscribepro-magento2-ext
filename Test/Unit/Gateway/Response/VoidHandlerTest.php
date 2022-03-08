@@ -59,7 +59,7 @@ class VoidHandlerTest extends \PHPUnit\Framework\TestCase
         return [
             'Payment is null' => ['payment' => null],
             'Payment is not object' => ['payment' => 'string'],
-            'Payment is not instance of payment' => ['payment' => new \ArrayObject()],
+            'Payment is not instance of payment' => ['payment' => new \stdClass()],
         ];
     }
 

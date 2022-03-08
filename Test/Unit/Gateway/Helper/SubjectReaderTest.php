@@ -49,7 +49,7 @@ class SubjectReaderTest extends \PHPUnit\Framework\TestCase
      */
     public function testFailToReadNotTransactionInterfaceInstance()
     {
-        $subject = ['transaction' => new \ArrayObject()];
+        $subject = ['transaction' => new \stdClass()];
         $this->subjectReader->readTransaction($subject);
     }
 
