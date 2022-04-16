@@ -34,15 +34,16 @@ class Updater
      * @param \Swarming\SubscribePro\Api\Data\ProductInterface $platformProduct
      * @param string $subscriptionOption
      * @param string $subscriptionInterval
+     * @param bool $itemAddedBySubscribePro
      * @return array
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function update($quoteItem, $platformProduct, $subscriptionOption, $subscriptionInterval)
+    public function update($quoteItem, $platformProduct, $subscriptionOption, $subscriptionInterval, $itemAddedBySubscribePro = false)
     {
         $createNewSubscriptionAtCheckout = false;
         
         $subscriptionOption = $this->getSubscriptionOption($platformProduct, $subscriptionOption);
-        if (PlatformProductInterface::SO_SUBSCRIPTION == $subscriptionOption) {
+        if (!$itemAddedBySubscribePro && PlatformProductInterface::SO_SUBSCRIPTION == $subscriptionOption) {
             $this->validateIntervals($platformProduct);
             $this->validateQuantity($quoteItem, $platformProduct);
             $subscriptionInterval = $this->getSubscriptionInterval($quoteItem, $platformProduct, $subscriptionInterval);

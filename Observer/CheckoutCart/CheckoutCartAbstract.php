@@ -105,7 +105,8 @@ abstract class CheckoutCartAbstract implements ObserverInterface
             $quoteItem,
             $platformProduct,
             $this->getParamData($quoteItemParams, SubscriptionOptionInterface::OPTION),
-            $this->getParamData($quoteItemParams, SubscriptionOptionInterface::INTERVAL)
+            $this->getParamData($quoteItemParams, SubscriptionOptionInterface::INTERVAL),
+            $this->getParamData($quoteItemParams, SubscriptionOptionInterface::ITEM_ADDED_BY_SUBSCRIBE_PRO)
         );
 
         foreach ($warnings as $message) {
