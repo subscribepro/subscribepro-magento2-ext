@@ -89,8 +89,20 @@ class ItemSubscriptionDiscount
      */
     protected function setSubscriptionDiscount(QuoteItem $item, $subscriptionDiscount, $baseSubscriptionDiscount)
     {
-        $item->setDiscountAmount($subscriptionDiscount);
-        $item->setBaseDiscountAmount($baseSubscriptionDiscount);
+        if ($item->getChildren() && $item->isChildrenCalculated()) {
+            $childItemCount = count($item->getChildren());
+            $childSubscriptionDiscount = round(($subscriptionDiscount * 1.0) / $childItemCount, 2);
+            $childBaseSubscriptionDiscount = round(($baseSubscriptionDiscount * 1.0) / $childItemCount, 2);
+
+            foreach ($item->getChildren() as $childItem) {
+                $childItem->setDiscountAmount($childSubscriptionDiscount);
+                $childItem->setBaseDiscountAmount($childBaseSubscriptionDiscount);
+            }
+        }
+        else {
+            $item->setDiscountAmount($subscriptionDiscount);
+            $item->setBaseDiscountAmount($baseSubscriptionDiscount);
+        }
     }
 
     /**
@@ -100,11 +112,26 @@ class ItemSubscriptionDiscount
      */
     protected function addSubscriptionDiscount(QuoteItem $item, $subscriptionDiscount, $baseSubscriptionDiscount)
     {
-        $newDiscountAmount = $item->getDiscountAmount() + $subscriptionDiscount;
-        $item->setDiscountAmount($newDiscountAmount);
+        if ($item->getChildren() && $item->isChildrenCalculated()) {
+            $childItemCount = count($item->getChildren());
+            $childSubscriptionDiscount = round(($subscriptionDiscount * 1.0) / $childItemCount, 2);
+            $childBaseSubscriptionDiscount = round(($baseSubscriptionDiscount * 1.0) / $childItemCount, 2);
 
-        $newBaseDiscountAmount = $item->getBaseDiscountAmount() + $baseSubscriptionDiscount;
-        $item->setBaseDiscountAmount($newBaseDiscountAmount);
+            foreach ($item->getChildren() as $childItem) {
+                $newDiscountAmount = $childItem->getDiscountAmount() + $childSubscriptionDiscount;
+                $childItem->setDiscountAmount($newDiscountAmount);
+
+                $newBaseDiscountAmount = $childItem->getBaseDiscountAmount() + $childBaseSubscriptionDiscount;
+                $childItem->setBaseDiscountAmount($newBaseDiscountAmount);
+            }
+        }
+        else {
+            $newDiscountAmount = $item->getDiscountAmount() + $subscriptionDiscount;
+            $item->setDiscountAmount($newDiscountAmount);
+
+            $newBaseDiscountAmount = $item->getBaseDiscountAmount() + $baseSubscriptionDiscount;
+            $item->setBaseDiscountAmount($newBaseDiscountAmount);
+        }
     }
 
     /**
