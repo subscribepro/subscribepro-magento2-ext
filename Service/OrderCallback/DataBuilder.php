@@ -108,7 +108,11 @@ class DataBuilder
             [
                 'firstname' => $this->getValue($addressData, 'firstName'),
                 'lastname' => $this->getValue($addressData, 'lastName'),
-                'street' => $this->getValue($addressData, 'street1'),
+                'street' => [
+                    $this->getValue($addressData, 'street1'),
+                    $this->getValue($addressData, 'street2'),
+                    $this->getValue($addressData, 'street3')
+                ],
                 'city' => $this->getValue($addressData, 'city'),
                 'country_id' => $this->getValue($addressData, 'country'),
                 'region' => $this->getValue($addressData, 'region'),
