@@ -94,29 +94,39 @@ class SubmitAllAfter implements ObserverInterface
 
         /** @var \Magento\Sales\Api\Data\OrderInterface $order */
         $order = $observer->getData('order');
-
-        $websiteCode = $quote->getStore()->getWebsite()->getCode();
-        if (!$this->generalConfig->isEnabled($websiteCode)
-            || !$quote->getCustomerId()
-            || !$this->canOrderBeProcessed($order)
-        ) {
-            return;
+        /** @var \Magento\Sales\Api\Data\OrderInterface[] $orders */
+        $orders = $observer->getData('orders');
+        if ($order instanceof OrderInterface) {
+            $orders = [$order];
+        } elseif (!is_array($orders)) {
+            $orders = [];
         }
 
-        try {
-            $result = $this->subscriptionCreator->createSubscriptions($quote, $order);
-            $this->checkoutSession->setData(
-                SubscriptionCreator::CREATED_SUBSCRIPTION_IDS,
-                $result[SubscriptionCreator::CREATED_SUBSCRIPTION_IDS]
-            );
-            $this->checkoutSession->setData(
-                SubscriptionCreator::FAILED_SUBSCRIPTION_COUNT,
-                $result[SubscriptionCreator::FAILED_SUBSCRIPTION_COUNT]
-            );
-        } catch (\Exception $e) {
-            $this->logger->critical($e);
-            $this->checkoutSession->setData(SubscriptionCreator::CREATED_SUBSCRIPTION_IDS, []);
-            $this->checkoutSession->setData(SubscriptionCreator::FAILED_SUBSCRIPTION_COUNT, 0);
+        $websiteCode = $quote->getStore()->getWebsite()->getCode();
+
+        foreach ($orders as $order) {
+            if (!$this->generalConfig->isEnabled($websiteCode)
+                || !$quote->getCustomerId()
+                || !$this->canOrderBeProcessed($order)
+            ) {
+                continue;
+            }
+
+            try {
+                $result = $this->subscriptionCreator->createSubscriptions($quote, $order);
+                $this->checkoutSession->setData(
+                    SubscriptionCreator::CREATED_SUBSCRIPTION_IDS,
+                    $result[SubscriptionCreator::CREATED_SUBSCRIPTION_IDS]
+                );
+                $this->checkoutSession->setData(
+                    SubscriptionCreator::FAILED_SUBSCRIPTION_COUNT,
+                    $result[SubscriptionCreator::FAILED_SUBSCRIPTION_COUNT]
+                );
+            } catch (\Exception $e) {
+                $this->logger->critical($e);
+                $this->checkoutSession->setData(SubscriptionCreator::CREATED_SUBSCRIPTION_IDS, []);
+                $this->checkoutSession->setData(SubscriptionCreator::FAILED_SUBSCRIPTION_COUNT, 0);
+            }
         }
     }
 
