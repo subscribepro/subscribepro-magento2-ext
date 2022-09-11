@@ -8,12 +8,8 @@
   "version": "1.5.15",
   "authors": [
     {
-      "name": "Swarming Technology",
-      "homepage": "http://swarmingtech.com"
-    },
-    {
       "name": "SUBSCRIBE PRO INC",
-      "homepage": "http://www.subscribepro.com"
+      "homepage": "https://www.subscribepro.com"
     }
   ],
   "require": {
@@ -28,12 +24,12 @@
     "magento/module-theme": "^100.2.0|^101.0.0|^101.1.0",
     "magento/module-ui": "^101.0.0|^101.1.0|^101.2.0",
     "magento/framework": "^101.0.0|^102.0.0|^103.0.0",
-    "subscribepro/subscribepro-php": "~1.0.24"
+    "subscribepro/subscribepro-php": "~1.1"
  },
   "require-dev": {
     "magento/zendframework1": "1.12.16",
     "zendframework/zend-stdlib": "~2.4.6",
-    "monolog/monolog": "^1.16.0"
+    "monolog/monolog": "^2.8"
   },
   "autoload": {
     "files": [
