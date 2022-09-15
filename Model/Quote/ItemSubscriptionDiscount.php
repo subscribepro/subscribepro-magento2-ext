@@ -140,7 +140,7 @@ class ItemSubscriptionDiscount
     protected function addDiscountDescription(QuoteItem $item)
     {
         $discountDescriptions = $item->getAddress()->getDiscountDescriptionArray();
-        $discountDescriptions[self::KEY_DISCOUNT_DESCRIPTION] = __('Subscription');
+        //$discountDescriptions[self::KEY_DISCOUNT_DESCRIPTION] = __('Subscription');
         $item->getAddress()->setDiscountDescriptionArray($discountDescriptions);
     }
 

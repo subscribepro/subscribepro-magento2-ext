@@ -2,6 +2,8 @@
 
 namespace Swarming\SubscribePro\Plugin\SalesRule;
 
+use Magento\Quote\Model\Quote\Item\AbstractItem;
+use Magento\SalesRule\Model\Rule;
 use Magento\SalesRule\Model\Validator as SalesRuleValidator;
 use Magento\Quote\Model\Quote\Item\AbstractItem as QuoteItem;
 
@@ -51,11 +53,12 @@ class Validator
 
     /**
      * @param \Magento\SalesRule\Model\Validator $subject
-     * @param \Closure $proceed
-     * @param \Magento\Quote\Model\Quote\Item\AbstractItem $item
+     * @param \Closure                           $proceed
+     * @param AbstractItem                          $item
+     * @param Rule                               $rule
      * @return \Magento\SalesRule\Model\Validator
      */
-    public function aroundProcess(SalesRuleValidator $subject, \Closure $proceed, QuoteItem $item)
+    public function aroundProcess(SalesRuleValidator $subject, \Closure $proceed, AbstractItem $item, Rule $rule)
     {
         $appliedRuleIds = [
             self::QUOTE_ITEM_RULES => $item->getAppliedRuleIds(),
@@ -64,7 +67,11 @@ class Validator
         ];
         $discountDescriptions = (array)$item->getAddress()->getDiscountDescriptionArray();
 
-        $result = $proceed($item);
+        $result = $proceed($item, $rule);
+
+        if ($rule->getName() !== 'Subscribe Pro Discount') {
+            return $result;
+        }
 
         $websiteId = $item->getQuote()->getStore()->getWebsiteId();
         if (!$this->subscriptionDiscountConfig->isEnabled($websiteId)) {

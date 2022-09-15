@@ -31,7 +31,7 @@ class QuoteItem
     }
 
     /**
-     * @param \Magento\Quote\Model\Quote\Item $item
+     * @param \Magento\Quote\Model\Quote\Item\AbstractItem $item
      * @return bool
      */
     public function hasSubscription($item)
@@ -40,7 +40,7 @@ class QuoteItem
     }
 
     /**
-     * @param \Magento\Quote\Model\Quote\Item $item
+     * @param \Magento\Quote\Model\Quote\Item\AbstractItem $item
      * @return bool
      */
     public function isSubscriptionEnabled($item)
@@ -49,7 +49,7 @@ class QuoteItem
     }
 
     /**
-     * @param \Magento\Quote\Model\Quote\Item $item
+     * @param \Magento\Quote\Model\Quote\Item\AbstractItem $item
      * @return null|string
      */
     public function getSubscriptionOption($item)
@@ -58,7 +58,7 @@ class QuoteItem
     }
 
     /**
-     * @param \Magento\Quote\Model\Quote\Item $item
+     * @param \Magento\Quote\Model\Quote\Item\AbstractItem $item
      * @return bool
      */
     public function isItemFulfilsSubscription($item)
@@ -67,7 +67,7 @@ class QuoteItem
     }
 
     /**
-     * @param \Magento\Quote\Model\Quote\Item $item
+     * @param \Magento\Quote\Model\Quote\Item\AbstractItem $item
      * @return bool
      */
     public function getCreateNewSubscriptionAtCheckout($item)
@@ -76,7 +76,7 @@ class QuoteItem
     }
 
     /**
-     * @param \Magento\Quote\Model\Quote\Item $item
+     * @param \Magento\Quote\Model\Quote\Item\AbstractItem $item
      * @return bool
      */
     public function getItemAddedBySubscribePro($item)
@@ -85,7 +85,7 @@ class QuoteItem
     }
 
     /**
-     * @param \Magento\Quote\Model\Quote\Item $item
+     * @param \Magento\Quote\Model\Quote\Item\AbstractItem $item
      * @return null|string
      */
     public function getSubscriptionInterval($item)
@@ -94,7 +94,7 @@ class QuoteItem
     }
 
     /**
-     * @param \Magento\Quote\Model\Quote\Item $item
+     * @param \Magento\Quote\Model\Quote\Item\AbstractItem $item
      * @return null|string
      */
     public function getNextOrderDate($item)
@@ -103,7 +103,7 @@ class QuoteItem
     }
 
     /**
-     * @param \Magento\Quote\Model\Quote\Item $item
+     * @param \Magento\Quote\Model\Quote\Item\AbstractItem $item
      * @return null|string
      */
     public function getFixedPrice($item)
@@ -112,7 +112,7 @@ class QuoteItem
     }
 
     /**
-     * @param \Magento\Quote\Model\Quote\Item $item
+     * @param \Magento\Quote\Model\Quote\Item\AbstractItem $item
      * @return null|string
      */
     public function getSubscriptionId($item)
@@ -121,7 +121,7 @@ class QuoteItem
     }
 
     /**
-     * @param \Magento\Quote\Model\Quote\Item $item
+     * @param \Magento\Quote\Model\Quote\Item\AbstractItem $item
      * @param string $paramKey
      * @return mixed|null
      */
@@ -132,7 +132,7 @@ class QuoteItem
     }
 
     /**
-     * @param \Magento\Quote\Model\Quote\Item $item
+     * @param \Magento\Quote\Model\Quote\Item\AbstractItem $item
      * @param string $paramKey
      * @param string $paramValue
      * @return $this
@@ -147,7 +147,7 @@ class QuoteItem
     }
 
     /**
-     * @param \Magento\Quote\Model\Quote\Item $item
+     * @param \Magento\Quote\Model\Quote\Item\AbstractItem $item
      * @return array
      */
     public function getSubscriptionParams($item)
@@ -160,7 +160,7 @@ class QuoteItem
     }
 
     /**
-     * @param \Magento\Quote\Model\Quote\Item $item
+     * @param \Magento\Quote\Model\Quote\Item\AbstractItem $item
      * @param array $params
      * @return array
      */
@@ -181,7 +181,7 @@ class QuoteItem
     /**
      * In case when only options are updated. Options are saved only if quote item is changed.
      *
-     * @param \Magento\Quote\Model\Quote\Item $item
+     * @param \Magento\Quote\Model\Quote\Item\AbstractItem $item
      */
     protected function markQuoteItemAsModified($item)
     {
