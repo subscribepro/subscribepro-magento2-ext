@@ -543,17 +543,12 @@
             <argument name="logger" xsi:type="object">Swarming\SubscribePro\Model\VirtualLogger</argument>
         </arguments>
     </type>
-    <type name="Swarming\SubscribePro\Model\ApplePay\PaymentAuthorized">
+    <type name="Swarming\SubscribePro\Controller\Applepay\ShippingMethod">
         <arguments>
             <argument name="logger" xsi:type="object">Swarming\SubscribePro\Model\VirtualLogger</argument>
         </arguments>
     </type>
-    <type name="Swarming\SubscribePro\Controller\ApplePay\Shipping">
-        <arguments>
-            <argument name="logger" xsi:type="object">Swarming\SubscribePro\Model\VirtualLogger</argument>
-        </arguments>
-    </type>
-    <type name="Swarming\SubscribePro\Controller\ApplePay\ShippingList">
+    <type name="Swarming\SubscribePro\Controller\Applepay\ShippingList">
         <arguments>
             <argument name="logger" xsi:type="object">Swarming\SubscribePro\Model\VirtualLogger</argument>
         </arguments>
