@@ -43,5 +43,5 @@
 </script>
 
 <script>
-    window.customerData = <?= json_encode($block->getCustomerData()) ?>;
+    window.customerData = <?= /* @noEscape */ json_encode($block->getCustomerData()) ?>;
 </script>
