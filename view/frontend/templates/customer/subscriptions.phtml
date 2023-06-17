@@ -43,5 +43,5 @@
 </script>
 
 <script>
-    window.customerData = <?= \Zend_Json::encode($block->getCustomerData()) ?>;
+    window.customerData = <?= json_encode($block->getCustomerData()) ?>;
 </script>
