@@ -23,7 +23,7 @@ interface CartManagementInterface
 
     /**
      * @param int $cartId
-     * @return String|null
+     * @return string|null
      */
     public function deactivateCustomerCart($cartId);
 }
