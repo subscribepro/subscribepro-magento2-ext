@@ -101,7 +101,7 @@ class QuoteManagement implements CartManagementInterface
 
     /**
      * @param int $cartId
-     * @return String|null
+     * @return string|null
      * @throws CouldNotSaveException
      * @throws NoSuchEntityException
      */
