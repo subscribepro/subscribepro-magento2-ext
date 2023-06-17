@@ -69,7 +69,7 @@
                         <span id="order_item_<?= /* @escapeNotVerified */ $_item->getId() ?>_title"><?= $block->escapeHtml($_item->getName()) ?></span>
                         <div class="product-sku-block">
                             <span><?= /* @escapeNotVerified */ __('SKU') ?>:</span>
-                            <?= implode('<br />', $this->helper('Magento\Catalog\Helper\Data')->splitSku($block->escapeHtml($_item->getSku()))); ?>
+                            <?= implode('<br />', $block->helper('Magento\Catalog\Helper\Data')->splitSku($block->escapeHtml($_item->getSku()))); ?>
                         </div>
                         <div class="product-configure-block">
                             <?= $block->getConfigureButtonHtml($_item) ?>
@@ -188,13 +188,12 @@
                                             // Select One-time Delivery IF
                                             // * The user selected one-time delivery and clicked Update
                                             // * The user hasn't selected anything and the default for the product is one-time
-                                            if (
-                                                $selectedOptionIsOneTimePurchase || (
-                                                    $selectedOptionIsEmpty && $defaultOptionIsOneTimePurchase
-                                                )
+                                        if ($selectedOptionIsOneTimePurchase || (
+                                            $selectedOptionIsEmpty && $defaultOptionIsOneTimePurchase
+                                        )
                                             ) {
-                                                echo 'checked="checked"';
-                                            }
+                                            echo 'checked="checked"';
+                                        }
                                         ?>
                                     />
                                     <label for="item-<?= /* @escapeNotVerified */ $_item->getId() ?>-one-time-purchase">One Time Purchase</label>
@@ -212,13 +211,12 @@
                                         // * The user selected regular delivery and clicked Update
                                         // * The product is subscription-only
                                         // * The user hasn't selected anything and the default for the product is subscription
-                                        if (
-                                            $selectedOptionIsSubscription || $optionModeIsSubscriptionOnly || (
-                                                $selectedOptionIsEmpty && $defaultOptionIsSubscription
-                                            )
+                                    if ($selectedOptionIsSubscription || $optionModeIsSubscriptionOnly || (
+                                        $selectedOptionIsEmpty && $defaultOptionIsSubscription
+                                    )
                                         ) {
-                                            echo 'checked="checked"';
-                                        }
+                                        echo 'checked="checked"';
+                                    }
                                     ?>
                                 />
                                 <label for="item-<?= /* @escapeNotVerified */ $_item->getId() ?>-subscription-option">Regular Delivery</label>
@@ -230,8 +228,8 @@
                                     <select class="admin__control-select" name="item[<?= /* @escapeNotVerified */ $_item->getId() ?>][admin_subscription_option][interval]">
                                         <?php foreach ($subscriptionProduct['intervals'] as $interval): ?>
                                             <option <?php if ($interval == $subscriptionOptions['interval']) {
-                                        echo 'selected';
-                                    }?> ><?= $interval; ?></option>
+                                                echo 'selected';
+                                                    }?> ><?= $interval; ?></option>
                                         <?php endforeach; ?>
                                     </select>
                                 <?php else: ?>
@@ -239,9 +237,9 @@
                                         <?php $intervalSet = false; ?>
                                         <?php foreach ($subscriptionProduct['intervals'] as $interval): ?>
                                             <option <?php if ($interval == $subscriptionProduct['default_interval']) {
-                                        $intervalSet = true;
-                                        echo 'selected';
-                                    }?> ><?= $interval; ?></option>
+                                                $intervalSet = true;
+                                                echo 'selected';
+                                                    }?> ><?= $interval; ?></option>
                                         <?php endforeach; ?>
                                         <?php if (!$intervalSet):?>
                                             <option selected><?= $subscriptionProduct['default_interval']; ?></option>
@@ -258,7 +256,7 @@
                 <?php foreach ($_item->getMessage(false) as $messageError):?>
                     <?php if (!empty($messageError)) {
                                         $hasMessageError = true;
-                                    }
+                    }
                     ?>
                 <?php endforeach; ?>
 
@@ -298,7 +296,7 @@
         });
     </script>
 
-    <?php if ($block->isGiftMessagesAvailable()) : ?>
+    <?php if ($block->isGiftMessagesAvailable()): ?>
         <script>
             require([
                 "prototype",

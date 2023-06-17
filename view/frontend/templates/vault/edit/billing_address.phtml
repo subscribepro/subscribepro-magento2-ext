@@ -133,11 +133,11 @@
                 "form": "#vault-edit",
                 "regionJson": <?=
                     // phpcs:ignore Magento2.Templates.ThisInTemplate.FoundHelper
-                    /* @noEscape */ $this->helper(\Magento\Directory\Helper\Data::class)->getRegionJson() ?>,
+                    /* @noEscape */ $block->helper(\Magento\Directory\Helper\Data::class)->getRegionJson() ?>,
                 "defaultRegion": "<?= /* @noEscape */ $block->getRegionId() ?>",
                 "countriesWithOptionalZip": <?=
                     // phpcs:ignore Magento2.Templates.ThisInTemplate.FoundHelper
-                    /* @noEscape */ $this->helper(\Magento\Directory\Helper\Data::class)
+                    /* @noEscape */ $block->helper(\Magento\Directory\Helper\Data::class)
                                         ->getCountriesWithOptionalZip(true) ?>
             }
         }
