@@ -10,10 +10,10 @@ use Magento\Vault\Api\Data\PaymentTokenInterface;
 use Magento\Vault\Model\CreditCardTokenFactory;
 use Magento\Vault\Model\Ui\VaultConfigProvider;
 use SubscribePro\Service\Transaction\TransactionInterface;
+use Swarming\SubscribePro\Gateway\Config\Config as GatewayConfig;
 use Swarming\SubscribePro\Gateway\Helper\SubjectReader;
 use Swarming\SubscribePro\Gateway\Response\VaultDetailsHandler;
 use Swarming\SubscribePro\Helper\Vault as SubscribeProVaultHelper;
-use Swarming\SubscribePro\Gateway\Config\Config as GatewayConfig;
 
 class VaultDetailsHandlerTest extends \PHPUnit\Framework\TestCase
 {

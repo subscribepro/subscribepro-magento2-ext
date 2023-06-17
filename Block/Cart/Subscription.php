@@ -2,12 +2,12 @@
 
 namespace Swarming\SubscribePro\Block\Cart;
 
+use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Framework\App\State as AppState;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Catalog\Api\Data\ProductInterface;
-use Swarming\SubscribePro\Api\Data\ProductInterface as PlatformProductInterface;
-use SubscribePro\Exception\InvalidArgumentException;
 use SubscribePro\Exception\HttpException;
+use SubscribePro\Exception\InvalidArgumentException;
+use Swarming\SubscribePro\Api\Data\ProductInterface as PlatformProductInterface;
 
 class Subscription extends \Magento\Checkout\Block\Cart\Additional\Info
 {

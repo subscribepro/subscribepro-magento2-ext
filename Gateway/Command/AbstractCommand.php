@@ -2,8 +2,8 @@
 
 namespace Swarming\SubscribePro\Gateway\Command;
 
-use Magento\Payment\Gateway\CommandInterface;
 use Magento\Payment\Gateway\Command\CommandException;
+use Magento\Payment\Gateway\CommandInterface;
 
 abstract class AbstractCommand implements CommandInterface
 {

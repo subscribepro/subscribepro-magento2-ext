@@ -2,10 +2,10 @@
 
 namespace Swarming\SubscribePro\Model\Subscription;
 
+use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\Product\Configuration\Item\ItemInterface;
 use Magento\Catalog\Model\Product\Configuration\Item\Option\OptionInterface;
 use Magento\Framework\DataObject;
-use Magento\Catalog\Api\Data\ProductInterface;
 
 class OptionItem extends DataObject implements ItemInterface
 {

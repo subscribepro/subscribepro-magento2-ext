@@ -2,9 +2,9 @@
 
 namespace Swarming\SubscribePro\Model;
 
+use SubscribePro\Service\Subscription\Subscription as PlatformSubscription;
 use Swarming\SubscribePro\Api\Data\ProductInterface;
 use Swarming\SubscribePro\Api\Data\SubscriptionInterface;
-use SubscribePro\Service\Subscription\Subscription as PlatformSubscription;
 
 /**
  * @codeCoverageIgnore

@@ -35,7 +35,7 @@ class VoidDataBuilder implements BuilderInterface
 
         /** @var \Magento\Sales\Model\Order\Payment $payment */
         $payment = $paymentDO->getPayment();
-        
+
         return [
             TransactionInterface::REF_TRANSACTION_ID => $payment->getParentTransactionId(),
         ];

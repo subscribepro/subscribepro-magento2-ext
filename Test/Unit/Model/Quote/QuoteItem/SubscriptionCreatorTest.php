@@ -4,20 +4,20 @@ namespace Swarming\SubscribePro\Test\Unit\Model\Quote\QuoteItem;
 
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\Product;
+use Magento\Framework\Event\ManagerInterface as EventManagerInterface;
 use Magento\Framework\Intl\DateTimeFactory;
 use Magento\Quote\Api\Data\CartInterface;
+use Magento\Quote\Model\Quote\Address as QuoteAddress;
+use Magento\Quote\Model\Quote\Item as QuoteItem;
 use Magento\Store\Api\Data\StoreInterface;
 use Psr\Log\LoggerInterface;
 use Swarming\SubscribePro\Api\Data\AddressInterface as PlatformAddressInterface;
 use Swarming\SubscribePro\Api\Data\SubscriptionInterface as PlatformSubscriptionInterface;
-use Swarming\SubscribePro\Model\Quote\QuoteItem\SubscriptionCreator;
+use Swarming\SubscribePro\Helper\ProductOption as QuoteItemProductOption;
 use Swarming\SubscribePro\Helper\QuoteItem as QuoteItemHelper;
 use Swarming\SubscribePro\Model\Config\SubscriptionOptions as SubscriptionOptionsConfig;
-use Magento\Quote\Model\Quote\Item as QuoteItem;
-use Magento\Quote\Model\Quote\Address as QuoteAddress;
+use Swarming\SubscribePro\Model\Quote\QuoteItem\SubscriptionCreator;
 use Swarming\SubscribePro\Platform\Service\Subscription as SubscriptionService;
-use Swarming\SubscribePro\Helper\ProductOption as QuoteItemProductOption;
-use Magento\Framework\Event\ManagerInterface as EventManagerInterface;
 
 class SubscriptionCreatorTest extends \PHPUnit\Framework\TestCase
 {

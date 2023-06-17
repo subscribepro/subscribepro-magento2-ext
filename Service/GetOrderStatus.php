@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Swarming\SubscribePro\Service;
 
-use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Model\Order;
 use SubscribePro\Service\Transaction\TransactionInterface;
 

@@ -2,10 +2,10 @@
 
 namespace Swarming\SubscribePro\Test\Unit\Platform\Webhook;
 
+use SubscribePro\Service\Webhook\EventInterface as WebhookEventInterface;
 use Swarming\SubscribePro\Platform\Webhook\HandlerInterface;
 use Swarming\SubscribePro\Platform\Webhook\HandlerPool;
 use Swarming\SubscribePro\Platform\Webhook\Processor;
-use SubscribePro\Service\Webhook\EventInterface as WebhookEventInterface;
 
 class ProcessorTest extends \PHPUnit\Framework\TestCase
 {

@@ -4,11 +4,11 @@ namespace Swarming\SubscribePro\Block\Customer;
 
 use Magento\Customer\Model\Address\Config as AddressConfig;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Swarming\SubscribePro\Platform\Manager\Customer;
-use Swarming\SubscribePro\Platform\Tool\Oauth;
 use Swarming\SubscribePro\Model\Config\Advanced;
 use Swarming\SubscribePro\Model\Config\Platform;
 use Swarming\SubscribePro\Model\Config\SubscriptionOptions;
+use Swarming\SubscribePro\Platform\Manager\Customer;
+use Swarming\SubscribePro\Platform\Tool\Oauth;
 
 class Subscriptions extends \Magento\Framework\View\Element\Template
 {

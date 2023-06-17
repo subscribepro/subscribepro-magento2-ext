@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Swarming\SubscribePro\Api;
 
-use Swarming\SubscribePro\Api\Data\OrderPaymentStateInterface;
-
 interface GetOrderStatusInterface
 {
     /**

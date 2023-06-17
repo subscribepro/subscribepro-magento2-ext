@@ -7,9 +7,9 @@ use Magento\Framework\HTTP\PhpEnvironment\RemoteAddress;
 use Psr\Log\LoggerInterface;
 use SubscribePro\Service\Webhook\EventInterface;
 use Swarming\SubscribePro\Controller\Webhook\Index;
-use Swarming\SubscribePro\Platform\Webhook\Processor as WebhookProcessor;
 use Swarming\SubscribePro\Model\Config\Advanced as AdvancedConfig;
 use Swarming\SubscribePro\Platform\Service\Webhook as WebhookService;
+use Swarming\SubscribePro\Platform\Webhook\Processor as WebhookProcessor;
 
 class IndexTest extends \PHPUnit\Framework\TestCase
 {

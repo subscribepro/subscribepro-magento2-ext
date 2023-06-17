@@ -2,14 +2,13 @@
 
 namespace Swarming\SubscribePro\Test\Unit\Helper;
 
-use Magento\Quote\Model\Quote\Item as OrderItemModel;
-use Magento\Sales\Model\Order\Item as OrderItem;
 use Magento\Sales\Api\OrderItemRepositoryInterface;
 use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Order\Item as OrderItem;
+use Swarming\SubscribePro\Api\Data\ProductInterface as PlatformProductInterface;
 use Swarming\SubscribePro\Api\Data\SubscriptionOptionInterface;
 use Swarming\SubscribePro\Helper\OrderItem as OrderItemHelper;
 use Swarming\SubscribePro\Model\Quote\SubscriptionOption\OptionProcessor;
-use Swarming\SubscribePro\Api\Data\ProductInterface as PlatformProductInterface;
 
 class OrderItemTest extends \PHPUnit\Framework\TestCase
 {

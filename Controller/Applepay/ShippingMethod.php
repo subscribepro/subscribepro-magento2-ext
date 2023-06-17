@@ -8,11 +8,10 @@ use Magento\Framework\App\CsrfAwareActionInterface;
 use Magento\Framework\App\Request\InvalidRequestException;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Controller\Result\JsonFactory as JsonResultFactory;
-use Magento\Framework\Phrase;
-use Magento\Framework\Serialize\Serializer\Json as JsonSerializer;
-use Swarming\SubscribePro\Model\ApplePay\Shipping;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Serialize\Serializer\Json as JsonSerializer;
 use Psr\Log\LoggerInterface;
+use Swarming\SubscribePro\Model\ApplePay\Shipping;
 
 class ShippingMethod implements HttpPostActionInterface, CsrfAwareActionInterface
 {

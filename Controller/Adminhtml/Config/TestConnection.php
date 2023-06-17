@@ -91,6 +91,6 @@ class TestConnection extends Action
     protected function updateEncryptedClientSecret($clientSecret, $website)
     {
         $website = empty($website) ? false : $website;
-        return $clientSecret == '******' ? $this->platformConfig->getClientSecret($website) : $clientSecret ;
+        return $clientSecret == '******' ? $this->platformConfig->getClientSecret($website) : $clientSecret;
     }
 }

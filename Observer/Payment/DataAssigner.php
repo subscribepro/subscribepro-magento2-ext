@@ -4,8 +4,8 @@ namespace Swarming\SubscribePro\Observer\Payment;
 
 use Magento\Framework\Event\Observer;
 use Magento\Quote\Api\Data\PaymentInterface;
-use Swarming\SubscribePro\Gateway\Request\PaymentDataBuilder;
 use SubscribePro\Service\Transaction\TransactionInterface;
+use Swarming\SubscribePro\Gateway\Request\PaymentDataBuilder;
 
 class DataAssigner extends \Magento\Payment\Observer\AbstractDataAssignObserver
 {

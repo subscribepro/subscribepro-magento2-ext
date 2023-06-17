@@ -3,9 +3,9 @@
 namespace Swarming\SubscribePro\Ui\ConfigProvider;
 
 use Magento\Checkout\Model\ConfigProviderInterface;
-use Swarming\SubscribePro\Gateway\Config\ConfigProvider as GatewayConfigProvider;
-use SubscribePro\Exception\InvalidArgumentException;
 use SubscribePro\Exception\HttpException;
+use SubscribePro\Exception\InvalidArgumentException;
+use Swarming\SubscribePro\Gateway\Config\ConfigProvider as GatewayConfigProvider;
 
 class Checkout implements ConfigProviderInterface
 {

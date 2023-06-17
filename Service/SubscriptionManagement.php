@@ -3,10 +3,10 @@
 namespace Swarming\SubscribePro\Service;
 
 use Magento\Framework\App\Area;
-use SubscribePro\Exception\HttpException;
 use Magento\Framework\Exception\AuthorizationException;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
+use SubscribePro\Exception\HttpException;
 use Swarming\SubscribePro\Api\SubscriptionManagementInterface;
 
 class SubscriptionManagement implements SubscriptionManagementInterface
@@ -414,7 +414,7 @@ class SubscriptionManagement implements SubscriptionManagementInterface
      */
     protected function checkSubscriptionOwner($subscription, $customerId, $platformCustomer = null)
     {
-        $platformCustomer = $platformCustomer ? : $this->platformCustomerManager->getCustomerById($customerId);
+        $platformCustomer = $platformCustomer ?: $this->platformCustomerManager->getCustomerById($customerId);
         if ($subscription->getCustomerId() != $platformCustomer->getId()) {
             throw new AuthorizationException(__('Forbidden action.'));
         }

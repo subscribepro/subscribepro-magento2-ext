@@ -2,8 +2,8 @@
 
 namespace Swarming\SubscribePro\Test\Unit\Platform\Service;
 
-use SubscribePro\Service\Webhook\WebhookService;
 use SubscribePro\Service\Webhook\EventInterface;
+use SubscribePro\Service\Webhook\WebhookService;
 use Swarming\SubscribePro\Platform\Service\Webhook;
 
 class WebhookTest extends AbstractService

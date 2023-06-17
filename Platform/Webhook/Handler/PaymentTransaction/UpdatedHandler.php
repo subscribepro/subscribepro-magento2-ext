@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Swarming\SubscribePro\Platform\Webhook\Handler\PaymentTransaction;
 
 use Magento\Sales\Api\Data\OrderInterface;
+use Magento\Sales\Api\Data\OrderPaymentInterface;
 use Magento\Sales\Model\Order;
+use SubscribePro\Service\Transaction\TransactionInterface;
+use SubscribePro\Service\Webhook\EventInterface;
 use Swarming\SubscribePro\Gateway\Config\ConfigProvider as GatewayConfigProvider;
 use Swarming\SubscribePro\Platform\Webhook\HandlerInterface;
-use SubscribePro\Service\Webhook\EventInterface;
-use SubscribePro\Service\Transaction\TransactionInterface;
-use Magento\Sales\Api\Data\OrderPaymentInterface;
 
 class UpdatedHandler implements HandlerInterface
 {

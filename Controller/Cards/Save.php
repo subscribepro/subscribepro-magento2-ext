@@ -2,8 +2,8 @@
 
 namespace Swarming\SubscribePro\Controller\Cards;
 
-use Magento\Framework\DataObject;
 use Magento\Framework\Controller\ResultFactory;
+use Magento\Framework\DataObject;
 use Magento\Framework\Exception\LocalizedException;
 use SubscribePro\Service\PaymentProfile\PaymentProfileInterface;
 

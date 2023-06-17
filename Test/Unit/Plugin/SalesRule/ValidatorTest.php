@@ -4,15 +4,15 @@ namespace Swarming\SubscribePro\Test\Unit\Plugin\SalesRule;
 
 use Magento\Catalog\Model\Product;
 use Magento\Quote\Model\Quote;
+use Magento\Quote\Model\Quote\Address as QuoteAddress;
+use Magento\Quote\Model\Quote\Item\AbstractItem as QuoteItem;
+use Magento\SalesRule\Model\Validator as SalesRuleValidator;
 use Magento\Store\Api\Data\StoreInterface;
+use Swarming\SubscribePro\Helper\QuoteItem as QuoteItemHelper;
+use Swarming\SubscribePro\Model\CatalogRule\InspectorInterface as CatalogRuleInspectorInterface;
+use Swarming\SubscribePro\Model\Config\SubscriptionDiscount as SubscriptionDiscountConfig;
 use Swarming\SubscribePro\Model\Quote\ItemSubscriptionDiscount;
 use Swarming\SubscribePro\Plugin\SalesRule\Validator;
-use Swarming\SubscribePro\Model\Config\SubscriptionDiscount as SubscriptionDiscountConfig;
-use Swarming\SubscribePro\Helper\QuoteItem as QuoteItemHelper;
-use Magento\SalesRule\Model\Validator as SalesRuleValidator;
-use Magento\Quote\Model\Quote\Item\AbstractItem as QuoteItem;
-use Magento\Quote\Model\Quote\Address as QuoteAddress;
-use Swarming\SubscribePro\Model\CatalogRule\InspectorInterface as CatalogRuleInspectorInterface;
 
 class ValidatorTest extends \PHPUnit\Framework\TestCase
 {

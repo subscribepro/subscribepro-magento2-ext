@@ -4,9 +4,9 @@ namespace Swarming\SubscribePro\Test\Unit\Plugin\Quote;
 
 use Magento\Framework\DataObject;
 use Magento\Quote\Api\Data\CartItemInterface;
-use Swarming\SubscribePro\Plugin\Quote\CartItemOptionsProcessor;
-use Swarming\SubscribePro\Model\Quote\SubscriptionOption\OptionProcessor as SubscriptionOptionProcessor;
 use Magento\Quote\Model\Quote\Item\CartItemOptionsProcessor as QuoteCartItemOptionsProcessor;
+use Swarming\SubscribePro\Model\Quote\SubscriptionOption\OptionProcessor as SubscriptionOptionProcessor;
+use Swarming\SubscribePro\Plugin\Quote\CartItemOptionsProcessor;
 
 class CartItemOptionsProcessorTest extends \PHPUnit\Framework\TestCase
 {

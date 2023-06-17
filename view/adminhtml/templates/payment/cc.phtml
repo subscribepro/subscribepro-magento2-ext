@@ -50,7 +50,7 @@ $code = $block->escapeHtml($block->getMethodCode());
         </div>
     </div>
 
-    <div class="admin__field _required" <?php if(!$block->hasVerification()): ?>style="display:none"<?php endif; ?>>
+    <div class="admin__field _required" <?php if (!$block->hasVerification()): ?>style="display:none"<?php endif; ?>>
         <label class="label admin__field-label">
             <span><?php echo $block->escapeHtml(__('Card Verification Number')); ?></span>
         </label>

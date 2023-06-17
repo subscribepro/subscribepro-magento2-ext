@@ -7,13 +7,13 @@ use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Vault\Api\Data\PaymentTokenInterface;
 use Magento\Vault\Api\PaymentTokenManagementInterface;
 use Magento\Vault\Api\PaymentTokenRepositoryInterface;
-use SubscribePro\Service\PaymentProfile\PaymentProfileInterface;
-use SubscribePro\Service\Webhook\EventInterface;
-use Swarming\SubscribePro\Platform\Webhook\Handler\PaymentProfile\CreateHandler;
-use Swarming\SubscribePro\Platform\Service\PaymentProfile as PaymentProfileService;
-use Swarming\SubscribePro\Helper\Vault as VaultHelper;
 use Magento\Vault\Model\CreditCardTokenFactory;
 use SubscribePro\Service\Customer\CustomerInterface as PlatformCustomerInterface;
+use SubscribePro\Service\PaymentProfile\PaymentProfileInterface;
+use SubscribePro\Service\Webhook\EventInterface;
+use Swarming\SubscribePro\Helper\Vault as VaultHelper;
+use Swarming\SubscribePro\Platform\Service\PaymentProfile as PaymentProfileService;
+use Swarming\SubscribePro\Platform\Webhook\Handler\PaymentProfile\CreateHandler;
 
 class CreateHandlerTest extends \PHPUnit\Framework\TestCase
 {

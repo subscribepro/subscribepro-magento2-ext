@@ -4,13 +4,13 @@ namespace Swarming\SubscribePro\Test\Unit\Controller\Adminhtml\Config;
 
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\App\RequestInterface;
+use Magento\Framework\Controller\Result\Json as ResultJson;
 use Magento\Framework\Controller\ResultFactory;
 use SubscribePro\Sdk;
-use Swarming\SubscribePro\Platform\SdkFactory;
 use SubscribePro\Service\Webhook\WebhookService;
 use Swarming\SubscribePro\Controller\Adminhtml\Config\TestConnection;
 use Swarming\SubscribePro\Model\Config\Platform as PlatformConfig;
-use Magento\Framework\Controller\Result\Json as ResultJson;
+use Swarming\SubscribePro\Platform\SdkFactory;
 
 class TestConnectionTest extends \PHPUnit\Framework\TestCase
 {

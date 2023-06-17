@@ -2,12 +2,11 @@
 
 namespace Swarming\SubscribePro\Test\Unit\Plugin\Quote;
 
+use Magento\Quote\Model\Quote\Item as QuoteItem;
+use Magento\Quote\Model\Quote\Item\Option as QuoteItemOptionMock;
 use Swarming\SubscribePro\Api\Data\SubscriptionOptionInterface;
 use Swarming\SubscribePro\Model\Quote\SubscriptionOption\OptionProcessor;
 use Swarming\SubscribePro\Plugin\Quote\Item;
-use Swarming\SubscribePro\Helper\QuoteItem as QuoteItemHelper;
-use Magento\Quote\Model\Quote\Item as QuoteItem;
-use Magento\Quote\Model\Quote\Item\Option as QuoteItemOptionMock;
 
 class ItemTest extends \PHPUnit\Framework\TestCase
 {

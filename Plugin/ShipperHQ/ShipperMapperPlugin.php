@@ -2,9 +2,6 @@
 
 namespace Swarming\SubscribePro\Plugin\ShipperHQ;
 
-use Swarming\SubscribePro\Api\Data\SubscriptionOptionInterface;
-use Swarming\SubscribePro\Api\Data\ProductInterface as PlatformProductInterface;
-
 class ShipperMapperPlugin
 {
     /**

@@ -3,7 +3,6 @@
 namespace Swarming\SubscribePro\Model\CatalogRule\Inspector;
 
 use Swarming\SubscribePro\Model\CatalogRule\InspectorInterface;
-use Swarming\SubscribePro\Model\CatalogRule\Inspector\DefaultInspector;
 
 class BundleProduct extends DefaultInspector implements InspectorInterface
 {

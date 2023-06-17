@@ -2,9 +2,6 @@
 
 namespace Swarming\SubscribePro\Model\Quote;
 
-use Magento\Framework\App\ObjectManager;
-use Swarming\SubscribePro\Model\Quote\Payment\GetPaymentProfileId;
-
 class SubscriptionCreator
 {
     const CREATED_SUBSCRIPTION_IDS = 'created_subscription_ids';

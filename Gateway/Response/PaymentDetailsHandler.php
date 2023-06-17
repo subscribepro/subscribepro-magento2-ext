@@ -3,8 +3,6 @@
 namespace Swarming\SubscribePro\Gateway\Response;
 
 use Magento\Payment\Gateway\Response\HandlerInterface;
-use Magento\Sales\Model\Order\Payment;
-use Magento\Sales\Model\Order\Payment\Transaction;
 use SubscribePro\Service\Transaction\TransactionInterface;
 
 class PaymentDetailsHandler implements HandlerInterface
@@ -22,7 +20,7 @@ class PaymentDetailsHandler implements HandlerInterface
     ) {
         $this->subjectReader = $subjectReader;
     }
-    
+
     /**
      * @param array $handlingSubject
      * @param array $response

@@ -2,8 +2,8 @@
 
 namespace Swarming\SubscribePro\Test\Unit\Model\CatalogRule\Inspector;
 
-use Swarming\SubscribePro\Model\CatalogRule\Inspector\BundleProduct;
 use Magento\Catalog\Model\Product\Configuration\Item\Option as ProductConfigurationOption;
+use Swarming\SubscribePro\Model\CatalogRule\Inspector\BundleProduct;
 
 class BundleProductTest extends AbstractInspector
 {

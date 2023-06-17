@@ -7,7 +7,6 @@ namespace Swarming\SubscribePro\Gateway\Request;
 use Magento\Payment\Gateway\Request\BuilderInterface;
 use SubscribePro\Service\Transaction\TransactionInterface;
 use Swarming\SubscribePro\Gateway\Config\Config as GatewayConfig;
-use Swarming\SubscribePro\Model\Config\Source\ThreeDsType;
 
 class ThreeDSecureBuilder implements BuilderInterface
 {

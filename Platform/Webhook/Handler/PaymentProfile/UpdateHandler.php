@@ -4,7 +4,6 @@ namespace Swarming\SubscribePro\Platform\Webhook\Handler\PaymentProfile;
 
 use SubscribePro\Service\Webhook\EventInterface;
 use Swarming\SubscribePro\Platform\Webhook\HandlerInterface;
-use Swarming\SubscribePro\Platform\Webhook\Handler\PaymentProfile\AbstractHandler;
 
 class UpdateHandler extends AbstractHandler implements HandlerInterface
 {

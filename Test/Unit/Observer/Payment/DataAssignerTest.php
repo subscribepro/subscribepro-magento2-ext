@@ -5,11 +5,11 @@ namespace Swarming\SubscribePro\Test\Unit\Observer\Payment;
 use Magento\Framework\DataObject;
 use Magento\Framework\Event;
 use Magento\Framework\Event\Observer;
+use Magento\Payment\Model\InfoInterface as PaymentInfoInterface;
 use Magento\Payment\Observer\AbstractDataAssignObserver;
 use Magento\Quote\Api\Data\PaymentInterface;
 use Swarming\SubscribePro\Gateway\Request\PaymentDataBuilder;
 use Swarming\SubscribePro\Observer\Payment\DataAssigner as PaymentDataAssigner;
-use Magento\Payment\Model\InfoInterface as PaymentInfoInterface;
 
 class DataAssignerTest extends \PHPUnit\Framework\TestCase
 {

@@ -5,9 +5,9 @@ namespace Swarming\SubscribePro\Test\Unit\Gateway\Command;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Vault\Model\Ui\VaultConfigProvider;
 use SubscribePro\Service\PaymentProfile\PaymentProfileInterface;
-use Swarming\SubscribePro\Gateway\Request\VaultDataBuilder;
 use Swarming\SubscribePro\Gateway\Command\AuthorizeCommand;
 use Swarming\SubscribePro\Gateway\Request\PaymentDataBuilder;
+use Swarming\SubscribePro\Gateway\Request\VaultDataBuilder;
 
 class AuthorizeCommandTest extends AbstractProfileCreatorCommand
 {

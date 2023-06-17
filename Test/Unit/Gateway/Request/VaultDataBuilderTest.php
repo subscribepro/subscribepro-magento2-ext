@@ -6,9 +6,9 @@ use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Sales\Api\Data\OrderPaymentExtensionInterface;
 use Magento\Sales\Model\Order\Payment;
 use Magento\Vault\Api\Data\PaymentTokenInterface;
+use SubscribePro\Service\Transaction\TransactionInterface;
 use Swarming\SubscribePro\Gateway\Helper\SubjectReader;
 use Swarming\SubscribePro\Gateway\Request\VaultDataBuilder;
-use SubscribePro\Service\Transaction\TransactionInterface;
 
 class VaultDataBuilderTest extends \PHPUnit\Framework\TestCase
 {

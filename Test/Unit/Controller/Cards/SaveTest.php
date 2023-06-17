@@ -3,22 +3,21 @@
 namespace Swarming\SubscribePro\Test\Unit\Controller\Cards;
 
 use Magento\Backend\App\Action\Context;
+use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\App\RequestInterface;
+use Magento\Framework\Controller\Result\Redirect as ResultRedirect;
 use Magento\Framework\Controller\ResultFactory;
+use Magento\Framework\Data\Form\FormKey\Validator as FormKeyValidator;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Message\ManagerInterface;
+use Magento\Store\Model\StoreManagerInterface as StoreManager;
 use Magento\Vault\Api\Data\PaymentTokenInterface;
 use Swarming\SubscribePro\Controller\Cards\Save;
-use Swarming\SubscribePro\Gateway\Config\VaultConfig;
-use Magento\Framework\View\Result\Page as ResultPage;
-use Magento\Framework\Controller\Result\Redirect as ResultRedirect;
-use Magento\Customer\Model\Session as CustomerSession;
-use Magento\Framework\Data\Form\FormKey\Validator as FormKeyValidator;
-use Swarming\SubscribePro\Model\Vault\Form as VaultForm;
-use Swarming\SubscribePro\Gateway\Config\Config as GatewayConfig;
-use Swarming\SubscribePro\Model\Vault\Validator as VaultFormValidator;
 use Swarming\SubscribePro\Gateway\Command\AuthorizeCommand as WalletAuthorizeCommand;
-use \Magento\Store\Model\StoreManagerInterface as StoreManager;
+use Swarming\SubscribePro\Gateway\Config\Config as GatewayConfig;
+use Swarming\SubscribePro\Gateway\Config\VaultConfig;
+use Swarming\SubscribePro\Model\Vault\Form as VaultForm;
+use Swarming\SubscribePro\Model\Vault\Validator as VaultFormValidator;
 
 class SaveTest extends \PHPUnit\Framework\TestCase
 {
@@ -57,14 +56,14 @@ class SaveTest extends \PHPUnit\Framework\TestCase
      */
     protected $vaultFormValidator;
 
-     /**
-      * @var \PHPUnit_Framework_MockObject_MockObject|\Swarming\SubscribePro\Gateway\Command\AuthorizeCommand
-      */
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject|\Swarming\SubscribePro\Gateway\Command\AuthorizeCommand
+     */
     protected $walletAuthorizeCommand;
 
-     /**
-      * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Store\Model\StoreManagerInterface
-      */
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Store\Model\StoreManagerInterface
+     */
     protected $storeManager;
 
     /**

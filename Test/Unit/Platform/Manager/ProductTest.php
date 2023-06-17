@@ -2,11 +2,11 @@
 
 namespace Swarming\SubscribePro\Test\Unit\Platform\Manager;
 
+use Magento\Catalog\Api\Data\ProductInterface;
 use Swarming\SubscribePro\Api\Data\ProductInterface as PlatformProductInterface;
 use Swarming\SubscribePro\Platform\Manager\Product;
 use Swarming\SubscribePro\Platform\Service\Product as ProductService;
 use Swarming\SubscribePro\Platform\Storage\Product as ProductStorage;
-use Magento\Catalog\Api\Data\ProductInterface;
 
 class ProductTest extends \PHPUnit\Framework\TestCase
 {

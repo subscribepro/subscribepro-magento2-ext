@@ -4,7 +4,6 @@ namespace Swarming\SubscribePro\Test\Unit\Helper;
 
 use Swarming\SubscribePro\Helper\SalesRuleValidator;
 use Swarming\SubscribePro\Model\Config\Source\CartRuleCombine;
-use Swarming\SubscribePro\Model\Rule\Condition\Base as ConditionBase;
 
 class SalesRuleValidatorTest extends \PHPUnit\Framework\TestCase
 {

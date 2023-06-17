@@ -2,10 +2,10 @@
 
 namespace Swarming\SubscribePro\Test\Unit\Plugin\Checkout;
 
-use Swarming\SubscribePro\Plugin\Checkout\Cart;
-use Swarming\SubscribePro\Helper\OrderItem as OrderItemHelper;
 use Magento\Checkout\Model\Cart as CheckoutCart;
 use Magento\Sales\Model\Order\Item as OrderItem;
+use Swarming\SubscribePro\Helper\OrderItem as OrderItemHelper;
+use Swarming\SubscribePro\Plugin\Checkout\Cart;
 
 class CartTest extends \PHPUnit\Framework\TestCase
 {

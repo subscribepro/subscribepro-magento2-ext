@@ -7,9 +7,9 @@ use Magento\Framework\Event\Observer;
 use Magento\Quote\Model\Quote;
 use Magento\Store\Api\Data\WebsiteInterface;
 use Magento\Store\Model\Store;
-use Swarming\SubscribePro\Observer\Checkout\IsAllowedGuest;
-use Swarming\SubscribePro\Model\Config\General as GeneralConfig;
 use Swarming\SubscribePro\Helper\Quote as QuoteHelper;
+use Swarming\SubscribePro\Model\Config\General as GeneralConfig;
+use Swarming\SubscribePro\Observer\Checkout\IsAllowedGuest;
 
 class IsAllowedGuestTest extends \PHPUnit\Framework\TestCase
 {

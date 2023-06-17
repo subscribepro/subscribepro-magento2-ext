@@ -3,12 +3,12 @@
 namespace Swarming\SubscribePro\Test\Unit\Controller\Cards;
 
 use Magento\Backend\App\Action\Context;
-use Magento\Framework\Controller\ResultFactory;
-use Swarming\SubscribePro\Controller\Customer\Subscriptions;
-use Magento\Framework\View\Result\Page as ResultPage;
 use Magento\Framework\Controller\Result\Forward as ResultForward;
+use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\View\Page\Config as PageConfig;
 use Magento\Framework\View\Page\Title as PageTitle;
+use Magento\Framework\View\Result\Page as ResultPage;
+use Swarming\SubscribePro\Controller\Customer\Subscriptions;
 use Swarming\SubscribePro\Model\Config\General as GeneralConfig;
 
 class SubscriptionsTest extends \PHPUnit\Framework\TestCase

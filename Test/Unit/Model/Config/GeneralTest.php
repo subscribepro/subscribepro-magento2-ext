@@ -3,8 +3,8 @@
 namespace Swarming\SubscribePro\Test\Unit\Model\Config;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
-use Swarming\SubscribePro\Model\Config\General;
 use Magento\Store\Model\ScopeInterface;
+use Swarming\SubscribePro\Model\Config\General;
 
 class GeneralTest extends \PHPUnit\Framework\TestCase
 {

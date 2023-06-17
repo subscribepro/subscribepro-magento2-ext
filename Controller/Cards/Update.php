@@ -2,9 +2,9 @@
 
 namespace Swarming\SubscribePro\Controller\Cards;
 
-use Magento\Vault\Api\Data\PaymentTokenInterface;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Vault\Api\Data\PaymentTokenInterface;
 
 class Update extends \Magento\Customer\Controller\AbstractAccount
 {

@@ -2,10 +2,10 @@
 
 namespace Swarming\SubscribePro\Helper;
 
+use Magento\Framework\App\ObjectManager;
 use Magento\Vault\Api\Data\PaymentTokenInterface;
 use SubscribePro\Service\PaymentProfile\PaymentProfileInterface;
 use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
-use Magento\Framework\App\ObjectManager;
 use Swarming\SubscribePro\Model\Config\Source\ThreeDsType;
 
 class Vault

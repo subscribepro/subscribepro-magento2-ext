@@ -6,9 +6,9 @@ use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Quote\Model\Quote\Item as QuoteItem;
-use Swarming\SubscribePro\Model\Quote\SubscriptionOption\OptionProcessor as SubscriptionOptionProcessor;
-use SubscribePro\Exception\InvalidArgumentException;
 use SubscribePro\Exception\HttpException;
+use SubscribePro\Exception\InvalidArgumentException;
+use Swarming\SubscribePro\Model\Quote\SubscriptionOption\OptionProcessor as SubscriptionOptionProcessor;
 
 class CartUpdateItemsAfter extends CheckoutCartAbstract implements ObserverInterface
 {

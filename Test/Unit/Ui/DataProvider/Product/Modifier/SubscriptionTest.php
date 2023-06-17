@@ -6,8 +6,8 @@ use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\Locator\LocatorInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Stdlib\ArrayManager;
-use Swarming\SubscribePro\Ui\DataProvider\Product\Modifier\Subscription;
 use Magento\Ui\Component\Form;
+use Swarming\SubscribePro\Ui\DataProvider\Product\Modifier\Subscription;
 
 class SubscriptionTest extends \PHPUnit\Framework\TestCase
 {

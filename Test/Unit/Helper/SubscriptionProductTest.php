@@ -2,23 +2,23 @@
 
 namespace Swarming\SubscribePro\Test\Unit\Helper;
 
+use Magento\Catalog\Helper\Image as ImageHelper;
+use Magento\Catalog\Helper\Product\Configuration\ConfigurationInterface as ProductConfigurationInterface;
+use Magento\Catalog\Helper\Product\ConfigurationPool as ProductConfigurationPool;
 use Magento\Catalog\Model\Product;
+use Magento\Catalog\Model\Product\Url as ProductUrl;
 use Magento\Framework\Api\AttributeInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Pricing\PriceCurrencyInterface;
 use Magento\Tax\Api\TaxCalculationInterface;
-use Swarming\SubscribePro\Api\Data\SubscriptionInterface;
-use Swarming\SubscribePro\Helper\SubscriptionProduct;
-use Swarming\SubscribePro\Platform\Manager\Product as ProductManager;
-use Magento\Catalog\Model\Product\Url as ProductUrl;
-use Magento\Catalog\Helper\Image as ImageHelper;
 use Swarming\SubscribePro\Api\Data\ProductInterface as PlatformProductInterface;
+use Swarming\SubscribePro\Api\Data\SubscriptionInterface;
 use Swarming\SubscribePro\Block\Product\Subscription as SubscriptionBlock;
-use Swarming\SubscribePro\Model\Subscription\OptionItemManager as SubscriptionOptionItemManager;
-use Magento\Catalog\Helper\Product\ConfigurationPool as ProductConfigurationPool;
-use Swarming\SubscribePro\Model\Subscription\OptionItem as SubscriptionOptionItem;
-use Magento\Catalog\Helper\Product\Configuration\ConfigurationInterface as ProductConfigurationInterface;
+use Swarming\SubscribePro\Helper\SubscriptionProduct;
 use Swarming\SubscribePro\Model\CatalogRule\InspectorInterface as CatalogRuleInspectorInterface;
+use Swarming\SubscribePro\Model\Subscription\OptionItem as SubscriptionOptionItem;
+use Swarming\SubscribePro\Model\Subscription\OptionItemManager as SubscriptionOptionItemManager;
+use Swarming\SubscribePro\Platform\Manager\Product as ProductManager;
 
 class SubscriptionProductTest extends \PHPUnit\Framework\TestCase
 {

@@ -2,11 +2,11 @@
 
 namespace Swarming\SubscribePro\Plugin\Vault;
 
-use Magento\Vault\Api\PaymentTokenRepositoryInterface;
 use Magento\Vault\Api\Data\PaymentTokenInterface;
-use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
-use SubscribePro\Service\PaymentProfile\PaymentProfileInterface;
+use Magento\Vault\Api\PaymentTokenRepositoryInterface;
 use SubscribePro\Exception\HttpException;
+use SubscribePro\Service\PaymentProfile\PaymentProfileInterface;
+use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
 
 class TokenRepository
 {

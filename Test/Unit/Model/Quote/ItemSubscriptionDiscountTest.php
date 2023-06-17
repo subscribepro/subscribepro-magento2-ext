@@ -6,14 +6,14 @@ use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\Product;
 use Magento\Framework\Pricing\PriceCurrencyInterface;
 use Magento\Quote\Api\Data\CartInterface;
-use Swarming\SubscribePro\Api\Data\ProductInterface as PlatformProductInterface;
-use Swarming\SubscribePro\Model\Config\Source\CartRuleCombine;
-use Swarming\SubscribePro\Model\Quote\ItemSubscriptionDiscount;
-use Swarming\SubscribePro\Helper\QuoteItem as QuoteItemHelper;
-use Swarming\SubscribePro\Platform\Manager\Product as ProductManager;
-use Swarming\SubscribePro\Model\Config\SubscriptionDiscount as SubscriptionDiscountConfig;
-use Magento\Quote\Model\Quote\Item as QuoteItem;
 use Magento\Quote\Model\Quote\Address as QuoteAddress;
+use Magento\Quote\Model\Quote\Item as QuoteItem;
+use Swarming\SubscribePro\Api\Data\ProductInterface as PlatformProductInterface;
+use Swarming\SubscribePro\Helper\QuoteItem as QuoteItemHelper;
+use Swarming\SubscribePro\Model\Config\Source\CartRuleCombine;
+use Swarming\SubscribePro\Model\Config\SubscriptionDiscount as SubscriptionDiscountConfig;
+use Swarming\SubscribePro\Model\Quote\ItemSubscriptionDiscount;
+use Swarming\SubscribePro\Platform\Manager\Product as ProductManager;
 
 class ItemSubscriptionDiscountTest extends \PHPUnit\Framework\TestCase
 {

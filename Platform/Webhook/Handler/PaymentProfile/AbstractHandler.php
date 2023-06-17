@@ -2,12 +2,12 @@
 
 namespace Swarming\SubscribePro\Platform\Webhook\Handler\PaymentProfile;
 
+use Magento\Framework\Exception\NoSuchEntityException;
 use SubscribePro\Service\Customer\CustomerInterface as PlatformCustomerInterface;
 use SubscribePro\Service\PaymentProfile\PaymentProfileInterface;
 use SubscribePro\Service\Webhook\EventInterface;
-use Magento\Framework\Exception\NoSuchEntityException;
-use Swarming\SubscribePro\Platform\Webhook\HandlerInterface;
 use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
+use Swarming\SubscribePro\Platform\Webhook\HandlerInterface;
 
 abstract class AbstractHandler implements HandlerInterface
 {

@@ -4,10 +4,9 @@ namespace Swarming\SubscribePro\Block\Product;
 
 use Magento\Catalog\Pricing\Price\FinalPrice;
 use Magento\Catalog\Pricing\Price\RegularPrice;
-use Magento\Tax\Model\Config as TaxConfig;
-use Swarming\SubscribePro\Api\Data\ProductInterface;
-use SubscribePro\Exception\InvalidArgumentException;
 use SubscribePro\Exception\HttpException;
+use SubscribePro\Exception\InvalidArgumentException;
+use Swarming\SubscribePro\Api\Data\ProductInterface;
 
 class Subscription extends \Magento\Catalog\Block\Product\AbstractProduct
 {

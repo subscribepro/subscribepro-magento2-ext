@@ -8,9 +8,9 @@ use Magento\Framework\Reflection\DataObjectProcessor;
 use Magento\Framework\Webapi\ServiceInputProcessor;
 use Magento\Quote\Api\Data\CartItemInterface;
 use Magento\Quote\Api\Data\ProductOptionInterface;
+use Magento\Quote\Model\Quote\Item as QuoteItem;
 use Swarming\SubscribePro\Api\Data\SubscriptionInterface;
 use Swarming\SubscribePro\Helper\ProductOption;
-use Magento\Quote\Model\Quote\Item as QuoteItem;
 use Swarming\SubscribePro\Model\Quote\SubscriptionOption\OptionProcessor;
 
 class ProductOptionTest extends \PHPUnit\Framework\TestCase

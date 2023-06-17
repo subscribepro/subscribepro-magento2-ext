@@ -2,9 +2,9 @@
 
 namespace Swarming\SubscribePro\Test\Unit\Plugin\GroupedProduct;
 
-use Swarming\SubscribePro\Plugin\GroupedProduct\TypeGrouped;
-use Magento\GroupedProduct\Model\Product\Type\Grouped as TypeGroupedSubject;
 use Magento\Catalog\Model\ResourceModel\Product\Link\Product\Collection as ProductCollection;
+use Magento\GroupedProduct\Model\Product\Type\Grouped as TypeGroupedSubject;
+use Swarming\SubscribePro\Plugin\GroupedProduct\TypeGrouped;
 use Swarming\SubscribePro\Ui\DataProvider\Product\Modifier\Subscription as SubscriptionModifier;
 
 class TypeGroupedTest extends \PHPUnit\Framework\TestCase

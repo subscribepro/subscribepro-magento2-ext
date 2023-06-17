@@ -2,10 +2,10 @@
 
 namespace Swarming\SubscribePro\Gateway\Response;
 
-use SubscribePro\Service\Transaction\TransactionInterface;
 use Magento\Payment\Gateway\Response\HandlerInterface;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Vault\Model\Ui\VaultConfigProvider;
+use SubscribePro\Service\Transaction\TransactionInterface;
 use Swarming\SubscribePro\Model\Config\Source\ThreeDsType;
 
 class VaultDetailsHandler implements HandlerInterface

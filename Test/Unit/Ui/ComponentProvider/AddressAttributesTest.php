@@ -4,10 +4,10 @@ namespace Swarming\SubscribePro\Test\Unit\Ui\ComponentProvider;
 
 use Magento\Checkout\Block\Checkout\AttributeMerger;
 use Magento\Customer\Model\AttributeMetadataDataProvider;
+use Magento\Customer\Model\Options as CustomerOptions;
 use Magento\Eav\Api\Data\AttributeInterface;
 use Magento\Ui\Component\Form\AttributeMapper;
 use Swarming\SubscribePro\Ui\ComponentProvider\AddressAttributes;
-use Magento\Customer\Model\Options as CustomerOptions;
 
 class AddressAttributesTest extends \PHPUnit\Framework\TestCase
 {

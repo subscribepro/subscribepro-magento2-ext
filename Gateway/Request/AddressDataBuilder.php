@@ -2,11 +2,11 @@
 
 namespace Swarming\SubscribePro\Gateway\Request;
 
-use Magento\Payment\Gateway\Request\BuilderInterface;
-use SubscribePro\Service\PaymentProfile\PaymentProfileInterface;
-use SubscribePro\Service\Address\AddressInterface;
 use Magento\Payment\Gateway\Data\AddressAdapterInterface;
+use Magento\Payment\Gateway\Request\BuilderInterface;
 use Magento\Sales\Api\Data\OrderAddressInterface;
+use SubscribePro\Service\Address\AddressInterface;
+use SubscribePro\Service\PaymentProfile\PaymentProfileInterface;
 
 class AddressDataBuilder implements BuilderInterface
 {

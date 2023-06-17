@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Swarming\SubscribePro\Helper;
 
-use Magento\Vault\Api\Data\PaymentTokenInterface;
 use SubscribePro\Service\PaymentProfile\PaymentProfileInterface;
 
 class PaymentProfileThreeDs

@@ -11,9 +11,9 @@ use Magento\Framework\Convert\DataObject;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Session\SessionManagerInterface;
+use Psr\Log\LoggerInterface;
 use Swarming\SubscribePro\Platform\Manager\Customer as PlatformManagerCustomer;
 use Swarming\SubscribePro\Platform\Tool\Oauth as PlatformOAuth;
-use Psr\Log\LoggerInterface;
 
 class PaymentRequestConfig extends DataObject
 {

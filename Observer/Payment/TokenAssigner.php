@@ -4,11 +4,11 @@ namespace Swarming\SubscribePro\Observer\Payment;
 
 use Magento\Framework\Event\Observer;
 use Magento\Quote\Api\Data\PaymentInterface;
+use Magento\Quote\Model\Quote\Payment as QuotePayment;
 use Magento\Vault\Api\Data\PaymentTokenInterface;
 use SubscribePro\Service\Transaction\TransactionInterface;
-use Swarming\SubscribePro\Gateway\Request\VaultDataBuilder;
 use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
-use Magento\Quote\Model\Quote\Payment as QuotePayment;
+use Swarming\SubscribePro\Gateway\Request\VaultDataBuilder;
 
 class TokenAssigner extends \Magento\Payment\Observer\AbstractDataAssignObserver
 {

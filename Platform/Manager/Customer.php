@@ -2,9 +2,9 @@
 
 namespace Swarming\SubscribePro\Platform\Manager;
 
-use SubscribePro\Service\Customer\CustomerInterface as PlatformCustomerInterface;
 use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
+use SubscribePro\Service\Customer\CustomerInterface as PlatformCustomerInterface;
 
 class Customer
 {

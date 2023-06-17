@@ -3,12 +3,12 @@
 namespace Swarming\SubscribePro\Test\Unit\Plugin\Product;
 
 use Magento\Catalog\Api\Data\ProductInterface;
-use Swarming\SubscribePro\Plugin\Product\Configuration;
+use Magento\Catalog\Helper\Product\Configuration as ProductConfiguration;
+use Magento\Catalog\Model\Product\Configuration\Item\ItemInterface as ConfigurationItemInterface;
+use SubscribePro\Service\Product\ProductInterface as PlatformProductInterface;
 use Swarming\SubscribePro\Helper\Product as ProductHelper;
 use Swarming\SubscribePro\Helper\QuoteItem as QuoteItemHelper;
-use Magento\Catalog\Model\Product\Configuration\Item\ItemInterface as ConfigurationItemInterface;
-use Magento\Catalog\Helper\Product\Configuration as ProductConfiguration;
-use SubscribePro\Service\Product\ProductInterface as PlatformProductInterface;
+use Swarming\SubscribePro\Plugin\Product\Configuration;
 
 class ConfigurationTest extends \PHPUnit\Framework\TestCase
 {

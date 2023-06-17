@@ -2,10 +2,10 @@
 
 namespace Swarming\SubscribePro\Test\Unit\Ui\ConfigProvider;
 
-use Swarming\SubscribePro\Ui\ConfigProvider\PriceConfig;
-use Swarming\SubscribePro\Model\Config\SubscriptionDiscount as SubscriptionDiscountConfig;
-use Magento\Tax\Model\Config as TaxConfig;
 use Magento\Framework\Locale\FormatInterface as LocaleFormatInterface;
+use Magento\Tax\Model\Config as TaxConfig;
+use Swarming\SubscribePro\Model\Config\SubscriptionDiscount as SubscriptionDiscountConfig;
+use Swarming\SubscribePro\Ui\ConfigProvider\PriceConfig;
 
 class PriceConfigTest extends \PHPUnit\Framework\TestCase
 {

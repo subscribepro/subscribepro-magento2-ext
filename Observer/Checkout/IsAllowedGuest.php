@@ -2,8 +2,8 @@
 
 namespace Swarming\SubscribePro\Observer\Checkout;
 
-use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Event\Observer;
+use Magento\Framework\Event\ObserverInterface;
 
 class IsAllowedGuest implements ObserverInterface
 {

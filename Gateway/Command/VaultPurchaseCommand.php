@@ -3,7 +3,6 @@
 namespace Swarming\SubscribePro\Gateway\Command;
 
 use Magento\Payment\Gateway\CommandInterface;
-use Magento\Framework\Exception\LocalizedException;
 use Swarming\SubscribePro\Gateway\Request\VaultDataBuilder;
 
 class VaultPurchaseCommand extends AbstractCommand implements CommandInterface

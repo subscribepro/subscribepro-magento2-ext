@@ -2,11 +2,10 @@
 
 namespace Swarming\SubscribePro\Plugin\Quote;
 
+use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Framework\App\State as AppState;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Quote\Model\Quote\Item as QuoteItem;
-use SubscribePro\Service\Product\ProductInterface as PlatformProductInterface;
 
 class QuoteItemUpdater
 {

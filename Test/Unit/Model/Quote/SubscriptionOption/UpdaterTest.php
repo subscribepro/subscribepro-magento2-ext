@@ -5,11 +5,10 @@ namespace Swarming\SubscribePro\Test\Unit\Model\Quote\SubscriptionOption;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Framework\TestFramework\Unit\Matcher\MethodInvokedAtIndex;
 use Magento\Quote\Api\Data\CartItemInterface;
+use Magento\Quote\Model\Quote\Item as QuoteItem;
 use Swarming\SubscribePro\Api\Data\ProductInterface as PlatformProductInterface;
 use Swarming\SubscribePro\Api\Data\SubscriptionOptionInterface;
 use Swarming\SubscribePro\Helper\QuoteItem as QuoteItemHelper;
-use Magento\Quote\Model\Quote\Item as QuoteItem;
-use Magento\Quote\Model\Quote\Address as QuoteAddress;
 use Swarming\SubscribePro\Model\Quote\SubscriptionOption\Updater;
 
 class UpdaterTest extends \PHPUnit\Framework\TestCase

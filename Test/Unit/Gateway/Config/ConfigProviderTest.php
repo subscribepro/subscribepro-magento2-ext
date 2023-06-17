@@ -4,12 +4,12 @@ namespace Swarming\SubscribePro\Test\Unit\Gateway\Config;
 
 use Magento\Payment\Model\CcConfig;
 use Magento\Payment\Model\CcConfigProvider;
-use Magento\Store\Model\StoreManagerInterface;
 use Magento\Store\Api\Data\StoreInterface;
+use Magento\Store\Model\StoreManagerInterface;
 use SubscribePro\Tools\Config as ConfigTool;
+use Swarming\SubscribePro\Gateway\Config\Config as GatewayConfig;
 use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
 use Swarming\SubscribePro\Model\Config\General as GeneralConfig;
-use Swarming\SubscribePro\Gateway\Config\Config as GatewayConfig;
 use Swarming\SubscribePro\Platform\Tool\Config as PlatformConfigTool;
 
 class ConfigProviderTest extends \PHPUnit\Framework\TestCase

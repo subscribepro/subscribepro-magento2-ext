@@ -4,16 +4,16 @@ namespace Swarming\SubscribePro\Test\Unit\Model\Vault;
 
 use Magento\Vault\Api\PaymentTokenManagementInterface;
 use Magento\Vault\Api\PaymentTokenRepositoryInterface;
-use Magento\Vault\Model\PaymentToken;
 use Magento\Vault\Model\CreditCardTokenFactory;
-use SubscribePro\Service\PaymentProfile\PaymentProfileInterface;
-use Swarming\SubscribePro\Model\Vault\Form;
-use Swarming\SubscribePro\Helper\Vault as VaultHelper;
-use Swarming\SubscribePro\Platform\Service\PaymentProfile as PaymentProfileService;
-use Swarming\SubscribePro\Platform\Manager\Customer as CustomerManager;
-use Swarming\SubscribePro\Model\Vault\Validator as VaultValidator;
+use Magento\Vault\Model\PaymentToken;
 use SubscribePro\Service\Customer\CustomerInterface as PlatformCustomerInterface;
+use SubscribePro\Service\PaymentProfile\PaymentProfileInterface;
 use Swarming\SubscribePro\Helper\DebugLogger;
+use Swarming\SubscribePro\Helper\Vault as VaultHelper;
+use Swarming\SubscribePro\Model\Vault\Form;
+use Swarming\SubscribePro\Model\Vault\Validator as VaultValidator;
+use Swarming\SubscribePro\Platform\Manager\Customer as CustomerManager;
+use Swarming\SubscribePro\Platform\Service\PaymentProfile as PaymentProfileService;
 
 class FormTest extends \PHPUnit\Framework\TestCase
 {

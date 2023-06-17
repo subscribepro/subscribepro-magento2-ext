@@ -160,7 +160,7 @@
                     </td>
                 </tr>
 
-                <?php // SUBSCRIBE PRO - Subscription Widget - Changes Start Here ?>
+                <?php // SUBSCRIBE PRO - Subscription Widget - Changes Start Here?>
                 <?php if ($block->isSubscriptionProduct($_item)): ?>
                     <?php
                     $subscriptionProduct = $block->getSubscriptionProduct($_item);
@@ -231,14 +231,19 @@
                                 <?php if ($subscriptionOptions['interval'] !== ''): ?>
                                     <select class="admin__control-select" name="item[<?php /* @escapeNotVerified */ echo $_item->getId() ?>][admin_subscription_option][interval]">
                                         <?php foreach ($subscriptionProduct['intervals'] as $interval): ?>
-                                            <option <?php if ($interval == $subscriptionOptions['interval']) { echo 'selected'; }?> ><?php echo $interval; ?></option>
+                                            <option <?php if ($interval == $subscriptionOptions['interval']) {
+                                        echo 'selected';
+                                    }?> ><?php echo $interval; ?></option>
                                         <?php endforeach; ?>
                                     </select>
                                 <?php else: ?>
                                     <select class="admin__control-select" name="item[<?php /* @escapeNotVerified */ echo $_item->getId() ?>][admin_subscription_option][interval]">
                                         <?php $intervalSet = false; ?>
                                         <?php foreach ($subscriptionProduct['intervals'] as $interval): ?>
-                                            <option <?php if ($interval == $subscriptionProduct['default_interval']) { $intervalSet = true; echo 'selected'; }?> ><?php echo $interval; ?></option>
+                                            <option <?php if ($interval == $subscriptionProduct['default_interval']) {
+                                        $intervalSet = true;
+                                        echo 'selected';
+                                    }?> ><?php echo $interval; ?></option>
                                         <?php endforeach; ?>
                                         <?php if (!$intervalSet):?>
                                             <option selected><?php echo $subscriptionProduct['default_interval']; ?></option>
@@ -249,13 +254,13 @@
                         </td>
                     </tr>
                 <?php endif; ?>
-                <?php // SUBSCRIBE PRO - Subscription Widget - Changes End Here ?>
+                <?php // SUBSCRIBE PRO - Subscription Widget - Changes End Here?>
 
                 <?php $hasMessageError = false; ?>
                 <?php foreach ($_item->getMessage(false) as $messageError):?>
                     <?php if (!empty($messageError)) {
-                        $hasMessageError = true;
-                    }
+                                        $hasMessageError = true;
+                                    }
                     ?>
                 <?php endforeach; ?>
 

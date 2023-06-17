@@ -10,10 +10,10 @@ use Magento\Sales\Api\Data\OrderPaymentInterface;
 use Magento\Store\Api\Data\WebsiteInterface;
 use Magento\Store\Model\Store;
 use Psr\Log\LoggerInterface;
+use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
+use Swarming\SubscribePro\Model\Config\General as GeneralConfig;
 use Swarming\SubscribePro\Model\Quote\SubscriptionCreator;
 use Swarming\SubscribePro\Observer\Checkout\SubmitAllAfter;
-use Swarming\SubscribePro\Model\Config\General as GeneralConfig;
-use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
 
 class SubmitAllAfterTest extends \PHPUnit\Framework\TestCase
 {

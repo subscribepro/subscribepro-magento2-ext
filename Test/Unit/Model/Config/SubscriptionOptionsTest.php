@@ -4,8 +4,8 @@ namespace Swarming\SubscribePro\Test\Unit\Model\Config;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Intl\DateTimeFactory;
-use Swarming\SubscribePro\Model\Config\SubscriptionOptions;
 use Magento\Store\Model\ScopeInterface;
+use Swarming\SubscribePro\Model\Config\SubscriptionOptions;
 
 class SubscriptionOptionsTest extends \PHPUnit\Framework\TestCase
 {

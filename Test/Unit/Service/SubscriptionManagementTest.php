@@ -3,9 +3,9 @@
 namespace Swarming\SubscribePro\Test\Unit\Service;
 
 use Magento\Framework\App\Area;
-use Magento\Customer\Model\Address\Config as AddressConfig;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\View\DesignInterface;
+use Magento\Quote\Model\Quote\Address as QuoteAddress;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use SubscribePro\Exception\HttpException;
@@ -14,14 +14,13 @@ use SubscribePro\Service\PaymentProfile\PaymentProfileInterface;
 use Swarming\SubscribePro\Api\Data\AddressInterface;
 use Swarming\SubscribePro\Api\Data\ProductInterface;
 use Swarming\SubscribePro\Api\Data\SubscriptionInterface;
-use Swarming\SubscribePro\Service\SubscriptionManagement;
-use Swarming\SubscribePro\Platform\Manager\Product as ProductManager;
-use Swarming\SubscribePro\Platform\Manager\Customer as CustomerManager;
-use Swarming\SubscribePro\Platform\Service\Subscription as SubscriptionService;
-use Swarming\SubscribePro\Platform\Manager\Address as AddressManager;
 use Swarming\SubscribePro\Helper\SubscriptionProduct as SubscriptionProductsHelper;
-use Magento\Quote\Model\Quote\Address as QuoteAddress;
 use Swarming\SubscribePro\Model\Config\SubscriptionOptions as SubscriptionOptionsConfig;
+use Swarming\SubscribePro\Platform\Manager\Address as AddressManager;
+use Swarming\SubscribePro\Platform\Manager\Customer as CustomerManager;
+use Swarming\SubscribePro\Platform\Manager\Product as ProductManager;
+use Swarming\SubscribePro\Platform\Service\Subscription as SubscriptionService;
+use Swarming\SubscribePro\Service\SubscriptionManagement;
 
 class SubscriptionManagementTest extends \PHPUnit\Framework\TestCase
 {

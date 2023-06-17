@@ -2,12 +2,12 @@
 
 namespace Swarming\SubscribePro\Test\Unit\Model\Vault;
 
+use Magento\Directory\Helper\Data as DirectoryDataHelper;
 use Magento\Directory\Model\Region;
 use Magento\Directory\Model\RegionFactory;
 use SubscribePro\Service\PaymentProfile\PaymentProfileInterface;
 use Swarming\SubscribePro\Api\Data\AddressInterface;
 use Swarming\SubscribePro\Model\Vault\Validator;
-use Magento\Directory\Helper\Data as DirectoryDataHelper;
 
 class ValidatorTest extends \PHPUnit\Framework\TestCase
 {

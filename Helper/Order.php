@@ -2,7 +2,7 @@
 
 namespace Swarming\SubscribePro\Helper;
 
-use \Magento\Sales\Api\Data\OrderInterface;
+use Magento\Sales\Api\Data\OrderInterface;
 
 class Order
 {

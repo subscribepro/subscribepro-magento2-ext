@@ -3,9 +3,9 @@
 namespace Swarming\SubscribePro\Block\Customer;
 
 use Magento\Directory\Helper\Data as DirectoryHelper;
-use Magento\Store\Model\StoreManagerInterface;
-use Magento\Store\Api\StoreResolverInterface;
 use Magento\Framework\App\ObjectManager;
+use Magento\Store\Api\StoreResolverInterface;
+use Magento\Store\Model\StoreManagerInterface;
 
 /**
  * Directory data processor.

@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace Swarming\SubscribePro\Observer\Customer;
 
+use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
-use Magento\Customer\Api\Data\CustomerInterface;
 
 class SaveAfterData implements ObserverInterface
 {

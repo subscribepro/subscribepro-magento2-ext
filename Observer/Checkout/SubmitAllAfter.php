@@ -4,8 +4,8 @@ namespace Swarming\SubscribePro\Observer\Checkout;
 
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
-use Magento\Sales\Model\Order;
 use Magento\Sales\Api\Data\OrderInterface;
+use Magento\Sales\Model\Order;
 use Swarming\SubscribePro\Gateway\Config\ApplePayConfigProvider;
 use Swarming\SubscribePro\Gateway\Config\ConfigProvider as GatewayConfigProvider;
 use Swarming\SubscribePro\Model\Quote\SubscriptionCreator;

@@ -5,7 +5,6 @@ namespace Swarming\SubscribePro\Platform\Webhook\Handler\PaymentProfile;
 use Magento\Framework\Exception\NoSuchEntityException;
 use SubscribePro\Service\Webhook\EventInterface;
 use Swarming\SubscribePro\Platform\Webhook\HandlerInterface;
-use Swarming\SubscribePro\Platform\Webhook\Handler\PaymentProfile\AbstractHandler;
 
 class RedactHandler extends AbstractHandler implements HandlerInterface
 {

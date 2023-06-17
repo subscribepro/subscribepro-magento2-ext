@@ -3,18 +3,18 @@
 namespace Swarming\SubscribePro\Test\Unit\Model\Quote;
 
 use Magento\Quote\Model\Quote;
+use Magento\Quote\Model\Quote\Address as QuoteAddress;
+use Magento\Quote\Model\Quote\Item as QuoteItem;
+use Magento\Sales\Api\Data\OrderInterface;
+use Magento\Sales\Api\Data\OrderPaymentInterface;
 use Magento\Vault\Api\Data\PaymentTokenInterface;
 use Magento\Vault\Api\PaymentTokenManagementInterface;
 use SubscribePro\Service\Customer\CustomerInterface as PlatformCustomerInterface;
-use Swarming\SubscribePro\Model\Quote\SubscriptionCreator;
-use Swarming\SubscribePro\Helper\QuoteItem as QuoteItemHelper;
 use Swarming\SubscribePro\Helper\OrderItem as OrderItemHelper;
-use Magento\Sales\Api\Data\OrderInterface;
-use Magento\Sales\Api\Data\OrderPaymentInterface;
-use Magento\Quote\Model\Quote\Item as QuoteItem;
-use Magento\Quote\Model\Quote\Address as QuoteAddress;
-use Swarming\SubscribePro\Platform\Manager\Customer as CustomerManager;
+use Swarming\SubscribePro\Helper\QuoteItem as QuoteItemHelper;
 use Swarming\SubscribePro\Model\Quote\QuoteItem\SubscriptionCreator as QuoteItemSubscriptionCreator;
+use Swarming\SubscribePro\Model\Quote\SubscriptionCreator;
+use Swarming\SubscribePro\Platform\Manager\Customer as CustomerManager;
 
 class SubscriptionCreatorTest extends \PHPUnit\Framework\TestCase
 {

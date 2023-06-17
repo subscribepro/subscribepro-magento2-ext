@@ -4,9 +4,9 @@ namespace Swarming\SubscribePro\Observer\CheckoutCart;
 
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
-use Swarming\SubscribePro\Model\Quote\SubscriptionOption\OptionProcessor;
-use SubscribePro\Exception\InvalidArgumentException;
 use SubscribePro\Exception\HttpException;
+use SubscribePro\Exception\InvalidArgumentException;
+use Swarming\SubscribePro\Model\Quote\SubscriptionOption\OptionProcessor;
 
 class UpdateProductAfter extends CheckoutCartAbstract implements ObserverInterface
 {

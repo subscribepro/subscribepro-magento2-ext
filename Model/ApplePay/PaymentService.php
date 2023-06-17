@@ -9,16 +9,16 @@ use Magento\Directory\Model\Region as DirectoryRegion;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Serialize\Serializer\Json as JsonSerializer;
 use Magento\Framework\Session\SessionManagerInterface;
+use Magento\Quote\Api\Data\AddressInterface;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\QuoteManagement;
-use Magento\Quote\Api\Data\AddressInterface;
+use Magento\Quote\Model\ResourceModel\Quote as QuoteResourceModel;
+use Magento\Quote\Model\ResourceModel\Quote\Payment as QuotePaymentResourceModel;
+use Psr\Log\LoggerInterface;
 use SubscribePro\Service\Token\TokenInterface;
 use Swarming\SubscribePro\Helper\ApplePay\Vault as ApplePayVaultHelper;
 use Swarming\SubscribePro\Platform\Manager\Customer as PlatformCustomer;
 use Swarming\SubscribePro\Platform\Service\ApplePay\PaymentProfile as PlatformApplePayPaymentProfile;
-use Magento\Quote\Model\ResourceModel\Quote\Payment as QuotePaymentResourceModel;
-use Magento\Quote\Model\ResourceModel\Quote as QuoteResourceModel;
-use Psr\Log\LoggerInterface;
 
 class PaymentService
 {

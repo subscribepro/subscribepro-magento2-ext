@@ -2,8 +2,8 @@
 
 namespace Swarming\SubscribePro\Gateway\Helper;
 
-use SubscribePro\Service\Transaction\TransactionInterface;
 use Magento\Payment\Gateway\Helper\SubjectReader as SubjectReaderHelper;
+use SubscribePro\Service\Transaction\TransactionInterface;
 
 class SubjectReader
 {

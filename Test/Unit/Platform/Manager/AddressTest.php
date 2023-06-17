@@ -2,10 +2,10 @@
 
 namespace Swarming\SubscribePro\Test\Unit\Platform\Manager;
 
+use Magento\Quote\Model\Quote\Address as QuoteAddress;
 use Swarming\SubscribePro\Api\Data\AddressInterface;
 use Swarming\SubscribePro\Platform\Manager\Address;
 use Swarming\SubscribePro\Platform\Service\Address as AddressService;
-use Magento\Quote\Model\Quote\Address as QuoteAddress;
 
 class AddressTest extends \PHPUnit\Framework\TestCase
 {
