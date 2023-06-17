@@ -4,9 +4,6 @@ namespace Swarming\SubscribePro\Observer\Checkout;
 
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
-use Magento\Framework\Event\ManagerInterface;
-use Swarming\SubscribePro\Model\Quote\SubscriptionCreator;
-use Swarming\SubscribePro\Gateway\Config\ConfigProvider as GatewayConfigProvider;
 
 class SubmitBefore implements ObserverInterface
 {

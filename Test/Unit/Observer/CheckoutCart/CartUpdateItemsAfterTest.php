@@ -2,26 +2,26 @@
 
 namespace Swarming\SubscribePro\Test\Unit\Observer\CheckoutCart;
 
+use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Catalog\Model\Product;
 use Magento\Checkout\Model\Cart;
+use Magento\Framework\App\State;
+use Magento\Framework\App\State as AppState;
 use Magento\Framework\DataObject;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Quote\Model\Quote;
-use Swarming\SubscribePro\Api\Data\ProductInterface;
-use Magento\Framework\App\State as AppState;
-use Swarming\SubscribePro\Api\Data\SubscriptionOptionInterface;
-use Swarming\SubscribePro\Model\Quote\SubscriptionOption\OptionProcessor as SubscriptionOptionProcessor;
-use Swarming\SubscribePro\Model\Config\General as GeneralConfig;
-use Magento\Framework\App\State;
 use Magento\Framework\Message\ManagerInterface;
+use Magento\Quote\Model\Quote;
+use Magento\Quote\Model\Quote\Item as QuoteItem;
 use Psr\Log\LoggerInterface;
+use Swarming\SubscribePro\Api\Data\ProductInterface;
+use Swarming\SubscribePro\Api\Data\SubscriptionOptionInterface;
+use Swarming\SubscribePro\Helper\Product as ProductHelper;
+use Swarming\SubscribePro\Model\Config\General as GeneralConfig;
+use Swarming\SubscribePro\Model\Quote\SubscriptionOption\OptionProcessor as SubscriptionOptionProcessor;
 use Swarming\SubscribePro\Model\Quote\SubscriptionOption\Updater as SubscriptionOptionUpdater;
 use Swarming\SubscribePro\Observer\CheckoutCart\CartUpdateItemsAfter;
 use Swarming\SubscribePro\Platform\Manager\Product as ProductManager;
-use Magento\Catalog\Api\ProductRepositoryInterface;
-use Swarming\SubscribePro\Helper\Product as ProductHelper;
-use Magento\Quote\Model\Quote\Item as QuoteItem;
 
 class CartUpdateItemsAfterTest extends \PHPUnit\Framework\TestCase
 {

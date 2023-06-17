@@ -4,7 +4,6 @@ namespace Swarming\SubscribePro\Model\Quote;
 
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Quote\Model\Quote\Item\AbstractItem as QuoteItem;
-use Swarming\SubscribePro\Model\Config\Source\CartRuleCombine;
 
 class ItemSubscriptionDiscount
 {
@@ -98,8 +97,7 @@ class ItemSubscriptionDiscount
                 $childItem->setDiscountAmount($childSubscriptionDiscount);
                 $childItem->setBaseDiscountAmount($childBaseSubscriptionDiscount);
             }
-        }
-        else {
+        } else {
             $item->setDiscountAmount($subscriptionDiscount);
             $item->setBaseDiscountAmount($baseSubscriptionDiscount);
         }
@@ -124,8 +122,7 @@ class ItemSubscriptionDiscount
                 $newBaseDiscountAmount = $childItem->getBaseDiscountAmount() + $childBaseSubscriptionDiscount;
                 $childItem->setBaseDiscountAmount($newBaseDiscountAmount);
             }
-        }
-        else {
+        } else {
             $newDiscountAmount = $item->getDiscountAmount() + $subscriptionDiscount;
             $item->setDiscountAmount($newDiscountAmount);
 

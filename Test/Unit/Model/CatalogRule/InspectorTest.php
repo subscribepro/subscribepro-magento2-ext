@@ -2,10 +2,10 @@
 
 namespace Swarming\SubscribePro\Test\Unit\Model\CatalogRule;
 
+use Magento\Catalog\Model\Product;
 use Swarming\SubscribePro\Model\CatalogRule\Inspector;
 use Swarming\SubscribePro\Model\CatalogRule\InspectorInterface;
 use Swarming\SubscribePro\Model\CatalogRule\InspectorRepository;
-use Magento\Catalog\Model\Product;
 
 class InspectorTest extends \PHPUnit\Framework\TestCase
 {

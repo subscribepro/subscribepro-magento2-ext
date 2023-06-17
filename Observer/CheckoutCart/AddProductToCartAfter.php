@@ -5,8 +5,8 @@ namespace Swarming\SubscribePro\Observer\CheckoutCart;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Exception\LocalizedException;
-use SubscribePro\Exception\InvalidArgumentException;
 use SubscribePro\Exception\HttpException;
+use SubscribePro\Exception\InvalidArgumentException;
 
 class AddProductToCartAfter extends CheckoutCartAbstract implements ObserverInterface
 {

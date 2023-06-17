@@ -5,8 +5,8 @@ namespace Swarming\SubscribePro\Test\Unit\Ui\ConfigProvider;
 use Magento\Framework\View\Element\BlockFactory;
 use Magento\Framework\View\Element\BlockInterface;
 use Swarming\SubscribePro\Model\Config\SubscriptionOptions;
-use Swarming\SubscribePro\Ui\ConfigProvider\SubscriptionConfig;
 use Swarming\SubscribePro\Model\Config\SubscriptionOptions as SubscriptionOptionsConfig;
+use Swarming\SubscribePro\Ui\ConfigProvider\SubscriptionConfig;
 
 class SubscriptionConfigTest extends \PHPUnit\Framework\TestCase
 {

@@ -2,8 +2,8 @@
 
 namespace Swarming\SubscribePro\Model\InstantPurchase;
 
-use Magento\Vault\Api\Data\PaymentTokenInterface;
 use Magento\InstantPurchase\PaymentMethodIntegration\PaymentAdditionalInformationProviderInterface;
+use Magento\Vault\Api\Data\PaymentTokenInterface;
 use Swarming\SubscribePro\Platform\Service\PaymentProfile;
 
 /**

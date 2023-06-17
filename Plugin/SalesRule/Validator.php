@@ -3,9 +3,9 @@
 namespace Swarming\SubscribePro\Plugin\SalesRule;
 
 use Magento\Quote\Model\Quote\Item\AbstractItem;
+use Magento\Quote\Model\Quote\Item\AbstractItem as QuoteItem;
 use Magento\SalesRule\Model\Rule;
 use Magento\SalesRule\Model\Validator as SalesRuleValidator;
-use Magento\Quote\Model\Quote\Item\AbstractItem as QuoteItem;
 
 class Validator
 {

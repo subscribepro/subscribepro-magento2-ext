@@ -2,16 +2,16 @@
 
 namespace Swarming\SubscribePro\Test\Unit\Model\Rule;
 
-use \Magento\Rule\Model\Condition\Context;
-use \Magento\Backend\Helper\Data;
-use \Magento\Eav\Model\Config;
-use \Magento\Catalog\Model\ProductFactory;
-use \Magento\Catalog\Api\ProductRepositoryInterface;
-use \Magento\Catalog\Model\ResourceModel\Product;
-use \Magento\Eav\Model\ResourceModel\Entity\Attribute\Set\Collection;
-use \Magento\Framework\Locale\FormatInterface;
-use \Magento\Quote\Model\Quote\Item;
-use \Swarming\SubscribePro\Helper\QuoteItem;
+use Magento\Backend\Helper\Data;
+use Magento\Catalog\Api\ProductRepositoryInterface;
+use Magento\Catalog\Model\ProductFactory;
+use Magento\Catalog\Model\ResourceModel\Product;
+use Magento\Eav\Model\Config;
+use Magento\Eav\Model\ResourceModel\Entity\Attribute\Set\Collection;
+use Magento\Framework\Locale\FormatInterface;
+use Magento\Quote\Model\Quote\Item;
+use Magento\Rule\Model\Condition\Context;
+use Swarming\SubscribePro\Helper\QuoteItem;
 use Swarming\SubscribePro\Model\Rule\Condition\Product as ProductCondition;
 
 class ProductConditionTest extends \PHPUnit\Framework\TestCase

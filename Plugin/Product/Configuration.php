@@ -2,7 +2,6 @@
 
 namespace Swarming\SubscribePro\Plugin\Product;
 
-use SubscribePro\Service\Product\ProductInterface;
 use Swarming\SubscribePro\Model\Subscription\OptionItem as SubscriptionOptionItem;
 
 class Configuration

@@ -4,13 +4,13 @@ namespace Swarming\SubscribePro\Test\Unit\Service;
 
 use Magento\Customer\Api\AddressRepositoryInterface;
 use Magento\Customer\Api\Data\AddressInterface;
-use Magento\Framework\DataObject;
-use Magento\Framework\Exception\LocalizedException;
+use Magento\Customer\Block\Address\Renderer\RendererInterface as AddressRendererInterface;
 use Magento\Customer\Model\Address\Config as AddressConfig;
 use Magento\Customer\Model\Address\Mapper as AddressMapper;
-use Swarming\SubscribePro\Service\AddressManagement;
+use Magento\Framework\DataObject;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Quote\Model\Quote\Address as QuoteAddress;
-use Magento\Customer\Block\Address\Renderer\RendererInterface as AddressRendererInterface;
+use Swarming\SubscribePro\Service\AddressManagement;
 
 class AddressManagementTest extends \PHPUnit\Framework\TestCase
 {

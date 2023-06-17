@@ -14,7 +14,6 @@ use Magento\Quote\Model\Quote\Address as QuoteAddress;
 use Magento\Quote\Model\Quote\AddressFactory;
 use Magento\Quote\Model\QuoteManagement;
 use Magento\Quote\Model\ShippingAddressManagement;
-use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Email\Sender\OrderSender;
 use Psr\Log\LoggerInterface;
 

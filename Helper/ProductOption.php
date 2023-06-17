@@ -3,8 +3,8 @@
 namespace Swarming\SubscribePro\Helper;
 
 use Magento\Framework\Api\ExtensibleDataInterface;
-use Magento\Quote\Api\Data\ProductOptionInterface;
 use Magento\Quote\Api\Data\CartItemInterface;
+use Magento\Quote\Api\Data\ProductOptionInterface;
 use Swarming\SubscribePro\Model\Quote\SubscriptionOption\OptionProcessor;
 
 class ProductOption
@@ -18,7 +18,7 @@ class ProductOption
      * @var \Magento\Framework\Webapi\ServiceInputProcessor
      */
     protected $inputProcessor;
-    
+
     /**
      * @var \Magento\ConfigurableProduct\Model\Quote\Item\CartItemProcessor
      */
@@ -110,7 +110,7 @@ class ProductOption
             case \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE:
                 $this->configurableProductCartItemProcessor->processOptions($quoteItem);
                 break;
-            
+
             case \Magento\Bundle\Model\Product\Type::TYPE_CODE:
                 $this->bundleProductCartItemProcessor->processOptions($quoteItem);
                 break;

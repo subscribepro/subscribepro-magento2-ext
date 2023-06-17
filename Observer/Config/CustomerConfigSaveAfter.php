@@ -2,10 +2,10 @@
 
 namespace Swarming\SubscribePro\Observer\Config;
 
-use Magento\Framework\Event\ObserverInterface;
-use Magento\Framework\Event\Observer;
-use Magento\Store\Model\ScopeInterface;
 use Magento\Customer\Model\Config\Share;
+use Magento\Framework\Event\Observer;
+use Magento\Framework\Event\ObserverInterface;
+use Magento\Store\Model\ScopeInterface;
 
 class CustomerConfigSaveAfter implements ObserverInterface
 {

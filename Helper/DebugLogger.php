@@ -56,8 +56,8 @@ class DebugLogger
         $function_name = isset($caller['function']) ? $caller['function'] : '';
         $traceArray[] = sprintf('%s: Called from %s:%s', $function_name, $caller['file'], $caller['line']);
         foreach ($trace as $entry_id => $entry) {
-            $entry['file'] = $entry['file'] ? : '-';
-            $entry['line'] = $entry['line'] ? : '-';
+            $entry['file'] = $entry['file'] ?: '-';
+            $entry['line'] = $entry['line'] ?: '-';
             if (empty($entry['class'])) {
                 $traceArray[] = sprintf(
                     '%s %3s. %s() %s:%s',

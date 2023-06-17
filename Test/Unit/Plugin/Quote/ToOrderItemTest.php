@@ -3,10 +3,10 @@
 namespace Swarming\SubscribePro\Test\Unit\Plugin\Quote;
 
 use Magento\Quote\Model\Quote\Item\AbstractItem;
-use Swarming\SubscribePro\Plugin\Quote\ToOrderItem;
-use Swarming\SubscribePro\Helper\OrderItem as OrderItemHelper;
-use Magento\Sales\Model\Order\Item as OrderItem;
 use Magento\Quote\Model\Quote\Item\ToOrderItem as QuoteToOrderItem;
+use Magento\Sales\Model\Order\Item as OrderItem;
+use Swarming\SubscribePro\Helper\OrderItem as OrderItemHelper;
+use Swarming\SubscribePro\Plugin\Quote\ToOrderItem;
 
 class ToOrderItemTest extends \PHPUnit\Framework\TestCase
 {

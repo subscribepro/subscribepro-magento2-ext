@@ -3,9 +3,9 @@
 namespace Swarming\SubscribePro\Test\Unit\Controller\Cards;
 
 use Magento\Backend\App\Action\Context;
+use Magento\Framework\Controller\Result\Forward as ResultForward;
 use Magento\Framework\Controller\ResultFactory;
 use Swarming\SubscribePro\Controller\Cards\NewAction;
-use Magento\Framework\Controller\Result\Forward as ResultForward;
 
 class NewActionTest extends \PHPUnit\Framework\TestCase
 {

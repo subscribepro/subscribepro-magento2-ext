@@ -3,13 +3,13 @@
 namespace Swarming\SubscribePro\Test\Unit\Observer\Config;
 
 use Magento\Config\Model\Config;
+use Magento\Config\Model\Config\Factory as ConfigFactory;
+use Magento\Customer\Model\Config\Share;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Event\Observer;
+use Magento\Store\Model\ScopeInterface;
 use Psr\Log\LoggerInterface;
 use Swarming\SubscribePro\Observer\Config\CustomerConfigSaveAfter;
-use Magento\Store\Model\ScopeInterface;
-use Magento\Customer\Model\Config\Share;
-use Magento\Config\Model\Config\Factory as ConfigFactory;
 
 class CustomerConfigSaveAfterTest extends \PHPUnit\Framework\TestCase
 {

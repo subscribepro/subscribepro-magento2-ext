@@ -4,8 +4,8 @@
 <?php if ($block->hasFailedSubscriptions()): ?>
     <p>
         <?= $block->escapeHtml(__(
-            'Failed to create some of your product subscriptions! Please contact support for assistance.'
-        )) ?>
+    'Failed to create some of your product subscriptions! Please contact support for assistance.'
+)) ?>
     </p>
 <?php endif; ?>
 
@@ -22,5 +22,5 @@
 <?php endif; ?>
 <?php
 if ($block->hasFailedSubscriptions() || $block->getCountSubscriptions()) {
-    $block->clearSubscriptionSessionData();
-}
+            $block->clearSubscriptionSessionData();
+        }

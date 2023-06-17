@@ -2,10 +2,10 @@
 
 namespace Swarming\SubscribePro\Test\Unit\Plugin\AdminOrder;
 
-use Swarming\SubscribePro\Plugin\AdminOrder\Create;
-use Swarming\SubscribePro\Helper\OrderItem as OrderItemHelper;
 use Magento\Sales\Model\AdminOrder\Create as AdminOrderCreate;
 use Magento\Sales\Model\Order\Item as OrderItem;
+use Swarming\SubscribePro\Helper\OrderItem as OrderItemHelper;
+use Swarming\SubscribePro\Plugin\AdminOrder\Create;
 
 class CreateTest extends \PHPUnit\Framework\TestCase
 {

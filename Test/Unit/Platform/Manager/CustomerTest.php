@@ -3,8 +3,8 @@
 namespace Swarming\SubscribePro\Test\Unit\Platform\Manager;
 
 use Magento\Customer\Api\CustomerRepositoryInterface;
-use SubscribePro\Service\Customer\CustomerInterface as PlatformCustomerInterface;
 use Magento\Customer\Api\Data\CustomerInterface;
+use SubscribePro\Service\Customer\CustomerInterface as PlatformCustomerInterface;
 use Swarming\SubscribePro\Platform\Manager\Customer;
 use Swarming\SubscribePro\Platform\Service\Customer as CustomerService;
 

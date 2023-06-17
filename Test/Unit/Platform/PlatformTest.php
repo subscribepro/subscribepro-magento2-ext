@@ -4,10 +4,10 @@ namespace Swarming\SubscribePro\Test\Unit\Platform;
 
 use Magento\Store\Api\Data\WebsiteInterface;
 use Magento\Store\Model\StoreManagerInterface;
-use Swarming\SubscribePro\Platform\SdkFactory;
-use Swarming\SubscribePro\Platform\Platform;
-use Swarming\SubscribePro\Model\Config\Platform as PlatformConfig;
 use SubscribePro\Sdk as SubscribeProSdk;
+use Swarming\SubscribePro\Model\Config\Platform as PlatformConfig;
+use Swarming\SubscribePro\Platform\Platform;
+use Swarming\SubscribePro\Platform\SdkFactory;
 
 class PlatformTest extends \PHPUnit\Framework\TestCase
 {

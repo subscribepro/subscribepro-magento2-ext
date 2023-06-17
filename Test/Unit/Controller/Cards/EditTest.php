@@ -3,15 +3,15 @@
 namespace Swarming\SubscribePro\Test\Unit\Controller\Cards;
 
 use Magento\Backend\App\Action\Context;
-use Magento\Framework\Controller\ResultFactory;
-use Magento\Framework\View\Layout;
-use Swarming\SubscribePro\Controller\Cards\Edit;
-use Swarming\SubscribePro\Gateway\Config\VaultConfig;
-use Magento\Framework\View\Result\Page as ResultPage;
 use Magento\Framework\Controller\Result\Forward as ResultForward;
+use Magento\Framework\Controller\ResultFactory;
+use Magento\Framework\View\Element\Html\Links as NavigationBlock;
+use Magento\Framework\View\Layout;
 use Magento\Framework\View\Page\Config as PageConfig;
 use Magento\Framework\View\Page\Title as PageTitle;
-use Magento\Framework\View\Element\Html\Links as NavigationBlock;
+use Magento\Framework\View\Result\Page as ResultPage;
+use Swarming\SubscribePro\Controller\Cards\Edit;
+use Swarming\SubscribePro\Gateway\Config\VaultConfig;
 
 class EditTest extends \PHPUnit\Framework\TestCase
 {

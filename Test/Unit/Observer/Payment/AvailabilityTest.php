@@ -2,15 +2,15 @@
 
 namespace Swarming\SubscribePro\Test\Unit\Observer\Payment;
 
+use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Framework\DataObject;
 use Magento\Framework\Event\Observer;
+use Magento\Payment\Model\Method\Adapter as MethodAdapter;
 use Magento\Quote\Api\Data\CartInterface;
 use Swarming\SubscribePro\Gateway\Config\Config as GatewayConfig;
 use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
-use Magento\Payment\Model\Method\Adapter as MethodAdapter;
-use Swarming\SubscribePro\Observer\Payment\Availability as PaymentAvailability;
-use Magento\Checkout\Model\Session as CheckoutSession;
 use Swarming\SubscribePro\Helper\Quote as QuoteHelper;
+use Swarming\SubscribePro\Observer\Payment\Availability as PaymentAvailability;
 
 class Availability extends \PHPUnit\Framework\TestCase
 {

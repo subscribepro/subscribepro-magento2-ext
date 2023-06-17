@@ -11,10 +11,10 @@ use Magento\Store\Api\Data\WebsiteInterface;
 use Magento\Store\Model\Store;
 use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
-use Swarming\SubscribePro\Observer\Catalog\ProductSaveAfter;
-use Swarming\SubscribePro\Model\Config\General as GeneralConfig;
-use Swarming\SubscribePro\Platform\Manager\Product as ProductManager;
 use Swarming\SubscribePro\Helper\Product as ProductHelper;
+use Swarming\SubscribePro\Model\Config\General as GeneralConfig;
+use Swarming\SubscribePro\Observer\Catalog\ProductSaveAfter;
+use Swarming\SubscribePro\Platform\Manager\Product as ProductManager;
 
 class ProductSaveAfterTest extends \PHPUnit\Framework\TestCase
 {

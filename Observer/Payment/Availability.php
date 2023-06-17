@@ -5,9 +5,9 @@ namespace Swarming\SubscribePro\Observer\Payment;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Payment\Model\Method\Free;
+use Swarming\SubscribePro\Gateway\Config\ApplePayConfigProvider;
 use Swarming\SubscribePro\Gateway\Config\Config;
 use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
-use Swarming\SubscribePro\Gateway\Config\ApplePayConfigProvider;
 
 class Availability implements ObserverInterface
 {

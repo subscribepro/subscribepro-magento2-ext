@@ -2,10 +2,10 @@
 
 namespace Swarming\SubscribePro\Observer\CheckoutCart;
 
+use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Framework\App\State as AppState;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Quote\Model\Quote\Item as QuoteItem;
 use Swarming\SubscribePro\Api\Data\SubscriptionOptionInterface;
 

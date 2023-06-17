@@ -2,8 +2,8 @@
 
 namespace Swarming\SubscribePro\Test\Unit\Platform\Tool;
 
-use Swarming\SubscribePro\Platform\Platform;
 use SubscribePro\Tools\Config as ConfigTool;
+use Swarming\SubscribePro\Platform\Platform;
 use Swarming\SubscribePro\Platform\Storage\Config as ConfigStorage;
 use Swarming\SubscribePro\Platform\Tool\Config;
 

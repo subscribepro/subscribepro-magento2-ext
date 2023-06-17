@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Swarming\SubscribePro\Gateway\Command\ApplePay;
 
-use Exception;
 use Magento\Payment\Gateway\CommandInterface;
 use Magento\Vault\Model\Ui\VaultConfigProvider;
 use Swarming\SubscribePro\Gateway\Command\AbstractProfileCreatorCommand;

@@ -2,9 +2,9 @@
 
 namespace Swarming\SubscribePro\Block\Adminhtml\System\Config;
 
+use Magento\Customer\Model\Config\Share;
 use Magento\Framework\Data\Form\Element\AbstractElement;
 use Magento\Store\Model\ScopeInterface;
-use Magento\Customer\Model\Config\Share;
 
 class PlatformField extends \Magento\Config\Block\System\Config\Form\Field
 {
@@ -38,6 +38,6 @@ class PlatformField extends \Magento\Config\Block\System\Config\Form\Field
      */
     public function render(AbstractElement $element)
     {
-        return $this->doRender() ? parent::render($element) :  '';
+        return $this->doRender() ? parent::render($element) : '';
     }
 }

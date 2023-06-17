@@ -2,8 +2,6 @@
 
 namespace Swarming\SubscribePro\Block\Vault;
 
-use Magento\Framework\View\Element\Template;
-
 class AddButton extends \Magento\Framework\View\Element\Template
 {
     /**

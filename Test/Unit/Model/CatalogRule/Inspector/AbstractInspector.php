@@ -2,14 +2,14 @@
 
 namespace Swarming\SubscribePro\Test\Unit\Model\CatalogRule\Inspector;
 
-use Magento\Store\Api\Data\StoreInterface;
-use Magento\Customer\Model\Session as CustomerSession;
-use Magento\Store\Model\StoreManagerInterface;
-use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
-use Magento\CatalogRule\Observer\RulePricesStorage;
-use Magento\Catalog\Model\Product;
 use DateTime;
+use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\Product\Type\Price as PriceModel;
+use Magento\CatalogRule\Observer\RulePricesStorage;
+use Magento\Customer\Model\Session as CustomerSession;
+use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
+use Magento\Store\Api\Data\StoreInterface;
+use Magento\Store\Model\StoreManagerInterface;
 
 abstract class AbstractInspector extends \PHPUnit\Framework\TestCase
 {

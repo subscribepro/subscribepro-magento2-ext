@@ -2,8 +2,8 @@
 
 namespace Swarming\SubscribePro\Block\Vault;
 
-use Magento\Vault\Api\Data\PaymentTokenInterface;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Vault\Api\Data\PaymentTokenInterface;
 
 class Edit extends \Magento\Directory\Block\Data
 {

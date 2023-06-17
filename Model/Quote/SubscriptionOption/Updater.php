@@ -4,7 +4,6 @@ namespace Swarming\SubscribePro\Model\Quote\SubscriptionOption;
 
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Quote\Api\Data\CartItemInterface;
-use Magento\Quote\Model\Quote\Item as QuoteItem;
 use SubscribePro\Service\Product\ProductInterface as PlatformProductInterface;
 use Swarming\SubscribePro\Api\Data\SubscriptionOptionInterface;
 
@@ -41,7 +40,7 @@ class Updater
     public function update($quoteItem, $platformProduct, $subscriptionOption, $subscriptionInterval, $itemAddedBySubscribePro = false)
     {
         $createNewSubscriptionAtCheckout = false;
-        
+
         $subscriptionOption = $this->getSubscriptionOption($platformProduct, $subscriptionOption);
         if (!$itemAddedBySubscribePro && PlatformProductInterface::SO_SUBSCRIPTION == $subscriptionOption) {
             $this->validateIntervals($platformProduct);

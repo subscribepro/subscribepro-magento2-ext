@@ -3,13 +3,13 @@
 namespace Swarming\SubscribePro\Test\Unit\Plugin\Checkout;
 
 use Magento\Customer\Api\CustomerRepositoryInterface;
-use Swarming\SubscribePro\Plugin\Customer\CustomerRepository as CustomerRepositoryPlugin;
-use Swarming\SubscribePro\Platform\Manager\Customer as PlatformCustomerManager;
-use Swarming\SubscribePro\Platform\Service\Customer as PlatformCustomerService;
-use SubscribePro\Service\Customer\CustomerInterface as PlatformCustomerInterface;
 use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Psr\Log\LoggerInterface;
+use SubscribePro\Service\Customer\CustomerInterface as PlatformCustomerInterface;
+use Swarming\SubscribePro\Platform\Manager\Customer as PlatformCustomerManager;
+use Swarming\SubscribePro\Platform\Service\Customer as PlatformCustomerService;
+use Swarming\SubscribePro\Plugin\Customer\CustomerRepository as CustomerRepositoryPlugin;
 
 class CustomerRepositoryTest extends \PHPUnit\Framework\TestCase
 {

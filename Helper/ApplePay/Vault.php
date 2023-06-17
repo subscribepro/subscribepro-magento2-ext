@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace Swarming\SubscribePro\Helper\ApplePay;
 
 use Magento\Quote\Api\Data\AddressInterface;
-use \Swarming\SubscribePro\Platform\Service\Token as PlatformServiceToken;
 use SubscribePro\Service\Token\TokenInterface;
+use Swarming\SubscribePro\Platform\Service\Token as PlatformServiceToken;
 
 class Vault
 {

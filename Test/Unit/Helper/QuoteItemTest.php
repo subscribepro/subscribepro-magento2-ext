@@ -5,13 +5,12 @@ namespace Swarming\SubscribePro\Test\Unit\Helper;
 use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\Product\Configuration\Item\Option\OptionInterface;
 use Magento\Framework\Intl\DateTimeFactory;
-use Magento\Quote\Api\Data\CartInterface;
 use Magento\Quote\Model\Quote\Item as QuoteItemModel;
 use Magento\Quote\Model\Quote\Item\OptionFactory;
+use Swarming\SubscribePro\Api\Data\ProductInterface as PlatformProductInterface;
 use Swarming\SubscribePro\Api\Data\SubscriptionOptionInterface;
 use Swarming\SubscribePro\Helper\QuoteItem;
 use Swarming\SubscribePro\Model\Quote\SubscriptionOption\OptionProcessor;
-use Swarming\SubscribePro\Api\Data\ProductInterface as PlatformProductInterface;
 
 class QuoteItemTest extends \PHPUnit\Framework\TestCase
 {
@@ -378,8 +377,7 @@ class QuoteItemTest extends \PHPUnit\Framework\TestCase
     {
         $buyRequestValue = json_encode([
             OptionProcessor::KEY_SUBSCRIPTION_OPTION => [
-                SubscriptionOptionInterface::CREATE_NEW_SUBSCRIPTION_AT_CHECKOUT
-                    => $subscriptionOption == PlatformProductInterface::SO_SUBSCRIPTION
+                SubscriptionOptionInterface::CREATE_NEW_SUBSCRIPTION_AT_CHECKOUT => $subscriptionOption == PlatformProductInterface::SO_SUBSCRIPTION
             ]
         ]);
 

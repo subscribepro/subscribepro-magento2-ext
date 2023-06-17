@@ -6,8 +6,8 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Vault\Model\Ui\VaultConfigProvider;
 use SubscribePro\Service\PaymentProfile\PaymentProfileInterface;
 use Swarming\SubscribePro\Gateway\Command\PurchaseCommand;
-use Swarming\SubscribePro\Gateway\Request\VaultDataBuilder;
 use Swarming\SubscribePro\Gateway\Request\PaymentDataBuilder;
+use Swarming\SubscribePro\Gateway\Request\VaultDataBuilder;
 
 class PurchaseCommandTest extends AbstractProfileCreatorCommand
 {

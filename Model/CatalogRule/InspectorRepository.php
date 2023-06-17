@@ -3,7 +3,6 @@
 namespace Swarming\SubscribePro\Model\CatalogRule;
 
 use Magento\Framework\ObjectManagerInterface;
-use Swarming\SubscribePro\Model\CatalogRule\InspectorInterface;
 
 class InspectorRepository
 {

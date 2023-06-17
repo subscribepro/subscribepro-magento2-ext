@@ -6,10 +6,10 @@ namespace Swarming\SubscribePro\Controller\Callback;
 
 use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\App\CsrfAwareActionInterface;
-use Magento\Framework\Controller\ResultInterface;
-use Magento\Framework\App\RequestInterface;
 use Magento\Framework\App\Request\InvalidRequestException;
+use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Controller\ResultFactory;
+use Magento\Framework\Controller\ResultInterface;
 
 class Order implements HttpPostActionInterface, CsrfAwareActionInterface
 {

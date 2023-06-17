@@ -2,8 +2,6 @@
 
 namespace Swarming\SubscribePro\Model\CatalogRule;
 
-use Swarming\SubscribePro\Model\CatalogRule\InspectorInterface;
-
 class Inspector implements InspectorInterface
 {
     /**

@@ -3,12 +3,12 @@
 namespace Swarming\SubscribePro\Test\Unit\Gateway\Response;
 
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
+use Magento\Payment\Model\InfoInterface as PaymentInfoInterface;
 use Magento\Sales\Model\Order\Payment;
 use SubscribePro\Service\Transaction\TransactionInterface;
+use Swarming\SubscribePro\Gateway\Config\Config as GatewayConfig;
 use Swarming\SubscribePro\Gateway\Helper\SubjectReader;
 use Swarming\SubscribePro\Gateway\Response\CardDetailsHandler;
-use Swarming\SubscribePro\Gateway\Config\Config as GatewayConfig;
-use Magento\Payment\Model\InfoInterface as PaymentInfoInterface;
 
 class CardDetailsHandlerTest extends \PHPUnit\Framework\TestCase
 {

@@ -7,11 +7,11 @@ use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Vault\Api\Data\PaymentTokenInterface;
 use Magento\Vault\Api\PaymentTokenManagementInterface;
 use Magento\Vault\Api\PaymentTokenRepositoryInterface;
+use SubscribePro\Service\Customer\CustomerInterface as PlatformCustomerInterface;
 use SubscribePro\Service\PaymentProfile\PaymentProfileInterface;
 use SubscribePro\Service\Webhook\EventInterface;
 use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
 use Swarming\SubscribePro\Platform\Webhook\Handler\PaymentProfile\RedactHandler;
-use SubscribePro\Service\Customer\CustomerInterface as PlatformCustomerInterface;
 
 class RedactHandlerTest extends \PHPUnit\Framework\TestCase
 {

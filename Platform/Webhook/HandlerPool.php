@@ -2,8 +2,6 @@
 
 namespace Swarming\SubscribePro\Platform\Webhook;
 
-use Swarming\SubscribePro\Platform\Webhook\HandlerInterface;
-
 class HandlerPool
 {
     /**

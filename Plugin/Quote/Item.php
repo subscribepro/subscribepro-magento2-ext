@@ -2,8 +2,8 @@
 
 namespace Swarming\SubscribePro\Plugin\Quote;
 
-use Swarming\SubscribePro\Model\Quote\SubscriptionOption\OptionProcessor;
 use Swarming\SubscribePro\Api\Data\SubscriptionOptionInterface;
+use Swarming\SubscribePro\Model\Quote\SubscriptionOption\OptionProcessor;
 
 class Item
 {

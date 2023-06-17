@@ -6,10 +6,10 @@ use Magento\Vault\Api\Data\PaymentTokenInterface;
 use Magento\Vault\Api\PaymentTokenRepositoryInterface;
 use Psr\Log\LoggerInterface;
 use SubscribePro\Exception\HttpException;
-use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
-use Swarming\SubscribePro\Plugin\Vault\TokenRepository;
-use Swarming\SubscribePro\Platform\Service\PaymentProfile as PaymentProfileService;
 use SubscribePro\Service\PaymentProfile\PaymentProfileInterface;
+use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
+use Swarming\SubscribePro\Platform\Service\PaymentProfile as PaymentProfileService;
+use Swarming\SubscribePro\Plugin\Vault\TokenRepository;
 
 class TokenRepositoryTest extends \PHPUnit\Framework\TestCase
 {

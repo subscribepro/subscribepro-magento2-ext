@@ -76,7 +76,7 @@ class SubscriptionProduct
         $this->catalogRuleInspector = $catalogRuleInspector;
         $this->priceCurrency = $priceCurrency;
     }
-    
+
     /**
      * @param \Swarming\SubscribePro\Api\Data\SubscriptionInterface[] $subscriptions
      * @return \Swarming\SubscribePro\Api\Data\SubscriptionInterface[]

@@ -2,9 +2,9 @@
 
 namespace Swarming\SubscribePro\Helper;
 
-use Swarming\SubscribePro\Model\Quote\SubscriptionOption\OptionProcessor;
-use Swarming\SubscribePro\Api\Data\SubscriptionOptionInterface;
 use Swarming\SubscribePro\Api\Data\ProductInterface as PlatformProductInterface;
+use Swarming\SubscribePro\Api\Data\SubscriptionOptionInterface;
+use Swarming\SubscribePro\Model\Quote\SubscriptionOption\OptionProcessor;
 
 class QuoteItem
 {

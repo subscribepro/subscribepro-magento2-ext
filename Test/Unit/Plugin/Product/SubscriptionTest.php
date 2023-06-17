@@ -3,10 +3,10 @@
 namespace Swarming\SubscribePro\Test\Unit\Plugin\Product;
 
 use Magento\Catalog\Api\Data\ProductInterface;
-use Swarming\SubscribePro\Plugin\Product\Subscription;
-use Swarming\SubscribePro\Model\Config\SubscriptionDiscount as SubscriptionDiscountConfig;
-use Swarming\SubscribePro\Helper\Product as ProductHelper;
 use Magento\Catalog\Block\Product\View as ProductView;
+use Swarming\SubscribePro\Helper\Product as ProductHelper;
+use Swarming\SubscribePro\Model\Config\SubscriptionDiscount as SubscriptionDiscountConfig;
+use Swarming\SubscribePro\Plugin\Product\Subscription;
 
 class SubscriptionTest extends \PHPUnit\Framework\TestCase
 {

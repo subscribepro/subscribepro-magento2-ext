@@ -2,8 +2,8 @@
 
 namespace Swarming\SubscribePro\Gateway\Response;
 
-use Magento\Payment\Gateway\Response\HandlerInterface;
 use Magento\Payment\Gateway\Helper\ContextHelper;
+use Magento\Payment\Gateway\Response\HandlerInterface;
 
 class CardDetailsHandler implements HandlerInterface
 {

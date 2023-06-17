@@ -3,8 +3,8 @@
 namespace Swarming\SubscribePro\Test\Unit\Model\Config;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
-use Swarming\SubscribePro\Model\Config\SubscriptionDiscount;
 use Magento\Store\Model\ScopeInterface;
+use Swarming\SubscribePro\Model\Config\SubscriptionDiscount;
 
 class SubscriptionDiscountTest extends \PHPUnit\Framework\TestCase
 {

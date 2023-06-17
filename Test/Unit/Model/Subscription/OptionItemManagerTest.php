@@ -4,17 +4,17 @@ namespace Swarming\SubscribePro\Test\Unit\Plugin\Product;
 
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Api\ProductRepositoryInterface;
+use Magento\Catalog\Model\Product\Type\AbstractType as ProductTypeInstance;
 use Magento\Framework\DataObject;
+use Magento\Framework\DataObject\Factory as DataObjectFactory;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Quote\Api\Data\CartItemInterface;
 use Magento\Quote\Model\Quote\Item\CartItemOptionsProcessor;
 use Swarming\SubscribePro\Api\Data\SubscriptionInterface;
+use Swarming\SubscribePro\Helper\ProductOption as ProductOptionHelper;
+use Swarming\SubscribePro\Model\Subscription\OptionItem as SubscriptionOptionItem;
 use Swarming\SubscribePro\Model\Subscription\OptionItemFactory;
 use Swarming\SubscribePro\Model\Subscription\OptionItemManager;
-use Swarming\SubscribePro\Helper\ProductOption as ProductOptionHelper;
-use Magento\Framework\DataObject\Factory as DataObjectFactory;
-use Swarming\SubscribePro\Model\Subscription\OptionItem as SubscriptionOptionItem;
-use Magento\Catalog\Model\Product\Type\AbstractType as ProductTypeInstance;
 
 class OptionItemManagerTest extends \PHPUnit\Framework\TestCase
 {

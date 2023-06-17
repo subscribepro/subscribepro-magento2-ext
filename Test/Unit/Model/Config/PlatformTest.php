@@ -4,8 +4,8 @@ namespace Swarming\SubscribePro\Test\Unit\Model\Config;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\Filesystem\DirectoryList;
-use Swarming\SubscribePro\Model\Config\Platform;
 use Magento\Store\Model\ScopeInterface;
+use Swarming\SubscribePro\Model\Config\Platform;
 
 class PlatformTest extends \PHPUnit\Framework\TestCase
 {

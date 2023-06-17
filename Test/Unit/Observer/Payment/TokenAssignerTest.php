@@ -6,18 +6,17 @@ use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Framework\DataObject;
 use Magento\Framework\Event;
 use Magento\Framework\Event\Observer;
+use Magento\Payment\Model\InfoInterface as PaymentInfoInterface;
 use Magento\Payment\Observer\AbstractDataAssignObserver;
 use Magento\Quote\Api\Data\CartInterface;
 use Magento\Quote\Api\Data\PaymentInterface;
+use Magento\Quote\Model\Quote\Payment as QuotePayment;
 use Magento\Vault\Api\Data\PaymentTokenInterface;
 use Magento\Vault\Api\PaymentTokenManagementInterface;
-use Magento\Vault\Model\Method\Vault;
+use SubscribePro\Service\Transaction\TransactionInterface;
 use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
 use Swarming\SubscribePro\Gateway\Request\VaultDataBuilder;
-use SubscribePro\Service\Transaction\TransactionInterface;
-use Magento\Quote\Model\Quote\Payment as QuotePayment;
 use Swarming\SubscribePro\Observer\Payment\TokenAssigner as PaymentTokenAssigner;
-use Magento\Payment\Model\InfoInterface as PaymentInfoInterface;
 
 class TokenAssignerTest extends \PHPUnit\Framework\TestCase
 {

@@ -72,7 +72,6 @@ class GetPaymentProfileId
         \Magento\Sales\Model\Order $order,
         int $platformCustomerId
     ): string {
-
         try {
             $platformPaymentProfiles = $this->platformPaymentProfileService->loadProfiles(
                 [PaymentProfileInterface::PAYMENT_TOKEN => $paymentToken->getGatewayToken()]
@@ -99,7 +98,6 @@ class GetPaymentProfileId
         \Magento\Sales\Model\Order $order,
         int $platformCustomerId
     ): PaymentProfileInterface {
-
         $paymentProfileData = $this->paymentProfileDataBuilder->build($platformCustomerId, $paymentToken);
 
         $billingAddress = $order->getBillingAddress();

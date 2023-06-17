@@ -2,11 +2,11 @@
 
 namespace Swarming\SubscribePro\Block\Adminhtml\Order\Create\Items;
 
+use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\CatalogInventory\Api\StockRegistryInterface;
 use Magento\CatalogInventory\Api\StockStateInterface;
 use Magento\Framework\Pricing\PriceCurrencyInterface;
 use Magento\Quote\Model\Quote\Item;
-use Magento\Catalog\Api\Data\ProductInterface;
 use Swarming\SubscribePro\Api\Data\SubscriptionOptionInterface;
 
 /**
@@ -124,8 +124,7 @@ class Grid extends \Magento\Sales\Block\Adminhtml\Order\Create\Items\Grid
     {
         return [
             SubscriptionOptionInterface::OPTION => $this->quoteItemHelper->getSubscriptionOption($quoteItem),
-            SubscriptionOptionInterface::CREATE_NEW_SUBSCRIPTION_AT_CHECKOUT =>
-                $this->quoteItemHelper->getCreateNewSubscriptionAtCheckout($quoteItem),
+            SubscriptionOptionInterface::CREATE_NEW_SUBSCRIPTION_AT_CHECKOUT => $this->quoteItemHelper->getCreateNewSubscriptionAtCheckout($quoteItem),
             SubscriptionOptionInterface::INTERVAL => $this->quoteItemHelper->getSubscriptionInterval($quoteItem)
         ];
     }

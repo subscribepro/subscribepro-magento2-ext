@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Swarming\SubscribePro\Service\OrderCallback;
 
+use Magento\Sales\Api\Data\OrderAddressInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\Data\OrderItemInterface;
-use Magento\Sales\Api\Data\OrderAddressInterface;
 
 class ResponseProcessor
 {
