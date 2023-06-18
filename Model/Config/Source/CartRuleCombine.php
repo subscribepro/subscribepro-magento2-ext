@@ -4,11 +4,11 @@ namespace Swarming\SubscribePro\Model\Config\Source;
 
 class CartRuleCombine implements \Magento\Framework\Option\ArrayInterface
 {
-    const TYPE_COMBINE_SUBSCRIPTION = 'combine';
-    const TYPE_APPLY_GREATEST = 'greatest';
-    const TYPE_APPLY_LEAST = 'least';
-    const TYPE_APPLY_CART_DISCOUNT = 'cart';
-    const TYPE_APPLY_SUBSCRIPTION = 'subscription';
+    public const TYPE_COMBINE_SUBSCRIPTION = 'combine';
+    public const TYPE_APPLY_GREATEST = 'greatest';
+    public const TYPE_APPLY_LEAST = 'least';
+    public const TYPE_APPLY_CART_DISCOUNT = 'cart';
+    public const TYPE_APPLY_SUBSCRIPTION = 'subscription';
 
     /**
      * @return string[]

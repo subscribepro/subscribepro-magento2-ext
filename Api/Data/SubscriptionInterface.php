@@ -12,11 +12,11 @@ interface SubscriptionInterface
     /**
      * Constants used as data array keys
      */
-    const PRODUCT = 'product';
+    public const PRODUCT = 'product';
 
-    const PRODUCT_OPTION = 'product_option';
+    public const PRODUCT_OPTION = 'product_option';
 
-    const PLATFORM_FIELD_KEY = 'magento2';
+    public const PLATFORM_FIELD_KEY = 'magento2';
 
     /**
      * @return bool

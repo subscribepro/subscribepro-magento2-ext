@@ -9,9 +9,9 @@ use Magento\SalesRule\Model\Validator as SalesRuleValidator;
 
 class Validator
 {
-    const QUOTE_ITEM_RULES = 'quoteItemRules';
-    const QUOTE_RULES = 'quoteRules';
-    const ADDRESS_RULES = 'addressRules';
+    public const QUOTE_ITEM_RULES = 'quoteItemRules';
+    public const QUOTE_RULES = 'quoteRules';
+    public const ADDRESS_RULES = 'addressRules';
 
     /**
      * @var \Swarming\SubscribePro\Model\Config\SubscriptionDiscount

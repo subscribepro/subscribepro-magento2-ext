@@ -7,7 +7,7 @@ use Magento\Vault\Model\Ui\VaultConfigProvider;
 
 class PaymentDataBuilder implements BuilderInterface
 {
-    const PAYMENT_METHOD_TOKEN = 'payment_method_token';
+    public const PAYMENT_METHOD_TOKEN = 'payment_method_token';
 
     /**
      * @var \Swarming\SubscribePro\Gateway\Helper\SubjectReader

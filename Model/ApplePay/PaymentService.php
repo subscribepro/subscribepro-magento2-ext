@@ -22,7 +22,7 @@ use Swarming\SubscribePro\Platform\Service\ApplePay\PaymentProfile as PlatformAp
 
 class PaymentService
 {
-    const DEFAULT_PHONE_NUMBER = '0000000000';
+    public const DEFAULT_PHONE_NUMBER = '0000000000';
 
     /**
      * @var Quote

@@ -6,9 +6,9 @@ use SubscribePro\Tools\Config as PlatformConfig;
 
 class ConfigProvider
 {
-    const CODE = 'subscribe_pro';
+    public const CODE = 'subscribe_pro';
 
-    const VAULT_CODE = 'subscribe_pro_vault';
+    public const VAULT_CODE = 'subscribe_pro_vault';
 
     /**
      * @var \Swarming\SubscribePro\Model\Config\General

@@ -10,7 +10,7 @@ use Swarming\SubscribePro\Model\Config\Source\ThreeDsType;
 
 class Vault
 {
-    const STATE_PENDING = 'pending';
+    public const STATE_PENDING = 'pending';
 
     /**
      * @var \Swarming\SubscribePro\Gateway\Config\Config

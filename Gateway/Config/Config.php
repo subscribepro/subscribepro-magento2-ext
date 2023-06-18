@@ -4,18 +4,18 @@ namespace Swarming\SubscribePro\Gateway\Config;
 
 class Config extends \Magento\Payment\Gateway\Config\Config
 {
-    const KEY_ACTIVE = 'active';
-    const KEY_THREE_DS_ACTIVE = 'three_ds_active';
-    const KEY_THREE_DS_TYPE = 'three_ds_type';
-    const KEY_WALLET_AUTHORIZATION_ACTIVE = 'wallet_authorization_active';
-    const KEY_WALLET_AUTHORIZATION_AMOUNT = 'wallet_authorization_amount';
-    const KEY_BROWSER_SIZE = 'browser_size';
-    const KEY_ACCEPT_HEADER = 'accept_header';
-    const KEY_ACTIVE_NON_SUBSCRIPTION = 'active_non_subscription';
-    const KEY_CURRENCY = 'currency';
-    const KEY_CC_TYPES = 'cctypes';
-    const KEY_CC_TYPES_MAPPER = 'cctypes_mapper';
-    const KEY_CC_USE_CCV = 'useccv';
+    public const KEY_ACTIVE = 'active';
+    public const KEY_THREE_DS_ACTIVE = 'three_ds_active';
+    public const KEY_THREE_DS_TYPE = 'three_ds_type';
+    public const KEY_WALLET_AUTHORIZATION_ACTIVE = 'wallet_authorization_active';
+    public const KEY_WALLET_AUTHORIZATION_AMOUNT = 'wallet_authorization_amount';
+    public const KEY_BROWSER_SIZE = 'browser_size';
+    public const KEY_ACCEPT_HEADER = 'accept_header';
+    public const KEY_ACTIVE_NON_SUBSCRIPTION = 'active_non_subscription';
+    public const KEY_CURRENCY = 'currency';
+    public const KEY_CC_TYPES = 'cctypes';
+    public const KEY_CC_TYPES_MAPPER = 'cctypes_mapper';
+    public const KEY_CC_USE_CCV = 'useccv';
 
     /**
      * @param int|null $storeId

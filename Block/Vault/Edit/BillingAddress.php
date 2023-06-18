@@ -7,7 +7,7 @@ use SubscribePro\Service\PaymentProfile\PaymentProfileInterface;
 
 class BillingAddress extends \Magento\Directory\Block\Data
 {
-    const XML_PATH_DISPLAY_ALL_STATES = 'general/region/display_all';
+    public const XML_PATH_DISPLAY_ALL_STATES = 'general/region/display_all';
 
     /**
      * @var \Magento\Directory\Model\RegionFactory

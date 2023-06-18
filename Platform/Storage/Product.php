@@ -6,7 +6,7 @@ use Swarming\SubscribePro\Platform\Cache\Type\Product as PlatformProductCache;
 
 class Product
 {
-    const PRODUCT_CACHE_KEY = 'sp_platform_product';
+    public const PRODUCT_CACHE_KEY = 'sp_platform_product';
 
     /**
      * @var \Magento\Framework\Cache\FrontendInterface

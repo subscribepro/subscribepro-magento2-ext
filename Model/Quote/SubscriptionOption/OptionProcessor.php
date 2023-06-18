@@ -7,7 +7,7 @@ use Magento\Quote\Model\Quote\Item\CartItemProcessorInterface;
 
 class OptionProcessor implements CartItemProcessorInterface
 {
-    const KEY_SUBSCRIPTION_OPTION = 'subscription_option';
+    public const KEY_SUBSCRIPTION_OPTION = 'subscription_option';
 
     /**
      * @var \Magento\Framework\DataObject\Factory

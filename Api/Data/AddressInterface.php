@@ -4,7 +4,7 @@ namespace Swarming\SubscribePro\Api\Data;
 
 interface AddressInterface extends \SubscribePro\Service\Address\AddressInterface
 {
-    const ADDRESS_INLINE = 'address_inline';
+    public const ADDRESS_INLINE = 'address_inline';
 
     /**
      * @return string|null

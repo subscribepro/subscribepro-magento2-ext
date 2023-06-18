@@ -14,7 +14,7 @@ use Magento\Quote\Model\ResourceModel\Quote as QuoteResourceModel;
 
 class Shipping
 {
-    const DEFAULT_FREE_METHOD = 'Free';
+    public const DEFAULT_FREE_METHOD = 'Free';
 
     /**
      * @var Quote

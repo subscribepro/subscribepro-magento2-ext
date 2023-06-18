@@ -7,7 +7,7 @@ use Magento\Quote\Model\Quote\Item\AbstractItem as QuoteItem;
 
 class ItemSubscriptionDiscount
 {
-    const KEY_DISCOUNT_DESCRIPTION = 'subscription';
+    public const KEY_DISCOUNT_DESCRIPTION = 'subscription';
 
     /**
      * @var \Swarming\SubscribePro\Model\Config\SubscriptionDiscount

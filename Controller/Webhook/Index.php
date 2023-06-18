@@ -12,7 +12,7 @@ use Magento\Framework\Webapi\Response;
 
 class Index extends Action implements CsrfAwareActionInterface
 {
-    const WEBHOOK_HASH_HEADER_KEY = 'Sp-Hmac';
+    public const WEBHOOK_HASH_HEADER_KEY = 'Sp-Hmac';
 
     /**
      * @var \Swarming\SubscribePro\Platform\Webhook\Processor

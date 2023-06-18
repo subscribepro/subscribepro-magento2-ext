@@ -7,8 +7,8 @@ use Swarming\SubscribePro\Gateway\Config\ConfigProvider as GatewayConfigProvider
 
 class ApplePayConfigProvider extends GatewayConfigProvider
 {
-    const CODE = 'subscribe_pro_apple_pay';
-    const VAULT_CODE = 'subscribe_pro_vault';
+    public const CODE = 'subscribe_pro_apple_pay';
+    public const VAULT_CODE = 'subscribe_pro_vault';
 
     /**
      * @param null $websiteCode

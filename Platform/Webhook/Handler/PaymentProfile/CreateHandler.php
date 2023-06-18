@@ -10,7 +10,7 @@ use Swarming\SubscribePro\Platform\Webhook\HandlerInterface;
 
 class CreateHandler extends AbstractHandler implements HandlerInterface
 {
-    const PAYMENT_METHOD_CODE = 'apple_pay';
+    public const PAYMENT_METHOD_CODE = 'apple_pay';
 
     /**
      * @var \Swarming\SubscribePro\Platform\Service\PaymentProfile
