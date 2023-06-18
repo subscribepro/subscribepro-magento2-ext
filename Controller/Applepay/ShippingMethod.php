@@ -60,7 +60,7 @@ class ShippingMethod implements HttpPostActionInterface, CsrfAwareActionInterfac
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function execute()
     {
@@ -113,7 +113,7 @@ class ShippingMethod implements HttpPostActionInterface, CsrfAwareActionInterfac
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getRequestData()
     {
@@ -121,7 +121,7 @@ class ShippingMethod implements HttpPostActionInterface, CsrfAwareActionInterfac
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function createCsrfValidationException(RequestInterface $request): ?InvalidRequestException
     {
@@ -135,7 +135,7 @@ class ShippingMethod implements HttpPostActionInterface, CsrfAwareActionInterfac
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function validateForCsrf(RequestInterface $request): ?bool
     {
@@ -143,7 +143,7 @@ class ShippingMethod implements HttpPostActionInterface, CsrfAwareActionInterfac
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getRowItems(): array
     {
@@ -151,7 +151,7 @@ class ShippingMethod implements HttpPostActionInterface, CsrfAwareActionInterfac
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getGrandTotal(): array
     {

@@ -127,7 +127,7 @@ class PaymentService
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     protected function getCustomerSession()
     {
@@ -147,7 +147,7 @@ class PaymentService
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getDirectoryRegionByName($administrativeArea, $countryId)
     {
@@ -155,7 +155,7 @@ class PaymentService
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getDirectoryRegionByCode($administrativeArea, $countryId)
     {
@@ -463,7 +463,7 @@ class PaymentService
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function placeOrder($quoteId, $defaultShippingMethod = null): bool
     {

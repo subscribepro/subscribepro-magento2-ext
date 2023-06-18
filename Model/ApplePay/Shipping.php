@@ -80,7 +80,7 @@ class Shipping
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     protected function getDirectoryRegionByName($administrativeArea, $countryId)
     {
@@ -206,7 +206,7 @@ class Shipping
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function formatPrice($price)
     {

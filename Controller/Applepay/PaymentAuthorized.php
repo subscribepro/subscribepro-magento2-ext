@@ -84,7 +84,7 @@ class PaymentAuthorized implements HttpPostActionInterface, CsrfAwareActionInter
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function execute()
     {
@@ -147,7 +147,7 @@ class PaymentAuthorized implements HttpPostActionInterface, CsrfAwareActionInter
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function createCsrfValidationException(RequestInterface $request): ?InvalidRequestException
     {
@@ -161,7 +161,7 @@ class PaymentAuthorized implements HttpPostActionInterface, CsrfAwareActionInter
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function validateForCsrf(RequestInterface $request): ?bool
     {
