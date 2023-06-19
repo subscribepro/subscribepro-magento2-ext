@@ -136,6 +136,10 @@ class Index extends Action implements CsrfAwareActionInterface
 
     /**
      * @inheridoc
+     *
+     * @param RequestInterface $request
+     *
+     * @return InvalidRequestException|null
      */
     public function createCsrfValidationException(RequestInterface $request): ?InvalidRequestException
     {
@@ -144,6 +148,10 @@ class Index extends Action implements CsrfAwareActionInterface
 
     /**
      * @inheridoc
+     *
+     * @param RequestInterface $request
+     *
+     * @return bool|null
      */
     public function validateForCsrf(RequestInterface $request): ?bool
     {

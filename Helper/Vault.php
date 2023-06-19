@@ -117,6 +117,8 @@ class Vault
      * @param string $lastDigits
      * @param string $month
      * @param string $year
+     * @param string $paymentToken
+     *
      * @return string
      */
     public function getTokenDetails($cardType, $lastDigits, $month, $year, $paymentToken)

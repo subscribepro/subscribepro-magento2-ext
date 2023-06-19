@@ -210,7 +210,7 @@ class Shipping
      */
     public function formatPrice($price)
     {
-        return $this->currency->format($price, ['display'=>\Zend_Currency::NO_SYMBOL], false);
+        return $this->currency->format($price, ['display'=>\Magento\Framework\Currency\Data\Currency::NO_SYMBOL], false);
     }
 
     /**

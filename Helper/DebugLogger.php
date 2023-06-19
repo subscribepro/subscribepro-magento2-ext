@@ -2,6 +2,9 @@
 
 namespace Swarming\SubscribePro\Helper;
 
+use Psr\Log\LoggerInterface;
+use Swarming\SubscribePro\Model\Config\Advanced;
+
 class DebugLogger
 {
     /**
@@ -16,7 +19,9 @@ class DebugLogger
 
     /**
      * DebugLogger constructor.
+     *
      * @param LoggerInterface $logger
+     * @param Advanced        $config
      */
     public function __construct(
         \Psr\Log\LoggerInterface $logger,

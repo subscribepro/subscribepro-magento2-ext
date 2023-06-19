@@ -177,9 +177,9 @@ class DiscountRule
     }
 
     /**
-     * @param $subscriptionParams
-     * @param $conditionValue
-     * @param $op
+     * @param array $subscriptionParams
+     * @param array|float|int|string $conditionValue
+     * @param string $op
      * @return bool
      */
     public function validateStatus($subscriptionParams, $conditionValue, $op)
@@ -195,7 +195,6 @@ class DiscountRule
     /**
      * @param array $subscriptionParams
      * @param string $conditionValue
-     * @param string $op
      * @return bool
      */
     protected function getStatusMatchResult($subscriptionParams, $conditionValue)

@@ -90,7 +90,12 @@ class Order implements HttpPostActionInterface, CsrfAwareActionInterface
         }
 
         if ($this->orderCallbackConfig->isLogEnabled()) {
-            $this->logger->debug(json_encode(['orderRequest' => $orderRequest, 'response' => $responseData], JSON_PRETTY_PRINT));
+            $this->logger->debug(json_encode(
+                [
+                    'orderRequest' => $orderRequest,
+                    'response' => $responseData
+                ],
+                JSON_PRETTY_PRINT));
         }
 
         /** @var \Magento\Framework\Controller\Result\Json $jsonResult */
