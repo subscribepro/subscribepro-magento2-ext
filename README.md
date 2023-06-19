@@ -50,5 +50,12 @@ Subscribe Pro team follows the standards described in https://devdocs.magento.co
 ### To confirm project is compliant with standards
 
 ```bash
-vendor/bin/phpcs --standard=Magento2 app/code/Swarming/SubscribePro
+vendor/bin/phpcs -s \
+  --standard=Magento2 app/code/Swarming/SubscribePro \
+  --extensions=phtml \
+  --error-severity=10 \
+  --ignore-annotations \
+  --exclude=Magento2.Annotation.MethodAnnotationStructure \
+  app/code/Swarming/SubscribePro
 ```
+
