@@ -47,7 +47,9 @@ Subscribe Pro team follows the standards described in https://devdocs.magento.co
     ```
       None of the existing PHP standards stipulates this at the moment of writing, so "no space" was elected.
 
-### To confirm project is compliant with standards
+### To confirm project is compliant with standards PHP_CodeSniffer (`phpcs`)
+
+Run PHP_CodeSniffer:
 
 ```bash
 vendor/bin/phpcs -s \
@@ -59,3 +61,25 @@ vendor/bin/phpcs -s \
   app/code/Swarming/SubscribePro
 ```
 
+To automatically fix certain issues with PHP Code Beautifier and Fixer:
+
+```bash
+bin/phpcbf --standard=Magento2 \
+  --extensions=phtml \
+  --error-severity=10 \
+  --ignore-annotations \
+  --exclude=Magento2.Annotation.MethodAnnotationStructure \
+  app/code/Swarming/SubscribePro
+```
+
+### Run `phpstan`
+
+```bash
+bin/analyse app/code/Swarming/SubscribePro --level=1
+```
+
+### Run PHP Coding Standards Fixer (`php-cs-fixer`)
+
+```bash
+php-cs-fixer fix src/app/code/Swarming/SubscribePro
+```
