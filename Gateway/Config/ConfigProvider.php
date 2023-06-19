@@ -99,7 +99,9 @@ class ConfigProvider
     }
 
     /**
-     * @param $websiteId
+     * Is Subscribe Pro payment method enabled for website.
+     *
+     * @param string|null $websiteId
      * @return bool
      */
     public function isEnabledPayment($websiteId)

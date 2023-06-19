@@ -178,6 +178,11 @@ class Subscriptions extends \Magento\Framework\View\Element\Template
         return $customerData;
     }
 
+    /**
+     * Return the customer ID for the subscriptions block.
+     *
+     * @return int|null
+     */
     public function getCustomerId()
     {
         return $this->customerSession->getCustomerId();
@@ -224,6 +229,11 @@ class Subscriptions extends \Magento\Framework\View\Element\Template
         return $accessToken['access_token'];
     }
 
+    /**
+     * Return the Subscribe Pro unique customer ID for subscriptions block.
+     *
+     * @return int|null|false
+     */
     public function getPlatformCustomerId()
     {
         try {
@@ -237,6 +247,10 @@ class Subscriptions extends \Magento\Framework\View\Element\Template
         }
     }
 
+    /**
+     * @inheirtdoc
+     * @return Subscriptions
+     */
     protected function _beforeToHtml()
     {
         $this->initJsLayout();
@@ -256,6 +270,11 @@ class Subscriptions extends \Magento\Framework\View\Element\Template
             ->renderArray($builtOutputAddressData);
     }
 
+    /**
+     * Initialize the $this->jsLayout member property.
+     *
+     * @return void
+     */
     protected function initJsLayout()
     {
         $data = [

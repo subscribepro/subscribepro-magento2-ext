@@ -88,7 +88,7 @@ class Grid extends \Magento\Sales\Block\Adminhtml\Order\Create\Items\Grid
     /**
      * Determines if a product has the subscription option enabled
      *
-     * @param $quoteItem
+     * @param Item $quoteItem
      * @return bool
      */
     public function isSubscriptionProduct(Item $quoteItem)

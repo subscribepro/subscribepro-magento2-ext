@@ -8,6 +8,7 @@ use Magento\Framework\App\CsrfAwareActionInterface;
 use Magento\Framework\App\Request\InvalidRequestException;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Controller\Result\JsonFactory as JsonResultFactory;
+use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Serialize\Serializer\Json as JsonSerializer;
 use Psr\Log\LoggerInterface;
@@ -70,27 +71,7 @@ class ShippingMethod implements HttpPostActionInterface, CsrfAwareActionInterfac
         $errorMessage = __('Shipping method error. Please select a different shipping method.');
 
         try {
-            // Get JSON POST
-            $data = $this->getRequestData();
-
-            if (!isset($data['shippingMethod'])) {
-                throw new LocalizedException($errorMessage);
-            }
-
-            // Set shipping method selection
-            $this->shipping->setShippingMethodToQuote($data['shippingMethod']);
-
-            // Build up our response
-            $response = [
-                'success' => true,
-                'newTotal' => $this->getGrandTotal(),
-                'newLineItems' => $this->getRowItems(),
-            ];
-
-            $result->setData($response);
-
-            return $result;
-            // phpcs:ignore Magento2.Exceptions.ThrowCatch.ThrowCatch
+            $this->implementExectute($result);
         } catch (LocalizedException $e) {
             $this->logger->error($e->getMessage());
             $response = [
@@ -156,5 +137,35 @@ class ShippingMethod implements HttpPostActionInterface, CsrfAwareActionInterfac
     public function getGrandTotal(): array
     {
         return $this->shipping->getGrandTotal();
+    }
+
+    /**
+     * Set shipping method on quote.
+     *
+     * @param ResultInterface $result
+     *
+     * @return void
+     * @throws LocalizedException
+     */
+    private function implementExectute(ResultInterface $result)
+    {
+        // Get JSON POST
+        $data = $this->getRequestData();
+
+        if (!isset($data['shippingMethod'])) {
+            throw new LocalizedException(__("'shippingMethod' key not set!"));
+        }
+
+        // Set shipping method selection
+        $this->shipping->setShippingMethodToQuote($data['shippingMethod']);
+
+        // Build up our response
+        $response = [
+            'success' => true,
+            'newTotal' => $this->getGrandTotal(),
+            'newLineItems' => $this->getRowItems(),
+        ];
+
+        $result->setData($response);
     }
 }

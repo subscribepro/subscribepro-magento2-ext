@@ -56,7 +56,7 @@ interface SubscriptionInterface
     public function getUserDefinedFields();
 
     /**
-     * @param array
+     * @param array $userDefinedFields
      * @return $this
      */
     public function setUserDefinedFields(array $userDefinedFields);
