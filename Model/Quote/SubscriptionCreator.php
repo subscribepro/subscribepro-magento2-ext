@@ -4,8 +4,8 @@ namespace Swarming\SubscribePro\Model\Quote;
 
 class SubscriptionCreator
 {
-    const CREATED_SUBSCRIPTION_IDS = 'created_subscription_ids';
-    const FAILED_SUBSCRIPTION_COUNT = 'failed_subscription_count';
+    public const CREATED_SUBSCRIPTION_IDS = 'created_subscription_ids';
+    public const FAILED_SUBSCRIPTION_COUNT = 'failed_subscription_count';
 
     /**
      * @var \Swarming\SubscribePro\Platform\Service\Subscription

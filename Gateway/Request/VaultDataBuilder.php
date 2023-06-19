@@ -7,8 +7,8 @@ use SubscribePro\Service\Transaction\TransactionInterface;
 
 class VaultDataBuilder implements BuilderInterface
 {
-    const PAYMENT_PROFILE_ID = 'profile_id';
-    const ORDER_TOKEN = 'subscribe_pro_order_token';
+    public const PAYMENT_PROFILE_ID = 'profile_id';
+    public const ORDER_TOKEN = 'subscribe_pro_order_token';
 
     /**
      * @var \Swarming\SubscribePro\Gateway\Helper\SubjectReader

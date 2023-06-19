@@ -7,20 +7,20 @@ use Swarming\SubscribePro\Gateway\Config\ConfigProvider as GatewayConfigProvider
 
 class ApplePayConfigProvider extends GatewayConfigProvider
 {
-    const CODE = 'subscribe_pro_apple_pay';
-    const VAULT_CODE = 'subscribe_pro_vault';
+    public const CODE = 'subscribe_pro_apple_pay';
+    public const VAULT_CODE = 'subscribe_pro_vault';
 
     /**
-     * @param null $websiteCode
+     * @param string|null $websiteId
      * @return bool
      */
-    public function isEnabledPayment($websiteCode = null): bool
+    public function isEnabledPayment($websiteId = null): bool
     {
-        return ($this->generalConfig->isEnabled($websiteCode) && $this->generalConfig->isApplePayEnabled($websiteCode));
+        return ($this->generalConfig->isEnabled($websiteId) && $this->generalConfig->isApplePayEnabled($websiteId));
     }
 
     /**
-     * @param null $storeId
+     * @param string|null $storeId
      * @return string
      */
     public function getDomain($storeId = null): string
@@ -31,7 +31,7 @@ class ApplePayConfigProvider extends GatewayConfigProvider
     }
 
     /**
-     * @param null $storeId
+     * @param string|null $storeId
      * @return bool
      */
     public function isActiveNonSubscription($storeId = null): bool
@@ -40,7 +40,7 @@ class ApplePayConfigProvider extends GatewayConfigProvider
     }
 
     /**
-     * @param null $websiteCode
+     * @param string|null $websiteCode
      * @return string
      */
     public function getApiBaseUrl($websiteCode = null): string

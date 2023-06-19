@@ -6,7 +6,7 @@ use Swarming\SubscribePro\Model\Config\SubscriptionOptions;
 
 class SubscriptionConfig
 {
-    const BLOCK_NAME_CANCELLATION = 'subscribe_pro_cancel_popup';
+    public const BLOCK_NAME_CANCELLATION = 'subscribe_pro_cancel_popup';
 
     /**
      * @var \Swarming\SubscribePro\Model\Config\SubscriptionOptions

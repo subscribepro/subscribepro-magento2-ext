@@ -4,7 +4,7 @@ namespace Swarming\SubscribePro\Gateway\Config;
 
 class VaultConfig extends \Magento\Payment\Gateway\Config\Config
 {
-    const KEY_ACTIVE = 'active';
+    public const KEY_ACTIVE = 'active';
 
     /**
      * @return bool

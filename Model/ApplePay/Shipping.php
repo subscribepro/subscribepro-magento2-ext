@@ -14,7 +14,7 @@ use Magento\Quote\Model\ResourceModel\Quote as QuoteResourceModel;
 
 class Shipping
 {
-    const DEFAULT_FREE_METHOD = 'Free';
+    public const DEFAULT_FREE_METHOD = 'Free';
 
     /**
      * @var Quote
@@ -53,6 +53,15 @@ class Shipping
      */
     protected $jsonSerializer;
 
+    /**
+     * Construct Apple Pay shipping model.
+     *
+     * @param SessionManagerInterface $checkoutSession
+     * @param DirectoryRegion         $directoryRegion
+     * @param Currency                $currency
+     * @param QuoteResourceModel      $quoteResourceModel
+     * @param JsonSerializer          $jsonSerializer
+     */
     public function __construct(
         SessionManagerInterface $checkoutSession,
         DirectoryRegion $directoryRegion,
@@ -80,7 +89,7 @@ class Shipping
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     protected function getDirectoryRegionByName($administrativeArea, $countryId)
     {
@@ -160,7 +169,7 @@ class Shipping
     /**
      * Convert a shipping rate into Apple Pay format
      *
-     * @param $shippingRate
+     * @param Quote\Address\Rate $shippingRate
      * @return array
      */
     protected function convertShippingRate($shippingRate)
@@ -180,14 +189,13 @@ class Shipping
     }
 
     /**
-     * @param $applePayShippingMethod
+     * @param array|null $applePayShippingMethod
      * @return $this
      * @throws \Exception
      */
     public function setShippingMethodToQuote($applePayShippingMethod)
     {
         if (isset($applePayShippingMethod['identifier'])) {
-            // TODO: avoid deprecated methods.
             $this->getQuote()
                 ->getShippingAddress()
                 ->setShippingMethod($applePayShippingMethod['identifier']);
@@ -206,11 +214,15 @@ class Shipping
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function formatPrice($price)
     {
-        return $this->currency->format($price, ['display'=>\Zend_Currency::NO_SYMBOL], false);
+        return $this->currency->format(
+            $price,
+            ['display' => \Magento\Framework\Currency\Data\Currency::NO_SYMBOL],
+            false
+        );
     }
 
     /**

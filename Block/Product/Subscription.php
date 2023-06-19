@@ -10,7 +10,7 @@ use Swarming\SubscribePro\Api\Data\ProductInterface;
 
 class Subscription extends \Magento\Catalog\Block\Product\AbstractProduct
 {
-    const TAX_CLASS_ID = 'tax_class_id';
+    public const TAX_CLASS_ID = 'tax_class_id';
 
     /**
      * @var \Swarming\SubscribePro\Model\Config\SubscriptionDiscount

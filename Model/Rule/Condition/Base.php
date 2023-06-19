@@ -8,9 +8,9 @@ use Swarming\SubscribePro\Helper\QuoteItem as QuoteItemHelper;
 
 class Base extends \Magento\Rule\Model\Condition\AbstractCondition
 {
-    const SUBSCRIPTION_STATUS_ANY = 0;
-    const SUBSCRIPTION_STATUS_NEW = 1;
-    const SUBSCRIPTION_STATUS_REORDER = 2;
+    public const SUBSCRIPTION_STATUS_ANY = 0;
+    public const SUBSCRIPTION_STATUS_NEW = 1;
+    public const SUBSCRIPTION_STATUS_REORDER = 2;
 
     /**
      * @var QuoteItemHelper

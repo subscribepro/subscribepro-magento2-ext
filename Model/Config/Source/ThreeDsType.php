@@ -4,8 +4,8 @@ namespace Swarming\SubscribePro\Model\Config\Source;
 
 class ThreeDsType implements \Magento\Framework\Option\ArrayInterface
 {
-    const GATEWAY_INDEPENDENT = 'gateway_independent';
-    const GATEWAY_SPECIFIC = 'gateway_specific';
+    public const GATEWAY_INDEPENDENT = 'gateway_independent';
+    public const GATEWAY_SPECIFIC = 'gateway_specific';
 
     /**
      * @return array[]

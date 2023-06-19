@@ -60,7 +60,7 @@ class ShippingList implements HttpPostActionInterface, CsrfAwareActionInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function execute()
     {

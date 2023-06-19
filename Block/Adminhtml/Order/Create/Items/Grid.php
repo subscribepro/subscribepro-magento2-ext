@@ -88,7 +88,7 @@ class Grid extends \Magento\Sales\Block\Adminhtml\Order\Create\Items\Grid
     /**
      * Determines if a product has the subscription option enabled
      *
-     * @param $quoteItem
+     * @param Item $quoteItem
      * @return bool
      */
     public function isSubscriptionProduct(Item $quoteItem)
@@ -123,9 +123,12 @@ class Grid extends \Magento\Sales\Block\Adminhtml\Order\Create\Items\Grid
     public function getSubscriptionParameters(Item $quoteItem)
     {
         return [
-            SubscriptionOptionInterface::OPTION => $this->quoteItemHelper->getSubscriptionOption($quoteItem),
-            SubscriptionOptionInterface::CREATE_NEW_SUBSCRIPTION_AT_CHECKOUT => $this->quoteItemHelper->getCreateNewSubscriptionAtCheckout($quoteItem),
-            SubscriptionOptionInterface::INTERVAL => $this->quoteItemHelper->getSubscriptionInterval($quoteItem)
+            SubscriptionOptionInterface::OPTION =>
+                $this->quoteItemHelper->getSubscriptionOption($quoteItem),
+            SubscriptionOptionInterface::CREATE_NEW_SUBSCRIPTION_AT_CHECKOUT =>
+                $this->quoteItemHelper->getCreateNewSubscriptionAtCheckout($quoteItem),
+            SubscriptionOptionInterface::INTERVAL =>
+                $this->quoteItemHelper->getSubscriptionInterval($quoteItem)
         ];
     }
 }

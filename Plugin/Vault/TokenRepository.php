@@ -52,7 +52,7 @@ class TokenRepository
     }
 
     /**
-     * @param $paymentProfileId
+     * @param string|int|null $paymentProfileId
      */
     protected function redactProfile($paymentProfileId)
     {

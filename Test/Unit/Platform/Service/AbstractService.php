@@ -11,6 +11,9 @@ class AbstractService extends \PHPUnit\Framework\TestCase
      */
     protected $platformMock;
 
+    /**
+     * @var string
+     */
     protected $name = 'test_name';
 
     protected function initService($service, $websiteId = null)

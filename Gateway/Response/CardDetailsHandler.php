@@ -7,8 +7,8 @@ use Magento\Payment\Gateway\Response\HandlerInterface;
 
 class CardDetailsHandler implements HandlerInterface
 {
-    const CARD_TYPE = 'cc_type';
-    const CARD_NUMBER = 'cc_number';
+    public const CARD_TYPE = 'cc_type';
+    public const CARD_NUMBER = 'cc_number';
 
     /**
      * @var \Swarming\SubscribePro\Gateway\Config\Config

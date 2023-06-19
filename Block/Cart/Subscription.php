@@ -52,6 +52,7 @@ class Subscription extends \Magento\Checkout\Block\Cart\Additional\Info
      * @param \Swarming\SubscribePro\Platform\Manager\Product $platformProductManager
      * @param \Swarming\SubscribePro\Helper\QuoteItem $quoteItemHelper
      * @param \Swarming\SubscribePro\Helper\Product $productHelper
+     * @param \Psr\Log\LoggerInterface $logger
      * @param array $data
      */
     public function __construct(

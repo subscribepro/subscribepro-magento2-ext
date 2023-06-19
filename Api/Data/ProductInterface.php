@@ -12,17 +12,17 @@ interface ProductInterface extends \SubscribePro\Service\Product\ProductInterfac
     /**
      * Constants used as data array keys
      */
-    const URL = 'url';
+    public const URL = 'url';
 
-    const IMAGE_URL = 'image_url';
+    public const IMAGE_URL = 'image_url';
 
-    const OPTION_LIST = 'option_list';
+    public const OPTION_LIST = 'option_list';
 
-    const FINAL_PRICE = 'final_price';
+    public const FINAL_PRICE = 'final_price';
 
-    const TAX_RATE = 'tax_rate';
+    public const TAX_RATE = 'tax_rate';
 
-    const IS_CATALOG_RULE_APPLIED = 'is_catalog_rule_applied';
+    public const IS_CATALOG_RULE_APPLIED = 'is_catalog_rule_applied';
 
     /**
      * @return string|null

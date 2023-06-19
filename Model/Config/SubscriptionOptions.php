@@ -6,7 +6,7 @@ use Magento\Store\Model\ScopeInterface;
 
 class SubscriptionOptions extends General
 {
-    const QTY_MIN_DAYS_TO_NEXT_ORDER = 1;
+    public const QTY_MIN_DAYS_TO_NEXT_ORDER = 1;
 
     /**
      * @var \Magento\Framework\Intl\DateTimeFactory

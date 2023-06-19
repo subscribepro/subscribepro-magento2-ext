@@ -78,6 +78,10 @@ class Edit extends \Magento\Directory\Block\Data
         );
     }
 
+    /**
+     * @inheridoc
+     * @return Edit
+     */
     protected function _prepareLayout()
     {
         $publicHash = $this->getRequest()->getParam(PaymentTokenInterface::PUBLIC_HASH);
@@ -116,6 +120,12 @@ class Edit extends \Magento\Directory\Block\Data
         $this->token = $token;
     }
 
+    /**
+     * Load Subscribe Pro payment profile.
+     *
+     * @return void
+     * @throws LocalizedException
+     */
     protected function loadProfile()
     {
         $profile = $this->platformPaymentProfileService->loadProfile($this->token->getGatewayToken());
@@ -125,6 +135,12 @@ class Edit extends \Magento\Directory\Block\Data
         $this->profile = $profile;
     }
 
+    /**
+     * Initialize page title for this page.
+     *
+     * @return void
+     * @throws LocalizedException
+     */
     protected function initPageTitle()
     {
         /** @var \Magento\Theme\Block\Html\Title $pageMainTitle */

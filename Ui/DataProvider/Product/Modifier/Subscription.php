@@ -10,7 +10,7 @@ use Magento\Ui\Component\Form;
 
 class Subscription extends AbstractModifier
 {
-    const SUBSCRIPTION_ENABLED = 'subscription_enabled';
+    public const SUBSCRIPTION_ENABLED = 'subscription_enabled';
 
     /**
      * @var \Magento\Framework\App\Config\ScopeConfigInterface
@@ -43,7 +43,7 @@ class Subscription extends AbstractModifier
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function modifyData(array $data)
     {
@@ -57,7 +57,7 @@ class Subscription extends AbstractModifier
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function modifyMeta(array $meta)
     {

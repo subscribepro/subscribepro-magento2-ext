@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Swarming\SubscribePro\Model\ApplePay;
@@ -22,7 +23,7 @@ use Swarming\SubscribePro\Platform\Service\ApplePay\PaymentProfile as PlatformAp
 
 class PaymentService
 {
-    const DEFAULT_PHONE_NUMBER = '0000000000';
+    public const DEFAULT_PHONE_NUMBER = '0000000000';
 
     /**
      * @var Quote
@@ -85,6 +86,23 @@ class PaymentService
      */
     private $logger;
 
+    /**
+     * Construct the payment service.
+     *
+     * @param SessionManagerInterface        $checkoutSession
+     * @param CustomerSession                $customerSession
+     * @param Currency                       $currency
+     * @param DirectoryRegion                $directoryRegion
+     * @param PlatformCustomer               $platformCustomer
+     * @param PlatformApplePayPaymentProfile $platformPaymentProfile
+     * @param OrderService                   $orderService
+     * @param QuoteManagement                $quoteManagement
+     * @param QuotePaymentResourceModel      $quotePaymentResourceModel
+     * @param QuoteResourceModel             $quoteResourceModel
+     * @param JsonSerializer                 $jsonSerializer
+     * @param ApplePayVaultHelper            $vault
+     * @param LoggerInterface                $logger
+     */
     public function __construct(
         SessionManagerInterface $checkoutSession,
         CustomerSession $customerSession,
@@ -127,7 +145,7 @@ class PaymentService
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     protected function getCustomerSession()
     {
@@ -147,7 +165,7 @@ class PaymentService
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getDirectoryRegionByName($administrativeArea, $countryId)
     {
@@ -155,7 +173,7 @@ class PaymentService
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getDirectoryRegionByCode($administrativeArea, $countryId)
     {
@@ -175,10 +193,11 @@ class PaymentService
     }
 
     /**
-     * @param int   $subscribeProCustomerId
-     * @param array $paymentProfileData
-     * @param       $billingAddress
-     * @param null  $websiteId
+     * @param int                                           $subscribeProCustomerId
+     * @param array                                         $paymentProfileData
+     * @param \Magento\Quote\Api\Data\AddressInterface|null $billingAddress
+     * @param null                                          $websiteId
+     *
      * @return \SubscribePro\Service\PaymentProfile\PaymentProfileInterface
      * @throws LocalizedException
      */
@@ -211,10 +230,10 @@ class PaymentService
     }
 
     /**
-     * @param $magentoAddress
+     * @param \Magento\Quote\Api\Data\AddressInterface       $magentoAddress
      * @param \SubscribePro\Service\Address\AddressInterface $platformAddress
      */
-    protected function mapMagentoAddressToPlatform($magentoAddress, $platformAddress)
+    protected function mapMagentoAddressToPlatform(AddressInterface $magentoAddress, $platformAddress)
     {
         $platformAddress->setFirstName($magentoAddress->getData('firstname'));
         $platformAddress->setLastName($magentoAddress->getData('lastname'));
@@ -238,8 +257,9 @@ class PaymentService
     }
 
     /**
-     * @param $type
-     * @param bool $throwExceptionOnTypeNotFound
+     * @param string|null $type
+     * @param bool        $throwExceptionOnTypeNotFound
+     *
      * @return mixed|null
      */
     public function mapSubscribeProCardTypeToMagento($type, $throwExceptionOnTypeNotFound = true)
@@ -333,7 +353,7 @@ class PaymentService
     }
 
     /**
-     * @param $address
+     * @param string|array|null $address
      * @return array
      */
     protected function convertToMagentoAddress($address)
@@ -370,8 +390,9 @@ class PaymentService
     }
 
     /**
-     * @param array $applePayPayment
-     * @param       $billingAddress
+     * @param array                                    $applePayPayment
+     * @param \Magento\Quote\Api\Data\AddressInterface $billingAddress
+     *
      * @return $this
      * @throws LocalizedException
      */
@@ -463,7 +484,7 @@ class PaymentService
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function placeOrder($quoteId, $defaultShippingMethod = null): bool
     {

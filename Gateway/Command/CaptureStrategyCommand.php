@@ -8,8 +8,8 @@ use Magento\Sales\Model\Order\Payment;
 
 class CaptureStrategyCommand implements CommandInterface
 {
-    const PURCHASE = 'purchase';
-    const SETTLEMENT = 'settlement';
+    public const PURCHASE = 'purchase';
+    public const SETTLEMENT = 'settlement';
 
     /**
      * @var \Magento\Payment\Gateway\Command\CommandPoolInterface

@@ -9,9 +9,9 @@ use Magento\SalesRule\Model\Validator as SalesRuleValidator;
 
 class Validator
 {
-    const QUOTE_ITEM_RULES = 'quoteItemRules';
-    const QUOTE_RULES = 'quoteRules';
-    const ADDRESS_RULES = 'addressRules';
+    public const QUOTE_ITEM_RULES = 'quoteItemRules';
+    public const QUOTE_RULES = 'quoteRules';
+    public const ADDRESS_RULES = 'addressRules';
 
     /**
      * @var \Swarming\SubscribePro\Model\Config\SubscriptionDiscount
@@ -54,8 +54,9 @@ class Validator
     /**
      * @param \Magento\SalesRule\Model\Validator $subject
      * @param \Closure                           $proceed
-     * @param AbstractItem                          $item
+     * @param AbstractItem                       $item
      * @param Rule                               $rule
+     *
      * @return \Magento\SalesRule\Model\Validator
      */
     public function aroundProcess(SalesRuleValidator $subject, \Closure $proceed, AbstractItem $item, Rule $rule)

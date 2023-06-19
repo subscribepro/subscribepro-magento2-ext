@@ -19,6 +19,13 @@ class Advanced extends General
         );
     }
 
+    /**
+     * Get the secret key which should be used for authenticating incoming webhook.
+     *
+     * @param string|null $websiteCode
+     *
+     * @return mixed
+     */
     public function getWebhookSecretKey($websiteCode = null)
     {
         return $this->scopeConfig->getValue(

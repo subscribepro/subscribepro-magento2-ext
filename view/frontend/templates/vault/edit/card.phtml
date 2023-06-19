@@ -19,7 +19,7 @@
 </script>
 <?php if ($block->isWalletAuthorizationActive()): ?>
     <div class="wallet-authorize-info"><?= $block->escapeHtml(__(
-    'You may see a %amount pre-authorization on your credit card account.',
-    ['amount' => $block->getWalletAuthorizationAmount()]
+        'You may see a %amount pre-authorization on your credit card account.',
+        ['amount' => $block->getWalletAuthorizationAmount()]
 )) ?></div>
 <?php endif; ?>

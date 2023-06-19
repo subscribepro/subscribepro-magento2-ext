@@ -4,9 +4,9 @@ namespace Swarming\SubscribePro\Platform\Cache\Type;
 
 class Product extends \Magento\Framework\Cache\Frontend\Decorator\TagScope
 {
-    const TYPE_IDENTIFIER = 'subscribe_pro_products';
+    public const TYPE_IDENTIFIER = 'subscribe_pro_products';
 
-    const CACHE_TAG = 'SP_PRODUCTS';
+    public const CACHE_TAG = 'SP_PRODUCTS';
 
     /**
      * @param \Magento\Framework\App\Cache\Type\FrontendPool $cacheFrontendPool

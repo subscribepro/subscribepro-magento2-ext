@@ -8,8 +8,8 @@ use Magento\Vault\Model\Ui\VaultConfigProvider;
 
 class ApplePayPaymentDataBuilder implements BuilderInterface
 {
-    const PAYMENT_METHOD_TOKEN = 'payment_method_token';
-    const PLATFORM_PROFILE_ID = 'payment_profile_id';
+    public const PAYMENT_METHOD_TOKEN = 'payment_method_token';
+    public const PLATFORM_PROFILE_ID = 'payment_profile_id';
 
     /**
      * @var \Swarming\SubscribePro\Gateway\Helper\SubjectReader

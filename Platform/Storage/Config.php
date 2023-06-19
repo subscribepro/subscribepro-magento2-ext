@@ -6,7 +6,7 @@ use Swarming\SubscribePro\Platform\Cache\Type\Config as PlatformConfigCache;
 
 class Config
 {
-    const CONFIG_CACHE_KEY = 'sp_platform_config';
+    public const CONFIG_CACHE_KEY = 'sp_platform_config';
 
     /**
      * @var \Magento\Framework\Cache\FrontendInterface

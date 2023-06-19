@@ -37,8 +37,13 @@ class Updater
      * @return array
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function update($quoteItem, $platformProduct, $subscriptionOption, $subscriptionInterval, $itemAddedBySubscribePro = false)
-    {
+    public function update(
+        $quoteItem,
+        $platformProduct,
+        $subscriptionOption,
+        $subscriptionInterval,
+        $itemAddedBySubscribePro = false
+    ) {
         $createNewSubscriptionAtCheckout = false;
 
         $subscriptionOption = $this->getSubscriptionOption($platformProduct, $subscriptionOption);

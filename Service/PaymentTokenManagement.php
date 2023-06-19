@@ -2,7 +2,12 @@
 
 namespace Swarming\SubscribePro\Service;
 
+use Magento\Framework\Api\FilterBuilder;
+use Magento\Framework\Api\Search\FilterGroupBuilder;
+use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\Intl\DateTimeFactory;
 use Magento\Vault\Api\Data\PaymentTokenInterface;
+use Magento\Vault\Api\PaymentTokenRepositoryInterface;
 use Swarming\SubscribePro\Api\PaymentTokenManagementInterface;
 
 class PaymentTokenManagement implements PaymentTokenManagementInterface
@@ -33,10 +38,11 @@ class PaymentTokenManagement implements PaymentTokenManagementInterface
     private $dateTimeFactory;
 
     /**
-     * @param \Magento\Vault\Api\PaymentTokenRepositoryInterface $paymentTokenRepository
-     * @param \Magento\Framework\Api\FilterBuilder $filterBuilder
-     * @param \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder
-     * @param \Magento\Framework\Intl\DateTimeFactory $dateTimeFactory
+     * @param PaymentTokenRepositoryInterface $paymentTokenRepository
+     * @param FilterBuilder                   $filterBuilder
+     * @param FilterGroupBuilder              $filterGroupBuilder
+     * @param SearchCriteriaBuilder           $searchCriteriaBuilder
+     * @param DateTimeFactory                 $dateTimeFactory
      */
     public function __construct(
         \Magento\Vault\Api\PaymentTokenRepositoryInterface $paymentTokenRepository,

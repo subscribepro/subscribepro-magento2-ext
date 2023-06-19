@@ -9,6 +9,7 @@ use Magento\Framework\App\CsrfAwareActionInterface;
 use Magento\Framework\App\Request\InvalidRequestException;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Controller\Result\JsonFactory as JsonResultFactory;
+use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Serialize\Serializer\Json as JsonSerializer;
 use Magento\Framework\UrlInterface;
@@ -84,7 +85,7 @@ class PaymentAuthorized implements HttpPostActionInterface, CsrfAwareActionInter
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function execute()
     {
@@ -93,33 +94,7 @@ class PaymentAuthorized implements HttpPostActionInterface, CsrfAwareActionInter
         $errorMessage = __('Apple Pay error. Please contact support for assistance.');
 
         try {
-            // Get JSON POST
-            $data = $this->getRequestData();
-
-            if (!isset($data['payment'])) {
-                throw new LocalizedException($errorMessage);
-            }
-
-            // Set shipping method selection
-            $quoteId = $this->paymentServie->setPaymentToQuote($data['payment']);
-            $shippingMethods = $this->shippingApplePay->getShippingMethods();
-            $defaultShippingMethod = [];
-            if (count($shippingMethods)) {
-                $defaultShippingMethod = $shippingMethods[0];
-            }
-
-            $this->paymentServie->placeOrder($quoteId, $defaultShippingMethod);
-
-            $redirectUrl = $this->defaultConfigProvider->getDefaultSuccessPageUrl();
-            $urlToRedirect = $this->urlBuilder->getUrl('checkout/onepage/success/');
-
-            $response = [
-                'success' => true,
-                'redirect' => $redirectUrl,
-                'redirectUrl' => $urlToRedirect
-            ];
-            $result->setData($response);
-            // phpcs:ignore Magento2.Exceptions.ThrowCatch.ThrowCatch
+            $this->implementExecute($result);
         } catch (LocalizedException $e) {
             if (isset($quoteId)) {
                 $this->logger->error('QuoteId: ' . $quoteId);
@@ -147,7 +122,7 @@ class PaymentAuthorized implements HttpPostActionInterface, CsrfAwareActionInter
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function createCsrfValidationException(RequestInterface $request): ?InvalidRequestException
     {
@@ -161,10 +136,48 @@ class PaymentAuthorized implements HttpPostActionInterface, CsrfAwareActionInter
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function validateForCsrf(RequestInterface $request): ?bool
     {
         return $request->isPost();
+    }
+
+    /**
+     * Place order from quote.
+     *
+     * @param ResultInterface $result
+     *
+     * @return void
+     * @throws LocalizedException
+     */
+    private function implementExecute(ResultInterface $result)
+    {
+        // Get JSON POST
+        $data = $this->getRequestData();
+
+        if (!isset($data['payment'])) {
+            throw new LocalizedException(__("'payment' key missing!"));
+        }
+
+        // Set shipping method selection
+        $quoteId = $this->paymentServie->setPaymentToQuote($data['payment']);
+        $shippingMethods = $this->shippingApplePay->getShippingMethods();
+        $defaultShippingMethod = [];
+        if (count($shippingMethods)) {
+            $defaultShippingMethod = $shippingMethods[0];
+        }
+
+        $this->paymentServie->placeOrder($quoteId, $defaultShippingMethod);
+
+        $redirectUrl = $this->defaultConfigProvider->getDefaultSuccessPageUrl();
+        $urlToRedirect = $this->urlBuilder->getUrl('checkout/onepage/success/');
+
+        $response = [
+            'success' => true,
+            'redirect' => $redirectUrl,
+            'redirectUrl' => $urlToRedirect
+        ];
+        $result->setData($response);
     }
 }

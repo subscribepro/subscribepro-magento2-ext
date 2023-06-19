@@ -21,7 +21,7 @@ class Order
     }
 
     /**
-     * @param OrderInterface $quote
+     * @param OrderInterface $order
      * @return bool
      */
     public function hasSubscription($order)
@@ -30,7 +30,7 @@ class Order
     }
 
     /**
-     * @param OrderInterface $quote
+     * @param OrderInterface $order
      * @return array
      */
     public function getSubscriptionItems($order)

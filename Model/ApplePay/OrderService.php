@@ -99,8 +99,8 @@ class OrderService
     }
 
     /**
-     * @param      $quoteId
-     * @param null $defaultShippingMethod
+     * @param int $quoteId
+     * @param array|null $defaultShippingMethod
      * @return bool
      * @throws LocalizedException
      * @throws \Magento\Framework\Exception\CouldNotSaveException

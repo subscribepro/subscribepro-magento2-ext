@@ -14,6 +14,11 @@ class Vault
      */
     private $platformServiceToken;
 
+    /**
+     * Construct Vault.
+     *
+     * @param PlatformServiceToken $token
+     */
     public function __construct(
         PlatformServiceToken $token
     ) {

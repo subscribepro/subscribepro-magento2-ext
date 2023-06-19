@@ -8,25 +8,25 @@ namespace Swarming\SubscribePro\Api\Data;
  */
 interface SubscriptionOptionInterface
 {
-    const OPTION = 'option';
+    public const OPTION = 'option';
 
-    const INTERVAL = 'interval';
+    public const INTERVAL = 'interval';
 
-    const ITEM_FULFILS_SUBSCRIPTION = 'item_fulfils_subscription';
+    public const ITEM_FULFILS_SUBSCRIPTION = 'item_fulfils_subscription';
 
-    const IS_FULFILLING = 'is_fulfilling';
+    public const IS_FULFILLING = 'is_fulfilling';
 
-    const SUBSCRIPTION_ID = 'subscription_id';
+    public const SUBSCRIPTION_ID = 'subscription_id';
 
-    const REORDER_ORDINAL = 'reorder_ordinal';
+    public const REORDER_ORDINAL = 'reorder_ordinal';
 
-    const CREATE_NEW_SUBSCRIPTION_AT_CHECKOUT = 'create_new_subscription_at_checkout';
+    public const CREATE_NEW_SUBSCRIPTION_AT_CHECKOUT = 'create_new_subscription_at_checkout';
 
-    const ITEM_ADDED_BY_SUBSCRIBE_PRO = 'item_added_by_subscribe_pro';
+    public const ITEM_ADDED_BY_SUBSCRIBE_PRO = 'item_added_by_subscribe_pro';
 
-    const NEXT_ORDER_DATE = 'next_order_date';
+    public const NEXT_ORDER_DATE = 'next_order_date';
 
-    const FIXED_PRICE = 'fixed_price';
+    public const FIXED_PRICE = 'fixed_price';
 
     /**
      * @return string|null

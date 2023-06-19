@@ -9,11 +9,11 @@ use Magento\Framework\DataObject;
 
 class OptionItem extends DataObject implements ItemInterface
 {
-    const PRODUCT = 'product';
+    public const PRODUCT = 'product';
 
-    const ITEM = 'item';
+    public const ITEM = 'item';
 
-    const CODE = 'code';
+    public const CODE = 'code';
 
     /**
      * @var \Magento\Catalog\Model\Product\Configuration\Item\Option\OptionInterface[]

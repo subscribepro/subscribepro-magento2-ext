@@ -12,7 +12,7 @@ use Magento\Framework\Webapi\Response;
 
 class Index extends Action implements CsrfAwareActionInterface
 {
-    const WEBHOOK_HASH_HEADER_KEY = 'Sp-Hmac';
+    public const WEBHOOK_HASH_HEADER_KEY = 'Sp-Hmac';
 
     /**
      * @var \Swarming\SubscribePro\Platform\Webhook\Processor
@@ -134,11 +134,25 @@ class Index extends Action implements CsrfAwareActionInterface
         return hash_equals($hash, $hashFromRequest);
     }
 
+    /**
+     * @inheridoc
+     *
+     * @param RequestInterface $request
+     *
+     * @return InvalidRequestException|null
+     */
     public function createCsrfValidationException(RequestInterface $request): ?InvalidRequestException
     {
         return null;
     }
 
+    /**
+     * @inheridoc
+     *
+     * @param RequestInterface $request
+     *
+     * @return bool|null
+     */
     public function validateForCsrf(RequestInterface $request): ?bool
     {
         return true;

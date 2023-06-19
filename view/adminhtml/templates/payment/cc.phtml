@@ -1,68 +1,66 @@
 <?php
 
-// @codingStandardsIgnoreFile
-
 /** @var \Swarming\SubscribePro\Block\Adminhtml\Payment\Cc $block */
 
 $code = $block->escapeHtml($block->getMethodCode());
 ?>
-<fieldset class="admin__fieldset payment-method" id="payment_form_<?php echo $code; ?>" style="display:none">
+<fieldset class="admin__fieldset payment-method" id="payment_form_<?= /* @noEscape */ $code; ?>" style="display:none">
     <div class="admin__field _required">
         <label class="label admin__field-label">
-            <span><?php echo $block->escapeHtml(__('Credit Card Number')); ?></span>
+            <span><?= $block->escapeHtml(__('Credit Card Number')); ?></span>
         </label>
         <div class="admin__field-control control">
-            <div id="<?php echo $code; ?>_cc_number" class="admin__control-text hosted-control">
+            <div id="<?= /* @noEscape */ $code; ?>_cc_number" class="admin__control-text hosted-control">
                 <span class="icon-type"></span>
             </div>
             <div class="hosted-error">
-                <?php echo $block->escapeHtml(__('Please, enter valid Credit Card Number')); ?>
+                <?= $block->escapeHtml(__('Please, enter valid Credit Card Number')); ?>
             </div>
         </div>
     </div>
 
     <div class="admin__field _required">
         <label class="label admin__field-label">
-            <span><?php echo $block->escapeHtml(__('Expiration Date')); ?></span>
+            <span><?= $block->escapeHtml(__('Expiration Date')); ?></span>
         </label>
         <div class="admin__field-control control">
             <div class="date-wrap">
-                <div id="<?php echo $code; ?>_cc_exp_month" class="child-control month">
+                <div id="<?= /* @noEscape */ $code; ?>_cc_exp_month" class="child-control month">
                     <input type="text"
-                           id="<?php echo $code; ?>_expiration"
-                           placeholder="<?php echo __('MM') ?>"
+                           id="<?= /* @noEscape */ $code; ?>_expiration"
+                           placeholder="<?= $block->escapeHtml(__('MM')) ?>"
                            size="3"
                            maxlength="2"
                            autocomplete="off"
                     >
                 </div>
-                <div id="<?php echo $code; ?>_cc_exp_year" class="child-control year">
+                <div id="<?= /* @noEscape */ $code; ?>_cc_exp_year" class="child-control year">
                     <input type="text"
-                           id="<?php echo $code; ?>_expiration_yr"
-                           placeholder="<?php echo __('YYYY') ?>"
+                           id="<?= /* @noEscape */ $code; ?>_expiration_yr"
+                           placeholder="<?= $block->escapeHtml(__('YYYY')) ?>"
                            size="5"
                            maxlength="4"
                            autocomplete="off"
                     >
                 </div>
-                <div class="error"><?php echo $block->escapeHtml(__('Please, enter valid Expiration Date')); ?></div>
+                <div class="error"><?= $block->escapeHtml(__('Please, enter valid Expiration Date')); ?></div>
             </div>
         </div>
     </div>
 
     <div class="admin__field _required" <?php if (!$block->hasVerification()): ?>style="display:none"<?php endif; ?>>
         <label class="label admin__field-label">
-            <span><?php echo $block->escapeHtml(__('Card Verification Number')); ?></span>
+            <span><?= $block->escapeHtml(__('Card Verification Number')); ?></span>
         </label>
         <div class="admin__field-control control">
-            <div id="<?php echo $code; ?>_cc_cid" class="admin__control-text hosted-control hosted-cid"></div>
+            <div id="<?= /* @noEscape */ $code; ?>_cc_cid" class="admin__control-text hosted-control hosted-cid"></div>
 
             <div class="hosted-error">
-                <?php echo $block->escapeHtml(__('Please, enter valid Card Verification Number')); ?>
+                <?= $block->escapeHtml(__('Please, enter valid Card Verification Number')); ?>
             </div>
         </div>
     </div>
 
-    <input type="hidden" id="<?php echo $code; ?>_payment_method_token" name="payment[payment_method_token]"/>
+    <input type="hidden" id="<?= /* @noEscape */ $code; ?>_payment_method_token" name="payment[payment_method_token]"/>
     <input name="payment[is_active_payment_token_enabler]" type="hidden" value="true" />
 </fieldset>

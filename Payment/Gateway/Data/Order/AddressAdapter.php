@@ -11,6 +11,9 @@ class AddressAdapter extends \Magento\Payment\Gateway\Data\Order\AddressAdapter
      */
     private $address;
 
+    /**
+     * @param OrderAddressInterface $address
+     */
     public function __construct(OrderAddressInterface $address)
     {
         $this->address = $address;

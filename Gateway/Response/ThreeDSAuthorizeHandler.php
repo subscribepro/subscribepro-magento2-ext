@@ -89,8 +89,8 @@ class ThreeDSAuthorizeHandler implements HandlerInterface
             $profile = $this->platformPaymentProfileService->loadProfile($paymentProfileId);
             $this->vaultHelper->initVault($paymentToken, $profile);
             $this->paymentTokenRepository->save($paymentToken);
-            // phpcs:ignore Magento2.CodeAnalysis.EmptyBlock.DetectedCatch
         } catch (\Magento\Framework\Exception\AlreadyExistsException $e) {
+            $this->logger->debug('Payment token already exists, therefore not saving.');
         } catch (\Exception $e) {
             $this->logger->critical($e);
         }

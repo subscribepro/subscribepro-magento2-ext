@@ -10,7 +10,7 @@ use Swarming\SubscribePro\Model\Config\Source\ThreeDsType;
 
 class Vault
 {
-    const STATE_PENDING = 'pending';
+    public const STATE_PENDING = 'pending';
 
     /**
      * @var \Swarming\SubscribePro\Gateway\Config\Config
@@ -117,6 +117,8 @@ class Vault
      * @param string $lastDigits
      * @param string $month
      * @param string $year
+     * @param string $paymentToken
+     *
      * @return string
      */
     public function getTokenDetails($cardType, $lastDigits, $month, $year, $paymentToken)

@@ -184,10 +184,10 @@ class PaymentRequestConfig extends DataObject
     /**
      * Convert a shipping rate into Apple Pay format
      *
-     * @param  $shippingRate
+     * @param \Magento\Quote\Model\Quote\Address\Rate $shippingRate
      * @return array
      */
-    public function convertShippingRate($shippingRate)
+    public function convertShippingRate(\Magento\Quote\Model\Quote\Address\Rate $shippingRate)
     {
         // Don't show the same information twice
         $detail = $shippingRate->getMethodTitle();
@@ -249,12 +249,16 @@ class PaymentRequestConfig extends DataObject
     }
 
     /**
-     * @param $price
+     * @param float|null $price
      * @return string
      */
     public function formatPrice($price): string
     {
-        return $this->currency->format($price, ['display'=>\Zend_Currency::NO_SYMBOL], false);
+        return $this->currency->format(
+            $price,
+            ['display'=>\Magento\Framework\Currency\Data\Currency::NO_SYMBOL],
+            false
+        );
     }
 
     /**

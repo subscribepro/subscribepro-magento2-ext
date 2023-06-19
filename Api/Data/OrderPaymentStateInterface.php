@@ -6,9 +6,9 @@ namespace Swarming\SubscribePro\Api\Data;
 
 interface OrderPaymentStateInterface
 {
-    const KEY_STATE = 'state';
-    const KEY_TOKEN = 'token';
-    const GATEWAY_SPECIFIC_FIELDS = 'gateway_specific_fields';
+    public const KEY_STATE = 'state';
+    public const KEY_TOKEN = 'token';
+    public const GATEWAY_SPECIFIC_FIELDS = 'gateway_specific_fields';
 
     /**
      * @return string|null
