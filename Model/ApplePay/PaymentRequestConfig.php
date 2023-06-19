@@ -254,7 +254,11 @@ class PaymentRequestConfig extends DataObject
      */
     public function formatPrice($price): string
     {
-        return $this->currency->format($price, ['display'=>\Magento\Framework\Currency\Data\Currency::NO_SYMBOL], false);
+        return $this->currency->format(
+            $price,
+            ['display'=>\Magento\Framework\Currency\Data\Currency::NO_SYMBOL],
+            false
+        );
     }
 
     /**

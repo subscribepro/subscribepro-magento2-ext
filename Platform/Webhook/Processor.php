@@ -2,20 +2,29 @@
 
 namespace Swarming\SubscribePro\Platform\Webhook;
 
+use Psr\Log\LoggerInterface;
+
 class Processor
 {
     /**
      * @var \Swarming\SubscribePro\Platform\Webhook\HandlerPool
      */
     protected $handlerPool;
+    /**
+     * @var LoggerInterface
+     */
+    private LoggerInterface $logger;
 
     /**
-     * @param \Swarming\SubscribePro\Platform\Webhook\HandlerPool $handlerPool
+     * @param HandlerPool     $handlerPool
+     * @param LoggerInterface $logger
      */
     public function __construct(
-        \Swarming\SubscribePro\Platform\Webhook\HandlerPool $handlerPool
+        \Swarming\SubscribePro\Platform\Webhook\HandlerPool $handlerPool,
+        \Psr\Log\LoggerInterface $logger
     ) {
         $this->handlerPool = $handlerPool;
+        $this->logger = $logger;
     }
 
     /**
@@ -26,9 +35,9 @@ class Processor
         try {
             $handler = $this->handlerPool->getHandler($event->getType());
             $handler->execute($event);
-            // phpcs:ignore Magento2.CodeAnalysis.EmptyBlock.DetectedCatch
         } catch (\DomainException $e) {
-            /* Do nothing */
+            $this->logger->debug($e->getMessage());
+            $this->logger->warning('Error while process webhook!');
         }
     }
 }

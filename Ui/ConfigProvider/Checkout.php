@@ -3,6 +3,7 @@
 namespace Swarming\SubscribePro\Ui\ConfigProvider;
 
 use Magento\Checkout\Model\ConfigProviderInterface;
+use Psr\Log\LoggerInterface;
 use SubscribePro\Exception\HttpException;
 use SubscribePro\Exception\InvalidArgumentException;
 use Swarming\SubscribePro\Gateway\Config\ConfigProvider as GatewayConfigProvider;
@@ -20,7 +21,8 @@ class Checkout implements ConfigProviderInterface
     protected $logger;
 
     /**
-     * @param \Swarming\SubscribePro\Gateway\Config\ConfigProvider $gatewayConfigProvider
+     * @param ConfigProvider  $gatewayConfigProvider
+     * @param LoggerInterface $logger
      */
     public function __construct(
         \Swarming\SubscribePro\Gateway\Config\ConfigProvider $gatewayConfigProvider,

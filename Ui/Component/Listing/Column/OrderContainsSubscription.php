@@ -35,6 +35,11 @@ class OrderContainsSubscription extends \Magento\Ui\Component\Listing\Columns\Co
         parent::__construct($context, $uiComponentFactory, $components, $data);
     }
 
+    /**
+     * @param array $dataSource
+     *
+     * @return array
+     */
     public function prepareDataSource(array $dataSource)
     {
         if (isset($dataSource['data']['items'])) {

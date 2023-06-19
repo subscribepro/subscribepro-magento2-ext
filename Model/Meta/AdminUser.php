@@ -4,7 +4,7 @@ namespace Swarming\SubscribePro\Model\Meta;
 
 class AdminUser implements \Swarming\SubscribePro\Model\MetaUserInterface
 {
-    public public const TYPE = 'admin';
+    public const TYPE = 'admin';
 
     /**
      * @var \Magento\Backend\Model\Auth\Session

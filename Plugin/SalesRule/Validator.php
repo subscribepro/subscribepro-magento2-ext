@@ -54,8 +54,9 @@ class Validator
     /**
      * @param \Magento\SalesRule\Model\Validator $subject
      * @param \Closure                           $proceed
-     * @param AbstractItem                          $item
+     * @param AbstractItem                       $item
      * @param Rule                               $rule
+     *
      * @return \Magento\SalesRule\Model\Validator
      */
     public function aroundProcess(SalesRuleValidator $subject, \Closure $proceed, AbstractItem $item, Rule $rule)

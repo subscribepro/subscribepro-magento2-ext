@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Swarming\SubscribePro\Service\OrderCallback;
 
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Quote\Model\Quote\Address as QuoteAddress;
 use Magento\Quote\Model\Quote\Payment as QuotePayment;
 use Magento\Vault\Api\Data\PaymentTokenInterface;
@@ -123,9 +124,13 @@ class DataBuilder
     }
 
     /**
-     * @param \Magento\Quote\Model\Quote\Payment $quotePayment
-     * @param array $paymentData
+     * @param QuotePayment $quotePayment
+     * @param array        $paymentData
+     * @param int          $customerId
+     * @param int          $storeId
+     *
      * @return void
+     * @throws LocalizedException
      */
     public function importPaymentData(
         QuotePayment $quotePayment,
@@ -206,7 +211,7 @@ class DataBuilder
     /**
      * @param array $request
      * @param string $field
-     * @param null $default
+     * @param string|mixed|null $default
      * @return string|array|null
      */
     public function getValue(array $request, string $field, $default = '')

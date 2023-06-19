@@ -377,7 +377,8 @@ class QuoteItemTest extends \PHPUnit\Framework\TestCase
     {
         $buyRequestValue = json_encode([
             OptionProcessor::KEY_SUBSCRIPTION_OPTION => [
-                SubscriptionOptionInterface::CREATE_NEW_SUBSCRIPTION_AT_CHECKOUT => $subscriptionOption == PlatformProductInterface::SO_SUBSCRIPTION
+                SubscriptionOptionInterface::CREATE_NEW_SUBSCRIPTION_AT_CHECKOUT =>
+                    $subscriptionOption == PlatformProductInterface::SO_SUBSCRIPTION
             ]
         ]);
 

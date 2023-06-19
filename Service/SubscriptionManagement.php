@@ -84,6 +84,11 @@ class SubscriptionManagement implements SubscriptionManagementInterface
         $this->logger = $logger;
     }
 
+    /**
+     * Enabled the design area on front-end.
+     *
+     * @return void
+     */
     protected function enableFrontendDesignArea()
     {
         $this->design->setDesignTheme(
@@ -269,7 +274,7 @@ class SubscriptionManagement implements SubscriptionManagementInterface
 
     /**
      * @param \Swarming\SubscribePro\Api\Data\SubscriptionInterface $subscription
-     * @param $paymentProfileId
+     * @param string|int|null $paymentProfileId
      */
     protected function setPaymentProfileProfile($subscription, $paymentProfileId)
     {
@@ -406,8 +411,9 @@ class SubscriptionManagement implements SubscriptionManagementInterface
 
     /**
      * @param \SubscribePro\Service\Subscription\SubscriptionInterface $subscription
-     * @param $customerId
-     * @param null|\SubscribePro\Service\Customer\CustomerInterface
+     * @param string|int|null                                          $customerId
+     * @param null|\SubscribePro\Service\Customer\CustomerInterface    $platformCustomer
+     *
      * @throws \Magento\Framework\Exception\AuthorizationException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @throws \SubscribePro\Exception\HttpException

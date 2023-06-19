@@ -50,6 +50,9 @@ class Subscription extends PlatformSubscription implements SubscriptionInterface
         return $this->setPlatformSpecificFields($platformSpecificFields);
     }
 
+    /**
+     * @return string|null
+     */
     public function getUserDefinedFields()
     {
         return json_encode(parent::getUserDefinedFields());

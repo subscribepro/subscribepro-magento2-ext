@@ -147,6 +147,13 @@ class QuoteItemUpdater
         return $platformProduct;
     }
 
+    /**
+     * Get subscription option (one-time purchase or subscribe) from quote item parameters.
+     *
+     * @param array $quoteItemParams
+     *
+     * @return false|mixed
+     */
     protected function getSubscriptionOption(array $quoteItemParams)
     {
         if (!isset($quoteItemParams['admin_subscription_option']['option'])
@@ -157,6 +164,13 @@ class QuoteItemUpdater
         return $quoteItemParams['admin_subscription_option']['option'];
     }
 
+    /**
+     * Get subscription frequency interval from quote item parameters.
+     *
+     * @param array $quoteItemParams
+     *
+     * @return false|mixed
+     */
     protected function getInterval(array $quoteItemParams)
     {
         if (!isset($quoteItemParams['admin_subscription_option']['interval'])) {

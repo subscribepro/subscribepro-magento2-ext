@@ -95,7 +95,8 @@ class Order implements HttpPostActionInterface, CsrfAwareActionInterface
                     'orderRequest' => $orderRequest,
                     'response' => $responseData
                 ],
-                JSON_PRETTY_PRINT));
+                JSON_PRETTY_PRINT
+            ));
         }
 
         /** @var \Magento\Framework\Controller\Result\Json $jsonResult */

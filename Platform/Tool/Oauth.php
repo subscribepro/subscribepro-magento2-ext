@@ -8,8 +8,9 @@ namespace Swarming\SubscribePro\Platform\Tool;
 class Oauth extends AbstractTool
 {
     /**
-     * @param      $customerId
-     * @param null $websiteId
+     * @param string|int|null $customerId
+     * @param string|int|null $websiteId
+     *
      * @return mixed
      */
     public function getWidgetAccessTokenByCustomerId($customerId, $websiteId = null)
@@ -18,7 +19,7 @@ class Oauth extends AbstractTool
     }
 
     /**
-     * @param null $websiteId
+     * @param string|int|null $websiteId
      * @return mixed
      */
     public function getWidgetAccessTokenByGuest($websiteId = null)

@@ -83,8 +83,8 @@ class ItemSubscriptionDiscount
 
     /**
      * @param \Magento\Quote\Model\Quote\Item\AbstractItem $item
-     * @param $subscriptionDiscount
-     * @param $baseSubscriptionDiscount
+     * @param float $subscriptionDiscount
+     * @param float $baseSubscriptionDiscount
      */
     protected function setSubscriptionDiscount(QuoteItem $item, $subscriptionDiscount, $baseSubscriptionDiscount)
     {
@@ -167,9 +167,10 @@ class ItemSubscriptionDiscount
     }
 
     /**
-     * @param string $storeId
      * @param float $baseSubscriptionDiscount
      * @param float $baseCartDiscount
+     * @param string $storeId
+     *
      * @return bool
      */
     protected function isOnlySubscriptionDiscount($baseSubscriptionDiscount, $baseCartDiscount, $storeId)

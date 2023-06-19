@@ -82,7 +82,7 @@ class Product
 
     /**
      * @param \Magento\Catalog\Api\Data\ProductInterface $product
-     * @param null $websiteId
+     * @param string|int|null $websiteId
      * @return \Swarming\SubscribePro\Api\Data\ProductInterface
      */
     protected function retrieveOrCreateNewProduct($product, $websiteId = null)

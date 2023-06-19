@@ -4,7 +4,7 @@ namespace Swarming\SubscribePro\Model\Meta;
 
 class Customer implements \Swarming\SubscribePro\Model\MetaUserInterface
 {
-    public public const TYPE = 'customer';
+    public const TYPE = 'customer';
 
     /**
      * @var \Magento\Customer\Model\Session

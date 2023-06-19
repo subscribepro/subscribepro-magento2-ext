@@ -29,7 +29,7 @@ class ShipperMapperPlugin
     /**
      * @param \ShipperHQ\Shipper\Model\Carrier\Processor\ShipperMapper $mapper
      * @param Closure $proceed
-     * @param $reqdAttributeNames
+     * @param array $reqdAttributeNames
      * @param \Swarming\SubscribePro\Helper\QuoteItem $item
      * @return array
      */

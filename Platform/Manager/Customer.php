@@ -47,9 +47,10 @@ class Customer
     }
 
     /**
-     * @param string $customerEmail
-     * @param bool $createIfNotExist
+     * @param string   $customerEmail
+     * @param bool     $createIfNotExist
      * @param int|null $websiteId
+     *
      * @return \SubscribePro\Service\Customer\CustomerInterface
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @throws \SubscribePro\Exception\HttpException
@@ -74,9 +75,10 @@ class Customer
     }
 
     /**
-     * @param int  $customerId
-     * @param bool $createIfNotExist
+     * @param int             $customerId
+     * @param bool            $createIfNotExist
      * @param int|string|null $websiteId
+     *
      * @return \SubscribePro\Service\Customer\CustomerInterface|null
      * @throws \Magento\Framework\Exception\LocalizedException
      */
