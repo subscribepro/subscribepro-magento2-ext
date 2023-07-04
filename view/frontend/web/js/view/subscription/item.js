@@ -36,6 +36,7 @@ define(
 
                 this.nextOrderDate(this.subscription.next_order_date);
                 this.selectedNextOrderDate(this.subscription.next_order_date);
+                this.value = ko.observable('');
                 this.qty(this.subscription.qty);
                 this.selectedQty(this.subscription.qty);
                 this.interval(this.subscription.interval);
@@ -53,6 +54,7 @@ define(
                         'showDetails',
                         'nextOrderDate',
                         'selectedNextOrderDate',
+                        'value',
                         'qty',
                         'selectedQty',
                         'interval',
