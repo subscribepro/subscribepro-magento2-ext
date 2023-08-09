@@ -33,7 +33,6 @@ class Address
             ->setCompany($address->getCompany())
             ->setCountry($address->getCountryId())
             ->setRegion($address->getRegionCode())
-            ->setCompany($address->getCompany())
             ->setStreet1($address->getStreetLine(1))
             ->setStreet2($address->getStreetLine(2))
             ->setStreet3($address->getStreetLine(3))
