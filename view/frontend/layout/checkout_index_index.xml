@@ -10,6 +10,7 @@
                                 <item name="steps" xsi:type="array">
                                     <item name="children" xsi:type="array">
                                         <item name="billing-step" xsi:type="array">
+                                            <item name="component" xsi:type="string">uiComponent</item>
                                             <item name="children" xsi:type="array">
                                                 <item name="payment" xsi:type="array">
                                                     <item name="children" xsi:type="array">
@@ -20,6 +21,9 @@
                                                                     <item name="component" xsi:type="string">Swarming_SubscribePro/js/view/payment/subscribe-pro</item>
                                                                     <item name="methods" xsi:type="array">
                                                                         <item name="subscribe_pro" xsi:type="array">
+                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+                                                                        </item>
+                                                                        <item name="subscribe_pro_vault" xsi:type="array">
                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
                                                                         </item>
                                                                     </item>
