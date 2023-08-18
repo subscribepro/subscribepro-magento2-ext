@@ -16,7 +16,7 @@ define(
                 function (response) {
                     callback(response);
                 }
-            ).error(
+            ).fail(
                 function (response) {
                     errorProcessor.process(response);
                     subscriptionLoader.isLoading(false);
