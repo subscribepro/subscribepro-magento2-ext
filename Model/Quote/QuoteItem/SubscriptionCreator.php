@@ -4,6 +4,10 @@ namespace Swarming\SubscribePro\Model\Quote\QuoteItem;
 
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable as ConfigurableProductType;
+use Magento\Quote\Model\Quote\Address;
+use Magento\Quote\Model\Quote\Item;
+use SubscribePro\Service\Subscription\SubscriptionInterface;
+use Swarming\SubscribePro\Api\Data\AddressInterface;
 
 class SubscriptionCreator
 {
@@ -70,13 +74,14 @@ class SubscriptionCreator
     }
 
     /**
-     * @param \Magento\Quote\Model\Quote\Item $quoteItem
+     * @param Item $quoteItem
      * @param int $platformCustomerId
      * @param int $paymentProfileId
-     * @param \Magento\Quote\Model\Quote\Address|null $address
+     * @param Address|null $shippingAddress
+     * @param Address|null $billingAddress
      * @return int
      */
-    public function create($quoteItem, $platformCustomerId, $paymentProfileId, $address = null)
+    public function create($quoteItem, $platformCustomerId, $paymentProfileId, $shippingAddress = null, $billingAddress = null)
     {
         $quote = $quoteItem->getQuote();
         $store = $quote->getStore();
@@ -96,12 +101,18 @@ class SubscriptionCreator
             $subscription->setMagentoStoreCode($store->getCode());
             $subscription->setSendCustomerNotificationEmail(true);
 
-            $subscription->setRequiresShipping((bool)$address);
-            if ($address) {
-                $this->importShippingAddress($subscription, $address);
-                $subscription->setMagentoShippingMethodCode($address->getShippingMethod());
+            $subscription->setRequiresShipping((bool)$shippingAddress);
+            if ($shippingAddress) {
+                $this->importShippingAddress($subscription, $shippingAddress);
+                $subscription->setMagentoShippingMethodCode($shippingAddress->getShippingMethod());
             } else {
                 $subscription->setShippingAddress(null);
+            }
+
+            if ($billingAddress) {
+                $this->importBillingAddress($subscription, $billingAddress);
+            } else {
+                $subscription->setBillingAddress(null);
             }
 
             if ($this->subscriptionOptionsConfig->isAllowedCoupon($store->getCode())) {
@@ -130,7 +141,7 @@ class SubscriptionCreator
      * Gets the product sku for the quote item
      * If enabled, grabs the child SKU when configurable
      *
-     * @param \Magento\Quote\Model\Quote\Item $quoteItem
+     * @param Item $quoteItem
      * @return string
      */
     protected function getProductSku($quoteItem)
@@ -148,22 +159,46 @@ class SubscriptionCreator
     }
 
     /**
-     * @param \SubscribePro\Service\Subscription\SubscriptionInterface $subscription
-     * @param \Magento\Quote\Model\Quote\Address $address
+     * @param \SubscribePro\Service\Address\AddressInterface $subAddress
+     * @param Address $quoteAddress
+     */
+    private function buildAddressData(&$subAddress, $quoteAddress)
+    {
+        $subAddress->setFirstName($quoteAddress->getFirstname());
+        $subAddress->setLastName($quoteAddress->getLastname());
+        $subAddress->setCompany($quoteAddress->getCompany());
+        $subAddress->setStreet1($quoteAddress->getStreetLine(1));
+        $subAddress->setStreet2($quoteAddress->getStreetLine(2));
+        $subAddress->setStreet3($quoteAddress->getStreetLine(3));
+        $subAddress->setCity($quoteAddress->getCity());
+        $subAddress->setRegion($quoteAddress->getRegionCode());
+        $subAddress->setPostcode($quoteAddress->getPostcode());
+        $subAddress->setCountry($quoteAddress->getCountryId());
+        $subAddress->setPhone($quoteAddress->getTelephone());
+        return $subAddress;
+    }
+
+    /**
+     * @param SubscriptionInterface $subscription
+     * @param Address $address
      */
     protected function importShippingAddress($subscription, $address)
     {
         $shippingAddress = $subscription->getShippingAddress();
-        $shippingAddress->setFirstName($address->getFirstname());
-        $shippingAddress->setLastName($address->getLastname());
-        $shippingAddress->setCompany($address->getCompany());
-        $shippingAddress->setStreet1($address->getStreetLine(1));
-        $shippingAddress->setStreet2($address->getStreetLine(2));
-        $shippingAddress->setStreet3($address->getStreetLine(3));
-        $shippingAddress->setCity($address->getCity());
-        $shippingAddress->setRegion($address->getRegionCode());
-        $shippingAddress->setPostcode($address->getPostcode());
-        $shippingAddress->setCountry($address->getCountryId());
-        $shippingAddress->setPhone($address->getTelephone());
+        if ($shippingAddress !== null) {
+            $this->buildAddressData($shippingAddress, $address);
+        }
+    }
+
+    /**
+     * @param SubscriptionInterface $subscription
+     * @param Address $address
+     */
+    protected function importBillingAddress($subscription, $address)
+    {
+        $billingAddress = $subscription->getBillingAddress();
+        if ($billingAddress !== null) {
+            $this->buildAddressData($billingAddress, $address);
+        }
     }
 }

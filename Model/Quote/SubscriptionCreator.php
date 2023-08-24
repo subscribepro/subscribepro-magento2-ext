@@ -93,7 +93,8 @@ class SubscriptionCreator
                     $quoteItem,
                     $platformCustomer->getId(),
                     $paymentProfileId,
-                    $address
+                    $address,
+                    $quote->getBillingAddress()
                 );
 
                 if ($subscriptionId) {

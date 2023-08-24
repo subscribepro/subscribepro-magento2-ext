@@ -196,6 +196,28 @@ interface SubscriptionInterface
     /**
      * @return int|null
      */
+    public function getBillingAddressId();
+
+    /**
+     * @param int $billingAddressId
+     * @return $this
+     */
+    public function setBillingAddressId($billingAddressId);
+
+    /**
+     * @return \SubscribePro\Service\Address\AddressInterface|null
+     */
+    public function getBillingAddress();
+
+    /**
+     * @param \SubscribePro\Service\Address\AddressInterface|null $billingAddress
+     * @return $this
+     */
+    public function setBillingAddress($billingAddress);
+
+    /**
+     * @return int|null
+     */
     public function getMagentoBillingAddressId();
 
     /**
