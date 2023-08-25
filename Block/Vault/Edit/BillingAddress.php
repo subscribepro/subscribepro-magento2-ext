@@ -184,4 +184,21 @@ class BillingAddress extends \Magento\Directory\Block\Data
     {
         return $this->_scopeConfig->getValue(self::XML_PATH_DISPLAY_ALL_STATES, ScopeInterface::SCOPE_STORE);
     }
+
+    /**
+     * @return string
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function getRegionJson()
+    {
+        return $this->directoryHelper->getRegionJson();
+    }
+
+    /**
+     * @param bool $asJson
+     * @return array|string
+     */
+    public function getCountriesWithOptionalZip(bool $asJson = false) {
+        return $this->directoryHelper->getCountriesWithOptionalZip($asJson);
+    }
 }

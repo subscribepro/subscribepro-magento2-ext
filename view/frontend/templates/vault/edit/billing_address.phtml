@@ -132,13 +132,10 @@
                 "postcodeId": "#postcode",
                 "form": "#vault-edit",
                 "regionJson": <?=
-                    // phpcs:ignore Magento2.Templates.ThisInTemplate.FoundHelper
-                    /* @noEscape */ $block->helper(\Magento\Directory\Helper\Data::class)->getRegionJson() ?>,
+                    /* @noEscape */ $block->getRegionJson() ?>,
                 "defaultRegion": "<?= /* @noEscape */ $block->getRegionId() ?>",
                 "countriesWithOptionalZip": <?=
-                    // phpcs:ignore Magento2.Templates.ThisInTemplate.FoundHelper
-                    /* @noEscape */ $block->helper(\Magento\Directory\Helper\Data::class)
-                                        ->getCountriesWithOptionalZip(true) ?>
+                    /* @noEscape */ $block->getCountriesWithOptionalZip(true) ?>
             }
         }
     }
