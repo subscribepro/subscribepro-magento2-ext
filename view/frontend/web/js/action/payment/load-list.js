@@ -16,7 +16,7 @@ define(
                 function (response) {
                     deferred.resolve(response);
                 }
-            ).error(
+            ).fail(
                 function (response) {
                     errorProcessor.process(response, messageContainer);
                     deferred.reject(response);
