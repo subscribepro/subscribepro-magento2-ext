@@ -26,6 +26,7 @@ class DataBuilder
      * @var \Magento\Vault\Api\PaymentTokenManagementInterface
      */
     private $paymentTokenManagement;
+    private \Psr\Log\LoggerInterface $logger;
 
     /**
      * @param \Magento\Framework\Webapi\ServiceInputProcessor $serviceInputProcessor
@@ -35,11 +36,13 @@ class DataBuilder
     public function __construct(
         \Magento\Framework\Webapi\ServiceInputProcessor $serviceInputProcessor,
         \Swarming\SubscribePro\Model\Config\ThirdPartyPayment $thirdPartyPaymentConfig,
-        \Magento\Vault\Api\PaymentTokenManagementInterface $paymentTokenManagement
+        \Magento\Vault\Api\PaymentTokenManagementInterface $paymentTokenManagement,
+        \Psr\Log\LoggerInterface $logger
     ) {
         $this->serviceInputProcessor = $serviceInputProcessor;
         $this->thirdPartyPaymentConfig = $thirdPartyPaymentConfig;
         $this->paymentTokenManagement = $paymentTokenManagement;
+        $this->logger = $logger;
     }
 
     /**
@@ -150,6 +153,8 @@ class DataBuilder
 
             $paymentMethodCode = $paymentToken->getPaymentMethodCode();
             $paymentMethodVault = $this->thirdPartyPaymentConfig->getVaultCodeByPaymentCode($paymentMethodCode);
+
+            $this->logger->debug('SS PRO: DataBuilder: paymentMethodCode: ' . $paymentMethodCode);
 
             $paymentAdditionalData[PaymentTokenInterface::CUSTOMER_ID] = $customerId;
             $paymentAdditionalData[PaymentTokenInterface::PUBLIC_HASH] = $paymentToken->getPublicHash();
