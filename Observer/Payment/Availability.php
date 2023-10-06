@@ -30,6 +30,7 @@ class Availability implements ObserverInterface
      * @var \Swarming\SubscribePro\Helper\ThirdPartyPayment
      */
     private $thirdPartyPayment;
+    private \Psr\Log\LoggerInterface $logger;
 
     /**
      * @param \Magento\Checkout\Model\Session $checkoutSession
@@ -41,12 +42,14 @@ class Availability implements ObserverInterface
         \Magento\Checkout\Model\Session $checkoutSession,
         \Swarming\SubscribePro\Helper\Quote $quoteHelper,
         \Swarming\SubscribePro\Model\Config\ThirdPartyPayment $thirdPartyPaymentConfig,
-        \Swarming\SubscribePro\Helper\ThirdPartyPayment $thirdPartyPayment
+        \Swarming\SubscribePro\Helper\ThirdPartyPayment $thirdPartyPayment,
+        \Psr\Log\LoggerInterface $logger
     ) {
         $this->checkoutSession = $checkoutSession;
         $this->quoteHelper = $quoteHelper;
         $this->thirdPartyPaymentConfig = $thirdPartyPaymentConfig;
         $this->thirdPartyPayment = $thirdPartyPayment;
+        $this->logger = $logger;
     }
 
     /**
@@ -79,6 +82,7 @@ class Availability implements ObserverInterface
             // For a subscription order, we filter out all payment methods
             // except the Subscribe Pro and (sometimes) free methods
             if ($this->quoteHelper->hasSubscription($quote)) {
+                $this->logger->debug('SS PRO: Availability: methodCode: ' . $methodCode);
                 switch ($methodCode) {
                     case Free::PAYMENT_METHOD_FREE_CODE:
                         $isAvailable = $this->quoteHelper->isRecurringQuote($quote);
@@ -92,6 +96,7 @@ class Availability implements ObserverInterface
                             $methodCode,
                             (int)$quote->getStoreId()
                         );
+                        $this->logger->debug('SS PRO: Availability: isAvailable: ' . $isAvailable);
                         break;
                 }
             } elseif (ConfigProvider::CODE === $methodCode && !$isActiveNonSubscription) {
