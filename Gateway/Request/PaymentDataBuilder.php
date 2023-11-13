@@ -8,6 +8,7 @@ use Magento\Vault\Model\Ui\VaultConfigProvider;
 class PaymentDataBuilder implements BuilderInterface
 {
     public const PAYMENT_METHOD_TOKEN = 'payment_method_token';
+    public const PAYMENT_CC_LAST_DIGITS = 'creditcard_last_digits';
 
     /**
      * @var \Swarming\SubscribePro\Gateway\Helper\SubjectReader

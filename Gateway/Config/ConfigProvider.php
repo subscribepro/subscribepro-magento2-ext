@@ -3,6 +3,7 @@
 namespace Swarming\SubscribePro\Gateway\Config;
 
 use SubscribePro\Tools\Config as PlatformConfig;
+use Swarming\SubscribePro\Platform\Tool\Oauth;
 
 class ConfigProvider
 {
@@ -41,11 +42,17 @@ class ConfigProvider
     protected $storeManager;
 
     /**
+     * @var Oauth
+     */
+    protected $oauth;
+
+    /**
      * @param \Swarming\SubscribePro\Model\Config\General $generalConfig
      * @param \Swarming\SubscribePro\Gateway\Config\Config $gatewayConfig
      * @param \Magento\Payment\Model\CcConfig $ccConfig
      * @param \Magento\Payment\Model\CcConfigProvider $ccConfigProvider
      * @param \Swarming\SubscribePro\Platform\Tool\Config $platformConfigTool
+     * @param \Swarming\SubscribePro\Platform\Tool\Oauth $oauth
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      */
     public function __construct(
@@ -54,6 +61,7 @@ class ConfigProvider
         \Magento\Payment\Model\CcConfig $ccConfig,
         \Magento\Payment\Model\CcConfigProvider $ccConfigProvider,
         \Swarming\SubscribePro\Platform\Tool\Config $platformConfigTool,
+        \Swarming\SubscribePro\Platform\Tool\Oauth $oauth,
         \Magento\Store\Model\StoreManagerInterface $storeManager
     ) {
         $this->generalConfig = $generalConfig;
@@ -62,6 +70,7 @@ class ConfigProvider
         $this->ccConfigProvider = $ccConfigProvider;
         $this->platformConfigTool = $platformConfigTool;
         $this->storeManager = $storeManager;
+        $this->oauth = $oauth;
     }
 
     /**
@@ -85,6 +94,7 @@ class ConfigProvider
                 'vaultCode' => self::VAULT_CODE,
                 'isActive' => $this->gatewayConfig->isActive($storeId),
                 'isThreeDSActive' => $this->gatewayConfig->isThreeDSActive($storeId),
+                'paymentFieldsToken' => $this->oauth->getPaymentFieldAccessToken($storeId),
                 'browserSize' => $this->gatewayConfig->getBrowserSize($storeId),
                 'acceptHeader' => $this->gatewayConfig->getAcceptHeader($storeId),
                 'environmentKey' => $environmentKey,

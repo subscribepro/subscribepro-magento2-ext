@@ -4,6 +4,7 @@ namespace Swarming\SubscribePro\Observer\Payment;
 
 use Magento\Framework\Event\Observer;
 use Magento\Quote\Api\Data\PaymentInterface;
+use Magento\Sales\Api\Data\OrderPaymentInterface;
 use SubscribePro\Service\Transaction\TransactionInterface;
 use Swarming\SubscribePro\Gateway\Request\PaymentDataBuilder;
 
@@ -15,6 +16,7 @@ class DataAssigner extends \Magento\Payment\Observer\AbstractDataAssignObserver
     protected $additionalInformationList = [
         PaymentDataBuilder::PAYMENT_METHOD_TOKEN,
         TransactionInterface::BROWSER_INFO,
+        PaymentDataBuilder::PAYMENT_CC_LAST_DIGITS,
     ];
 
     /**
@@ -37,5 +39,8 @@ class DataAssigner extends \Magento\Payment\Observer\AbstractDataAssignObserver
                 $paymentInfo->setAdditionalInformation($key, $additionalData[$key]);
             }
         }
+        $paymentInfo->setData(OrderPaymentInterface::CC_EXP_MONTH, $additionalData[OrderPaymentInterface::CC_EXP_MONTH] ?? '');
+        $paymentInfo->setData(OrderPaymentInterface::CC_EXP_YEAR, $additionalData[OrderPaymentInterface::CC_EXP_YEAR] ?? '');
+        $paymentInfo->setData(OrderPaymentInterface::CC_TYPE, $additionalData['creditcard_type'] ?? '');
     }
 }

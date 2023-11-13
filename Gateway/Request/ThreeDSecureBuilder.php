@@ -62,6 +62,13 @@ class ThreeDSecureBuilder implements BuilderInterface
             $data[TransactionInterface::BROWSER_INFO] = $payment->getAdditionalInformation(
                 TransactionInterface::BROWSER_INFO
             );
+
+            $data['creditcard_type'] = $payment->getCcType();
+            $data['creditcard_month'] = $payment->getCcExpMonth();
+            $data['creditcard_year'] = $payment->getCcExpYear();
+            $data['creditcard_last_digits'] = $payment->getAdditionalInformation(
+                'creditcard_last_digits'
+            );
         }
         return $data;
     }

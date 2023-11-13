@@ -34,6 +34,7 @@ define(
                 creditCardExpMonth: '',
                 creditCardExpMonthFocus: null,
                 creditCardExpYearFocus: null,
+                creditCardLastDigits: null,
                 paymentMethodToken: null,
                 selectedCardType: null,
                 show3DSiFrame: false
@@ -46,6 +47,7 @@ define(
                         'creditCardExpMonth',
                         'creditCardExpMonthFocus',
                         'creditCardExpYearFocus',
+                        'creditCardLastDigits',
                         'paymentMethodToken',
                         'selectedCardType',
                         'show3DSiFrame'
