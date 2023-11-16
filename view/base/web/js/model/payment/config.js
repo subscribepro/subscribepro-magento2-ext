@@ -19,10 +19,6 @@ define(
                 return this.getConfig().isActive;
             },
 
-            isThreeDSActive: function () {
-                return this.getConfig().isThreeDSActive;
-            },
-
             getBrowserSize: function () {
                 return this.getConfig().browserSize;
             },

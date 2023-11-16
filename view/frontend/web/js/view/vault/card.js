@@ -63,9 +63,6 @@ define(
             submitPayment: function () {
                 var cartData = $(this.formSelector).serializeJSON();
 
-                if (config.isThreeDSActive()) {
-                    cartData.browser_info = this.getThreeDSBrowserInfo();
-                }
                 this.isLoading(true);
                 saveCart(cartData).done(this.onSaveCart.bind(this));
                 $(this.formSubmitSelector).attr('disabled', 'disabled');
@@ -73,18 +70,14 @@ define(
 
             onSaveCart: function (response) {
                 $(window).scrollTop(0);
-                this.show3DSiFrame(false);
                 this.isLoading(false);
                 if (response.state === 'succeeded') {
                     this.onOrderSuccess();
-                } else if (response.state === 'pending' && config.isThreeDSActive()) {
-                    this.initializeThreeDSLifecycle(response.token);
                 }
             },
 
             onOrderSuccess: function () {
                 $(window).scrollTop(0);
-                this.show3DSiFrame(false);
                 $.cookieStorage.set('mage-messages', [{'type': 'success', 'text': 'The card was successfully saved.'}]);
                 window.location.href = urlBuilder.build('vault/cards/listaction');
             }

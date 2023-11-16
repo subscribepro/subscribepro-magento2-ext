@@ -5,8 +5,6 @@ namespace Swarming\SubscribePro\Gateway\Config;
 class Config extends \Magento\Payment\Gateway\Config\Config
 {
     public const KEY_ACTIVE = 'active';
-    public const KEY_THREE_DS_ACTIVE = 'three_ds_active';
-    public const KEY_THREE_DS_TYPE = 'three_ds_type';
     public const KEY_WALLET_AUTHORIZATION_ACTIVE = 'wallet_authorization_active';
     public const KEY_WALLET_AUTHORIZATION_AMOUNT = 'wallet_authorization_amount';
     public const KEY_BROWSER_SIZE = 'browser_size';
@@ -30,28 +28,9 @@ class Config extends \Magento\Payment\Gateway\Config\Config
      * @param int|null $storeId
      * @return bool
      */
-    public function isThreeDSActive($storeId = null)
-    {
-        return (bool)$this->getValue(self::KEY_THREE_DS_ACTIVE, $storeId);
-    }
-
-    /**
-     * @param int|null $storeId
-     * @return string
-     */
-    public function getThreeDsType($storeId = null)
-    {
-        return $this->getValue(self::KEY_THREE_DS_TYPE, $storeId);
-    }
-
-    /**
-     * @param int|null $storeId
-     * @return bool
-     */
     public function isWalletAuthorizationActive($storeId = null)
     {
-        return $this->isThreeDSActive($storeId)
-            || $this->getValue(self::KEY_WALLET_AUTHORIZATION_ACTIVE, $storeId);
+        return $this->getValue(self::KEY_WALLET_AUTHORIZATION_ACTIVE, $storeId);
     }
 
     /**

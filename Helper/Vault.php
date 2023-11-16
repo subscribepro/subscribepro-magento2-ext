@@ -6,7 +6,6 @@ use Magento\Framework\App\ObjectManager;
 use Magento\Vault\Api\Data\PaymentTokenInterface;
 use SubscribePro\Service\PaymentProfile\PaymentProfileInterface;
 use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
-use Swarming\SubscribePro\Model\Config\Source\ThreeDsType;
 
 class Vault
 {
@@ -16,11 +15,6 @@ class Vault
      * @var \Swarming\SubscribePro\Gateway\Config\Config
      */
     protected $gatewayConfig;
-
-    /**
-     * @var \Swarming\SubscribePro\Helper\PaymentProfileThreeDs
-     */
-    protected $paymentProfileThreeDs;
 
     /**
      * @var \Magento\Framework\Encryption\EncryptorInterface
@@ -36,19 +30,15 @@ class Vault
      * @param \Swarming\SubscribePro\Gateway\Config\Config $gatewayConfig
      * @param \Magento\Framework\Encryption\EncryptorInterface $encryptor
      * @param \Magento\Framework\Intl\DateTimeFactory $dateTimeFactory
-     * @param \Swarming\SubscribePro\Helper\PaymentProfileThreeDs|null $paymentProfileThreeDs
      */
     public function __construct(
         \Swarming\SubscribePro\Gateway\Config\Config $gatewayConfig,
         \Magento\Framework\Encryption\EncryptorInterface $encryptor,
-        \Magento\Framework\Intl\DateTimeFactory $dateTimeFactory,
-        \Swarming\SubscribePro\Helper\PaymentProfileThreeDs $paymentProfileThreeDs = null
+        \Magento\Framework\Intl\DateTimeFactory $dateTimeFactory
     ) {
         $this->gatewayConfig = $gatewayConfig;
         $this->encryptor = $encryptor;
         $this->dateTimeFactory = $dateTimeFactory;
-        $this->paymentProfileThreeDs = $paymentProfileThreeDs
-            ?: ObjectManager::getInstance()->get(PaymentProfileThreeDs::class);
     }
 
     /**
@@ -76,13 +66,6 @@ class Vault
             $profile->getPaymentToken()
         );
 
-        if ($this->gatewayConfig->isThreeDSActive()
-            && $this->gatewayConfig->getThreeDsType() === ThreeDsType::GATEWAY_INDEPENDENT
-            && !$this->paymentProfileThreeDs->isThreeDsAuthenticated($profile)
-        ) {
-            $tokenDetails = $this->markPendingTokenDetails($tokenDetails);
-        }
-
         $token->setTokenDetails($tokenDetails);
         $token->setExpiresAt($this->getExpirationDate($profile->getCreditcardYear(), $profile->getCreditcardMonth()));
         $token->setPublicHash($this->generatePublicHash($token));
@@ -100,12 +83,6 @@ class Vault
         $tokenDetails['expirationDate'] = $profile->getCreditcardMonth() . '/' . $profile->getCreditcardYear();
 
         unset($tokenDetails['state']);
-        if ($this->gatewayConfig->isThreeDSActive()
-            && $this->gatewayConfig->getThreeDsType() === ThreeDsType::GATEWAY_INDEPENDENT
-            && !$this->paymentProfileThreeDs->isThreeDsAuthenticated($profile)
-        ) {
-            $tokenDetails['state'] = self::STATE_PENDING;
-        }
 
         $token->setTokenDetails($this->encodeDetails($tokenDetails));
         $token->setExpiresAt($this->getExpirationDate($profile->getCreditcardYear(), $profile->getCreditcardMonth()));
