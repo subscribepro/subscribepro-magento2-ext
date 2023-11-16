@@ -28,9 +28,6 @@ define(
                         'canPlaceOrder'
                     ]);
 
-                if (config.isThreeDSActive()) {
-                    $(document).on('subscribepro:orderPlaceAfter', $.proxy(this.onOrderPlaceAfter, this));
-                }
                 return this;
             },
 
@@ -52,25 +49,16 @@ define(
 
             initSpreedly: function () {
                 this._super();
-
-                if (config.isThreeDSActive()) {
-                    this.redirectAfterPlaceOrder = false;
-                }
             },
 
             getData: function () {
-                var data = {
+                return {
                     'method': this.getCode(),
                     'additional_data': {
                         'is_active_payment_token_enabler': customer.isLoggedIn(),
                         'payment_method_token': this.paymentMethodToken()
                     }
                 };
-
-                if (config.isThreeDSActive()) {
-                    data.additional_data.browser_info = this.getThreeDSBrowserInfo();
-                }
-                return data;
             },
 
             getPaymentData: function () {
@@ -96,27 +84,9 @@ define(
 
             onOrderPlaceAfter: function (event, orderId) {
                 getOrderStatus(orderId)
-                    .done(function (response) {
-                        if (response.state === 'pending') {
-                            this.trigger3DS(response);
-                        } else {
-                            this.onOrderSuccess();
-                        }
+                    .done(function () {
+                        this.onOrderSuccess();
                     }.bind(this));
-            },
-
-            trigger3DS: function (response) {
-                if (response.gateway_specific_fields) {
-                    var form3DS = $('<form action="' + response.gateway_specific_fields.three_ds_auth_redirect_url + '" method="post">' +
-                        '<input type="text" name="PAY_REQUEST_ID" value="' + response.gateway_specific_fields.PAY_REQUEST_ID + '" />' +
-                        '<input type="text" name="PAYGATE_ID" value="' + response.gateway_specific_fields.PAYGATE_ID + '" />' +
-                        '<input type="text" name="CHECKSUM" value="' + response.gateway_specific_fields.CHECKSUM + '" />' +
-                        '</form>');
-                    $('body').append(form3DS);
-                    form3DS.submit();
-                } else {
-                    this.initializeThreeDSLifecycle(response.token);
-                }
             },
 
             onOrderSuccess: function () {
