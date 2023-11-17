@@ -87,7 +87,7 @@ define(
                     console.log(`'challengeHidden' event received.`);
                     console.log(data);
                 });
-                let authConfig = config.getConfig().paymentFieldsToken;
+                let authConfig = config.getConfig().sessionAccessToken;
                 PaymentFields.init({
                     apiBaseUrl: 'https://api.subscribepro.com/',
                     oauthApiToken: authConfig.access_token,
@@ -125,12 +125,7 @@ define(
                     },
                 };
 
-                data.additional_data.browser_info = this.getThreeDSBrowserInfo();
                 return data;
-            },
-
-            getThreeDSBrowserInfo: function () {
-                return JSON.stringify([config.getBrowserSize(), config.getAcceptHeader()])
             },
 
             getPaymentData: function () {

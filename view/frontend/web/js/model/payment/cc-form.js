@@ -53,9 +53,6 @@ define(
 
                 return this;
             },
-            getThreeDSBrowserInfo: function () {
-                return JSON.stringify([config.getBrowserSize(), config.getAcceptHeader()])
-            },
 
             initialize: function () {
                 this._super();

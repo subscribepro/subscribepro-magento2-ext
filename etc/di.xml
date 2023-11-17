@@ -278,7 +278,6 @@
                 <item name="customer" xsi:type="string">Swarming\SubscribePro\Gateway\Request\CustomerDataBuilder</item>
                 <item name="order" xsi:type="string">Swarming\SubscribePro\Gateway\Request\OrderDataBuilder</item>
                 <item name="payment" xsi:type="string">Swarming\SubscribePro\Gateway\Request\PaymentDataBuilder</item>
-                <item name="3ds" xsi:type="string">Swarming\SubscribePro\Gateway\Request\ThreeDSecureBuilder</item>
                 <item name="address" xsi:type="string">Swarming\SubscribePro\Gateway\Request\AddressDataBuilder</item>
             </argument>
         </arguments>
@@ -286,7 +285,6 @@
     <virtualType name="SubscribeProPlaceOrderHandler" type="Magento\Payment\Gateway\Response\HandlerChain">
         <arguments>
             <argument name="handlers" xsi:type="array">
-                <item name="3ds" xsi:type="string">Swarming\SubscribePro\Gateway\Response\ThreeDSecure</item>
                 <item name="payment_details" xsi:type="string">Swarming\SubscribePro\Gateway\Response\PaymentDetailsHandler</item>
                 <item name="txn_id" xsi:type="string">Swarming\SubscribePro\Gateway\Response\TransactionIdHandler</item>
                 <item name="card_details" xsi:type="string">Swarming\SubscribePro\Gateway\Response\CardDetailsHandler</item>
@@ -384,7 +382,7 @@
     <virtualType name="SubscribeProWalletVerifyCommand" type="Swarming\SubscribePro\Gateway\Command\VerifyCommand">
         <arguments>
             <argument name="requestBuilder" xsi:type="object">WalletVerifyBuilder</argument>
-            <argument name="handler" xsi:type="object">Swarming\SubscribePro\Gateway\Response\ThreeDSAuthorizeHandler</argument>
+            <argument name="handler" xsi:type="object">Swarming\SubscribePro\Gateway\Response\AuthorizeHandler</argument>
             <argument name="validator" xsi:type="object">Swarming\SubscribePro\Gateway\Validator\ResponseValidator</argument>
         </arguments>
     </virtualType>
@@ -394,7 +392,6 @@
                 <item name="customer" xsi:type="string">Swarming\SubscribePro\Gateway\Request\WalletCustomerDataBuilder</item>
                 <item name="amount" xsi:type="string">Swarming\SubscribePro\Gateway\Request\WalletAmountBuilder</item>
                 <item name="payment" xsi:type="string">Swarming\SubscribePro\Gateway\Request\WalletPaymentBuilder</item>
-                <item name="3ds" xsi:type="string">Swarming\SubscribePro\Gateway\Request\WalletThreeDSecureBuilder</item>
             </argument>
         </arguments>
     </virtualType>
