@@ -4,6 +4,7 @@ namespace Swarming\SubscribePro\Gateway\Request;
 
 use Magento\Payment\Gateway\Request\BuilderInterface;
 use Magento\Vault\Model\Ui\VaultConfigProvider;
+use SubscribePro\Service\PaymentProfile\PaymentProfileInterface;
 
 class PaymentDataBuilder implements BuilderInterface
 {
@@ -38,6 +39,15 @@ class PaymentDataBuilder implements BuilderInterface
             self::PAYMENT_METHOD_TOKEN => $payment->getAdditionalInformation(self::PAYMENT_METHOD_TOKEN),
             VaultConfigProvider::IS_ACTIVE_CODE => $payment->getAdditionalInformation(
                 VaultConfigProvider::IS_ACTIVE_CODE
+            ),
+            PaymentProfileInterface::CREDITCARD_TYPE => $payment->getCcType(),
+            PaymentProfileInterface::CREDITCARD_MONTH => $payment->getCcExpMonth(),
+            PaymentProfileInterface::CREDITCARD_YEAR => $payment->getCcExpYear(),
+            PaymentProfileInterface::CREDITCARD_LAST_DIGITS => $payment->getAdditionalInformation(
+                PaymentProfileInterface::CREDITCARD_LAST_DIGITS
+            ),
+            PaymentProfileInterface::CREDITCARD_FIRST_DIGITS => $payment->getAdditionalInformation(
+                PaymentProfileInterface::CREDITCARD_FIRST_DIGITS
             )
         ];
     }

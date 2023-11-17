@@ -9,11 +9,12 @@ define(
         'Swarming_SubscribePro/js/action/checkout/get-order-status',
         'Magento_Checkout/js/model/quote',
         'Magento_Customer/js/model/customer',
-
+        'Magento_Checkout/js/action/place-order',
+        'paymentFields',
         'Magento_Checkout/js/action/redirect-on-success',
         'mage/translate'
     ],
-    function ($, Component, CcForm, config, getOrderStatus, quote, customer, redirectOnSuccessAction, $t) {
+    function ($, Component, CcForm, config, getOrderStatus, quote, customer,placeOrder, PaymentFields, redirectOnSuccessAction, $t) {
         'use strict';
 
         return Component.extend(CcForm).extend({
@@ -28,37 +29,108 @@ define(
                         'canPlaceOrder'
                     ]);
 
+                $(document).on('subscribepro:orderPlaceAfter', $.proxy(this.onOrderPlaceAfter, this));
                 return this;
             },
 
             initialize: function () {
                 this._super();
-
-                quote.billingAddress.subscribe(function (address) {
-                    this.canPlaceOrder(address !== null && this.isValidHostedFields && this.isValidExpDate);
-                }, this);
+                this.canPlaceOrder(true);
             },
 
             updateSaveActionAllowed: function () {
-                this.canPlaceOrder(quote.billingAddress() != null && this.isValidHostedFields && this.isValidExpDate)
+                this.canPlaceOrder(true)
             },
 
             isActive: function () {
                 return this.getCode() == this.isChecked();
             },
 
-            initSpreedly: function () {
-                this._super();
+            initPayment: function () {
+                console.log(config)
+                this.initPaymentFields();
+                this.redirectAfterPlaceOrder = false;
+            },
+            startPlaceOrder: function () {
+                $('body').trigger('processStart');
+                this.tokenizeCard();
+                $('body').trigger('processStop');
+            },
+
+            initPaymentFields: function () {
+                PaymentFields.on('tokenize', (data) => {
+                    if (data.isSuccessful === true) {
+                        this.selectedCardType(data.creditCard.cardType)
+                        this.creditCardFirstDigits(data.creditCard.cardIssuerIdentificationNumber.substring(0, 4))
+                        this.creditCardLastDigits(data.creditCard.cardLastDigits)
+                        this.paymentMethodToken(data.tokenString);
+                        placeOrder(this.getData())
+                    }
+                });
+
+                PaymentFields.on('error', (data) => {
+                    console.log(`'error' event received.`);
+                    console.log(data);
+                });
+
+                PaymentFields.on('inputEvent', (data) => {
+                    console.log(data);
+                    console.log(`'inputEvent' event received.`);
+                });
+
+                PaymentFields.on('challengeShown', (data) => {
+                    console.log(`'challengeShown' event received.`);
+                    console.log(data);
+                });
+
+                PaymentFields.on('challengeHidden', (data) => {
+                    console.log(`'challengeHidden' event received.`);
+                    console.log(data);
+                });
+                let authConfig = config.getConfig().paymentFieldsToken;
+                PaymentFields.init({
+                    apiBaseUrl: 'https://api.subscribepro.com/',
+                    oauthApiToken: authConfig.access_token,
+                    spVaultEnvironmentId: authConfig.sp_vault_environment_id,
+                    paymentMethodType: 'credit_card',
+                    enableThreeDs: config.isThreeDSActive(),
+                    enableCvv: true,
+                    numberIframe: {
+                        container: this.getCode() + '_cc_number',
+                        inputStyle:
+                            'width: 100%; padding: 5px 8px; line-height: 20px; font-size: 14px; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", Segoe UI Symbol, "Noto Color Emoji";',
+                    },
+                    cvvIframe: {
+                        container: this.getCode() + '_cc_cid',
+                        inputStyle:
+                            'width: 100%; padding: 5px 8px; line-height: 20px; font-size: 14px; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", Segoe UI Symbol, "Noto Color Emoji";',
+                    },
+                    threeDsChallengeIframe: {
+                        container: 'challenge',
+                    },
+                });
             },
 
             getData: function () {
-                return {
+                var data = {
                     'method': this.getCode(),
                     'additional_data': {
                         'is_active_payment_token_enabler': customer.isLoggedIn(),
-                        'payment_method_token': this.paymentMethodToken()
-                    }
+                        'payment_method_token': this.paymentMethodToken(),
+                        'cc_exp_month': this.creditCardExpMonth(),
+                        'cc_exp_year': this.creditCardExpYear(),
+                        'creditcard_first_digits': this.creditCardFirstDigits(),
+                        'creditcard_last_digits': this.creditCardLastDigits(),
+                        'creditcard_type': this.selectedCardType(),
+                    },
                 };
+
+                data.additional_data.browser_info = this.getThreeDSBrowserInfo();
+                return data;
+            },
+
+            getThreeDSBrowserInfo: function () {
+                return JSON.stringify([config.getBrowserSize(), config.getAcceptHeader()])
             },
 
             getPaymentData: function () {
@@ -82,15 +154,45 @@ define(
                 this.placeOrder();
             },
 
-            onOrderPlaceAfter: function (event, orderId) {
-                getOrderStatus(orderId)
-                    .done(function () {
-                        this.onOrderSuccess();
-                    }.bind(this));
-            },
-
             onOrderSuccess: function () {
                 redirectOnSuccessAction.execute();
+            },
+
+            tokenizeCard: function () {
+                PaymentFields.tokenize({
+                    authenticateCardholder: config.isThreeDSActive(),
+                    authenticationType: 'payment',
+                    paymentDetails: {
+                        amount: quote.getCalculatedTotal(),
+                    },
+                    cardDetails: {
+                        creditcardMonth: this.creditCardExpMonth(),
+                        creditcardYear: this.creditCardExpYear(),
+                    },
+                    customerEmail: customer.customerData.email,
+                    billingAddress: {
+                        firstName: quote.billingAddress().firstname,
+                        lastName: quote.billingAddress().lastname,
+                        street1: quote.billingAddress().street[0],
+                        street2: quote.billingAddress().street[1] || '',
+                        street3: quote.billingAddress().street[2] || '',
+                        city: quote.billingAddress().city,
+                        region: quote.billingAddress().regionCode,
+                        postcode: quote.billingAddress().postcode,
+                        country: quote.billingAddress().countryId,
+                    },
+                    shippingAddress: {
+                        firstName: quote.shippingAddress().firstname,
+                        lastName: quote.shippingAddress().lastname,
+                        street1: quote.shippingAddress().street[0],
+                        street2: quote.shippingAddress().street[1] || '',
+                        street3: quote.shippingAddress().street[2] || '',
+                        city: quote.shippingAddress().city,
+                        region: quote.shippingAddress().regionCode,
+                        postcode: quote.shippingAddress().postcode,
+                        country: quote.shippingAddress().countryId,
+                    },
+                });
             }
         });
     }
