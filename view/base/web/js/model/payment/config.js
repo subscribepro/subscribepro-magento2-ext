@@ -27,6 +27,10 @@ define(
                 return this.getConfig().isWalletAuthorizationActive;
             },
 
+            getAdminOrderAmountUrl: function () {
+                return this.getConfig().adminOrderAmountUrl;
+            },
+
             getBrowserSize: function () {
                 return this.getConfig().browserSize;
             },

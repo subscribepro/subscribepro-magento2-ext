@@ -12,8 +12,8 @@ define(
         'Swarming_SubscribePro/js/model/payment/credit-card-validation/expiration-fields',
         'Swarming_SubscribePro/js/model/payment/credit-card-validation/hosted-fields',
         'Swarming_SubscribePro/js/model/payment/config',
-        'Swarming_SubscribePro/js/model/payment/spreedly',
-        'Magento_Ui/js/lib/view/utils/dom-observer'
+        'Magento_Ui/js/lib/view/utils/dom-observer',
+        'paymentFields'
     ],
     function (
         ko,
@@ -25,8 +25,8 @@ define(
         expirationFields,
         hostedFields,
         config,
-        spreedly,
-        domObserver
+        domObserver,
+        PaymentFields
     ) {
         'use strict';
 
@@ -36,9 +36,16 @@ define(
                 orderFormSelector: 'edit_form',
                 container: 'payment_form_subscribe_pro',
                 active: false,
-                spreedlyInitialized: false,
                 isValidHostedFields: false,
                 isValidExpDate: false,
+                creditCardExpYear: '',
+                creditCardExpMonth: '',
+                creditCardExpMonthFocus: null,
+                creditCardExpYearFocus: null,
+                creditCardFirstDigits: null,
+                creditCardLastDigits: null,
+                paymentMethodToken: null,
+                selectedCardType: null,
                 imports: {
                     onActiveChange: 'active'
                 }
@@ -46,28 +53,35 @@ define(
 
             initObservable: function () {
                 var self = this;
-
                 this.$orderForm = $('#' + this.orderFormSelector);
-
                 this._super()
                     .observe([
-                        'active'
+                        'active',
+                        'creditCardExpYear',
+                        'creditCardExpMonth',
+                        'creditCardExpMonthFocus',
+                        'creditCardExpYearFocus',
+                        'creditCardFirstDigits',
+                        'creditCardLastDigits',
+                        'paymentMethodToken',
+                        'selectedCardType',
                     ]);
 
                 this.$orderForm.off('changePaymentMethod.' + config.getCode())
                     .on('changePaymentMethod.' + config.getCode(), this.changePaymentMethod.bind(this));
-
                 domObserver.get('#' + this.container, function () {
-                    self.initSpreedly();
+                    self.initPaymentFields();
                 });
 
-                this.$orderForm
-                    .on('focusin', this.getSelector('expiration'), $.proxy(this.validationCreditCardExpMonth, this, true))
-                    .on('focusout', this.getSelector('expiration'), $.proxy(this.validationCreditCardExpMonth, this, false))
-                    .on('focusin', this.getSelector('expiration_yr'), $.proxy(this.validationCreditCardExpYear, this, true))
-                    .on('focusout', this.getSelector('expiration_yr'), $.proxy(this.validationCreditCardExpYear, this, false));
+                this.$orderForm.on('beforeSubmit', function () {
+                    this.addAdditionalData();
+                }.bind(this))
 
                 return this;
+            },
+
+            getThreeDSBrowserInfo: function () {
+                return JSON.stringify([config.getBrowserSize(), config.getAcceptHeader()])
             },
 
             changePaymentMethod: function (event, method) {
@@ -104,22 +118,67 @@ define(
                 if (this.$orderForm.validate().errorList.length) {
                     return false;
                 }
-
-                if (!this.isValidHostedFields || !this.isValidExpDate) {
-                    alert({content: $.mage.__('Enter valid payment information.')});
-                    return false;
-                }
-
-                spreedly.validate();
+                $('body').trigger('processStart');
+                this.tokenizeCard();
             },
 
-            initSpreedly: function () {
-                spreedly.init(
-                    $.proxy(this.onFieldEvent, this),
-                    $.proxy(this.onPaymentMethod, this),
-                    $.proxy(this.validationPaymentData, this),
-                    $.proxy(this.onErrors, this)
-                );
+            initPaymentFields: function () {
+                PaymentFields.on('tokenize', (data) => {
+                    if (data.isSuccessful === true) {
+                        $('body').trigger('processStop');
+                        this.selectedCardType(data.creditCard.cardType)
+                        this.creditCardFirstDigits(data.creditCard.cardIssuerIdentificationNumber.substring(0, 4))
+                        this.creditCardLastDigits(data.creditCard.cardLastDigits)
+                        this.paymentMethodToken(data.tokenString);
+                        this.placeOrder()
+                    }
+                });
+
+                PaymentFields.on('error', (data) => {
+                    $('body').trigger('processStop');
+                    console.log(`'error' event received.`);
+                    console.log(data);
+                });
+
+                PaymentFields.on('inputEvent', (data) => {
+                    $('body').trigger('processStop');
+                    console.log(data);
+                    console.log(`'inputEvent' event received.`);
+                });
+
+                PaymentFields.on('challengeShown', (data) => {
+                    $('body').trigger('processStop');
+                    console.log(`'challengeShown' event received.`);
+                    console.log(data);
+                });
+
+                PaymentFields.on('challengeHidden', (data) => {
+                    $('body').trigger('processStop');
+                    console.log(`'challengeHidden' event received.`);
+                    console.log(data);
+                });
+                let authConfig = config.getConfig().sessionAccessToken;
+                PaymentFields.init({
+                    apiBaseUrl: 'https://api.subscribepro.com/',
+                    oauthApiToken: authConfig.access_token,
+                    spVaultEnvironmentId: authConfig.sp_vault_environment_id,
+                    paymentMethodType: 'credit_card',
+                    enableThreeDs: false,
+                    enableCvv: true,
+                    numberIframe: {
+                        container: config.getCode() + '_cc_number',
+                        inputStyle:
+                            'width: 100%; padding: 5px 8px; line-height: 20px; font-size: 14px; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", Segoe UI Symbol, "Noto Color Emoji";',
+                    },
+                    cvvIframe: {
+                        container: config.getCode() + '_cc_cid',
+                        inputStyle:
+                            'width: 100%; padding: 5px 8px; line-height: 20px; font-size: 14px; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", Segoe UI Symbol, "Noto Color Emoji";',
+                    },
+                    threeDsChallengeIframe: {
+                        container: 'challenge',
+                    },
+                });
             },
 
             onFieldEvent: function (name, event, activeElement, inputData) {
@@ -138,24 +197,6 @@ define(
                 $cardType.addClass('icon-type-' + cardType);
             },
 
-            validationPaymentData: function (inputProperties) {
-                if (inputProperties['validNumber'] && (inputProperties['validCvv'] || !config.hasVerification())) {
-                    this.tokenizeCreditCard();
-                }
-
-                if (!inputProperties['validNumber']) {
-                    hostedFields.addClass('number', 'invalid');
-                }
-
-                if (!inputProperties['validCvv'] && config.hasVerification()) {
-                    hostedFields.addClass('cvv', 'invalid');
-                }
-            },
-
-            tokenizeCreditCard: function () {
-                spreedly.tokenizeCreditCard(this.getPaymentData());
-            },
-
             getPaymentData: function () {
                 return {
                     'first_name': $('#order-billing_address_firstname').val(),
@@ -171,6 +212,36 @@ define(
                     'year': $(this.getSelector('expiration_yr')).val(),
                     'month': $(this.getSelector('expiration')).val()
                 };
+            },
+
+            tokenizeCard: function () {
+                var self = this;
+                $.ajax({
+                    url: config.getAdminOrderAmountUrl(),
+                    data: {
+                        form_key: window.FORM_KEY,
+                        quote_id: window.order.quoteId
+                    },
+                    type: 'POST',
+                    dataType: 'json',
+
+                }).done( function (response) {
+                    PaymentFields.tokenize({
+                        authenticateCardholder: false,
+                        authenticationType: 'payment',
+                        paymentDetails: {
+                            amount: response.grand_total,
+                        },
+                        cardDetails: {
+                            creditcardMonth: $(self.getSelector('expiration')).val(),
+                            creditcardYear: $(self.getSelector('expiration_yr')).val()
+                        },
+                        customerEmail: $('#email').val(),
+                        billingAddress: self.getPaymentData(),
+                        shippingAddress: self.getPaymentData(),
+                    });
+                });
+
             },
 
             onErrors: function (errors) {
@@ -198,22 +269,25 @@ define(
                 this.$orderForm.trigger('realOrder');
             },
 
-            validationCreditCardExpMonth: function (isFocused) {
-                this.isValidExpDate = expirationFieldValidator(
-                    isFocused,
-                    'month',
-                    $(this.getSelector('expiration')).val(),
-                    $(this.getSelector('expiration_yr')).val()
-                );
-            },
+            addAdditionalData: function () {
+                var orderForm = this.$orderForm;
+                var additionalData = {
+                    cc_type: this.selectedCardType(),
+                    browser_info: this.getThreeDSBrowserInfo(),
+                    cc_exp_year: $(this.getSelector('expiration_yr')).val(),
+                    cc_exp_month: $(this.getSelector('expiration')).val(),
+                    payment_method_token: this.paymentMethodToken(),
+                    creditcard_first_digits: this.creditCardFirstDigits(),
+                    creditcard_last_digits: this.creditCardLastDigits(),
+                };
 
-            validationCreditCardExpYear: function (isFocused) {
-                this.isValidExpDate = expirationFieldValidator(
-                    isFocused,
-                    'year',
-                    $(this.getSelector('expiration')).val(),
-                    $(this.getSelector('expiration_yr')).val()
-                );
+                $.each(additionalData, function (key, value) {
+                    $('<input>').attr({
+                        type: 'hidden',
+                        name: 'payment[' + key + ']',
+                        value: value
+                    }).appendTo(orderForm);
+                });
             },
 
             getSelector: function (field) {
