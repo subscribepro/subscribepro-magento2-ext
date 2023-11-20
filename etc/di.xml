@@ -162,6 +162,10 @@
         <plugin name="subscribepro_attribute" type="Swarming\SubscribePro\Plugin\GroupedProduct\TypeGrouped"/>
     </type>
 
+    <type name="Magento\Customer\CustomerData\Customer">
+        <plugin name="additional_section_data" type="Swarming\SubscribePro\Plugin\Account\AddCustomerEmail" />
+    </type>
+
     <!-- ShipperHQ extension -->
     <type name="ShipperHQ\Shipper\Model\Carrier\Processor\ShipperMapper">
         <plugin name="subscribepro_shipperhq" type="Swarming\SubscribePro\Plugin\ShipperHQ\ShipperMapperPlugin" />

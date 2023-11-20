@@ -23,6 +23,10 @@ define(
                 return this.getConfig().isThreeDSActive;
             },
 
+            isWalletAuthorizationActive: function () {
+                return this.getConfig().isWalletAuthorizationActive;
+            },
+
             getBrowserSize: function () {
                 return this.getConfig().browserSize;
             },
