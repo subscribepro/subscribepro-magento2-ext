@@ -38,6 +38,7 @@ define(
                 $(self.formSubmitSelector).click(function(e) {
                     if ($(self.formSelector).valid() && self.paymentMethodToken() === null) {
                         e.preventDefault();
+                        $('body').trigger('processStart');
                         self.tokenizeCard();
                         return false;
                     }
@@ -56,6 +57,7 @@ define(
                 });
 
                 PaymentFields.on('error', (data) => {
+                    $('body').trigger('processStop');
                     console.log(`'error' event received.`);
                     console.log(data);
                 });
@@ -65,11 +67,13 @@ define(
                 });
 
                 PaymentFields.on('challengeShown', (data) => {
+                    $('body').trigger('processStop');
                     console.log(`'challengeShown' event received.`);
                     console.log(data);
                 });
 
                 PaymentFields.on('challengeHidden', (data) => {
+                    $('body').trigger('processStop');
                     console.log(`'challengeHidden' event received.`);
                     console.log(data);
                 });
