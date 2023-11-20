@@ -38,6 +38,7 @@ define(
                 $(self.formSubmitSelector).click(function(e) {
                     if ($(self.formSelector).valid() && self.paymentMethodToken() === null) {
                         e.preventDefault();
+                        $('body').trigger('processStart');
                         self.tokenizeCard();
                         return false;
                     }
@@ -47,6 +48,7 @@ define(
 
             initPaymentFields: function () {
                 PaymentFields.on('tokenize', (data) => {
+                    $('body').trigger('processStop');
                     if (data.isSuccessful === true) {
                         this.selectedCardType(data.creditCard.cardType)
                         this.creditCardLastDigits(data.creditCard.cardLastDigits)
@@ -56,6 +58,7 @@ define(
                 });
 
                 PaymentFields.on('error', (data) => {
+                    $('body').trigger('processStop');
                     console.log(`'error' event received.`);
                     console.log(data);
                 });
@@ -65,11 +68,13 @@ define(
                 });
 
                 PaymentFields.on('challengeShown', (data) => {
+                    $('body').trigger('processStop');
                     console.log(`'challengeShown' event received.`);
                     console.log(data);
                 });
 
                 PaymentFields.on('challengeHidden', (data) => {
+                    $('body').trigger('processStop');
                     console.log(`'challengeHidden' event received.`);
                     console.log(data);
                 });
@@ -120,9 +125,13 @@ define(
             },
 
             tokenizeCard: function () {
+                let authenticationType = 'non_payment';
+                if (config.isWalletAuthorizationActive() && config.isThreeDSActive()) {
+                    authenticationType = 'payment'
+                }
                 PaymentFields.tokenize({
                     authenticateCardholder: config.isThreeDSActive(),
-                    authenticationType: 'non_payment',
+                    authenticationType: authenticationType,
                     paymentDetails: {
                         amount: config.getConfig().wallet_authorization_amount,
                     },

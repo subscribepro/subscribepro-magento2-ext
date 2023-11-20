@@ -293,9 +293,6 @@
                     <label>Enable Authorization on Wallet</label>
                     <comment>Enable or disable authorization of new cards added by customer on wallet page</comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <depends>
-                        <field id="three_ds_active">0</field>
-                    </depends>
                 </field>
 
                 <field id="wallet_authorization_amount" translate="label" type="text" sortOrder="48" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
