@@ -1,17 +1,50 @@
+#challenge {
+    width: 0; //hide empty space on the page when container is empty
+    height: 0;
 
+    iframe {
+        position: fixed;
+        top: 50%;
+        transform: translateY(-50%);
+        left: 0;
+        right: 0;
+        margin: 0 auto;
+        z-index: 9;
+        width: 500px !important;
+        height: 513px !important;
+        padding: 1px;
+        background : #ffffff;
+    }
+
+    &:not(:empty) {
+        &:after {
+            display: block;
+            content: "";
+            position: fixed;
+            z-index: 8;
+            background: rgba(0, 0, 0, .3);
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+        }
+    }
+}
 //
 //  Generic subscription container
 //  _____________________________________________
 
 .subscription-container {
-	.fieldset{
-		margin-bottom: 0;
+    .fieldset{
+        margin-bottom: 0;
 
-		// Field: choices
-		> .field.choice {
-			margin-bottom: 10px;
-		}
-	}
+        // Field: choices
+        > .field.choice {
+            margin-bottom: 10px;
+        }
+    }
 }
 
 //
@@ -20,14 +53,14 @@
 
 // Custom options spacing
 .product-options-wrapper + .product-options-bottom > .subscription-container {
-	margin-top: 20px;
+    margin-top: 20px;
 }
 
 // Bundle product detail page
 .bundle-options-container .block-bundle-summary & {
-	& ~ .box-tocart {
-		margin-top: 20px;
-	}
+    & ~ .box-tocart {
+        margin-top: 20px;
+    }
 }
 
 
@@ -36,113 +69,113 @@
 //  _____________________________________________
 
 .swarming-subscribepro-customer-subscriptions {
-	#subscriptions-container {
-		@media (max-width: @screen__s) {
-			.table-wrapper .table > tbody > tr {
-				td {
-					padding-left: 0;
-					padding-right: 0;
+    #subscriptions-container {
+        @media (max-width: @screen__s) {
+            .table-wrapper .table > tbody > tr {
+                td {
+                    padding-left: 0;
+                    padding-right: 0;
 
-					&:before {
-						content: '';
-						display: none;
-					}
+                    &:before {
+                        content: '';
+                        display: none;
+                    }
 
-					&.col.subscription {
-						margin-bottom: 1rem;
-					}
+                    &.col.subscription {
+                        margin-bottom: 1rem;
+                    }
 
-					&.col.product-image {
-						float: left;
-						padding-right: 25px;
+                    &.col.product-image {
+                        float: left;
+                        padding-right: 25px;
 
-						.product-item-photo {
-							display: block;
-						}
+                        .product-item-photo {
+                            display: block;
+                        }
 
-						@media (max-width: 400px) {
-							p {
-								clear: left;
-							}
-						}
-					}
-				}
-			}
-		}
+                        @media (max-width: 400px) {
+                            p {
+                                clear: left;
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
-		.col.product-image {
-			width: 75px;
-		}
+        .col.product-image {
+            width: 75px;
+        }
 
-		.col.product-info {
-			h2 {
-				margin-bottom: 1rem;
-			}
-			p {
-				margin: 0;
-			}
-		}
+        .col.product-info {
+            h2 {
+                margin-bottom: 1rem;
+            }
+            p {
+                margin: 0;
+            }
+        }
 
-		.col.subscription {
-			.next-ship-date {
-				font-weight: 700;
-				margin-top: .5rem;
-				margin-bottom: 1.5rem;
-			}
+        .col.subscription {
+            .next-ship-date {
+                font-weight: 700;
+                margin-top: .5rem;
+                margin-bottom: 1.5rem;
+            }
 
-			// Adds cursor to datepicker trigger
-			.ui-datepicker-trigger {
-				cursor: pointer;
-				margin-left: 2px;
-			}
+            // Adds cursor to datepicker trigger
+            .ui-datepicker-trigger {
+                cursor: pointer;
+                margin-left: 2px;
+            }
 
-			// Styles dropdowns inline
-			.options {
-				> select {
-					width: auto;
-				}
-				> span {
-					margin: 0 5px;
-				}
-			}
-		}
+            // Styles dropdowns inline
+            .options {
+                > select {
+                    width: auto;
+                }
+                > span {
+                    margin: 0 5px;
+                }
+            }
+        }
 
-		.col.payment-information {
-			div img {
-				padding-bottom: 4px;
-				vertical-align: middle;
-			}
-		}
+        .col.payment-information {
+            div img {
+                padding-bottom: 4px;
+                vertical-align: middle;
+            }
+        }
 
-		// "See Details" toggle
-		.product.option-list {
-			.toggle {
-				&:extend(.abs-toggling-title all);
-				&:after {
-					.lib-css(color, @color-gray56);
-					margin: 0 0 0 @indent__xs;
-					position: static;
-				}
-				border: 0;
-				padding: 0 @indent__xl @indent__xs 0;
-			}
+        // "See Details" toggle
+        .product.option-list {
+            .toggle {
+                &:extend(.abs-toggling-title all);
+                &:after {
+                    .lib-css(color, @color-gray56);
+                    margin: 0 0 0 @indent__xs;
+                    position: static;
+                }
+                border: 0;
+                padding: 0 @indent__xl @indent__xs 0;
+            }
 
-			&.active {
-				> .toggle {
-					.lib-icon-font-symbol(
-						@_icon-font-content: @icon-up,
-						@_icon-font-position: after
-					);
-				}
-			}
-		}
+            &.active {
+                > .toggle {
+                    .lib-icon-font-symbol(
+                        @_icon-font-content: @icon-up,
+                        @_icon-font-position: after
+                    );
+                }
+            }
+        }
 
-		.col.product-info {
-			.product.option-list .toggle > span {
-				&:extend(.abs-visually-hidden-reset all);
-			}
-		}
-	}
+        .col.product-info {
+            .product.option-list .toggle > span {
+                &:extend(.abs-visually-hidden-reset all);
+            }
+        }
+    }
 }
 
 //
@@ -150,9 +183,9 @@
 //  _____________________________________________
 
 .vault-cards-listaction {
-	.my-credit-cards {
-		.table-credit-cards {
-			.col {
+    .my-credit-cards {
+        .table-credit-cards {
+            .col {
                 &.actions {
                     form {
                         display: inline;
@@ -174,14 +207,14 @@
                         text-transform: uppercase;
                     }
                 }
-			}
-		}
-	}
+            }
+        }
+    }
 }
 
 .wallet-authorize-info {
     .lib-message(warning);
-	clear: both;
+    clear: both;
     margin-bottom: 20px;
     margin-top: 20px;
 }
@@ -191,12 +224,12 @@
 //  _____________________________________________
 
 .cart.table-wrapper {
-	.product-item-name,
-	.item-options {
-		& + .subscription-container {
-			margin-top: 20px;
-		}
-	}
+    .product-item-name,
+    .item-options {
+        & + .subscription-container {
+            margin-top: 20px;
+        }
+    }
 }
 
 //
@@ -204,81 +237,81 @@
 //  _____________________________________________
 
 .payment-method-subscribe_pro .form .hosted-control {
-	background: #fff;
-	background-clip: padding-box;
-	border: 1px solid #c2c2c2;
-	border-radius: 1px;
-	font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-	font-size: 14px;
-	height: 32px;
-	line-height: 1.42857143;
-	padding: 0 9px;
-	vertical-align: baseline;
-	box-sizing: border-box;
-	position: relative;
-	width: 225px;
+    background: #fff;
+    background-clip: padding-box;
+    border: 1px solid #c2c2c2;
+    border-radius: 1px;
+    font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    height: 32px;
+    line-height: 1.42857143;
+    padding: 0 9px;
+    vertical-align: baseline;
+    box-sizing: border-box;
+    position: relative;
+    width: 225px;
 }
 
 .payment-method-subscribe_pro .form .child-control.control-focused input,
 .payment-method-subscribe_pro .form .hosted-control.hosted-control-focused {
-	border-color: #006bb4;
+    border-color: #006bb4;
 }
 
 .payment-method-subscribe_pro .form .child-control.control-valid input,
 .payment-method-subscribe_pro .form .hosted-control.hosted-control-valid {
-	border-color: #006400;
+    border-color: #006400;
 }
 
 .payment-method-subscribe_pro .form .child-control.control-invalid:not(.control-focused) input,
 .payment-method-subscribe_pro .form .hosted-control.hosted-control-invalid:not(.hosted-control-focused) {
-	border-color: #e02b27;
+    border-color: #e02b27;
 }
 
 .payment-method-subscribe_pro .form .control-invalid:not(.control-focused) ~ .error,
 .payment-method-subscribe_pro .form .hosted-control-invalid:not(.hosted-control-focused) ~ .hosted-error {
-	opacity: 1;
+    opacity: 1;
 }
 
 .payment-method-subscribe_pro .form .hosted-control.hosted-cid {
-	width: 6rem;
+    width: 6rem;
 }
 
 .payment-method-subscribe_pro .form .cvv .field-tooltip {
-	left: 7rem;
+    left: 7rem;
 }
 
 .payment-method-subscribe_pro .form .error,
 .payment-method-subscribe_pro .form .hosted-error {
-	clear: both;
-	color: #e02b27;
-	font-size: 1.2rem;
-	height: 0;
-	margin-top: 7px;
-	opacity: 0;
+    clear: both;
+    color: #e02b27;
+    font-size: 1.2rem;
+    height: 0;
+    margin-top: 7px;
+    opacity: 0;
 }
 
 .payment-method-subscribe_pro .form .date-wrap .child-control{
-	float: left;
-	margin-right: 2rem;
+    float: left;
+    margin-right: 2rem;
 }
 
 .payment-method-subscribe_pro .form .date-wrap input:focus{
-	outline: none;
-	-webkit-box-shadow: none;
-	box-shadow: none;
+    outline: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
 }
 
 .payment-method-subscribe_pro .form .date-wrap .month{
-	position: relative;
+    position: relative;
 }
 .payment-method-subscribe_pro .form .date-wrap .month:after{
-	content: '/';
-	display: inline;
-	padding-bottom: inherit;
-	padding-top: inherit;
-	position: absolute;
-	right: -12px;
-	top: 5px;
+    content: '/';
+    display: inline;
+    padding-bottom: inherit;
+    padding-top: inherit;
+    position: absolute;
+    right: -12px;
+    top: 5px;
 }
 
 //
@@ -286,62 +319,97 @@
 //  _____________________________________________
 
 .card-number-type {
-	margin-bottom: 10px;
+    margin-bottom: 10px;
 }
 
 .card-number-type img {
-	vertical-align: middle;
-	margin-right: 5px;
-	padding-bottom: 4px;
+    vertical-align: middle;
+    margin-right: 5px;
+    padding-bottom: 4px;
 }
 
 .expiration-date .date-wrap .child-control{
-	float: left;
-	margin-right: 2rem;
+    float: left;
+    margin-right: 2rem;
 }
 
 .expiration-date .date-wrap input:focus{
-	outline: none;
-	-webkit-box-shadow: none;
-	box-shadow: none;
+    outline: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
 }
 
 .expiration-date .date-wrap .month{
-	position: relative;
+    position: relative;
 }
 .expiration-date .date-wrap .month:after{
-	content: '/';
-	display: inline;
-	padding-bottom: inherit;
-	padding-top: inherit;
-	position: absolute;
-	right: -12px;
-	top: 5px;
+    content: '/';
+    display: inline;
+    padding-bottom: inherit;
+    padding-top: inherit;
+    position: absolute;
+    right: -12px;
+    top: 5px;
 }
 
 .expiration-date .child-control.control-focused input {
-	border-color: #006bb4;
+    border-color: #006bb4;
 }
 
 .expiration-date .child-control.control-valid input {
-	border-color: #006400;
+    border-color: #006400;
 }
 
 .expiration-date .child-control.control-invalid:not(.control-focused) input {
-	border-color: #e02b27;
+    border-color: #e02b27;
 }
 
 .expiration-date .error{
-	clear: both;
-	color: #e02b27;
-	font-size: 1.2rem;
-	height: 0;
-	margin-top: 7px;
-	opacity: 0;
+    clear: both;
+    color: #e02b27;
+    font-size: 1.2rem;
+    height: 0;
+    margin-top: 7px;
+    opacity: 0;
 }
 
 .expiration-date .control-invalid:not(.control-focused) ~ .error {
-	opacity: 1;
+    opacity: 1;
+}
+
+//
+//  3ds iFrame
+//  _____________________________________________
+
+.spro-3ds-wrapper {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 10;
+    background-color: fade(@color-gray20, 55%);
+    &.active {
+        .lib-vendor-prefix-display();
+    }
+    &:not(.active) {
+        display: none;
+    }
+    #spro-3ds-challenge {
+        margin: auto;
+        max-width: 100%;
+        max-height: 100%;
+        overflow: auto;
+        background-color: @color-white;
+        iframe {
+            max-width: 100%;
+            width: 375px;
+            height: 675px;
+        }
+    }
+}
+body.spro-3ds-active {
+    overflow: hidden;
 }
 
 //
@@ -349,7 +417,7 @@
 //  _____________________________________________
 
 .field.field-select-billing + .billing-address-form {
-	margin-top: 15px;
+    margin-top: 15px;
 }
 
 //
@@ -357,124 +425,124 @@
 //  _____________________________________________
 
 .form-address-edit.form-vault-edit {
-	.actions-toolbar {
-		clear: both;
-		@media (min-width: @screen__m) {
-			display: flex;
+    .actions-toolbar {
+        clear: both;
+        @media (min-width: @screen__m) {
+            display: flex;
 
-			> .secondary {
-				align-items: center;
-				display: flex;
+            > .secondary {
+                align-items: center;
+                display: flex;
 
-				a.action.back {
-					margin-top: 0;
-					margin-bottom: 0;
-				}
-			}
-		}
+                a.action.back {
+                    margin-top: 0;
+                    margin-bottom: 0;
+                }
+            }
+        }
 
-		> .secondary {
-			a.action.back {
-				display: inline-block;
-			}
-		}
-	}
+        > .secondary {
+            a.action.back {
+                display: inline-block;
+            }
+        }
+    }
 }
 
 .subscribe-pro-vault-card fieldset {
-	float: none !important;
+    float: none !important;
 }
 
 .subscribe-pro-vault-card .legend {
-	clip: auto !important;
-	position: inherit !important;
-	margin: 0 0 20px !important;
-	padding: 0 0 10px !important;
-	box-sizing: border-box !important;
-	font-weight: 300 !important;
-	line-height: 1.2 !important;
-	font-size: 1.8rem !important;
-	border-bottom: 1px solid #c6c6c6 !important;
-	width: 100% !important;
-	height: auto !important;
+    clip: auto !important;
+    position: inherit !important;
+    margin: 0 0 20px !important;
+    padding: 0 0 10px !important;
+    box-sizing: border-box !important;
+    font-weight: 300 !important;
+    line-height: 1.2 !important;
+    font-size: 1.8rem !important;
+    border-bottom: 1px solid #c6c6c6 !important;
+    width: 100% !important;
+    height: auto !important;
 }
 
 .subscribe-pro-vault-card .hosted-control {
-	background: #fff;
-	background-clip: padding-box;
-	border: 1px solid #c2c2c2;
-	border-radius: 1px;
-	font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-	font-size: 14px;
-	height: 32px;
-	line-height: 1.42857143;
-	padding: 0 9px;
-	vertical-align: baseline;
-	box-sizing: border-box;
-	position: relative;
-	width: 225px;
+    background: #fff;
+    background-clip: padding-box;
+    border: 1px solid #c2c2c2;
+    border-radius: 1px;
+    font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    height: 32px;
+    line-height: 1.42857143;
+    padding: 0 9px;
+    vertical-align: baseline;
+    box-sizing: border-box;
+    position: relative;
+    width: 225px;
 }
 
 .subscribe-pro-vault-card .child-control.control-focused input,
 .subscribe-pro-vault-card .hosted-control.hosted-control-focused {
-	border-color: #006bb4;
+    border-color: #006bb4;
 }
 
 .subscribe-pro-vault-card .child-control.control-valid input,
 .subscribe-pro-vault-card .hosted-control.hosted-control-valid {
-	border-color: #006400;
+    border-color: #006400;
 }
 
 .subscribe-pro-vault-card .child-control.control-invalid:not(.control-focused) input,
 .subscribe-pro-vault-card .hosted-control.hosted-control-invalid:not(.hosted-control-focused) {
-	border-color: #e02b27;
+    border-color: #e02b27;
 }
 
 .subscribe-pro-vault-card .control-invalid:not(.control-focused) ~ .error,
 .subscribe-pro-vault-card .hosted-control-invalid:not(.hosted-control-focused) ~ .hosted-error {
-	opacity: 1;
+    opacity: 1;
 }
 
 .subscribe-pro-vault-card .hosted-control.hosted-cid {
-	width: 6rem;
+    width: 6rem;
 }
 
 .subscribe-pro-vault-card .cvv .field-tooltip {
-	left: 7rem;
+    left: 7rem;
 }
 
 .subscribe-pro-vault-card .error,
 .subscribe-pro-vault-card .hosted-error {
-	clear: both;
-	color: #e02b27;
-	font-size: 1.2rem;
-	height: 0;
-	margin-top: 7px;
-	opacity: 0;
+    clear: both;
+    color: #e02b27;
+    font-size: 1.2rem;
+    height: 0;
+    margin-top: 7px;
+    opacity: 0;
 }
 
 .subscribe-pro-vault-card .date-wrap .child-control{
-	float: left;
-	margin-right: 2rem;
+    float: left;
+    margin-right: 2rem;
 }
 
 .subscribe-pro-vault-card .date-wrap input:focus{
-	outline: none;
-	-webkit-box-shadow: none;
-	box-shadow: none;
+    outline: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
 }
 
 .subscribe-pro-vault-card .date-wrap .month{
-	position: relative;
+    position: relative;
 }
 .subscribe-pro-vault-card .date-wrap .month:after{
-	content: '/';
-	display: inline;
-	padding-bottom: inherit;
-	padding-top: inherit;
-	position: absolute;
-	right: -12px;
-	top: 5px;
+    content: '/';
+    display: inline;
+    padding-bottom: inherit;
+    padding-top: inherit;
+    position: absolute;
+    right: -12px;
+    top: 5px;
 }
 
 //
@@ -482,13 +550,13 @@
 //  _____________________________________________
 
 .vault-list-action {
-	margin-top: 15px;
-	margin-bottom: 15px;
+    margin-top: 15px;
+    margin-bottom: 15px;
 
-	@media (min-width: @screen__s) {
-		float: right;
-		margin-top: 10px;
-	}
+    @media (min-width: @screen__s) {
+        float: right;
+        margin-top: 10px;
+    }
 }
 
 //
@@ -499,31 +567,31 @@
 // tooltip from being clipped by modal edge.
 
 @media (min-width: @screen__s) {
-	.modal-content .field .control._with-tooltip .field-tooltip .field-tooltip-content {
-		right: -10px;
-		top: 40px;
-		left: auto;
+    .modal-content .field .control._with-tooltip .field-tooltip .field-tooltip-content {
+        right: -10px;
+        top: 40px;
+        left: auto;
 
-		&:before,
-		&:after {
-			border: 10px solid transparent;
-			height: 0;
-			width: 0;
-			margin-top: -21px;
-			right: 10px;
-			left: auto;
-			top: 0;
-		}
+        &:before,
+        &:after {
+            border: 10px solid transparent;
+            height: 0;
+            width: 0;
+            margin-top: -21px;
+            right: 10px;
+            left: auto;
+            top: 0;
+        }
 
-		&:before {
-			border-bottom-color: #666666;
-		}
+        &:before {
+            border-bottom-color: #666666;
+        }
 
-		&:after {
-			border-bottom-color: #f4f4f4;
-			top: 1px;
-		}
-	}
+        &:after {
+            border-bottom-color: #f4f4f4;
+            top: 1px;
+        }
+    }
 }
 
 //
@@ -531,7 +599,7 @@
 //  _____________________________________________
 
 .fieldset > .field > .control > select.inline {
-	width: auto;
+    width: auto;
 }
 
 
@@ -540,5 +608,5 @@
 //  _____________________________________________
 
 .no-border {
-	border: 0 !important;
+    border: 0 !important;
 }

@@ -49,5 +49,20 @@ class PaymentDetailsHandler implements HandlerInterface
         $payment->setAdditionalInformation(TransactionInterface::CVV_CODE, $transaction->getCvvCode());
         $payment->setAdditionalInformation(TransactionInterface::CVV_MESSAGE, $transaction->getCvvMessage());
         $payment->setAdditionalInformation(TransactionInterface::RESPONSE_MESSAGE, $transaction->getResponseMessage());
+
+        $payment->setAdditionalInformation(TransactionInterface::STATE, $transaction->getState());
+        $payment->setAdditionalInformation(TransactionInterface::TOKEN, $transaction->getToken());
+
+        $gatewaySpecificResponse = $transaction->getGatewaySpecificResponse();
+        if (!empty($gatewaySpecificResponse)) {
+            $payment->setAdditionalInformation(
+                TransactionInterface::GATEWAY_SPECIFIC_RESPONSE,
+                $gatewaySpecificResponse
+            );
+        }
+
+        if ($transaction->getState() === TransactionInterface::STATE_PENDING) {
+            $payment->setIsTransactionPending(true);
+        }
     }
 }

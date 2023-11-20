@@ -28,4 +28,16 @@ class Oauth extends AbstractTool
             'scope' => 'widget',
         ]);
     }
+
+    /**
+     * @param string|int|null $websiteId
+     * @return mixed
+     */
+    public function getSessionAccessToken($websiteId = null): mixed
+    {
+        return $this->getTool($websiteId)->retrieveAccessToken([
+            'scope' => 'session',
+            'grant_type' => 'client_credentials',
+        ]);
+    }
 }

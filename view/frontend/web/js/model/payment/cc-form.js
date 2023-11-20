@@ -8,7 +8,6 @@ define(
         'Swarming_SubscribePro/js/model/payment/credit-card-validation/hosted-field-validator',
         'Swarming_SubscribePro/js/model/payment/credit-card-validation/expiration-fields',
         'Swarming_SubscribePro/js/model/payment/credit-card-validation/hosted-fields',
-        'Swarming_SubscribePro/js/model/payment/spreedly',
         'Magento_Ui/js/modal/alert',
         'mage/translate'
     ],
@@ -20,7 +19,6 @@ define(
         hostedFieldValidator,
         expirationFields,
         hostedFields,
-        spreedly,
         alert,
         $t
     ) {
@@ -34,8 +32,10 @@ define(
                 creditCardExpMonth: '',
                 creditCardExpMonthFocus: null,
                 creditCardExpYearFocus: null,
+                creditCardFirstDigits: null,
+                creditCardLastDigits: null,
                 paymentMethodToken: null,
-                selectedCardType: null
+                selectedCardType: null,
             },
 
             initObservable: function () {
@@ -45,8 +45,10 @@ define(
                         'creditCardExpMonth',
                         'creditCardExpMonthFocus',
                         'creditCardExpYearFocus',
+                        'creditCardFirstDigits',
+                        'creditCardLastDigits',
                         'paymentMethodToken',
-                        'selectedCardType'
+                        'selectedCardType',
                     ]);
 
                 return this;
@@ -62,15 +64,6 @@ define(
 
             getCode: function () {
                 return config.getCode();
-            },
-
-            initSpreedly: function () {
-                spreedly.init(
-                    $.proxy(this.onFieldEvent, this),
-                    $.proxy(this.onPaymentMethod, this),
-                    $.proxy(this.validationPaymentData, this),
-                    $.proxy(this.onErrors, this)
-                );
             },
 
             onFieldEvent: function (name, event, activeElement, inputData) {
@@ -104,12 +97,6 @@ define(
                 this.updateSaveActionAllowed();
             },
 
-            startPlaceOrder: function () {
-                if (this.isValidHostedFields && this.isValidExpDate) {
-                    spreedly.validate();
-                }
-            },
-
             validationPaymentData: function (inputProperties) {
                 if (inputProperties['validNumber'] && (inputProperties['validCvv'] || !config.hasVerification())) {
                     this.tokenizeCreditCard();
@@ -122,10 +109,6 @@ define(
                 if (!inputProperties['validCvv'] && config.hasVerification()) {
                     hostedFields.addClass('cvv', 'invalid');
                 }
-            },
-
-            tokenizeCreditCard: function () {
-                spreedly.tokenizeCreditCard(this.getPaymentData());
             },
 
             getPaymentData: function () {
