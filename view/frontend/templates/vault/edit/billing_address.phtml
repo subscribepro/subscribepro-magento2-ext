@@ -38,11 +38,10 @@
                    title="<?= $block->escapeHtmlAttr(__('Company')) ?>">
         </div>
     </div>
-    <div class="field telephone required">
+    <div class="field telephone">
         <label class="label" for="telephone"><span><?= $block->escapeHtml(__('Phone Number')) ?></span></label>
         <div class="control">
-            <input type="text" id="telephone" name="billing_address[phone]" class="input-text required-entry"
-                   data-validate="{required:true}"
+            <input type="text" id="telephone" name="billing_address[phone]" class="input-text"
                    value="<?= $block->escapeHtmlAttr($block->getTelephone()) ?>"
                    title="<?= $block->escapeHtmlAttr(__('Phone Number')) ?>">
         </div>

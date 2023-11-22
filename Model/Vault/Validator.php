@@ -71,7 +71,6 @@ class Validator
             || empty($addressData[AddressInterface::COUNTRY])
             || (empty($addressData[AddressInterface::REGION]) && $isRegionRequired)
             || (empty($addressData[AddressInterface::POSTCODE]) && !$isZipCodeOptional)
-            || empty($addressData[AddressInterface::PHONE])
         ) {
             $isValid = false;
         }
