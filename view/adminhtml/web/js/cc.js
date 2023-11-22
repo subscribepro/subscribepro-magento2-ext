@@ -110,12 +110,36 @@ define(
                 this.$orderForm.on('submitOrder.subscribe_pro', this.submitOrder.bind(this));
             },
 
+            validationCreditCardExpMonth: function (isFocused) {
+                this.isValidExpDate = expirationFieldValidator(
+                    isFocused,
+                    'month',
+                    $(this.getSelector('expiration')).val(),
+                    $(this.getSelector('expiration_yr')).val()
+                );
+            },
+
+            validationCreditCardExpYear: function (isFocused) {
+                this.isValidExpDate = expirationFieldValidator(
+                    isFocused,
+                    'year',
+                    $(this.getSelector('expiration')).val(),
+                    $(this.getSelector('expiration_yr')).val()
+                );
+            },
+
             submitOrder: function () {
+                this.validationCreditCardExpMonth();
+                this.validationCreditCardExpYear();
                 this.$orderForm.validate().form();
                 this.$orderForm.trigger('afterValidate.beforeSubmit');
                 $('body').trigger('processStop');
 
                 if (this.$orderForm.validate().errorList.length) {
+                    return false;
+                }
+                if (!this.isValidExpDate) {
+                    alert({content: $.mage.__('Enter valid payment information.')});
                     return false;
                 }
                 $('body').trigger('processStart');
