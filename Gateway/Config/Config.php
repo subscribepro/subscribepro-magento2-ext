@@ -40,7 +40,7 @@ class Config extends \Magento\Payment\Gateway\Config\Config
      */
     public function isWalletAuthorizationActive($storeId = null)
     {
-        return $this->getValue(self::KEY_WALLET_AUTHORIZATION_ACTIVE, $storeId);
+        return (bool)$this->getValue(self::KEY_WALLET_AUTHORIZATION_ACTIVE, $storeId);
     }
 
     /**

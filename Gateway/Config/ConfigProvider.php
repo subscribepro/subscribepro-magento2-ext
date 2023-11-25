@@ -95,6 +95,7 @@ class ConfigProvider
                 'vaultCode' => self::VAULT_CODE,
                 'isActive' => $this->gatewayConfig->isActive($storeId),
                 'isThreeDSActive' => $this->gatewayConfig->isThreeDSActive($storeId),
+                'isWalletAuthorizationActive' => $this->gatewayConfig->isWalletAuthorizationActive($storeId),
                 'sessionAccessToken' => $this->oauth->getSessionAccessToken($storeId),
                 'browserSize' => $this->gatewayConfig->getBrowserSize($storeId),
                 'acceptHeader' => $this->gatewayConfig->getAcceptHeader($storeId),
