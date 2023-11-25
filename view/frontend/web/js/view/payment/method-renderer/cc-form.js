@@ -47,28 +47,30 @@ define(
             },
 
             initPayment: function () {
-                console.log(config)
                 this.initPaymentFields();
                 this.redirectAfterPlaceOrder = false;
             },
             startPlaceOrder: function () {
                 $('body').trigger('processStart');
                 this.tokenizeCard();
-                $('body').trigger('processStop');
             },
 
             initPaymentFields: function () {
                 PaymentFields.on('tokenize', (data) => {
+                    $('body').trigger('processStop');
                     if (data.isSuccessful === true) {
                         this.selectedCardType(data.creditCard.cardType)
                         this.creditCardFirstDigits(data.creditCard.cardIssuerIdentificationNumber.substring(0, 4))
                         this.creditCardLastDigits(data.creditCard.cardLastDigits)
                         this.paymentMethodToken(data.tokenString);
-                        placeOrder(this.getData())
+                        placeOrder(this.getData()).done(function () {
+                            this.onOrderSuccess();
+                        }.bind(this));
                     }
                 });
 
                 PaymentFields.on('error', (data) => {
+                    $('body').trigger('processStop');
                     console.log(`'error' event received.`);
                     console.log(data);
                 });
@@ -79,17 +81,20 @@ define(
                 });
 
                 PaymentFields.on('challengeShown', (data) => {
+                    $('body').trigger('processStop');
                     console.log(`'challengeShown' event received.`);
                     console.log(data);
                 });
 
                 PaymentFields.on('challengeHidden', (data) => {
+                    $('body').trigger('processStop');
                     console.log(`'challengeHidden' event received.`);
                     console.log(data);
                 });
                 let authConfig = config.getConfig().sessionAccessToken;
+                let apiBaseUrl = config.getConfig().apiBaseUrl;
                 PaymentFields.init({
-                    apiBaseUrl: 'https://api.subscribepro.com/',
+                    apiBaseUrl: apiBaseUrl,
                     oauthApiToken: authConfig.access_token,
                     spVaultEnvironmentId: authConfig.sp_vault_environment_id,
                     paymentMethodType: 'credit_card',

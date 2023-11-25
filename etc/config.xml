@@ -30,17 +30,18 @@
                 <webhook_secret></webhook_secret>
                 <enable_debugging>0</enable_debugging>
                 <enable_hosted_my_subscriptions>0</enable_hosted_my_subscriptions>
-                <hosted_my_subscriptions_url>https://hosted.subscribepro.com/my-subscriptions/widget-my-subscriptions-1.1.1.js</hosted_my_subscriptions_url>
+                <enable_hosted_my_subscriptions>1</enable_hosted_my_subscriptions>
+                <hosted_my_subscriptions_url>https://hosted.subscribepro.com/my-subscriptions/widget-my-subscriptions-1.16.0.js</hosted_my_subscriptions_url>
                 <custom_json_hosted_my_subscriptions>{
-    "version": 2,
-    "themeName":"base",
-    "sections": {
-        "quantity": {
-            "show": true,
-            "allowEdit": true,
-            "labelText": "Qty"
-        }
-    }
+                    "version": 2,
+                    "themeName":"m2-demo",
+                    "sections": {
+                        "quantity": {
+                            "show": true,
+                            "allowEdit": true,
+                            "labelText": "Qty"
+                        }
+                    }
 }</custom_json_hosted_my_subscriptions>
             </advanced>
             <shipperhq>
