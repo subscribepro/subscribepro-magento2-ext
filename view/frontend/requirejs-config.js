@@ -6,6 +6,9 @@ var config = {
             },
             'Magento_Checkout/js/action/place-order': {
                 'Swarming_SubscribePro/js/action/checkout/place-order-mixin': true
+            },
+            'Magento_Checkout/js/model/place-order': {
+                'Swarming_SubscribePro/js/model/checkout/place-order-mixin': true
             }
         }
     }
