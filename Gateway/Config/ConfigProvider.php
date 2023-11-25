@@ -93,6 +93,7 @@ class ConfigProvider
                 $websiteId
             );
             $config = [
+                'apiBaseUrl' => $this->generalConfig->getBaseUrl() ? $this->generalConfig->getBaseUrl() . '/' : '',
                 'vaultCode' => self::VAULT_CODE,
                 'isActive' => $this->gatewayConfig->isActive($storeId),
                 'isThreeDSActive' => $this->gatewayConfig->isThreeDSActive($storeId),

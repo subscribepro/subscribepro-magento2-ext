@@ -2,10 +2,19 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
         <referenceContainer name="page.main.title">
-            <block class="Swarming\SubscribePro\Block\Vault\AddButton" name="vault.cards.add_button" template="Swarming_SubscribePro::vault/add_button.phtml" before="vault.cards.list" />
+            <block class="Swarming\SubscribePro\Block\Vault\AddButton"
+                   name="vault.cards.add_button"
+                   template="Swarming_SubscribePro::vault/add_button.phtml"
+                   before="vault.cards.list"
+                   ifconfig="payment/subscribe_pro/active"
+            />
         </referenceContainer>
         <referenceBlock name="vault.cards.list">
-            <block class="Swarming\SubscribePro\Block\Vault\CardRenderer" name="subscribepro.card.renderer" template="Swarming_SubscribePro::vault/card_render.phtml" />
+            <block class="Swarming\SubscribePro\Block\Vault\CardRenderer"
+                   name="subscribepro.card.renderer"
+                   template="Swarming_SubscribePro::vault/card_render.phtml"
+                   ifconfig="payment/subscribe_pro/active"
+            />
         </referenceBlock>
     </body>
 </page>

@@ -54,6 +54,9 @@ define(
                         this.creditCardLastDigits(data.creditCard.cardLastDigits)
                         this.paymentMethodToken(data.tokenString);
                         this.submitPayment();
+                    } else {
+                        $.cookieStorage.set('mage-messages', [{'type': 'error', 'text': 'An error occurred while validating the card.'}]);
+                        window.location.href = urlBuilder.build('subscribepro/cards/new');
                     }
                 });
 
@@ -72,7 +75,6 @@ define(
                     console.log(`'challengeShown' event received.`);
                     console.log(data);
                 });
-
                 PaymentFields.on('challengeHidden', (data) => {
                     $('body').trigger('processStop');
                     console.log(`'challengeHidden' event received.`);
@@ -158,6 +160,8 @@ define(
                 this.isLoading(false);
                 if (response.state === 'succeeded') {
                     this.onOrderSuccess();
+                } else if (response.state === "failed") {
+                    this.onOrderFailed();
                 }
             },
 
@@ -165,6 +169,10 @@ define(
                 $(window).scrollTop(0);
                 $.cookieStorage.set('mage-messages', [{'type': 'success', 'text': 'The card was successfully saved.'}]);
                 window.location.href = urlBuilder.build('vault/cards/listaction');
+            },
+            onOrderFailed: function () {
+                $(window).scrollTop(0);
+                window.location.href = urlBuilder.build('subscribepro/cards/new');
             }
         });
     }
