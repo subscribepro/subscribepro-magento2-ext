@@ -12,9 +12,10 @@ define(
         'Magento_Checkout/js/action/place-order',
         'paymentFields',
         'Magento_Checkout/js/action/redirect-on-success',
+        'Magento_Ui/js/model/messageList',
         'mage/translate'
     ],
-    function ($, Component, CcForm, config, getOrderStatus, quote, customer,placeOrder, PaymentFields, redirectOnSuccessAction, $t) {
+    function ($, Component, CcForm, config, getOrderStatus, quote, customer,placeOrder, PaymentFields, redirectOnSuccessAction, messageList, $t) {
         'use strict';
 
         return Component.extend(CcForm).extend({
@@ -69,6 +70,14 @@ define(
                         placeOrder(this.getData()).done(function () {
                             this.onOrderSuccess();
                         }.bind(this));
+                    } else {
+                        if (data.isThreeDsAuthenticationSuccessful === false) {
+                            let error = {
+                                message: $t('Transaction has been declined. Please try again later.')
+                            };
+                            $("html, body").animate({ scrollTop: 0 }, 500);
+                            messageList.addErrorMessage(error);
+                        }
                     }
                 });
 
