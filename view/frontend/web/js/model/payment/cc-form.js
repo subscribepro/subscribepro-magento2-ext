@@ -26,7 +26,8 @@ define(
 
         return {
             defaults: {
-                isValidHostedFields: false,
+                isValidNumber: false,
+                isValidCvv: false,
                 isValidExpDate: false,
                 creditCardExpYear: '',
                 creditCardExpMonth: '',
@@ -36,11 +37,14 @@ define(
                 creditCardLastDigits: null,
                 paymentMethodToken: null,
                 selectedCardType: null,
+                ccValidationData: null,
             },
 
             initObservable: function () {
                 this._super()
                     .observe([
+                        'isValidNumber',
+                        'isValidCvv',
                         'creditCardExpYear',
                         'creditCardExpMonth',
                         'creditCardExpMonthFocus',
@@ -49,6 +53,7 @@ define(
                         'creditCardLastDigits',
                         'paymentMethodToken',
                         'selectedCardType',
+                        'ccValidationData'
                     ]);
 
                 return this;
@@ -77,37 +82,61 @@ define(
                 this.updateSaveActionAllowed();
             },
 
+            validatePayment: function () {
+                this.validationPaymentData('number');
+                this.validationPaymentData('cvv');
+                this.validationCreditCardExpMonth(false);
+                this.validationCreditCardExpYear(false);
+            },
+
             validationCreditCardExpMonth: function (isFocused) {
-                this.isValidExpDate = expirationFieldValidator(
-                    isFocused,
-                    'month',
-                    this.creditCardExpMonth(),
-                    this.creditCardExpYear()
-                );
+                if (!this.creditCardExpMonth()) {
+                    expirationFields.addClass('month', 'invalid');
+                } else {
+                    this.isValidExpDate = expirationFieldValidator(
+                        isFocused,
+                        'month',
+                        this.creditCardExpMonth(),
+                        this.creditCardExpYear()
+                    );
+                }
+
                 this.updateSaveActionAllowed();
             },
 
             validationCreditCardExpYear: function (isFocused) {
-                this.isValidExpDate = expirationFieldValidator(
-                    isFocused,
-                    'year',
-                    this.creditCardExpMonth(),
-                    this.creditCardExpYear()
-                );
+                if (!this.creditCardExpYear()) {
+                    expirationFields.addClass('year', 'invalid');
+                } else {
+                    this.isValidExpDate = expirationFieldValidator(
+                        isFocused,
+                        'year',
+                        this.creditCardExpMonth(),
+                        this.creditCardExpYear()
+                    );
+                }
                 this.updateSaveActionAllowed();
             },
 
-            validationPaymentData: function (inputProperties) {
-                if (inputProperties['validNumber'] && (inputProperties['validCvv'] || !config.hasVerification())) {
-                    this.tokenizeCreditCard();
+            validationPaymentData: function (input) {
+                if (input === 'number') {
+                    if (!this.ccValidationData() || this.ccValidationData().isNumberValid === false) {
+                        this.isValidNumber(false);
+                        hostedFields.addClass('number', 'invalid');
+                    } else {
+                        this.isValidNumber(true);
+                        hostedFields.removeClass('number', 'invalid');
+                    }
                 }
 
-                if (!inputProperties['validNumber']) {
-                    hostedFields.addClass('number', 'invalid');
-                }
-
-                if (!inputProperties['validCvv'] && config.hasVerification()) {
-                    hostedFields.addClass('cvv', 'invalid');
+                if (input === 'cvv') {
+                    if (!this.ccValidationData() || this.ccValidationData().isCvvValid === false) {
+                        this.isValidCvv(false);
+                        hostedFields.addClass('cvv', 'invalid');
+                    } else {
+                        this.isValidCvv(true);
+                        hostedFields.removeClass('cvv', 'invalid');
+                    }
                 }
             },
 
