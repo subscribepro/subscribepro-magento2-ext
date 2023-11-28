@@ -46,6 +46,9 @@ define(
                 creditCardLastDigits: null,
                 paymentMethodToken: null,
                 selectedCardType: null,
+                ccValidationData: null,
+                isValidNumber: false,
+                isValidCvv: false,
                 imports: {
                     onActiveChange: 'active'
                 }
@@ -65,6 +68,9 @@ define(
                         'creditCardLastDigits',
                         'paymentMethodToken',
                         'selectedCardType',
+                        'ccValidationData',
+                        'isValidNumber',
+                        'isValidCvv',
                     ]);
 
                 this.$orderForm.off('changePaymentMethod.' + config.getCode())
@@ -73,9 +79,9 @@ define(
                     self.initPaymentFields();
                 });
 
-                this.$orderForm.on('beforeSubmit', function () {
-                    this.addAdditionalData();
-                }.bind(this))
+                this.$orderForm
+                    .on('focusout', this.getSelector('expiration'), $.proxy(this.validationCreditCardExpMonth, this, false))
+                    .on('focusout', this.getSelector('expiration_yr'), $.proxy(this.validationCreditCardExpYear, this, false));
 
                 return this;
             },
@@ -110,40 +116,78 @@ define(
                 this.$orderForm.on('submitOrder.subscribe_pro', this.submitOrder.bind(this));
             },
 
+            validatePayment: function () {
+                this.validationPaymentData('number');
+                this.validationPaymentData('cvv');
+                this.validationCreditCardExpMonth(false);
+                this.validationCreditCardExpYear(false);
+            },
+
             validationCreditCardExpMonth: function (isFocused) {
-                this.isValidExpDate = expirationFieldValidator(
-                    isFocused,
-                    'month',
-                    $(this.getSelector('expiration')).val(),
-                    $(this.getSelector('expiration_yr')).val()
-                );
+                if (!$(this.getSelector('expiration')).val()) {
+                    expirationFields.addClass('month', 'invalid');
+                } else {
+                    this.isValidExpDate = expirationFieldValidator(
+                        isFocused,
+                        'month',
+                        $(this.getSelector('expiration')).val(),
+                        $(this.getSelector('expiration_yr')).val()
+                    );
+                }
             },
 
             validationCreditCardExpYear: function (isFocused) {
-                this.isValidExpDate = expirationFieldValidator(
-                    isFocused,
-                    'year',
-                    $(this.getSelector('expiration')).val(),
-                    $(this.getSelector('expiration_yr')).val()
-                );
+                if (!$(this.getSelector('expiration_yr')).val()) {
+                    expirationFields.addClass('year', 'invalid');
+                } else {
+                    this.isValidExpDate = expirationFieldValidator(
+                        isFocused,
+                        'year',
+                        $(this.getSelector('expiration')).val(),
+                        $(this.getSelector('expiration_yr')).val()
+                    );
+                }
             },
 
+            validationPaymentData: function (input) {
+                if (input === 'number') {
+                    if (!this.ccValidationData() || this.ccValidationData().isNumberValid === false) {
+                        this.isValidNumber(false);
+                        hostedFields.addClass('number', 'invalid');
+                    } else {
+                        this.isValidNumber(true);
+                        hostedFields.removeClass('number', 'invalid');
+                    }
+                }
+
+                if (input === 'cvv') {
+                    if (!this.ccValidationData() || this.ccValidationData().isCvvValid === false) {
+                        this.isValidCvv(false);
+                        hostedFields.addClass('cvv', 'invalid');
+                    } else {
+                        this.isValidCvv(true);
+                        hostedFields.removeClass('cvv', 'invalid');
+                    }
+                }
+            },
+
+
             submitOrder: function () {
-                this.validationCreditCardExpMonth();
-                this.validationCreditCardExpYear();
+                this.validatePayment();
                 this.$orderForm.validate().form();
                 this.$orderForm.trigger('afterValidate.beforeSubmit');
                 $('body').trigger('processStop');
-
                 if (this.$orderForm.validate().errorList.length) {
                     return false;
                 }
-                if (!this.isValidExpDate) {
+                if (!this.isValidNumber() || !this.isValidCvv() || !this.isValidExpDate) {
                     alert({content: $.mage.__('Enter valid payment information.')});
                     return false;
                 }
-                $('body').trigger('processStart');
-                this.tokenizeCard();
+                if (this.isValidNumber() && this.isValidCvv() && this.isValidExpDate) {
+                    $('body').trigger('processStart');
+                    this.tokenizeCard();
+                }
             },
 
             initPaymentFields: function () {
@@ -165,6 +209,9 @@ define(
                 });
 
                 PaymentFields.on('inputEvent', (data) => {
+                    if (data.eventType === 'blur') {
+                        this.validationPaymentData(data.fieldCode);
+                    }
                     $('body').trigger('processStop');
                     console.log(data);
                     console.log(`'inputEvent' event received.`);
@@ -180,6 +227,18 @@ define(
                     $('body').trigger('processStop');
                     console.log(`'challengeHidden' event received.`);
                     console.log(data);
+                });
+                PaymentFields.on('validationResultChanged', (data) => {
+                    if (data !== undefined) {
+                        this.ccValidationData(data.validationResult);
+                    }
+                    if (data.validationResult.cardType !== undefined) {
+                        if (config.getCcTypesMapper()[data.validationResult.cardType] !== undefined) {
+                            this.selectedCardType(config.getCcTypesMapper()[data.validationResult.cardType]);
+                        }
+                    }
+                    console.log(data);
+                    console.log(`'validationResultChanged' event received.`);
                 });
                 let authConfig = config.getConfig().sessionAccessToken;
                 PaymentFields.init({
