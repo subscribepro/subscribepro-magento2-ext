@@ -2,6 +2,9 @@
 
 namespace Swarming\SubscribePro\Model\Vault;
 
+use Magento\Customer\Block\Widget\Telephone;
+use Magento\Directory\Helper\Data;
+use Magento\Directory\Model\RegionFactory;
 use Magento\Framework\Exception\LocalizedException;
 use SubscribePro\Service\Address\AddressInterface;
 use SubscribePro\Service\PaymentProfile\PaymentProfileInterface;
@@ -9,31 +12,39 @@ use SubscribePro\Service\PaymentProfile\PaymentProfileInterface;
 class Validator
 {
     /**
-     * @var \Magento\Directory\Model\RegionFactory
+     * @var RegionFactory
      */
     protected $regionFactory;
 
     /**
-     * @var \Magento\Directory\Helper\Data
+     * @var Data
      */
     protected $directoryData;
 
     /**
-     * @param \Magento\Directory\Model\RegionFactory $regionFactory
-     * @param \Magento\Directory\Helper\Data $directoryData
+     * @var Telephone
+     */
+    private Telephone $telephoneWidget;
+
+    /**
+     * @param RegionFactory $regionFactory
+     * @param Data $directoryData
+     * @param Telephone $telephoneWidget
      */
     public function __construct(
-        \Magento\Directory\Model\RegionFactory $regionFactory,
-        \Magento\Directory\Helper\Data $directoryData
+        RegionFactory $regionFactory,
+        Data $directoryData,
+        Telephone $telephoneWidget
     ) {
         $this->regionFactory = $regionFactory;
         $this->directoryData = $directoryData;
+        $this->telephoneWidget = $telephoneWidget;
     }
 
     /**
      * @param array $profileData
      * @return array
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws LocalizedException
      */
     public function validate(array $profileData)
     {
@@ -64,6 +75,7 @@ class Validator
         $isValid = true;
         $isRegionRequired = $this->directoryData->isRegionRequired($addressData[AddressInterface::COUNTRY]);
         $isZipCodeOptional = $this->directoryData->isZipCodeOptional($addressData[AddressInterface::COUNTRY]);
+        $isPhoneRequired = $this->telephoneWidget->isRequired();
         if (empty($addressData[AddressInterface::FIRST_NAME])
             || empty($addressData[AddressInterface::LAST_NAME])
             || empty($addressData[AddressInterface::STREET1])
@@ -71,6 +83,7 @@ class Validator
             || empty($addressData[AddressInterface::COUNTRY])
             || (empty($addressData[AddressInterface::REGION]) && $isRegionRequired)
             || (empty($addressData[AddressInterface::POSTCODE]) && !$isZipCodeOptional)
+            || ($isPhoneRequired && empty($addressData[AddressInterface::PHONE]))
         ) {
             $isValid = false;
         }
