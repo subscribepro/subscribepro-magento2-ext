@@ -71,13 +71,11 @@ define(
                             this.onOrderSuccess();
                         }.bind(this));
                     } else {
-                        if (data.isThreeDsAuthenticationSuccessful === false) {
-                            let error = {
-                                message: $t('Transaction has been declined. Please try again later.')
-                            };
-                            $("html, body").animate({ scrollTop: 0 }, 500);
-                            messageList.addErrorMessage(error);
-                        }
+                        let error = {
+                            message: $t('Transaction has been declined. Please try again later.')
+                        };
+                        $("html, body").animate({ scrollTop: 0 }, 500);
+                        messageList.addErrorMessage(error);
                     }
                 });
 
