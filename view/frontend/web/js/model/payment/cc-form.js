@@ -8,7 +8,6 @@ define(
         'Swarming_SubscribePro/js/model/payment/credit-card-validation/hosted-field-validator',
         'Swarming_SubscribePro/js/model/payment/credit-card-validation/expiration-fields',
         'Swarming_SubscribePro/js/model/payment/credit-card-validation/hosted-fields',
-        'Swarming_SubscribePro/js/model/payment/spreedly',
         'Magento_Ui/js/modal/alert',
         'mage/translate'
     ],
@@ -20,7 +19,6 @@ define(
         hostedFieldValidator,
         expirationFields,
         hostedFields,
-        spreedly,
         alert,
         $t
     ) {
@@ -28,25 +26,34 @@ define(
 
         return {
             defaults: {
-                isValidHostedFields: false,
+                isValidNumber: false,
+                isValidCvv: false,
                 isValidExpDate: false,
                 creditCardExpYear: '',
                 creditCardExpMonth: '',
                 creditCardExpMonthFocus: null,
                 creditCardExpYearFocus: null,
+                creditCardFirstDigits: null,
+                creditCardLastDigits: null,
                 paymentMethodToken: null,
-                selectedCardType: null
+                selectedCardType: null,
+                ccValidationData: null,
             },
 
             initObservable: function () {
                 this._super()
                     .observe([
+                        'isValidNumber',
+                        'isValidCvv',
                         'creditCardExpYear',
                         'creditCardExpMonth',
                         'creditCardExpMonthFocus',
                         'creditCardExpYearFocus',
+                        'creditCardFirstDigits',
+                        'creditCardLastDigits',
                         'paymentMethodToken',
-                        'selectedCardType'
+                        'selectedCardType',
+                        'ccValidationData'
                     ]);
 
                 return this;
@@ -64,15 +71,6 @@ define(
                 return config.getCode();
             },
 
-            initSpreedly: function () {
-                spreedly.init(
-                    $.proxy(this.onFieldEvent, this),
-                    $.proxy(this.onPaymentMethod, this),
-                    $.proxy(this.validationPaymentData, this),
-                    $.proxy(this.onErrors, this)
-                );
-            },
-
             onFieldEvent: function (name, event, activeElement, inputData) {
                 var hostedField = hostedFieldValidator(name, event, inputData);
                 if (hostedField.isValid !== undefined) {
@@ -84,48 +82,62 @@ define(
                 this.updateSaveActionAllowed();
             },
 
+            validatePayment: function () {
+                this.validationPaymentData('number');
+                this.validationPaymentData('cvv');
+                this.validationCreditCardExpMonth(false);
+                this.validationCreditCardExpYear(false);
+            },
+
             validationCreditCardExpMonth: function (isFocused) {
-                this.isValidExpDate = expirationFieldValidator(
-                    isFocused,
-                    'month',
-                    this.creditCardExpMonth(),
-                    this.creditCardExpYear()
-                );
+                if (!this.creditCardExpMonth()) {
+                    expirationFields.addClass('month', 'invalid');
+                } else {
+                    this.isValidExpDate = expirationFieldValidator(
+                        isFocused,
+                        'month',
+                        this.creditCardExpMonth(),
+                        this.creditCardExpYear()
+                    );
+                }
+
                 this.updateSaveActionAllowed();
             },
 
             validationCreditCardExpYear: function (isFocused) {
-                this.isValidExpDate = expirationFieldValidator(
-                    isFocused,
-                    'year',
-                    this.creditCardExpMonth(),
-                    this.creditCardExpYear()
-                );
+                if (!this.creditCardExpYear()) {
+                    expirationFields.addClass('year', 'invalid');
+                } else {
+                    this.isValidExpDate = expirationFieldValidator(
+                        isFocused,
+                        'year',
+                        this.creditCardExpMonth(),
+                        this.creditCardExpYear()
+                    );
+                }
                 this.updateSaveActionAllowed();
             },
 
-            startPlaceOrder: function () {
-                if (this.isValidHostedFields && this.isValidExpDate) {
-                    spreedly.validate();
-                }
-            },
-
-            validationPaymentData: function (inputProperties) {
-                if (inputProperties['validNumber'] && (inputProperties['validCvv'] || !config.hasVerification())) {
-                    this.tokenizeCreditCard();
-                }
-
-                if (!inputProperties['validNumber']) {
-                    hostedFields.addClass('number', 'invalid');
+            validationPaymentData: function (input) {
+                if (input === 'number') {
+                    if (!this.ccValidationData() || this.ccValidationData().isNumberValid === false) {
+                        this.isValidNumber(false);
+                        hostedFields.addClass('number', 'invalid');
+                    } else {
+                        this.isValidNumber(true);
+                        hostedFields.removeClass('number', 'invalid');
+                    }
                 }
 
-                if (!inputProperties['validCvv'] && config.hasVerification()) {
-                    hostedFields.addClass('cvv', 'invalid');
+                if (input === 'cvv') {
+                    if (!this.ccValidationData() || this.ccValidationData().isCvvValid === false) {
+                        this.isValidCvv(false);
+                        hostedFields.addClass('cvv', 'invalid');
+                    } else {
+                        this.isValidCvv(true);
+                        hostedFields.removeClass('cvv', 'invalid');
+                    }
                 }
-            },
-
-            tokenizeCreditCard: function () {
-                spreedly.tokenizeCreditCard(this.getPaymentData());
             },
 
             getPaymentData: function () {

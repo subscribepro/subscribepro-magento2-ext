@@ -284,6 +284,11 @@
                     <source_model>Swarming\SubscribePro\Model\Config\Source\PaymentAction</source_model>
                 </field>
 
+                <field id="three_ds_active" translate="label" type="select" sortOrder="45" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Enable 3DS2</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
                 <field id="wallet_authorization_active" translate="label" type="select" sortOrder="47" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Enable Authorization on Wallet</label>
                     <comment>Enable or disable authorization of new cards added by customer on wallet page</comment>

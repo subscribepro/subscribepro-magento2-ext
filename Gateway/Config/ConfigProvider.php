@@ -3,6 +3,7 @@
 namespace Swarming\SubscribePro\Gateway\Config;
 
 use SubscribePro\Tools\Config as PlatformConfig;
+use Swarming\SubscribePro\Platform\Tool\Oauth;
 
 class ConfigProvider
 {
@@ -16,7 +17,7 @@ class ConfigProvider
     protected $generalConfig;
 
     /**
-     * @var \Swarming\SubscribePro\Gateway\Config\Config
+     * @var Config
      */
     protected $gatewayConfig;
 
@@ -41,20 +42,27 @@ class ConfigProvider
     protected $storeManager;
 
     /**
+     * @var Oauth
+     */
+    protected $oauth;
+
+    /**
      * @param \Swarming\SubscribePro\Model\Config\General $generalConfig
-     * @param \Swarming\SubscribePro\Gateway\Config\Config $gatewayConfig
+     * @param Config $gatewayConfig
      * @param \Magento\Payment\Model\CcConfig $ccConfig
      * @param \Magento\Payment\Model\CcConfigProvider $ccConfigProvider
      * @param \Swarming\SubscribePro\Platform\Tool\Config $platformConfigTool
+     * @param \Swarming\SubscribePro\Platform\Tool\Oauth $oauth
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      */
     public function __construct(
         \Swarming\SubscribePro\Model\Config\General $generalConfig,
-        \Swarming\SubscribePro\Gateway\Config\Config $gatewayConfig,
-        \Magento\Payment\Model\CcConfig $ccConfig,
-        \Magento\Payment\Model\CcConfigProvider $ccConfigProvider,
+        Config                                      $gatewayConfig,
+        \Magento\Payment\Model\CcConfig             $ccConfig,
+        \Magento\Payment\Model\CcConfigProvider     $ccConfigProvider,
         \Swarming\SubscribePro\Platform\Tool\Config $platformConfigTool,
-        \Magento\Store\Model\StoreManagerInterface $storeManager
+        \Swarming\SubscribePro\Platform\Tool\Oauth  $oauth,
+        \Magento\Store\Model\StoreManagerInterface  $storeManager
     ) {
         $this->generalConfig = $generalConfig;
         $this->gatewayConfig = $gatewayConfig;
@@ -62,6 +70,7 @@ class ConfigProvider
         $this->ccConfigProvider = $ccConfigProvider;
         $this->platformConfigTool = $platformConfigTool;
         $this->storeManager = $storeManager;
+        $this->oauth = $oauth;
     }
 
     /**
@@ -82,11 +91,16 @@ class ConfigProvider
                 $websiteId
             );
             $config = [
+                'apiBaseUrl' => $this->generalConfig->getBaseUrl() ? $this->generalConfig->getBaseUrl() . '/' : '',
                 'vaultCode' => self::VAULT_CODE,
                 'isActive' => $this->gatewayConfig->isActive($storeId),
+                'isThreeDSActive' => $this->gatewayConfig->isThreeDSActive($storeId),
+                'isWalletAuthorizationActive' => $this->gatewayConfig->isWalletAuthorizationActive($storeId),
+                'sessionAccessToken' => $this->oauth->getSessionAccessToken($storeId),
                 'browserSize' => $this->gatewayConfig->getBrowserSize($storeId),
                 'acceptHeader' => $this->gatewayConfig->getAcceptHeader($storeId),
                 'environmentKey' => $environmentKey,
+                Config::KEY_WALLET_AUTHORIZATION_AMOUNT => $this->gatewayConfig->getWalletAuthorizationAmount($storeId),
                 'availableCardTypes' => $this->getCcAvailableTypes($storeId),
                 'ccTypesMapper' => $this->gatewayConfig->getCcTypesMapper($storeId),
                 'hasVerification' => $this->gatewayConfig->hasVerification($storeId),
