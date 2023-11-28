@@ -67,8 +67,8 @@
                 <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
                 <can_cancel>1</can_cancel>
                 <can_void>1</can_void>
-                <cctypes>AE,VI,MC,DI,JCB,DN</cctypes>
-                <cctypes_mapper><![CDATA[{"american_express":"AE","visa":"VI","master":"MC","discover":"DI","jcb":"JCB","diners_club":"DN"}]]></cctypes_mapper>
+                <cctypes>AE,VI,MC,DI</cctypes>
+                <cctypes_mapper><![CDATA[{"american_express":"AE","visa":"VI","master":"MC","discover":"DI"}]]></cctypes_mapper>
                 <useccv>1</useccv>
                 <payment_action>authorize</payment_action>
                 <three_ds_active>0</three_ds_active>

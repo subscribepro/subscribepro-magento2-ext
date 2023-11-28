@@ -51,8 +51,11 @@ define(
                 this.redirectAfterPlaceOrder = false;
             },
             startPlaceOrder: function () {
-                $('body').trigger('processStart');
-                this.tokenizeCard();
+                this.validatePayment();
+                if (this.isValidNumber() && this.isValidCvv() && this.isValidExpDate) {
+                    $('body').trigger('processStart');
+                    this.tokenizeCard();
+                }
             },
 
             initPaymentFields: function () {
@@ -76,8 +79,24 @@ define(
                 });
 
                 PaymentFields.on('inputEvent', (data) => {
+                    if (data.eventType === 'blur') {
+                        this.validationPaymentData(data.fieldCode);
+                    }
                     console.log(data);
                     console.log(`'inputEvent' event received.`);
+                });
+
+                PaymentFields.on('validationResultChanged', (data) => {
+                    if (data !== undefined) {
+                        this.ccValidationData(data.validationResult);
+                    }
+                    if (data.validationResult.cardType !== undefined) {
+                        if (config.getCcTypesMapper()[data.validationResult.cardType] !== undefined) {
+                            this.selectedCardType(config.getCcTypesMapper()[data.validationResult.cardType]);
+                        }
+                    }
+                    console.log(data);
+                    console.log(`'validationResultChanged' event received.`);
                 });
 
                 PaymentFields.on('challengeShown', (data) => {
