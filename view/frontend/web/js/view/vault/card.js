@@ -81,8 +81,9 @@ define(
                     console.log(data);
                 });
                 let authConfig = config.getConfig().sessionAccessToken;
+                let apiBaseUrl = config.getConfig().apiBaseUrl;
                 PaymentFields.init({
-                    apiBaseUrl: 'https://api.subscribepro.com/',
+                    apiBaseUrl: apiBaseUrl,
                     oauthApiToken: authConfig.access_token,
                     spVaultEnvironmentId: authConfig.sp_vault_environment_id,
                     paymentMethodType: 'credit_card',
