@@ -6,6 +6,7 @@ use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\DataObject;
 use Magento\Framework\Exception\LocalizedException;
 use SubscribePro\Service\PaymentProfile\PaymentProfileInterface;
+use SubscribePro\Service\Transaction\TransactionInterface;
 
 class Save extends \Magento\Customer\Controller\AbstractAccount
 {
@@ -40,9 +41,14 @@ class Save extends \Magento\Customer\Controller\AbstractAccount
     protected $vaultFormValidator;
 
     /**
-     * @var \Swarming\SubscribePro\Gateway\Command\VerifyCommand
+     * @var \Swarming\SubscribePro\Gateway\Command\AuthorizeCommand
      */
-    protected $walletVerifyCommand;
+    protected $walletAuthorizeCommand;
+
+    /**
+     * @var \Swarming\SubscribePro\Gateway\Command\VoidCommand
+     */
+    protected $walletVoidCommand;
 
     /**
      * @var \Magento\Store\Model\StoreManagerInterface
@@ -57,7 +63,8 @@ class Save extends \Magento\Customer\Controller\AbstractAccount
      * @param \Swarming\SubscribePro\Gateway\Config\VaultConfig $platformVaultConfig
      * @param \Swarming\SubscribePro\Gateway\Config\Config $gatewayConfig
      * @param \Swarming\SubscribePro\Model\Vault\Validator $vaultFormValidator
-     * @param \Swarming\SubscribePro\Gateway\Command\VerifyCommand $walletVerifyCommand
+     * @param \Swarming\SubscribePro\Gateway\Command\AuthorizeCommand $walletAuthorizeCommand
+     * @param \Swarming\SubscribePro\Gateway\Command\VoidCommand $walletVoidCommand
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      */
     public function __construct(
@@ -68,7 +75,8 @@ class Save extends \Magento\Customer\Controller\AbstractAccount
         \Swarming\SubscribePro\Gateway\Config\VaultConfig $platformVaultConfig,
         \Swarming\SubscribePro\Gateway\Config\Config $gatewayConfig,
         \Swarming\SubscribePro\Model\Vault\Validator $vaultFormValidator,
-        \Swarming\SubscribePro\Gateway\Command\VerifyCommand $walletVerifyCommand,
+        \Swarming\SubscribePro\Gateway\Command\AuthorizeCommand $walletAuthorizeCommand,
+        \Swarming\SubscribePro\Gateway\Command\VoidCommand $walletVoidCommand,
         \Magento\Store\Model\StoreManagerInterface $storeManager
     ) {
         $this->formKeyValidator = $formKeyValidator;
@@ -77,7 +85,8 @@ class Save extends \Magento\Customer\Controller\AbstractAccount
         $this->platformVaultConfig = $platformVaultConfig;
         $this->gatewayConfig = $gatewayConfig;
         $this->vaultFormValidator = $vaultFormValidator;
-        $this->walletVerifyCommand = $walletVerifyCommand;
+        $this->walletAuthorizeCommand = $walletAuthorizeCommand;
+        $this->walletVoidCommand = $walletVoidCommand;
         $this->storeManager = $storeManager;
         parent::__construct($context);
     }
@@ -106,12 +115,16 @@ class Save extends \Magento\Customer\Controller\AbstractAccount
 
             if ($this->gatewayConfig->isWalletAuthorizationActive()) {
                 $transfer = new DataObject();
-                $commandSubject = $this->prepareVerifyCommandSubject($data, $transfer);
+                $authorizeCommandSubject = $this->prepareAuthorizeCommandSubject($data, $transfer);
 
-                $this->walletVerifyCommand->execute($commandSubject);
+                $this->walletAuthorizeCommand->execute($authorizeCommandSubject);
 
                 $responseData['state'] = $transfer->getData('state');
                 $responseData['token'] = $transfer->getData('token');
+                $data[TransactionInterface::REF_TRANSACTION_ID] = $transfer->getData(TransactionInterface::REF_TRANSACTION_ID);
+
+                $voidCommandSubject = $this->prepareVoidCommandSubject($data, $transfer);
+                $this->walletVoidCommand->execute($voidCommandSubject);
             } else {
                 $this->vaultForm->createProfile($data, $this->customerSession->getCustomerId());
             }
@@ -135,7 +148,7 @@ class Save extends \Magento\Customer\Controller\AbstractAccount
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    private function prepareVerifyCommandSubject(array $profileData, DataObject $transfer): array
+    private function prepareAuthorizeCommandSubject(array $profileData, DataObject $transfer): array
     {
         if (empty($profileData['token'])) {
             throw new LocalizedException(__('The credit card can not be saved.'));
@@ -152,6 +165,26 @@ class Save extends \Magento\Customer\Controller\AbstractAccount
             'browser_info' => ($profileData['browser_info'] ?? ''),
             'token' => $profileData['token'],
             'transfer' => $transfer
+        ];
+    }
+
+    /**
+     * @param array $profileData
+     * @param \Magento\Framework\DataObject $transfer
+     * @return array
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    private function prepareVoidCommandSubject(array $profileData, DataObject $transfer): array
+    {
+        if (empty($profileData[TransactionInterface::REF_TRANSACTION_ID])) {
+            throw new LocalizedException(__('The credit card can not be saved.'));
+        }
+        return [
+            'store_id' => $this->storeManager->getStore()->getId(),
+            TransactionInterface::REF_TRANSACTION_ID => $profileData[TransactionInterface::REF_TRANSACTION_ID],
+            'customer_id' => $this->customerSession->getCustomerId(),
+            'customer_email' => $this->customerSession->getCustomer()->getEmail(),
         ];
     }
 }
