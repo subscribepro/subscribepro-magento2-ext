@@ -3,6 +3,7 @@
 namespace Swarming\SubscribePro\Gateway\Response;
 
 use Magento\Payment\Gateway\Response\HandlerInterface;
+use SubscribePro\Service\Transaction\TransactionInterface;
 
 class AuthorizeHandler implements HandlerInterface
 {
@@ -76,6 +77,7 @@ class AuthorizeHandler implements HandlerInterface
 
         $transfer->setData('state', $transaction->getState());
         $transfer->setData('token', $transaction->getToken());
+        $transfer->setData(TransactionInterface::REF_TRANSACTION_ID, $transaction->getId());
     }
 
     /**
