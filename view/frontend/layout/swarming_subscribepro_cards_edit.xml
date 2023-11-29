@@ -4,7 +4,11 @@
     <body>
         <referenceContainer name="content">
             <block class="Swarming\SubscribePro\Block\Vault\Edit" name="subscribepro.vault.edit" template="Swarming_SubscribePro::vault/edit.phtml" cacheable="false">
-                <block class="Swarming\SubscribePro\Block\Vault\Edit\BillingAddress" name="subscribepro.vault.edit.billing" as="billing" template="Swarming_SubscribePro::vault/edit/billing_address.phtml"/>
+                <block class="Swarming\SubscribePro\Block\Vault\Edit\BillingAddress" name="subscribepro.vault.edit.billing" as="billing" template="Swarming_SubscribePro::vault/edit/billing_address.phtml">
+                    <arguments>
+                        <argument name="view_model" xsi:type="object">Magento\Customer\ViewModel\Address</argument>
+                    </arguments>
+                </block>
                 <block class="Swarming\SubscribePro\Block\Vault\Edit\CardExpiration" name="subscribepro.vault.edit.card.expiration" as="card_expiration" template="Swarming_SubscribePro::vault/edit/card_expiration.phtml">
                     <arguments>
                         <argument name="jsLayout" xsi:type="array">
