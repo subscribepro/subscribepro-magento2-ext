@@ -166,6 +166,10 @@
         <plugin name="additional_section_data" type="Swarming\SubscribePro\Plugin\Account\AddCustomerEmail" />
     </type>
 
+    <type name="Magento\Payment\Model\CcConfigProvider">
+        <plugin name="subscribepro_cc_icons" type="Swarming\SubscribePro\Plugin\Payment\CcConfigProvider" />
+    </type>
+
     <!-- ShipperHQ extension -->
     <type name="ShipperHQ\Shipper\Model\Carrier\Processor\ShipperMapper">
         <plugin name="subscribepro_shipperhq" type="Swarming\SubscribePro\Plugin\ShipperHQ\ShipperMapperPlugin" />
