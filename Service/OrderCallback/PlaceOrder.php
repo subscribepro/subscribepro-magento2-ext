@@ -42,6 +42,11 @@ class PlaceOrder
     private $responseProcessor;
 
     /**
+     * @var \Magento\Catalog\Api\ProductRepositoryInterface
+     */
+    private $productRepository;
+
+    /**
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      * @param \Magento\Customer\Api\CustomerRepositoryInterface $customerRepository
      * @param \Magento\Quote\Model\QuoteFactory $quoteFactory
@@ -57,7 +62,8 @@ class PlaceOrder
         \Magento\Quote\Api\CartRepositoryInterface $quoteRepository,
         \Magento\Quote\Model\QuoteManagement $quoteManagement,
         \Swarming\SubscribePro\Service\OrderCallback\DataBuilder $orderCallbackDataBuilder,
-        \Swarming\SubscribePro\Service\OrderCallback\ResponseProcessor $responseProcessor
+        \Swarming\SubscribePro\Service\OrderCallback\ResponseProcessor $responseProcessor,
+        \Magento\Catalog\Api\ProductRepositoryInterface $productRepository
     ) {
         $this->storeManager = $storeManager;
         $this->customerRepository = $customerRepository;
@@ -66,6 +72,7 @@ class PlaceOrder
         $this->quoteManagement = $quoteManagement;
         $this->orderCallbackDataBuilder = $orderCallbackDataBuilder;
         $this->responseProcessor = $responseProcessor;
+        $this->productRepository = $productRepository;
     }
 
     /**
@@ -86,6 +93,18 @@ class PlaceOrder
         $errorMessages = [];
         foreach ($orderRequest['items'] as $productData) {
             try {
+                if ($orderRequest['allowSomeFailedItems']) {
+                    $isSalable = $this->productRepository->get($productData['productSku'])->isSalable();
+                    if (!$isSalable) {
+                        $subscriptionData = (array)$this->orderCallbackDataBuilder->getValue($productData, 'subscription', []);
+                        $errorMessages[] = [
+                            'subscriptionId' => (string)$this->orderCallbackDataBuilder->getValue($subscriptionData, 'id'),
+                            'errorMessage' => 'Product is not salable',
+                        ];
+
+                        continue;
+                    }
+                }
                 $this->addProductToQuote($quote, $productData);
                 $addedItemCount++;
             } catch (\Exception $e) {
