@@ -81,6 +81,7 @@ class PlaceOrder
      */
     public function execute(array $orderRequest): array
     {
+        $hasFailedItem = false;
         $store = $this->storeManager->getStore();
         $customer = $this->customerRepository->getById($orderRequest['platformCustomerId']);
 
@@ -93,15 +94,16 @@ class PlaceOrder
         $errorMessages = [];
         foreach ($orderRequest['items'] as $productData) {
             try {
-                if ($orderRequest['allowSomeFailedItems']) {
+                if (!$orderRequest['allowSomeFailedItems']) {
                     $isSalable = $this->productRepository->get($productData['productSku'])->isSalable();
                     if (!$isSalable) {
+                        $addedItemCount = 0;
                         $subscriptionData = (array)$this->orderCallbackDataBuilder->getValue($productData, 'subscription', []);
                         $errorMessages[] = [
                             'subscriptionId' => (string)$this->orderCallbackDataBuilder->getValue($subscriptionData, 'id'),
-                            'errorMessage' => 'Product is not salable',
+                            'errorMessage' => __('Product is not salable'),
                         ];
-
+                        $hasFailedItem = true;
                         continue;
                     }
                 }
@@ -118,9 +120,8 @@ class PlaceOrder
             $quote = $this->quoteRepository->get($quote->getId());
             $quote->setItems($quote->getAllVisibleItems());
         }
-
         $order = null;
-        if ($addedItemCount > 0) {
+        if (!$hasFailedItem && $addedItemCount > 0) {
             $this->orderCallbackDataBuilder->importAddressData(
                 $quote->getBillingAddress(),
                 (array)$this->orderCallbackDataBuilder->getValue($orderRequest, 'billingAddress', [])
