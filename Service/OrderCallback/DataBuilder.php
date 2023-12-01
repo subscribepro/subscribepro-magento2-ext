@@ -159,24 +159,34 @@ class DataBuilder
             $paymentAdditionalData[PaymentTokenInterface::CUSTOMER_ID] = $customerId;
             $paymentAdditionalData[PaymentTokenInterface::PUBLIC_HASH] = $paymentToken->getPublicHash();
         }
-
         $quotePayment->unsMethodInstance();
-        $quotePayment->setPaymentMethod($paymentMethodVault);
-        $quotePayment->setMethod($paymentMethodVault);
-        $quotePayment->getMethodInstance();
+        if (!isset($paymentData['paymentMethodCode'])) {
 
-        $paymentAdditionalData['profile_id'] = $this->getValue($paymentData, 'paymentProfileId');
-        $paymentAdditionalData['cc_type'] = $this->getValue($paymentData, 'creditcardType');
-        $paymentAdditionalData['cc_number'] = $this->getValue($paymentData, 'creditcardLastDigits');
-        $paymentAdditionalData['cc_exp_year'] = $this->getValue($paymentData, 'creditcardYear');
-        $paymentAdditionalData['cc_exp_month'] = $this->getValue($paymentData, 'creditcardMonth');
+            $quotePayment->setPaymentMethod($paymentMethodVault);
+            $quotePayment->setMethod($paymentMethodVault);
+            $quotePayment->getMethodInstance();
 
-        $quotePayment->importData(
-            [
-                'method' => $paymentMethodVault,
-                'additional_data' => $paymentAdditionalData
-            ]
-        );
+            $paymentAdditionalData['profile_id'] = $this->getValue($paymentData, 'paymentProfileId');
+            $paymentAdditionalData['cc_type'] = $this->getValue($paymentData, 'creditcardType');
+            $paymentAdditionalData['cc_number'] = $this->getValue($paymentData, 'creditcardLastDigits');
+            $paymentAdditionalData['cc_exp_year'] = $this->getValue($paymentData, 'creditcardYear');
+            $paymentAdditionalData['cc_exp_month'] = $this->getValue($paymentData, 'creditcardMonth');
+
+            $quotePayment->importData(
+                [
+                    'method' => $paymentMethodVault,
+                    'additional_data' => $paymentAdditionalData
+                ]
+            );
+        } else {
+            $quotePayment->setPaymentMethod($paymentData['paymentMethodCode']);
+            $quotePayment->setMethod($paymentData['paymentMethodCode']);
+            $quotePayment->importData(
+                [
+                    'method' => $paymentData['paymentMethodCode'],
+                ]
+            );
+        }
     }
 
     /**
