@@ -7,6 +7,7 @@ use Magento\Framework\Exception\AuthorizationException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use SubscribePro\Exception\HttpException;
+use SubscribePro\Utils\SubscriptionUtils;
 use Swarming\SubscribePro\Api\SubscriptionManagementInterface;
 
 class SubscriptionManagement implements SubscriptionManagementInterface
@@ -47,6 +48,11 @@ class SubscriptionManagement implements SubscriptionManagementInterface
     protected $design;
 
     /**
+     * @var SubscriptionUtils
+     */
+    protected SubscriptionUtils $subscriptionUtils;
+
+    /**
      * @var \Psr\Log\LoggerInterface
      */
     protected $logger;
@@ -58,7 +64,7 @@ class SubscriptionManagement implements SubscriptionManagementInterface
      * @param \Swarming\SubscribePro\Platform\Manager\Address $platformAddressManager
      * @param \Swarming\SubscribePro\Helper\SubscriptionProduct $subscriptionProductHelper
      * @param \Swarming\SubscribePro\Model\Config\SubscriptionOptions $subscriptionOptionConfig
-     * @param \SubscribePro\Utils\SubscriptionUtils $subscriptionUtils
+     * @param SubscriptionUtils $subscriptionUtils
      * @param \Magento\Framework\View\DesignInterface $design
      * @param \Psr\Log\LoggerInterface $logger
      */
@@ -69,7 +75,7 @@ class SubscriptionManagement implements SubscriptionManagementInterface
         \Swarming\SubscribePro\Platform\Manager\Address $platformAddressManager,
         \Swarming\SubscribePro\Helper\SubscriptionProduct $subscriptionProductHelper,
         \Swarming\SubscribePro\Model\Config\SubscriptionOptions $subscriptionOptionConfig,
-        \SubscribePro\Utils\SubscriptionUtils $subscriptionUtils,
+        SubscriptionUtils $subscriptionUtils,
         \Magento\Framework\View\DesignInterface $design,
         \Psr\Log\LoggerInterface $logger
     ) {
