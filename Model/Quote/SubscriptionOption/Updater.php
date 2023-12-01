@@ -54,7 +54,7 @@ class Updater
             $createNewSubscriptionAtCheckout = true;
         }
 
-        if (!$createNewSubscriptionAtCheckout) {
+        if (!$createNewSubscriptionAtCheckout && !$this->quoteItemHelper->isItemFulfilsSubscription($quoteItem)) {
             $subscriptionInterval = null;
         }
 
