@@ -239,7 +239,7 @@ class Subscriptions extends \Magento\Framework\View\Element\Template
         try {
             return $this->platformCustomerManager->getCustomerById(
                 $this->getCustomerId(),
-                false,
+                true,
                 $this->customerSession->getCustomer()->getWebsiteId()
             )->getId();
         } catch (NoSuchEntityException $e) {
