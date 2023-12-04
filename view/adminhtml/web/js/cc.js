@@ -205,8 +205,6 @@ define(
 
                 PaymentFields.on('error', (data) => {
                     $('body').trigger('processStop');
-                    console.log(`'error' event received.`);
-                    console.log(data);
                 });
 
                 PaymentFields.on('inputEvent', (data) => {
@@ -214,21 +212,8 @@ define(
                         this.validationPaymentData(data.fieldCode);
                     }
                     $('body').trigger('processStop');
-                    console.log(data);
-                    console.log(`'inputEvent' event received.`);
                 });
 
-                PaymentFields.on('challengeShown', (data) => {
-                    $('body').trigger('processStop');
-                    console.log(`'challengeShown' event received.`);
-                    console.log(data);
-                });
-
-                PaymentFields.on('challengeHidden', (data) => {
-                    $('body').trigger('processStop');
-                    console.log(`'challengeHidden' event received.`);
-                    console.log(data);
-                });
                 PaymentFields.on('validationResultChanged', (data) => {
                     if (data !== undefined) {
                         this.ccValidationData(data.validationResult);
@@ -238,8 +223,6 @@ define(
                             this.selectedCardType(config.getCcTypesMapper()[data.validationResult.cardType]);
                         }
                     }
-                    console.log(data);
-                    console.log(`'validationResultChanged' event received.`);
                 });
                 let authConfig = config.getConfig().sessionAccessToken;
                 let apiBaseUrl = config.getConfig().apiBaseUrl;
