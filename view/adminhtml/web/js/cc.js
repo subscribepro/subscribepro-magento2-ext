@@ -198,6 +198,7 @@ define(
                         this.creditCardFirstDigits(data.creditCard.cardIssuerIdentificationNumber.substring(0, 4))
                         this.creditCardLastDigits(data.creditCard.cardLastDigits)
                         this.paymentMethodToken(data.tokenString);
+                        this.addAdditionalData();
                         this.placeOrder()
                     }
                 });
@@ -241,8 +242,9 @@ define(
                     console.log(`'validationResultChanged' event received.`);
                 });
                 let authConfig = config.getConfig().sessionAccessToken;
+                let apiBaseUrl = config.getConfig().apiBaseUrl;
                 PaymentFields.init({
-                    apiBaseUrl: 'https://api.subscribepro.com/',
+                    apiBaseUrl: apiBaseUrl,
                     oauthApiToken: authConfig.access_token,
                     spVaultEnvironmentId: authConfig.sp_vault_environment_id,
                     paymentMethodType: 'credit_card',
