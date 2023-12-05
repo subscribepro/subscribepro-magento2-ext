@@ -29,6 +29,7 @@
                 <cache_lifetime>3600</cache_lifetime>
                 <webhook_secret></webhook_secret>
                 <enable_debugging>0</enable_debugging>
+                <enable_account_expires>1</enable_account_expires>
                 <enable_hosted_my_subscriptions>0</enable_hosted_my_subscriptions>
                 <enable_hosted_my_subscriptions>1</enable_hosted_my_subscriptions>
                 <hosted_my_subscriptions_url>https://hosted.subscribepro.com/my-subscriptions/widget-my-subscriptions-1.16.0.js</hosted_my_subscriptions_url>
