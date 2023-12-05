@@ -63,6 +63,19 @@ class Advanced extends General
 
     /**
      * @param string|null $websiteCode
+     * @return bool
+     */
+    public function isExpiredCardsEnabled($websiteCode = null)
+    {
+        return $this->scopeConfig->isSetFlag(
+            'swarming_subscribepro/advanced/enable_account_expires',
+            ScopeInterface::SCOPE_WEBSITE,
+            $websiteCode
+        );
+    }
+
+    /**
+     * @param string|null $websiteCode
      * @return string
      */
     public function getHostedMySubscriptionWidgetConfig($websiteCode = null)

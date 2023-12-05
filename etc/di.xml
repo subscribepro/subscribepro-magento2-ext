@@ -170,6 +170,14 @@
         <plugin name="subscribepro_cc_icons" type="Swarming\SubscribePro\Plugin\Payment\CcConfigProvider" />
     </type>
 
+    <type name="Magento\Vault\Model\PaymentTokenManagement">
+        <plugin name="subscribepro_cc_store_expired_card" type="Swarming\SubscribePro\Plugin\Payment\PaymentTokenManagement" />
+    </type>
+    <type name="Magento\Vault\Model\Ui\Adminhtml\TokensConfigProvider">
+        <plugin name="subscribepro_cc_store_expired_card_admin" type="Swarming\SubscribePro\Plugin\Ui\Adminhtml\TokensConfigProvider" />
+    </type>
+
+
     <!-- ShipperHQ extension -->
     <type name="ShipperHQ\Shipper\Model\Carrier\Processor\ShipperMapper">
         <plugin name="subscribepro_shipperhq" type="Swarming\SubscribePro\Plugin\ShipperHQ\ShipperMapperPlugin" />
