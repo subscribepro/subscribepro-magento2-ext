@@ -285,7 +285,7 @@ class PaymentService
      */
     protected function getAllCardTypeMappings(): array
     {
-        // Subscribe Pro / Spreedly type => Magento type
+        // Subscribe Pro / Payment Fields type => Magento type
         $cardTypes = [
             'visa' => 'VI',
             'master' => 'MC',
