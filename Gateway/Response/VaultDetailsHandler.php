@@ -95,14 +95,16 @@ class VaultDetailsHandler implements HandlerInterface
             $transaction->getCreditcardMonth()
         ));
 
-        $refPaymentToken = $transaction->getRefToken();
+        /** @var \Swarming\SubscribePro\Platform\Service\PaymentProfile */
+        $paymentProfile = $this->paymentProfileService->loadProfile($transaction->getRefPaymentProfileId());
+        $vaultPaymentToken = $paymentProfile->getPaymentToken();
 
         $tokenDetails = $this->vaultHelper->getTokenDetails(
             $transaction->getCreditcardType(),
             $transaction->getCreditcardLastDigits(),
             $transaction->getCreditcardMonth(),
             $transaction->getCreditcardYear(),
-            $refPaymentToken
+            $vaultPaymentToken
         );
         if ($isPending) {
             $tokenDetails = $this->vaultHelper->markPendingTokenDetails($tokenDetails);
