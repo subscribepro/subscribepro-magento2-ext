@@ -90,22 +90,33 @@ class VaultDetailsHandler implements HandlerInterface
         $paymentToken = $this->paymentTokenFactory->create();
         $paymentToken->setGatewayToken($transaction->getRefPaymentProfileId());
 
-        $paymentToken->setExpiresAt($this->vaultHelper->getExpirationDate(
-            $transaction->getCreditcardYear(),
-            $transaction->getCreditcardMonth()
-        ));
-
         /** @var \Swarming\SubscribePro\Platform\Service\PaymentProfile */
         $paymentProfile = $this->paymentProfileService->loadProfile($transaction->getRefPaymentProfileId());
         $vaultPaymentToken = $paymentProfile->getPaymentToken();
 
+        $ccYear = $transaction->getCreditcardYear();
+        $ccMonth = $transaction->getCreditcardMonth();
+        $ccType = $transaction->getCreditcardType();
+        $ccLastDigits = $transaction->getCreditcardLastDigits();
+
+        if (!$ccMonth || !$ccYear || !$ccType || !$ccLastDigits) {
+            $ccMonth = $paymentProfile->getCreditcardMonth();
+            $ccYear = $paymentProfile->getCreditcardYear();
+            $ccType = $paymentProfile->getCreditcardYear();
+            $ccLastDigits = $paymentProfile->getCreditcardYear();
+        }
+        $paymentToken->setExpiresAt($this->vaultHelper->getExpirationDate(
+            $ccYear,
+            $ccMonth
+        ));
         $tokenDetails = $this->vaultHelper->getTokenDetails(
-            $transaction->getCreditcardType(),
-            $transaction->getCreditcardLastDigits(),
-            $transaction->getCreditcardMonth(),
-            $transaction->getCreditcardYear(),
+            $ccType,
+            $ccLastDigits,
+            $ccMonth,
+            $ccYear,
             $vaultPaymentToken
         );
+
         if ($isPending) {
             $tokenDetails = $this->vaultHelper->markPendingTokenDetails($tokenDetails);
         }
