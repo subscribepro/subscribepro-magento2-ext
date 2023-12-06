@@ -22,6 +22,7 @@ define(
                 formSubmitSelector: "#vault-edit .save",
                 isLoading: false,
                 creditCardLastDigits: null,
+                creditCardFirstDigits: null,
                 paymentMethodToken: null,
                 selectedCardType: null,
             },
@@ -31,6 +32,7 @@ define(
                     .observe([
                         'isLoading',
                         'creditCardLastDigits',
+                        'creditCardFirstDigits',
                         'paymentMethodToken',
                         'selectedCardType',
                     ]);
@@ -54,6 +56,7 @@ define(
                     $('body').trigger('processStop');
                     if (data.isSuccessful === true) {
                         this.selectedCardType(data.creditCard.cardType)
+                        this.creditCardFirstDigits(data.creditCard.cardIssuerIdentificationNumber)
                         this.creditCardLastDigits(data.creditCard.cardLastDigits)
                         this.paymentMethodToken(data.tokenString);
                         this.submitPayment();
@@ -160,7 +163,8 @@ define(
 
             submitPayment: function () {
                 var cartData = $(this.formSelector).serializeJSON();
-
+                cartData.creditcard_last_digits = this.creditCardLastDigits();
+                cartData.creditcard_first_digits = this.creditCardFirstDigits();
                 this.isLoading(true);
                 saveCart(cartData).done(this.onSaveCart.bind(this));
                 $(this.formSubmitSelector).attr('disabled', 'disabled');
