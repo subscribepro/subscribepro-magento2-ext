@@ -6,6 +6,8 @@ namespace Swarming\SubscribePro\Observer\Customer;
 use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 
 class SaveAfterData implements ObserverInterface
 {
@@ -91,13 +93,14 @@ class SaveAfterData implements ObserverInterface
     /**
      * @param \Magento\Customer\Api\Data\CustomerInterface $customer
      * @return void
+     * @throws NoSuchEntityException|LocalizedException
      */
     private function savePlatformCustomer(CustomerInterface $customer): void
     {
         $websiteId = $customer->getWebsiteId();
 
-        $platformCustomer = $this->platformCustomerManager->getCustomerByMagentoCustomerId(
-            (int)$customer->getId(),
+        $platformCustomer = $this->platformCustomerManager->getCustomerByEmail(
+            $customer->getEmail(),
             $this->isCreateNewCustomerIfNotExist($websiteId),
             $websiteId
         );
@@ -106,6 +109,7 @@ class SaveAfterData implements ObserverInterface
             $platformCustomer->setFirstName($customer->getFirstname());
             $platformCustomer->setLastName($customer->getLastname());
             $platformCustomer->setEmail($customer->getEmail());
+            $platformCustomer->setMagentoCustomerId($customer->getId());
             $platformCustomer->setMagentoCustomerGroupId($customer->getGroupId());
 
             $this->platformCustomerService->saveCustomer($platformCustomer, (int)$websiteId);

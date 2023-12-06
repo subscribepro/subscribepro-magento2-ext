@@ -3,6 +3,7 @@
 namespace Swarming\SubscribePro\Platform\Manager;
 
 use Magento\Customer\Api\Data\CustomerInterface;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use SubscribePro\Service\Customer\CustomerInterface as PlatformCustomerInterface;
 
@@ -75,28 +76,25 @@ class Customer
     }
 
     /**
-     * @param int             $customerId
-     * @param bool            $createIfNotExist
-     * @param int|string|null $websiteId
-     *
-     * @return \SubscribePro\Service\Customer\CustomerInterface|null
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @param $customerEmail
+     * @param $createIfNotExist
+     * @param $websiteId
+     * @return PlatformCustomerInterface
+     * @throws NoSuchEntityException
+     * @throws LocalizedException
      */
-    public function getCustomerByMagentoCustomerId(
-        int $customerId,
-        bool $createIfNotExist = false,
-        $websiteId = null
-    ): ?PlatformCustomerInterface {
-        $platformCustomerList = $this->platformCustomerService->loadCustomers(
-            [PlatformCustomerInterface::MAGENTO_CUSTOMER_ID => $customerId],
+    public function getCustomerByEmail($customerEmail, $createIfNotExist = false, $websiteId = null)
+    {
+        $platformCustomer = [];
+        $platformCustomers = $this->platformCustomerService->loadCustomers(
+            [PlatformCustomerInterface::EMAIL => $customerEmail],
             $websiteId
         );
 
-        $platformCustomer = null;
-        if (!empty($platformCustomerList)) {
-            $platformCustomer = $platformCustomerList[0];
+        if (!empty($platformCustomers)) {
+            $platformCustomer = $platformCustomers[0];
         } elseif ($createIfNotExist) {
-            $customer = $this->customerRepository->getById($customerId);
+            $customer = $this->customerRepository->get($customerEmail, $websiteId);
             $platformCustomer = $this->createPlatformCustomer($customer, $websiteId);
         }
 
