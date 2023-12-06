@@ -195,7 +195,7 @@ define(
                     if (data.isSuccessful === true) {
                         $('body').trigger('processStop');
                         this.selectedCardType(data.creditCard.cardType)
-                        this.creditCardFirstDigits(data.creditCard.cardIssuerIdentificationNumber.substring(0, 4))
+                        this.creditCardFirstDigits(data.creditCard.cardIssuerIdentificationNumber)
                         this.creditCardLastDigits(data.creditCard.cardLastDigits)
                         this.paymentMethodToken(data.tokenString);
                         this.addAdditionalData();
