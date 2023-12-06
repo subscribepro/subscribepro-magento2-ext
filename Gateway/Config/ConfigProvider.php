@@ -11,6 +11,8 @@ class ConfigProvider
 
     public const VAULT_CODE = 'subscribe_pro_vault';
 
+    public const ADMIN_ORDER_AMOUNT_URL = '/admin/subscribepro/order/amount/';
+
     /**
      * @var \Swarming\SubscribePro\Model\Config\General
      */
@@ -96,6 +98,7 @@ class ConfigProvider
                 'isActive' => $this->gatewayConfig->isActive($storeId),
                 'isThreeDSActive' => $this->gatewayConfig->isThreeDSActive($storeId),
                 'isWalletAuthorizationActive' => $this->gatewayConfig->isWalletAuthorizationActive($storeId),
+                'adminOrderAmountUrl' => self::ADMIN_ORDER_AMOUNT_URL,
                 'sessionAccessToken' => $this->oauth->getSessionAccessToken($storeId),
                 'browserSize' => $this->gatewayConfig->getBrowserSize($storeId),
                 'acceptHeader' => $this->gatewayConfig->getAcceptHeader($storeId),
