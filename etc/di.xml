@@ -596,4 +596,7 @@
             </argument>
         </arguments>
     </type>
+    <type name="Magento\Sales\Model\Reorder\Reorder">
+        <plugin name="reorder_quote_options" type="Swarming\SubscribePro\Plugin\Sales\Model\Reorder\ReorderPlugin" />
+    </type>
 </config>
