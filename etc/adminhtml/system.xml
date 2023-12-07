@@ -304,7 +304,7 @@
 
                 <field id="wallet_authorization_amount" translate="label" type="text" sortOrder="48" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Authorization Amount on Wallet</label>
-                    <validate>validate-greater-than-zero validate-number required-entry</validate>
+                    <validate>validate-zero-or-greater validate-number required-entry</validate>
                 </field>
 
                 <field id="order_status" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0">
