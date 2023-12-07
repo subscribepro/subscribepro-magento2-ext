@@ -145,12 +145,20 @@ class Vault
      */
     public function getExpirationDate($year, $month)
     {
-        $expDate = $this->dateTimeFactory->create(
-            $year . '-' . $month . '-01 00:00:00',
-            new \DateTimeZone('UTC')
-        );
-        $expDate->add(new \DateInterval('P1M'));
-        return $expDate->format('Y-m-d 00:00:00');
+        try {
+            $month = str_pad((string) intval($month), 2, '0', STR_PAD_LEFT);
+            $year = str_pad((string) intval($year), 4, '0', STR_PAD_LEFT);
+            $expDate = $this->dateTimeFactory->create(
+                $year.'-'.$month.'-01 00:00:00',
+                new \DateTimeZone('UTC')
+            );
+            $expDate->add(new \DateInterval('P1M'));
+
+            return $expDate->format('Y-m-d 00:00:00');
+        }
+        catch (\Exception $e) {
+            return '2050-01-01 00:00:00';
+        }
     }
 
     /**
