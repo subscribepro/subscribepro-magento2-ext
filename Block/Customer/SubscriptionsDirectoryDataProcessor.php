@@ -2,9 +2,10 @@
 
 namespace Swarming\SubscribePro\Block\Customer;
 
+use Magento\Checkout\Block\Checkout\LayoutProcessorInterface;
 use Magento\Directory\Helper\Data as DirectoryHelper;
+use Magento\Directory\Model\ResourceModel\Region\CollectionFactory;
 use Magento\Framework\App\ObjectManager;
-use Magento\Store\Api\StoreResolverInterface;
 use Magento\Store\Model\StoreManagerInterface;
 
 /**
@@ -13,7 +14,7 @@ use Magento\Store\Model\StoreManagerInterface;
  * This class adds various country and region dictionaries to checkout page.
  * This data can be used by other UI components during checkout flow.
  */
-class SubscriptionsDirectoryDataProcessor implements \Magento\Checkout\Block\Checkout\LayoutProcessorInterface
+class SubscriptionsDirectoryDataProcessor implements LayoutProcessorInterface
 {
     /**
      * @var array
@@ -26,12 +27,12 @@ class SubscriptionsDirectoryDataProcessor implements \Magento\Checkout\Block\Che
     protected $regionOptions;
 
     /**
-     * @var \Magento\Directory\Model\ResourceModel\Region\CollectionFactory
+     * @var CollectionFactory
      */
     protected $regionCollectionFactory;
 
     /**
-     * @var \Magento\Directory\Model\ResourceModel\Region\CollectionFactory
+     * @var CollectionFactory
      */
     protected $countryCollectionFactory;
 
@@ -47,16 +48,14 @@ class SubscriptionsDirectoryDataProcessor implements \Magento\Checkout\Block\Che
 
     /**
      * @param \Magento\Directory\Model\ResourceModel\Country\CollectionFactory $countryCollection
-     * @param \Magento\Directory\Model\ResourceModel\Region\CollectionFactory $regionCollection
-     * @param StoreResolverInterface $storeResolver @deprecated
+     * @param CollectionFactory $regionCollection
      * @param DirectoryHelper $directoryHelper
-     * @param StoreManagerInterface $storeManager
+     * @param StoreManagerInterface|null $storeManager
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __construct(
         \Magento\Directory\Model\ResourceModel\Country\CollectionFactory $countryCollection,
-        \Magento\Directory\Model\ResourceModel\Region\CollectionFactory $regionCollection,
-        StoreResolverInterface $storeResolver,
+        CollectionFactory $regionCollection,
         DirectoryHelper $directoryHelper,
         StoreManagerInterface $storeManager = null
     ) {

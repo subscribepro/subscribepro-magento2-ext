@@ -295,7 +295,7 @@ class PaymentRequestConfig extends DataObject
         } catch (LocalizedException $e) {
             $this->logger->error('QuoteId: ' . $quote->getId());
             $this->logger->error('WebsiteId: ' . $websiteId);
-            if ($subscriberProCustomerId) {
+            if ($customerId && $subscriberProCustomerId) {
                 $this->logger->error('SubscriberProCustomerId: ' . $subscriberProCustomerId);
             }
             $this->logger->error($e->getMessage());

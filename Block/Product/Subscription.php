@@ -64,7 +64,6 @@ class Subscription extends \Magento\Catalog\Block\Product\AbstractProduct
      * @param \Magento\Tax\Api\TaxCalculationInterface $taxCalculation
      * @param \Swarming\SubscribePro\Ui\ConfigProvider\PriceConfig $priceConfigProvider
      * @param \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency
-     * @param \Magento\Framework\Locale\FormatInterface $localeFormat
      * @param \Swarming\SubscribePro\Helper\Product $productHelper
      * @param \Magento\Checkout\Model\Cart $cart
      * @param \Swarming\SubscribePro\Helper\QuoteItem $quoteItemHelper
@@ -78,7 +77,6 @@ class Subscription extends \Magento\Catalog\Block\Product\AbstractProduct
         \Magento\Tax\Api\TaxCalculationInterface $taxCalculation,
         \Swarming\SubscribePro\Ui\ConfigProvider\PriceConfig $priceConfigProvider,
         \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency,
-        \Magento\Framework\Locale\FormatInterface $localeFormat,
         \Swarming\SubscribePro\Helper\Product $productHelper,
         \Magento\Checkout\Model\Cart $cart,
         \Swarming\SubscribePro\Helper\QuoteItem $quoteItemHelper,

@@ -96,9 +96,6 @@ class PaymentAuthorized implements HttpPostActionInterface, CsrfAwareActionInter
         try {
             $this->implementExecute($result);
         } catch (LocalizedException $e) {
-            if (isset($quoteId)) {
-                $this->logger->error('QuoteId: ' . $quoteId);
-            }
             $this->logger->error($e->getMessage());
 
             $response = [

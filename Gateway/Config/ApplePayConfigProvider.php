@@ -47,6 +47,6 @@ class ApplePayConfigProvider extends GatewayConfigProvider
     {
         $value = $this->generalConfig->getBaseUrl($websiteCode);
 
-        return ($value)?? '';
+        return $value ?: '';
     }
 }

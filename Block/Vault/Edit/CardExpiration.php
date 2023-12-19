@@ -2,7 +2,9 @@
 
 namespace Swarming\SubscribePro\Block\Vault\Edit;
 
-class CardExpiration extends \Swarming\SubscribePro\Block\Vault\CardRenderer
+use Swarming\SubscribePro\Block\Vault\CardRenderer;
+
+class CardExpiration extends CardRenderer
 {
     /**
      * @return string
@@ -14,7 +16,7 @@ class CardExpiration extends \Swarming\SubscribePro\Block\Vault\CardRenderer
     }
 
     /**
-     * @return string[]
+     * @return void
      */
     protected function updateJsLayout()
     {

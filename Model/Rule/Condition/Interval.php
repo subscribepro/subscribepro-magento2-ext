@@ -24,6 +24,6 @@ class Interval extends Base
     public function validate(\Magento\Framework\Model\AbstractModel $model)
     {
         $interval = $this->discountRuleHelper->validateInterval($this->quoteItemHelper->getSubscriptionParams($model));
-        return false === $interval ? false : $this->validateAttribute($interval);
+        return !(false === $interval) && $this->validateAttribute($interval);
     }
 }
