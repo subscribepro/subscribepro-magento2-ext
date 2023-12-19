@@ -36,7 +36,7 @@ class OrderDataBuilder implements BuilderInterface
         $order = $paymentDO->getOrder();
 
         return [
-            TransactionInterface::AMOUNT => $this->formatPrice($this->subjectReader->readAmount($buildSubject))*100,
+            TransactionInterface::AMOUNT => (float) $this->formatPrice($this->subjectReader->readAmount($buildSubject)) * 100,
             TransactionInterface::CURRENCY_CODE => $order->getCurrencyCode(),
             TransactionInterface::ORDER_ID => $order->getOrderIncrementId(),
             TransactionInterface::IP => $order->getRemoteIp(),

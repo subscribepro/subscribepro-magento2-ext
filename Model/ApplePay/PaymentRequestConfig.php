@@ -11,6 +11,8 @@ use Magento\Framework\Convert\DataObject;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Session\SessionManagerInterface;
+use Magento\Quote\Api\Data\CartInterface;
+use Magento\Quote\Model\Quote;
 use Psr\Log\LoggerInterface;
 use Swarming\SubscribePro\Platform\Manager\Customer as PlatformManagerCustomer;
 use Swarming\SubscribePro\Platform\Tool\Oauth as PlatformOAuth;
@@ -22,11 +24,11 @@ class PaymentRequestConfig extends DataObject
      */
     private $directoryHelper;
     /**
-     * @var \Magento\Quote\Api\Data\CartInterface|\Magento\Quote\Model\Quote
+     * @var CartInterface|Quote
      */
     private $quote;
     /**
-     * @var CheckoutSession|SessionManagerInterface
+     * @var SessionManagerInterface
      */
     private $checkoutSession;
     /**
@@ -86,14 +88,16 @@ class PaymentRequestConfig extends DataObject
      */
     public function getRequestConfig(): array
     {
+        /** @var Quote $quote */
+        $quote = $this->getQuote();
         // Req fields
-        if ($this->getQuote()->isVirtual()) {
+        if ($quote->isVirtual()) {
             $requiredShippingContactFields = ['name', 'email'];
         } else {
             $requiredShippingContactFields = ['name', 'email', 'postalAddress'];
         }
 
-        $data = [
+        return [
             'countryCode' => $this->getMerchantCountryCode(),
             'currencyCode' => $this->getMerchantCurrencyCode(),
             'shippingMethods' => $this->getApplePayShippingMethods(),
@@ -104,27 +108,31 @@ class PaymentRequestConfig extends DataObject
             'requiredShippingContactFields' => $requiredShippingContactFields,
             'requiredBillingContactFields' => ['name', 'postalAddress'],
         ];
-
-        return $data;
     }
 
     /**
      * @return string
-     */
-    public function getMerchantCountryCode(): string
-    {
-        return $this->directoryHelper->getDefaultCountry($this->getQuote()->getStore());
-    }
-
-    /**
-     * @return \Magento\Quote\Api\Data\CartInterface|\Magento\Quote\Model\Quote
      * @throws LocalizedException
      * @throws NoSuchEntityException
      */
-    public function getQuote()
+    public function getMerchantCountryCode(): string
+    {
+        /** @var Quote $quote */
+        $quote = $this->getQuote();
+        return $this->directoryHelper->getDefaultCountry($quote->getStore());
+    }
+
+    /**
+     * @return CartInterface|Quote
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
+     */
+    public function getQuote(): CartInterface|Quote
     {
         if (!$this->quote) {
-            $this->quote = $this->checkoutSession->getQuote();
+            /** @var CheckoutSession $session */
+            $session = $this->checkoutSession;
+            $this->quote = $session->getQuote();
         }
 
         return $this->quote;
@@ -132,19 +140,26 @@ class PaymentRequestConfig extends DataObject
 
     /**
      * @return string
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
     public function getMerchantCurrencyCode(): string
     {
-        return $this->getQuote()->getBaseCurrencyCode();
+        /** @var Quote $quote */
+        $quote = $this->getQuote();
+        return $quote->getBaseCurrencyCode();
     }
 
     /**
      * Retrieve the shipping rates for the Apple Pay session
      *
      * @return array
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
     public function getApplePayShippingMethods(): array
     {
+        /** @var Quote $quote */
         $quote = $this->getQuote();
         $shippingAddress = $quote->getShippingAddress();
 
@@ -204,34 +219,42 @@ class PaymentRequestConfig extends DataObject
     }
 
     /**
-     * @return array
+     * @return array[]
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
     public function getApplePayLineItems(): array
     {
+        /** @var Quote $quote */
+        $quote = $this->getQuote();
         return [
             [
                 'label' => 'SUBTOTAL',
-                'amount' => $this->formatPrice($this->getQuote()->getShippingAddress()->getSubtotalWithDiscount()),
+                'amount' => $this->formatPrice($quote->getShippingAddress()->getSubtotalWithDiscount()),
             ],
             [
                 'label' => 'SHIPPING',
-                'amount' => $this->formatPrice($this->getQuote()->getShippingAddress()->getShippingAmount()),
+                'amount' => $this->formatPrice($quote->getShippingAddress()->getShippingAmount()),
             ],
             [
                 'label' => 'TAX',
-                'amount' => $this->formatPrice($this->getQuote()->getShippingAddress()->getTaxAmount()),
+                'amount' => $this->formatPrice($quote->getShippingAddress()->getTaxAmount()),
             ],
         ];
     }
 
     /**
      * @return array
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
     public function getApplePayTotal(): array
     {
+        /** @var Quote $quote */
+        $quote = $this->getQuote();
         return [
             'label' => 'MERCHANT',
-            'amount' => $this->formatPrice($this->getQuote()->getGrandTotal()),
+            'amount' => $this->formatPrice($quote->getGrandTotal()),
         ];
     }
 
@@ -268,7 +291,8 @@ class PaymentRequestConfig extends DataObject
      */
     public function getAccessToken()
     {
-        $quote = $this->checkoutSession->getQuote();
+        /** @var Quote $quote */
+        $quote = $this->getQuote();
         $customerId = $quote->getCustomerId();
         $websiteId = $quote->getStore()->getWebsiteId();
         if ($customerId) {

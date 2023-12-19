@@ -7,6 +7,7 @@ use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\App\CsrfAwareActionInterface;
 use Magento\Framework\App\Request\InvalidRequestException;
 use Magento\Framework\App\RequestInterface;
+use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\Result\JsonFactory as JsonResultFactory;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\LocalizedException;
@@ -165,7 +166,7 @@ class ShippingMethod implements HttpPostActionInterface, CsrfAwareActionInterfac
             'newTotal' => $this->getGrandTotal(),
             'newLineItems' => $this->getRowItems(),
         ];
-
+        /** @var Json $result */
         $result->setData($response);
     }
 }

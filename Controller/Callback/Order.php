@@ -78,7 +78,7 @@ class Order implements HttpPostActionInterface, CsrfAwareActionInterface
      */
     public function execute(): ResultInterface
     {
-        $orderRequest = $this->serializer->unserialize($this->request->getContent());
+        $orderRequest = $this->serializer->unserialize($this->request->getContent()); /* @phpstan-ignore-line */
 
         try {
             $responseData = $this->placeOrderService->execute($orderRequest);
@@ -150,7 +150,7 @@ class Order implements HttpPostActionInterface, CsrfAwareActionInterface
         $hmacSignature = (string)$request->getHeader(self::HMAC_SIGNATURE_HEADER);
 
         $sharedSecret = $this->orderCallbackConfig->getSharedSecret();
-        $body = $request->getContent();
+        $body = $request->getContent(); /* @phpstan-ignore-line */
         $calculatedHash = hash_hmac('sha256', $body, $sharedSecret, false);
 
         return hash_equals($calculatedHash, $hmacSignature);

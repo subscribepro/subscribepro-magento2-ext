@@ -14,7 +14,7 @@ class Token extends AbstractService
      */
     public function createToken(array $tokenData = [], $websiteId = null)
     {
-        return $this->getService($websiteId)->createToken($tokenData);
+        return $this->getService($websiteId)->createToken($tokenData); /* @phpstan-ignore-line */
     }
 
     /**
@@ -24,6 +24,6 @@ class Token extends AbstractService
      */
     public function saveToken($token, $websiteId = null)
     {
-        return $this->getService($websiteId)->saveToken($token);
+        return $this->getService($websiteId)->saveToken($token); /* @phpstan-ignore-line */
     }
 }

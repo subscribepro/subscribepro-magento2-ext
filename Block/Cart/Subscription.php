@@ -42,7 +42,7 @@ class Subscription extends \Magento\Checkout\Block\Cart\Additional\Info
     protected $canRender = false;
 
     /**
-     * @var /Psr/Log/LoggerInterface
+     * @var \Psr\Log\LoggerInterface
      */
     protected $logger;
 
@@ -115,7 +115,8 @@ class Subscription extends \Magento\Checkout\Block\Cart\Additional\Info
     }
 
     /**
-     * @return mixed[]
+     * @return array[]
+     * @throws NoSuchEntityException
      */
     protected function generateJsLayout()
     {
@@ -148,10 +149,9 @@ class Subscription extends \Magento\Checkout\Block\Cart\Additional\Info
             (array)$this->getData('subscription-container-component')
         );
 
-        $jsLayout = [
+        return [
             'components' => [$subscriptionContainerId => $subscriptionContainerComponent]
         ];
-        return $jsLayout;
     }
 
     /**

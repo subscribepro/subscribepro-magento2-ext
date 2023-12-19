@@ -15,7 +15,7 @@ class Oauth extends AbstractTool
      */
     public function getWidgetAccessTokenByCustomerId($customerId, $websiteId = null)
     {
-        return $this->getTool($websiteId)->retrieveWidgetAccessTokenByCustomerId($customerId);
+        return $this->getTool($websiteId)->retrieveWidgetAccessTokenByCustomerId($customerId); /* @phpstan-ignore-line */
     }
 
     /**
@@ -24,6 +24,7 @@ class Oauth extends AbstractTool
      */
     public function getWidgetAccessTokenByGuest($websiteId = null)
     {
+        /* @phpstan-ignore-next-line */
         return $this->getTool($websiteId)->retrieveAccessToken([
             'scope' => 'widget',
         ]);
@@ -35,6 +36,7 @@ class Oauth extends AbstractTool
      */
     public function getSessionAccessToken($websiteId = null): mixed
     {
+        /* @phpstan-ignore-next-line */
         return $this->getTool($websiteId)->retrieveAccessToken([
             'scope' => 'session',
             'grant_type' => 'client_credentials',

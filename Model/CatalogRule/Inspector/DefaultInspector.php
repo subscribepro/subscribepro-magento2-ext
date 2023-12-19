@@ -2,6 +2,8 @@
 
 namespace Swarming\SubscribePro\Model\CatalogRule\Inspector;
 
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Swarming\SubscribePro\Model\CatalogRule\InspectorInterface;
 
 class DefaultInspector implements InspectorInterface
@@ -72,8 +74,10 @@ class DefaultInspector implements InspectorInterface
     }
 
     /**
-     * @param \Magento\Catalog\Model\Product $product
+     * @param $product
      * @return bool
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
     protected function isAppliedCatalogRule($product)
     {

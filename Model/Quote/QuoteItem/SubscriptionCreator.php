@@ -6,6 +6,8 @@ use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable as ConfigurableProductType;
 use Magento\Quote\Model\Quote\Address;
 use Magento\Quote\Model\Quote\Item;
+use Magento\Quote\Model\Quote\Item\Option;
+use SubscribePro\Service\Subscription\Subscription;
 use SubscribePro\Service\Subscription\SubscriptionInterface;
 use Swarming\SubscribePro\Api\Data\AddressInterface;
 
@@ -152,7 +154,11 @@ class SubscriptionCreator
             && $this->subscriptionOptionsConfig->isChildSkuForConfigurableEnabled()
             && $quoteItem->getOptionByCode('simple_product')
         ) {
-            $product = $quoteItem->getOptionByCode('simple_product')->getProduct();
+            /** @var Option $option */
+            $option = $quoteItem->getOptionByCode('simple_product');
+            if ($option !== null) {
+                $product = $option->getProduct();
+            }
         }
 
         return $product->getData(ProductInterface::SKU);
@@ -196,6 +202,7 @@ class SubscriptionCreator
      */
     protected function importBillingAddress($subscription, $address)
     {
+        /** @var Subscription $subscription */
         $billingAddress = $subscription->getBillingAddress();
         if ($billingAddress !== null) {
             $this->buildAddressData($billingAddress, $address);

@@ -4,6 +4,7 @@ namespace Swarming\SubscribePro\Observer\Checkout;
 
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
 
 class IsAllowedGuest implements ObserverInterface
 {
@@ -30,8 +31,9 @@ class IsAllowedGuest implements ObserverInterface
     }
 
     /**
-     * @param \Magento\Framework\Event\Observer $observer
+     * @param Observer $observer
      * @return void
+     * @throws NoSuchEntityException
      */
     public function execute(Observer $observer)
     {
@@ -47,7 +49,7 @@ class IsAllowedGuest implements ObserverInterface
         }
 
         if ($this->quoteHelper->hasSubscription($quote)) {
-            $result->setIsAllowed(false);
+            $result->setData('is_allowed', false);
         }
     }
 }

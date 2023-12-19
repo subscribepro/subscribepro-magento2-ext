@@ -3,11 +3,15 @@ declare(strict_types=1);
 
 namespace Swarming\SubscribePro\Model\ApplePay;
 
+use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Directory\Model\Currency;
 use Magento\Directory\Model\Region as DirectoryRegion;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Serialize\Serializer\Json as JsonSerializer;
 use Magento\Framework\Session\SessionManagerInterface;
+use Magento\Quote\Api\Data\CartInterface;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\QuoteManagement;
 use Magento\Quote\Model\ResourceModel\Quote as QuoteResourceModel;
@@ -77,12 +81,16 @@ class Shipping
     }
 
     /**
-     * @return \Magento\Quote\Api\Data\CartInterface|Quote
+     * @return CartInterface|Quote
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
     protected function getQuote()
     {
         if (!$this->quote) {
-            $this->quote = $this->checkoutSession->getQuote();
+            /** @var CheckoutSession $session */
+            $session = $this->checkoutSession;
+            $this->quote = $session->getQuote();
         }
 
         return $this->quote;
@@ -103,6 +111,8 @@ class Shipping
      */
     public function setDataToQuote(array $shippingData): bool
     {
+        /** @var Quote $quote */
+        $quote = $this->getQuote();
         // Retrieve the countryId from the request
         $countryId = ($shippingData['countryCode']) ?? null;
         $countryId = strtoupper($countryId);
@@ -110,32 +120,34 @@ class Shipping
         // Lookup region
         $region = $this->getDirectoryRegionByName($shippingData['administrativeArea'], $countryId);
 
-        $this->getQuote()->getShippingAddress()
+        $quote->getShippingAddress()
             ->setCountryId($countryId)
             ->setCity(($shippingData['locality']) ?? null)
             ->setPostcode(($shippingData['postalCode']) ?? null)
             ->setCollectShippingRates(true);
         if ($region->isEmpty()) {
-            $this->getQuote()->getShippingAddress()->setRegionId($region->getId());
-            $this->getQuote()->getShippingAddress()->setRegion($region->getName());
+            $quote->getShippingAddress()->setRegionId($region->getId());
+            $quote->getShippingAddress()->setRegion($region->getName());
         }
-        $this->getQuote()->getShippingAddress()->save();
+        $quote->getShippingAddress()->save();
 
         // Recalculate quote
-        $this->getQuote()
-            ->setTotalsCollectedFlag(false)
-            ->collectTotals();
+        /* @phpstan-ignore-next-line */
+        $quote->setTotalsCollectedFlag(false)->collectTotals();
 
-        $this->quoteResourceModel->save($this->getQuote());
+        $this->quoteResourceModel->save($quote);
 
         return true;
     }
 
     /**
      * @return array
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
     public function getShippingMethods(): array
     {
+        /** @var Quote $quote */
         $quote = $this->getQuote();
         $shippingAddress = $quote->getShippingAddress();
 
@@ -195,17 +207,18 @@ class Shipping
      */
     public function setShippingMethodToQuote($applePayShippingMethod)
     {
+        /** @var Quote $quote */
+        $quote = $this->getQuote();
         if (isset($applePayShippingMethod['identifier'])) {
-            $this->getQuote()
+            $quote
                 ->getShippingAddress()
                 ->setShippingMethod($applePayShippingMethod['identifier']);
 
             $this->quoteResourceModel->save($this->getQuote());
 
             // Recalculate quote
-            $this->getQuote()
-                ->setTotalsCollectedFlag(false)
-                ->collectTotals();
+            /* @phpstan-ignore-next-line */
+            $quote->setTotalsCollectedFlag(false)->collectTotals();
 
             $this->quoteResourceModel->save($this->getQuote());
         }
@@ -214,7 +227,8 @@ class Shipping
     }
 
     /**
-     * @inheritdoc
+     * @param $price
+     * @return string
      */
     public function formatPrice($price)
     {
@@ -227,21 +241,29 @@ class Shipping
 
     /**
      * @return array
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
     public function getGrandTotal(): array
     {
+        /** @var Quote $quote */
+        $quote = $this->getQuote();
         return [
             'label' => 'MERCHANT',
-            'amount' => $this->formatPrice($this->getQuote()->getGrandTotal()),
+            'amount' => $this->formatPrice($quote->getGrandTotal()),
         ];
     }
 
     /**
-     * @return array
+     * @return array[]
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
     public function getRowItems(): array
     {
-        $address = $this->getQuote()->getShippingAddress();
+        /** @var Quote $quote */
+        $quote = $this->getQuote();
+        $address = $quote->getShippingAddress();
         return [
             [
                 'label' => 'SUBTOTAL',

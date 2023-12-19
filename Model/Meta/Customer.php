@@ -56,7 +56,7 @@ class Customer implements \Swarming\SubscribePro\Model\MetaUserInterface
         return [
             'customer_id' => $this->getPlatformCustomerId($customer->getId(), $customer->getWebsiteId()),
             'email' => $customer->getEmail(),
-            'full_name' => implode(' ', [$customer->getFirstname(), $customer->getLastname()]),
+            'full_name' => implode(' ', [$customer->getData('firstname'), $customer->getData('lastname')]),
         ];
     }
 

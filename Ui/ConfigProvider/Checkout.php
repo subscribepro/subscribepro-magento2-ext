@@ -11,7 +11,7 @@ use Swarming\SubscribePro\Gateway\Config\ConfigProvider as GatewayConfigProvider
 class Checkout implements ConfigProviderInterface
 {
     /**
-     * @var \Swarming\SubscribePro\Gateway\Config\ConfigProvider
+     * @var GatewayConfigProvider
      */
     protected $gatewayConfigProvider;
 
@@ -21,11 +21,11 @@ class Checkout implements ConfigProviderInterface
     protected $logger;
 
     /**
-     * @param ConfigProvider  $gatewayConfigProvider
+     * @param GatewayConfigProvider $gatewayConfigProvider
      * @param LoggerInterface $logger
      */
     public function __construct(
-        \Swarming\SubscribePro\Gateway\Config\ConfigProvider $gatewayConfigProvider,
+        GatewayConfigProvider    $gatewayConfigProvider,
         \Psr\Log\LoggerInterface $logger
     ) {
         $this->gatewayConfigProvider = $gatewayConfigProvider;
@@ -41,11 +41,7 @@ class Checkout implements ConfigProviderInterface
     {
         try {
             $config = $this->gatewayConfigProvider->getConfig();
-        } catch (InvalidArgumentException $e) {
-            $this->logger->debug('Cannot load configuration from Subscribe Pro platform.');
-            $this->logger->info($e->getMessage());
-            $config = [];
-        } catch (HttpException $e) {
+        } catch (InvalidArgumentException|HttpException $e) {
             $this->logger->debug('Cannot load configuration from Subscribe Pro platform.');
             $this->logger->info($e->getMessage());
             $config = [];

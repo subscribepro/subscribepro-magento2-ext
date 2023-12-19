@@ -2,6 +2,8 @@
 
 namespace Swarming\SubscribePro\Model\CatalogRule\Inspector;
 
+use Magento\Catalog\Model\Product;
+use Magento\Quote\Model\Quote\Item\Option;
 use Swarming\SubscribePro\Model\CatalogRule\InspectorInterface;
 
 class BundleProduct extends DefaultInspector implements InspectorInterface
@@ -24,6 +26,7 @@ class BundleProduct extends DefaultInspector implements InspectorInterface
         $isApplied = false;
         $selectionIds = $this->getSelectionsIds($product);
         foreach ($selectionIds as $selectionId) {
+            /** @var Option $selection */
             $selection = $product->getCustomOption('selection_qty_' . $selectionId);
             if ($selection && $selection->getProduct()) {
                 $isApplied = $this->isAppliedToProduct($selection->getProduct());
@@ -41,7 +44,7 @@ class BundleProduct extends DefaultInspector implements InspectorInterface
      */
     protected function getSelectionsIds($product)
     {
-        /** @var \Magento\Catalog\Model\Product\Configuration\Item\Option $customOption */
+        /** @var Option $customOption */
         $customOption = $product->getCustomOption('bundle_selection_ids');
         return $customOption
             ? json_decode($customOption->getValue())

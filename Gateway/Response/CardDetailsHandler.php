@@ -4,6 +4,7 @@ namespace Swarming\SubscribePro\Gateway\Response;
 
 use Magento\Payment\Gateway\Helper\ContextHelper;
 use Magento\Payment\Gateway\Response\HandlerInterface;
+use Magento\Sales\Model\Order\Payment;
 
 class CardDetailsHandler implements HandlerInterface
 {
@@ -44,7 +45,7 @@ class CardDetailsHandler implements HandlerInterface
         $paymentDO = $this->subjectReader->readPayment($handlingSubject);
         $transaction = $this->subjectReader->readTransaction($response);
 
-        /** @var \Magento\Sales\Api\Data\OrderPaymentInterface $payment */
+        /** @var Payment $payment */
         $payment = $paymentDO->getPayment();
         ContextHelper::assertOrderPayment($payment);
 

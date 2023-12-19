@@ -48,7 +48,7 @@ class SetProduct implements ObserverInterface
             return;
         }
 
-        /** @var \Magento\Quote\Model\Quote\Item */
+        /** @var \Magento\Quote\Model\Quote\Item $item */
         $item = $observer->getEvent()->getData('quote_item');
         $itemFulfilsSubscriptions = $this->quoteItemHelper->isItemFulfilsSubscription($item);
         $fixedPrice = $this->quoteItemHelper->getFixedPrice($item);
@@ -56,7 +56,7 @@ class SetProduct implements ObserverInterface
             $item = ($item->getParentItem() ? $item->getParentItem() : $item);
             $item->setCustomPrice($fixedPrice);
             $item->setOriginalCustomPrice($fixedPrice);
-            $item->getProduct()->setIsSuperMode(true);
+            $item->getProduct()->setIsSuperMode(true);/* @phpstan-ignore-line */
         }
     }
 }

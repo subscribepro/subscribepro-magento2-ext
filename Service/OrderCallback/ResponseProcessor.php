@@ -4,9 +4,13 @@ declare(strict_types=1);
 
 namespace Swarming\SubscribePro\Service\OrderCallback;
 
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Sales\Api\Data\OrderAddressInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\Data\OrderItemInterface;
+use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Order\Address;
+use Magento\Sales\Model\Order\Item;
 
 class ResponseProcessor
 {
@@ -42,12 +46,14 @@ class ResponseProcessor
 
     /**
      * @param string $salesOrderToken
-     * @param \Magento\Sales\Api\Data\OrderInterface|\Magento\Sales\Model\Order $order
+     * @param \Magento\Sales\Api\Data\OrderInterface|Order $order
      * @param array $errorMessages
      * @return array
+     * @throws NoSuchEntityException
      */
     private function prepareSuccessResponse(string $salesOrderToken, OrderInterface $order, array $errorMessages): array
     {
+        /** @var Order $order */
         $websiteId = (int)$order->getStore()->getWebsiteId();
 
         $successResponse = [
@@ -106,6 +112,7 @@ class ResponseProcessor
      */
     private function prepareAddressData(OrderAddressInterface $orderAddress): array
     {
+        /** @var Address $orderAddress */
         return [
             'firstName' => $orderAddress->getFirstname(),
             'lastName' => $orderAddress->getLastname(),
@@ -127,6 +134,7 @@ class ResponseProcessor
      */
     private function prepareOrderItemData(OrderItemInterface $orderItem): array
     {
+        /** @var Item $orderItem */
         $buyRequestData = $orderItem->getProductOptionByCode('info_buyRequest');
         $subscriptionId = $buyRequestData['subscription_option']['subscription_id'] ?? null;
 

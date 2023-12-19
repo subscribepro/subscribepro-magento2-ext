@@ -58,7 +58,7 @@ class Update extends \Magento\Customer\Controller\AbstractAccount
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
 
         if (!$this->formKeyValidator->validate($this->getRequest())
-            || !$this->getRequest()->isPost()
+            || !$this->getRequest()->isPost() /* @phpstan-ignore-line */
             || !$this->platformVaultConfig->isActive()
         ) {
             return $resultRedirect->setPath('vault/cards/listaction');

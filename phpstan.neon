@@ -1,0 +1,9 @@
+parameters:
+    excludePaths:
+        - 'Test'
+    ignoreErrors:
+    	    - '#Call to an undefined method Magento\\Framework\\App\\RequestInterface\:\:isPost\(\)#'
+    	    - '#Call to an undefined method Magento\\Framework\\App\\RequestInterface\:\:getPost\(\)#'
+    	    - '#Call to an undefined method Magento\\Framework\\App\\RequestInterface\:\:getPostValue\(\)#'
+    	    - '#Call to an undefined method Magento\\Framework\\App\\RequestInterface\:\:getHeader\(\)#'
+    	    - '#Call to an undefined method Magento\\Framework\\App\\RequestInterface\:\:getContent\(\)#'

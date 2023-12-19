@@ -6,6 +6,7 @@ use Magento\Checkout\Block\Checkout\LayoutProcessorInterface;
 use Magento\Directory\Helper\Data as DirectoryHelper;
 use Magento\Directory\Model\ResourceModel\Region\CollectionFactory;
 use Magento\Framework\App\ObjectManager;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Store\Model\StoreManagerInterface;
 
 /**
@@ -32,7 +33,7 @@ class SubscriptionsDirectoryDataProcessor implements LayoutProcessorInterface
     protected $regionCollectionFactory;
 
     /**
-     * @var CollectionFactory
+     * @var \Magento\Directory\Model\ResourceModel\Country\CollectionFactory
      */
     protected $countryCollectionFactory;
 
@@ -70,6 +71,7 @@ class SubscriptionsDirectoryDataProcessor implements LayoutProcessorInterface
      *
      * @param array $jsLayout
      * @return array
+     * @throws NoSuchEntityException
      */
     public function process($jsLayout)
     {
@@ -87,6 +89,7 @@ class SubscriptionsDirectoryDataProcessor implements LayoutProcessorInterface
      * Get country options list.
      *
      * @return array
+     * @throws NoSuchEntityException
      */
     protected function getCountryOptions()
     {

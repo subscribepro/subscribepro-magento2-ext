@@ -123,8 +123,8 @@ class Index extends Action implements CsrfAwareActionInterface
     {
         $secretKey = $this->advancedConfig->getWebhookSecretKey();
 
-        $hashFromRequest = $this->request->getHeader(self::WEBHOOK_HASH_HEADER_KEY);
-        $body = $this->request->getContent();
+        $hashFromRequest = $this->request->getHeader(self::WEBHOOK_HASH_HEADER_KEY); /* @phpstan-ignore-line */
+        $body = $this->request->getContent(); /* @phpstan-ignore-line */
 
         if (!$hashFromRequest) {
             return false;

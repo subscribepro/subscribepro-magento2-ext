@@ -38,9 +38,9 @@ class TokensConfigProvider
     private SearchCriteriaBuilder $searchCriteriaBuilder;
 
     /**
-     * @var SessionManagerInterface
+     * @var Quote
      */
-    private SessionManagerInterface $session;
+    private Quote $session;
 
     /**
      * @var DateTimeFactory
@@ -72,7 +72,7 @@ class TokensConfigProvider
     /**
      * Constructor
      *
-     * @param SessionManagerInterface $session
+     * @param Quote $session
      * @param PaymentTokenRepositoryInterface $paymentTokenRepository
      * @param FilterBuilder $filterBuilder
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
@@ -127,6 +127,7 @@ class TokensConfigProvider
         $result = [];
         $customerId = $this->session->getCustomerId();
 
+        /** @var \Magento\Vault\Model\VaultPaymentInterface $vaultPayment */
         $vaultPayment = $this->getVaultPayment($vaultPaymentCode);
         if ($vaultPayment === null) {
             return $result;
@@ -234,6 +235,7 @@ class TokensConfigProvider
      */
     private function getOrderPaymentEntityId()
     {
+        /* @phpstan-ignore-next-line */
         $orderId = $this->session->getReordered()
             ?: $this->session->getOrder()->getEntityId();
         $order = $this->orderRepository->get($orderId);

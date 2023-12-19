@@ -6,6 +6,8 @@ namespace Swarming\SubscribePro\Model\Quote\Payment;
 
 use Magento\Sales\Api\Data\OrderAddressInterface;
 use Magento\Sales\Api\Data\OrderPaymentInterface;
+use Magento\Sales\Model\Order\Address;
+use Magento\Sales\Model\Order\Payment;
 use Magento\Vault\Api\Data\PaymentTokenInterface;
 use SubscribePro\Service\Address\AddressInterface;
 use SubscribePro\Service\PaymentProfile\PaymentProfileInterface;
@@ -55,7 +57,7 @@ class GetPaymentProfileId
         if (!$paymentToken || !$paymentToken->getIsActive()) {
             throw new \UnexpectedValueException('The vault is not found.');
         }
-
+        /** @var Payment $payment */
         return $paymentToken->getPaymentMethodCode() === SubscribeProConfigProvider::CODE
             ? $paymentToken->getGatewayToken()
             : $this->getExternalProfileId($paymentToken, $payment->getOrder(), $platformCustomerId);
@@ -119,6 +121,7 @@ class GetPaymentProfileId
      */
     private function getBillingAddressData(OrderAddressInterface $billingAddress): array
     {
+        /** @var Address $billingAddress */
         return [
             AddressInterface::FIRST_NAME => $billingAddress->getFirstname(),
             AddressInterface::LAST_NAME => $billingAddress->getLastname(),

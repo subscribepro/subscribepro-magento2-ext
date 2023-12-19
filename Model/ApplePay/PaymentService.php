@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Swarming\SubscribePro\Model\ApplePay;
 
+use Magento\Checkout\Model\Session;
 use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Directory\Model\Currency;
 use Magento\Directory\Model\Region as DirectoryRegion;
@@ -12,6 +13,7 @@ use Magento\Framework\Serialize\Serializer\Json as JsonSerializer;
 use Magento\Framework\Session\SessionManagerInterface;
 use Magento\Quote\Api\Data\AddressInterface;
 use Magento\Quote\Model\Quote;
+use Magento\Quote\Model\Quote\Address as QuoteAddress;
 use Magento\Quote\Model\QuoteManagement;
 use Magento\Quote\Model\ResourceModel\Quote as QuoteResourceModel;
 use Magento\Quote\Model\ResourceModel\Quote\Payment as QuotePaymentResourceModel;
@@ -38,7 +40,7 @@ class PaymentService
      */
     private $applePayVaultHelper;
     /**
-     * @var SessionManagerInterface
+     * @var Session
      */
     private $checkoutSession;
     /**
@@ -133,7 +135,7 @@ class PaymentService
         $this->logger = $logger;
     }
     /**
-     * @return \Magento\Quote\Api\Data\CartInterface|Quote
+     * @return Quote
      */
     protected function getQuote()
     {
@@ -230,11 +232,13 @@ class PaymentService
     }
 
     /**
-     * @param \Magento\Quote\Api\Data\AddressInterface       $magentoAddress
-     * @param \SubscribePro\Service\Address\AddressInterface $platformAddress
+     * @param AddressInterface $magentoAddress
+     * @param $platformAddress
+     * @return void
      */
     protected function mapMagentoAddressToPlatform(AddressInterface $magentoAddress, $platformAddress)
     {
+        /** @var QuoteAddress $magentoAddress */
         $platformAddress->setFirstName($magentoAddress->getData('firstname'));
         $platformAddress->setLastName($magentoAddress->getData('lastname'));
         $platformAddress->setCompany($magentoAddress->getData('company'));
@@ -257,10 +261,10 @@ class PaymentService
     }
 
     /**
-     * @param string|null $type
-     * @param bool        $throwExceptionOnTypeNotFound
-     *
-     * @return mixed|null
+     * @param $type
+     * @param $throwExceptionOnTypeNotFound
+     * @return string|null
+     * @throws LocalizedException
      */
     public function mapSubscribeProCardTypeToMagento($type, $throwExceptionOnTypeNotFound = true)
     {

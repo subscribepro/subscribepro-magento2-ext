@@ -70,6 +70,7 @@ class QuoteManagement implements CartManagementInterface
      */
     public function createEmptyCartForCustomer($customerId)
     {
+        /** @phpstan-ignore-next-line */
         $storeId = $this->storeManager->getStore()->getStoreId();
         $quote = $this->createCustomerCart($customerId, $storeId);
 
@@ -100,8 +101,8 @@ class QuoteManagement implements CartManagementInterface
     }
 
     /**
-     * @param int $cartId
-     * @return string|null
+     * @param $cartId
+     * @return void
      * @throws CouldNotSaveException
      * @throws NoSuchEntityException
      */

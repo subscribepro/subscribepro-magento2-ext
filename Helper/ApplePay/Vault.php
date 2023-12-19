@@ -12,7 +12,7 @@ class Vault
     /**
      * @var PlatformServiceToken
      */
-    private $platformServiceToken;
+    private PlatformServiceToken $platformServiceToken;
 
     /**
      * Construct Vault.
@@ -35,6 +35,7 @@ class Vault
         array $applePayPaymentData
     ): TokenInterface {
         // Build request data
+        /** @var \SubscribePro\Service\Address\Address $billingAddress */
         $requestData = [
             'billing_address' => [
                 'first_name' => $billingAddress->getData('firstname'),

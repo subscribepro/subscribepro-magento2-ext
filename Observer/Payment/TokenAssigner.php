@@ -3,6 +3,7 @@
 namespace Swarming\SubscribePro\Observer\Payment;
 
 use Magento\Framework\Event\Observer;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Quote\Api\Data\PaymentInterface;
 use Magento\Quote\Model\Quote\Payment as QuotePayment;
 use Magento\Vault\Api\Data\PaymentTokenInterface;
@@ -29,6 +30,7 @@ class TokenAssigner extends \Magento\Payment\Observer\AbstractDataAssignObserver
     /**
      * @param \Magento\Framework\Event\Observer $observer
      * @return void
+     * @throws LocalizedException
      */
     public function execute(Observer $observer)
     {
@@ -49,7 +51,7 @@ class TokenAssigner extends \Magento\Payment\Observer\AbstractDataAssignObserver
         }
 
         $quote = $paymentModel->getQuote();
-        $customerId = $quote->getCustomer()->getId();
+        $customerId = $quote->getCustomerId();
         if ($customerId === null) {
             return;
         }

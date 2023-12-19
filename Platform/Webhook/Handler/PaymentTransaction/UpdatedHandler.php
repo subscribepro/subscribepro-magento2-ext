@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace Swarming\SubscribePro\Platform\Webhook\Handler\PaymentTransaction;
 
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Quote\Model\Quote;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\Data\OrderPaymentInterface;
 use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Order\Payment;
 use SubscribePro\Service\Transaction\TransactionInterface;
 use SubscribePro\Service\Webhook\EventInterface;
 use Swarming\SubscribePro\Gateway\Config\ConfigProvider as GatewayConfigProvider;
@@ -104,6 +107,7 @@ class UpdatedHandler implements HandlerInterface
      */
     private function approveOrder(OrderInterface $order)
     {
+        /** @var Payment $orderPayment */
         $orderPayment = $this->getOrderPayment($order);
         $orderPayment->accept();
         $this->orderRepository->save($order);
@@ -116,6 +120,8 @@ class UpdatedHandler implements HandlerInterface
      */
     private function createSubscriptions(OrderInterface $order)
     {
+        /** @var Order $order */
+        /** @var Quote $quote */
         $quote = $this->quoteRepository->get($order->getQuoteId());
         if ($order->getPayment()->getMethod() == GatewayConfigProvider::CODE && $quote->getCustomerId()) {
             $this->addProductOptionsToQuoteItems($quote);
@@ -142,9 +148,11 @@ class UpdatedHandler implements HandlerInterface
     /**
      * @param \Magento\Sales\Api\Data\OrderInterface $order
      * @return void
+     * @throws LocalizedException
      */
     private function declineOrder(OrderInterface $order)
     {
+        /** @var Payment $orderPayment */
         $orderPayment = $this->getOrderPayment($order);
         $orderPayment->deny();
         $this->orderRepository->save($order);

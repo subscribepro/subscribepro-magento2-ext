@@ -143,7 +143,6 @@ class ApplePay extends Template
     }
 
     /**
-     * @param null $storeId
      * @return string
      */
     public function getMerchantDomainName(): string
