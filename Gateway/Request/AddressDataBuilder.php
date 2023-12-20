@@ -50,7 +50,8 @@ class AddressDataBuilder implements BuilderInterface
                 AddressInterface::CITY => $billingAddress->getCity(),
                 AddressInterface::REGION => $billingAddress->getRegionCode(),
                 AddressInterface::POSTCODE => $billingAddress->getPostcode(),
-                AddressInterface::COUNTRY => $billingAddress->getCountryId()
+                AddressInterface::COUNTRY => $billingAddress->getCountryId(),
+                AddressInterface::PHONE => $billingAddress->getTelephone(),
             ];
         }
 
