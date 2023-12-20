@@ -2,6 +2,7 @@
 
 namespace Swarming\SubscribePro\Block\Adminhtml\Order\Create\Items;
 
+use Magento\Backend\Model\Session\Quote;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\CatalogInventory\Api\StockRegistryInterface;
 use Magento\CatalogInventory\Api\StockStateInterface;
@@ -31,8 +32,13 @@ class Grid extends \Magento\Sales\Block\Adminhtml\Order\Create\Items\Grid
     protected $platformProductManager;
 
     /**
+     * @var Quote
+     */
+    protected Quote $sessionQuote;
+
+    /**
      * @param \Magento\Backend\Block\Template\Context $context
-     * @param \Magento\Backend\Model\Session\Quote $sessionQuote
+     * @param Quote $sessionQuote
      * @param \Magento\Sales\Model\AdminOrder\Create $orderCreate
      * @param PriceCurrencyInterface $priceCurrency
      * @param \Magento\Wishlist\Model\WishlistFactory $wishlistFactory
@@ -50,7 +56,7 @@ class Grid extends \Magento\Sales\Block\Adminhtml\Order\Create\Items\Grid
      */
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
-        \Magento\Backend\Model\Session\Quote $sessionQuote,
+        Quote $sessionQuote,
         \Magento\Sales\Model\AdminOrder\Create $orderCreate,
         PriceCurrencyInterface $priceCurrency,
         \Magento\Wishlist\Model\WishlistFactory $wishlistFactory,

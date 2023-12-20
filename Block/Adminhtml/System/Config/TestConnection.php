@@ -12,6 +12,11 @@ class TestConnection extends PlatformField
     protected $_template = 'system/config/test_connection.phtml';
 
     /**
+     * @var string
+     */
+    protected string $_htmlId;
+
+    /**
      * @param \Magento\Framework\Data\Form\Element\AbstractElement $element
      * @return string
      */
@@ -79,5 +84,16 @@ class TestConnection extends PlatformField
     public function getWebsiteCode()
     {
         return $this->getRequest()->getParam('website', '');
+    }
+
+    /**
+     * Set html id
+     *
+     * @param string $htmlId
+     * @return void
+     */
+    public function setHtmlId(string $htmlId): void
+    {
+        $this->_htmlId = $htmlId;
     }
 }

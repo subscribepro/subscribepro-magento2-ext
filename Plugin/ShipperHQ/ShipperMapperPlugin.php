@@ -34,7 +34,7 @@ class ShipperMapperPlugin
      * @return array
      */
     public function aroundPopulateAttributes(
-        \ShipperHQ\Shipper\Model\Carrier\Processor\ShipperMapper $mapper,
+        \ShipperHQ\Shipper\Model\Carrier\Processor\ShipperMapper $mapper, /* @phpstan-ignore-line */
         callable $proceed,
         $reqdAttributeNames,
         $item
@@ -43,6 +43,7 @@ class ShipperMapperPlugin
 
         if ($recurringShippingCode = $this->determineSubscriptionCode($item)) {
             $shippingGroup = '';
+            $shippingKey = '';
             $shippingGroupSet = false;
 
             if (is_array($attributes)) {
@@ -55,7 +56,7 @@ class ShipperMapperPlugin
                 }
                 if (!$shippingGroupSet) {
                     $attributes[] = ['name' => 'shipperhq_shipping_group', 'value' => $recurringShippingCode];
-                } else {
+                } else{
                     $attributes[$shippingKey] = ['name' => 'shipperhq_shipping_group', 'value' => $shippingGroup];
                 }
             }

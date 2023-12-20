@@ -130,7 +130,7 @@ class OrderItem
     /**
      * @param \Magento\Sales\Model\Order\Item $orderItem
      * @param array $additionalOptions
-     * @return array
+     * @return void
      */
     protected function setAdditionalOptions($orderItem, $additionalOptions)
     {

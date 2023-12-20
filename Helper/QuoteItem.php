@@ -154,15 +154,13 @@ class QuoteItem
     {
         $buyRequest = $item->getOptionByCode('info_buyRequest');
         $buyRequest = $buyRequest ? json_decode($buyRequest->getValue(), true) : [];
-        return isset($buyRequest[OptionProcessor::KEY_SUBSCRIPTION_OPTION])
-            ? $buyRequest[OptionProcessor::KEY_SUBSCRIPTION_OPTION]
-            : [];
+        return $buyRequest[OptionProcessor::KEY_SUBSCRIPTION_OPTION] ?? [];
     }
 
     /**
      * @param \Magento\Quote\Model\Quote\Item\AbstractItem $item
      * @param array $params
-     * @return array
+     * @return void
      */
     protected function setSubscriptionParams($item, $params)
     {
