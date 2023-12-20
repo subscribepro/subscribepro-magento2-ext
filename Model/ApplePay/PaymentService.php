@@ -13,7 +13,6 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Serialize\Serializer\Json as JsonSerializer;
 use Magento\Framework\Session\SessionManagerInterface;
 use Magento\Quote\Api\Data\AddressInterface;
-use Magento\Quote\Api\Data\CartInterface;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\Address as QuoteAddress;
 use Magento\Quote\Model\QuoteManagement;
@@ -50,10 +49,6 @@ class PaymentService
      */
     private $customerSession;
     /**
-     * @var Currency
-     */
-    private $currency;
-    /**
      * @var DirectoryRegion
      */
     private $directoryRegion;
@@ -70,10 +65,6 @@ class PaymentService
      */
     private $orderService;
     /**
-     * @var QuoteManagement
-     */
-    private $quoteManagement;
-    /**
      * @var QuotePaymentResourceModel
      */
     private $quotePaymentResourceModel;
@@ -85,56 +76,43 @@ class PaymentService
      * @var JsonSerializer
      */
     private $jsonSerializer;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
 
     /**
      * Construct the payment service.
      *
-     * @param SessionManagerInterface        $checkoutSession
-     * @param CustomerSession                $customerSession
-     * @param Currency                       $currency
-     * @param DirectoryRegion                $directoryRegion
-     * @param PlatformCustomer               $platformCustomer
+     * @param SessionManagerInterface $checkoutSession
+     * @param CustomerSession $customerSession
+     * @param DirectoryRegion $directoryRegion
+     * @param PlatformCustomer $platformCustomer
      * @param PlatformApplePayPaymentProfile $platformPaymentProfile
-     * @param OrderService                   $orderService
-     * @param QuoteManagement                $quoteManagement
-     * @param QuotePaymentResourceModel      $quotePaymentResourceModel
-     * @param QuoteResourceModel             $quoteResourceModel
-     * @param JsonSerializer                 $jsonSerializer
-     * @param ApplePayVaultHelper            $vault
-     * @param LoggerInterface                $logger
+     * @param OrderService $orderService
+     * @param QuotePaymentResourceModel $quotePaymentResourceModel
+     * @param QuoteResourceModel $quoteResourceModel
+     * @param JsonSerializer $jsonSerializer
+     * @param ApplePayVaultHelper $vault
      */
     public function __construct(
         SessionManagerInterface $checkoutSession,
         CustomerSession $customerSession,
-        Currency $currency,
         DirectoryRegion $directoryRegion,
         PlatformCustomer $platformCustomer,
         PlatformApplePayPaymentProfile $platformPaymentProfile,
         OrderService $orderService,
-        QuoteManagement $quoteManagement,
         QuotePaymentResourceModel $quotePaymentResourceModel,
         QuoteResourceModel $quoteResourceModel,
         JsonSerializer $jsonSerializer,
-        ApplePayVaultHelper $vault,
-        LoggerInterface $logger
+        ApplePayVaultHelper $vault
     ) {
         $this->checkoutSession = $checkoutSession;
         $this->customerSession = $customerSession;
-        $this->currency = $currency;
         $this->directoryRegion = $directoryRegion;
         $this->platformCustomer = $platformCustomer;
         $this->platformPaymentProfile = $platformPaymentProfile;
         $this->orderService = $orderService;
-        $this->quoteManagement = $quoteManagement;
         $this->quotePaymentResourceModel = $quotePaymentResourceModel;
         $this->quoteResourceModel = $quoteResourceModel;
         $this->jsonSerializer = $jsonSerializer;
         $this->applePayVaultHelper = $vault;
-        $this->logger = $logger;
     }
 
     /**

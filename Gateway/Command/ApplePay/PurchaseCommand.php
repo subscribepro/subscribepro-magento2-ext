@@ -26,9 +26,7 @@ class PurchaseCommand extends AbstractProfileCreatorCommand implements CommandIn
             throw new \InvalidArgumentException(__('Payment token is not passed'));
         }
         $transaction = $this->platformTransactionService->createTransaction($requestData);
-        if (!empty($requestData[VaultConfigProvider::IS_ACTIVE_CODE])
-            && $requestData[VaultConfigProvider::IS_ACTIVE_CODE]
-        ) {
+        if (!empty($requestData[VaultConfigProvider::IS_ACTIVE_CODE])) {
             $this->platformTransactionService->purchaseByProfile([
                 VaultDataBuilder::PAYMENT_PROFILE_ID => $requestData[ApplePayPaymentDataBuilder::PLATFORM_PROFILE_ID]
             ], $transaction);
