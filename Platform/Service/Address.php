@@ -11,8 +11,8 @@ class Address extends AbstractService
 {
     /**
      * @param array $platformAddressData
-     * @param int|null $websiteId
-     * @return \Swarming\SubscribePro\Api\Data\AddressInterface
+     * @param $websiteId
+     * @return \SubscribePro\Service\Address\AddressInterface
      */
     public function createAddress(array $platformAddressData = [], $websiteId = null)
     {
@@ -20,10 +20,9 @@ class Address extends AbstractService
     }
 
     /**
-     * @param int $platformAddressId
-     * @param int|null $websiteId
-     * @return \Swarming\SubscribePro\Api\Data\AddressInterface
-     * @throws \SubscribePro\Exception\HttpException
+     * @param $platformAddressId
+     * @param $websiteId
+     * @return \SubscribePro\Service\Address\AddressInterface
      */
     public function loadAddress($platformAddressId, $websiteId = null)
     {
@@ -31,11 +30,9 @@ class Address extends AbstractService
     }
 
     /**
-     * @param \Swarming\SubscribePro\Api\Data\AddressInterface $platformAddress
-     * @param int|null $websiteId
-     * @return \Swarming\SubscribePro\Api\Data\AddressInterface
-     * @throws \SubscribePro\Exception\EntityInvalidDataException
-     * @throws \SubscribePro\Exception\HttpException
+     * @param AddressInterface $platformAddress
+     * @param $websiteId
+     * @return \SubscribePro\Service\Address\AddressInterface
      */
     public function saveAddress(AddressInterface $platformAddress, $websiteId = null)
     {
@@ -43,11 +40,9 @@ class Address extends AbstractService
     }
 
     /**
-     * @param \Swarming\SubscribePro\Api\Data\AddressInterface $platformAddress
-     * @param int|null $websiteId
-     * @return \Swarming\SubscribePro\Api\Data\AddressInterface
-     * @throws \SubscribePro\Exception\EntityInvalidDataException
-     * @throws \SubscribePro\Exception\HttpException
+     * @param AddressInterface $platformAddress
+     * @param $websiteId
+     * @return \SubscribePro\Service\Address\AddressInterface
      */
     public function findOrSave(AddressInterface $platformAddress, $websiteId = null)
     {
@@ -55,10 +50,9 @@ class Address extends AbstractService
     }
 
     /**
-     * @param int|null $customerId
-     * @param int|null $websiteId
-     * @return \Swarming\SubscribePro\Api\Data\AddressInterface[]
-     * @throws \SubscribePro\Exception\HttpException
+     * @param $customerId
+     * @param $websiteId
+     * @return \SubscribePro\Service\Address\AddressInterface[]
      */
     public function loadAddresses($customerId = null, $websiteId = null)
     {

@@ -2,6 +2,8 @@
 
 namespace Swarming\SubscribePro\Model\Quote;
 
+use Magento\Framework\Exception\NoSuchEntityException;
+
 class SubscriptionCreator
 {
     public const CREATED_SUBSCRIPTION_IDS = 'created_subscription_ids';
@@ -70,9 +72,10 @@ class SubscriptionCreator
     }
 
     /**
-     * @param \Magento\Quote\Model\Quote $quote
-     * @param \Magento\Sales\Api\Data\OrderInterface $order
-     * @return string[]
+     * @param $quote
+     * @param $order
+     * @return array
+     * @throws NoSuchEntityException
      */
     public function createSubscriptions($quote, $order)
     {

@@ -41,9 +41,7 @@ class AddSubscriptionEnabledProductAttributePatch implements
     }
 
     /**
-     * Do Upgrade
-     *
-     * @return void
+     * @inheritdoc
      */
     public function apply()
     {
@@ -74,6 +72,7 @@ class AddSubscriptionEnabledProductAttributePatch implements
                 'apply_to' => 'simple,configurable,bundle,virtual,downloadable'
             ]
         );
+        return $this;
     }
 
     /**

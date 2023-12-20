@@ -52,6 +52,7 @@ class CaptureStrategyCommand implements CommandInterface
 
         $command = $this->getCommand($paymentInfo);
         $this->commandPool->get($command)->execute($commandSubject);
+        return null;
     }
 
     /**

@@ -76,12 +76,13 @@ class SubscriptionCreator
     }
 
     /**
-     * @param Item $quoteItem
-     * @param int $platformCustomerId
-     * @param int $paymentProfileId
-     * @param Address|null $shippingAddress
-     * @param Address|null $billingAddress
-     * @return int
+     * @param $quoteItem
+     * @param $platformCustomerId
+     * @param $paymentProfileId
+     * @param $shippingAddress
+     * @param $billingAddress
+     * @return false|int|null
+     * @throws \Exception
      */
     public function create($quoteItem, $platformCustomerId, $paymentProfileId, $shippingAddress = null, $billingAddress = null)
     {

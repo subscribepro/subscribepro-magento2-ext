@@ -9,9 +9,11 @@ use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Directory\Model\Currency;
 use Magento\Directory\Model\Region as DirectoryRegion;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Serialize\Serializer\Json as JsonSerializer;
 use Magento\Framework\Session\SessionManagerInterface;
 use Magento\Quote\Api\Data\AddressInterface;
+use Magento\Quote\Api\Data\CartInterface;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\Address as QuoteAddress;
 use Magento\Quote\Model\QuoteManagement;
@@ -40,7 +42,7 @@ class PaymentService
      */
     private $applePayVaultHelper;
     /**
-     * @var Session
+     * @var SessionManagerInterface
      */
     private $checkoutSession;
     /**
@@ -134,13 +136,18 @@ class PaymentService
         $this->applePayVaultHelper = $vault;
         $this->logger = $logger;
     }
+
     /**
      * @return Quote
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
     protected function getQuote()
     {
         if (!$this->quote) {
-            $this->quote = $this->checkoutSession->getQuote();
+            /** @var Session $checkoutSession */
+            $checkoutSession = $this->checkoutSession;
+            $this->quote = $checkoutSession->getQuote();
         }
 
         return $this->quote;
