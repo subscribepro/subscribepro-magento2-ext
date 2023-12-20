@@ -162,7 +162,7 @@ class Subscription extends \Magento\Catalog\Block\Product\AbstractProduct
     }
 
     /**
-     * @return \Swarming\SubscribePro\Api\Data\ProductInterface
+     * @return \SubscribePro\Service\Product\ProductInterface|ProductInterface
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     protected function getPlatformProduct()

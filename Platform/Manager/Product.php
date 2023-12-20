@@ -41,13 +41,14 @@ class Product
             $platformProduct = $this->retrieveProduct($sku, $websiteId);
             $this->platformProductStorage->save($platformProduct, $websiteId);
         }
+        /* @phpstan-ignore-next-line */
         return $platformProduct;
     }
 
     /**
      * @param string $sku
      * @param int|null $websiteId
-     * @return \Swarming\SubscribePro\Api\Data\ProductInterface
+     * @return \SubscribePro\Service\Product\ProductInterface
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     protected function retrieveProduct($sku, $websiteId = null)
@@ -62,7 +63,7 @@ class Product
     /**
      * @param \Magento\Catalog\Api\Data\ProductInterface $product
      * @param int|null $websiteId
-     * @return \Swarming\SubscribePro\Api\Data\ProductInterface
+     * @return \SubscribePro\Service\Product\ProductInterface
      * @throws \SubscribePro\Exception\InvalidArgumentException
      * @throws \SubscribePro\Exception\HttpException
      */
@@ -83,7 +84,7 @@ class Product
     /**
      * @param \Magento\Catalog\Api\Data\ProductInterface $product
      * @param string|int|null $websiteId
-     * @return \Swarming\SubscribePro\Api\Data\ProductInterface
+     * @return \SubscribePro\Service\Product\ProductInterface
      */
     protected function retrieveOrCreateNewProduct($product, $websiteId = null)
     {

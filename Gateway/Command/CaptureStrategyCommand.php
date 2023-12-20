@@ -37,9 +37,9 @@ class CaptureStrategyCommand implements CommandInterface
 
     /**
      * @param array $commandSubject
-     * @return void
-     * @throws NotFoundException
+     * @return null
      * @throws CommandException
+     * @throws NotFoundException
      */
     public function execute(array $commandSubject)
     {

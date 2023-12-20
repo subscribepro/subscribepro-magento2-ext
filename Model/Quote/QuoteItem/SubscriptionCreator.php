@@ -81,7 +81,7 @@ class SubscriptionCreator
      * @param $paymentProfileId
      * @param $shippingAddress
      * @param $billingAddress
-     * @return false|int|null
+     * @return false|string|null
      * @throws \Exception
      */
     public function create($quoteItem, $platformCustomerId, $paymentProfileId, $shippingAddress = null, $billingAddress = null)
@@ -91,6 +91,7 @@ class SubscriptionCreator
         $productSku = $this->getProductSku($quoteItem);
         $storeTimezone = new \DateTimeZone($store->getConfig('general/locale/timezone'));
         try {
+            /** @var \Swarming\SubscribePro\Model\Subscription $subscription */
             $subscription = $this->platformSubscriptionService->createSubscription();
             $subscription->setCustomerId($platformCustomerId);
             $subscription->setPaymentProfileId($paymentProfileId);

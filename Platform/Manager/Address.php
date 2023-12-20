@@ -22,7 +22,7 @@ class Address
      * @param \Magento\Customer\Model\Address\AbstractAddress $address
      * @param int $platformCustomerId
      * @param int|null $websiteId
-     * @return \Swarming\SubscribePro\Api\Data\AddressInterface
+     * @return \SubscribePro\Service\Address\AddressInterface
      * @throws \SubscribePro\Exception\HttpException
      * @throws \SubscribePro\Exception\InvalidArgumentException
      */
