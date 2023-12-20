@@ -3,6 +3,7 @@
 namespace Swarming\SubscribePro\Model\Quote\SubscriptionOption;
 
 use Magento\Quote\Api\Data\CartItemInterface;
+use Magento\Quote\Model\Quote\Item;
 use Magento\Quote\Model\Quote\Item\CartItemProcessorInterface;
 
 class OptionProcessor implements CartItemProcessorInterface
@@ -98,6 +99,7 @@ class OptionProcessor implements CartItemProcessorInterface
      */
     protected function getOptions(CartItemInterface $cartItem)
     {
+        /** @var Item $cartItem */
         $buyRequest = !empty($cartItem->getOptionByCode('info_buyRequest'))
             ? json_decode($cartItem->getOptionByCode('info_buyRequest')->getValue(), true)
             : null;

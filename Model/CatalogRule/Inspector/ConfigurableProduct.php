@@ -2,12 +2,14 @@
 
 namespace Swarming\SubscribePro\Model\CatalogRule\Inspector;
 
+use Magento\Catalog\Model\Product;
+use Magento\Quote\Model\Quote\Item\Option;
 use Swarming\SubscribePro\Model\CatalogRule\InspectorInterface;
 
 class ConfigurableProduct extends DefaultInspector implements InspectorInterface
 {
     /**
-     * @param \Magento\Catalog\Model\Product $product
+     * @param Product $product
      * @return bool
      */
     public function isApplied($product)
@@ -19,11 +21,12 @@ class ConfigurableProduct extends DefaultInspector implements InspectorInterface
     }
 
     /**
-     * @param \Magento\Catalog\Model\Product $product
-     * @return \Magento\Catalog\Model\Product
+     * @param Product $product
+     * @return Product
      */
     protected function getChildProduct($product)
     {
+        /** @var Option $customOption */
         $customOption = $product->getCustomOption('simple_product');
         return $customOption && $customOption->getProduct() ? $customOption->getProduct() : null;
     }

@@ -2,30 +2,34 @@
 
 namespace Swarming\SubscribePro\Block\Checkout\Onepage\Success;
 
+use Magento\Checkout\Model\Session;
+use Magento\Framework\View\Element\Template;
+use Magento\Framework\View\Element\Template\Context;
+use Swarming\SubscribePro\Model\Config\General;
 use Swarming\SubscribePro\Model\Quote\SubscriptionCreator;
 
-class Subscriptions extends \Magento\Framework\View\Element\Template
+class Subscriptions extends Template
 {
     /**
-     * @var \Magento\Checkout\Model\Session
+     * @var Session
      */
-    protected $checkoutSession;
+    protected Session $checkoutSession;
 
     /**
-     * @var \Swarming\SubscribePro\Model\Config\General
+     * @var General
      */
-    protected $generalConfig;
+    protected General $generalConfig;
 
     /**
-     * @param \Magento\Framework\View\Element\Template\Context $context
-     * @param \Swarming\SubscribePro\Model\Config\General $generalConfig
-     * @param \Magento\Checkout\Model\Session $checkoutSession
+     * @param Context $context
+     * @param General $generalConfig
+     * @param Session $checkoutSession
      * @param array $data
      */
     public function __construct(
-        \Magento\Framework\View\Element\Template\Context $context,
-        \Swarming\SubscribePro\Model\Config\General $generalConfig,
-        \Magento\Checkout\Model\Session $checkoutSession,
+        Context $context,
+        General $generalConfig,
+        Session $checkoutSession,
         array $data = []
     ) {
         $this->checkoutSession = $checkoutSession;
@@ -36,7 +40,7 @@ class Subscriptions extends \Magento\Framework\View\Element\Template
     /**
      * @return int
      */
-    public function getCountSubscriptions()
+    public function getCountSubscriptions(): int
     {
         $createdSubscriptionIds = $this->checkoutSession->getData(SubscriptionCreator::CREATED_SUBSCRIPTION_IDS);
         return !empty($createdSubscriptionIds) ? count($createdSubscriptionIds) : 0;
@@ -45,17 +49,19 @@ class Subscriptions extends \Magento\Framework\View\Element\Template
     /**
      * @return bool
      */
-    public function hasFailedSubscriptions()
+    public function hasFailedSubscriptions(): bool
     {
         return (bool)$this->checkoutSession->getData(SubscriptionCreator::FAILED_SUBSCRIPTION_COUNT);
     }
 
     /**
-     * @return null
+     * @return void
      */
     public function clearSubscriptionSessionData()
     {
+        /* @phpstan-ignore-next-line */
         $this->checkoutSession->setData(SubscriptionCreator::CREATED_SUBSCRIPTION_IDS, []);
+        /* @phpstan-ignore-next-line */
         $this->checkoutSession->setData(SubscriptionCreator::FAILED_SUBSCRIPTION_COUNT, 0);
     }
 

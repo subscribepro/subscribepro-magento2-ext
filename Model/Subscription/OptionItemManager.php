@@ -2,6 +2,7 @@
 
 namespace Swarming\SubscribePro\Model\Subscription;
 
+use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\Product\Type\AbstractType as ProductAbstractType;
 use Magento\Framework\Exception\NoSuchEntityException;
 
@@ -77,12 +78,13 @@ class OptionItemManager
     }
 
     /**
-     * @param \Magento\Catalog\Api\Data\ProductInterface|\Magento\Catalog\Model\Product $product
+     * @param \Magento\Catalog\Api\Data\ProductInterface|Product $product
      * @param \Magento\Quote\Api\Data\CartItemInterface $cartItem
      * @return array
      */
     protected function getOptions($product, $cartItem)
     {
+        /** @var Product $product */
         $product->unsetData('_cache_instance_options_collection'); /* TODO Temporary magento bug fix */
 
         $buyRequest = $this->cartItemOptionProcessor->getBuyRequest($product->getTypeId(), $cartItem);

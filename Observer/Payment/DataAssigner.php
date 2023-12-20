@@ -3,8 +3,10 @@
 namespace Swarming\SubscribePro\Observer\Payment;
 
 use Magento\Framework\Event\Observer;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Quote\Api\Data\PaymentInterface;
 use Magento\Sales\Api\Data\OrderPaymentInterface;
+use Magento\Sales\Model\Order\Payment;
 use SubscribePro\Service\PaymentProfile\PaymentProfileInterface;
 use SubscribePro\Service\Transaction\TransactionInterface;
 use Swarming\SubscribePro\Gateway\Request\PaymentDataBuilder;
@@ -14,7 +16,7 @@ class DataAssigner extends \Magento\Payment\Observer\AbstractDataAssignObserver
     /**
      * @var array
      */
-    protected $additionalInformationList = [
+    protected array $additionalInformationList = [
         PaymentDataBuilder::PAYMENT_METHOD_TOKEN,
         TransactionInterface::BROWSER_INFO,
         PaymentProfileInterface::CREDITCARD_FIRST_DIGITS,
@@ -23,8 +25,9 @@ class DataAssigner extends \Magento\Payment\Observer\AbstractDataAssignObserver
     ];
 
     /**
-     * @param \Magento\Framework\Event\Observer $observer
+     * @param Observer $observer
      * @return void
+     * @throws LocalizedException
      */
     public function execute(Observer $observer)
     {
@@ -34,7 +37,7 @@ class DataAssigner extends \Magento\Payment\Observer\AbstractDataAssignObserver
         if (!is_array($additionalData)) {
             return;
         }
-
+        /** @var Payment $paymentInfo */
         $paymentInfo = $this->readPaymentModelArgument($observer);
 
         foreach ($this->additionalInformationList as $key) {

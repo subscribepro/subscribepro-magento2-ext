@@ -2,10 +2,11 @@
 
 namespace Swarming\SubscribePro\Block\Adminhtml\System\Config;
 
+use Magento\Framework\View\Element\Template;
 use SubscribePro\Exception\InvalidArgumentException;
 use Swarming\SubscribePro\Gateway\Config\Config as SubscribeProConfig;
 
-class Config extends \Magento\Framework\View\Element\Template
+class Config extends Template
 {
     /**
      * @var \Swarming\SubscribePro\Gateway\Config\ConfigProvider
@@ -23,14 +24,14 @@ class Config extends \Magento\Framework\View\Element\Template
     protected $logger;
 
     /**
-     * @var Swarming\SubscribePro\Gateway\Config\Config
+     * @var SubscribeProConfig
      */
     private $sProConfig;
 
     /**
      * @param \Magento\Framework\View\Element\Template\Context $context
      * @param \Swarming\SubscribePro\Gateway\Config\ConfigProvider $gatewayConfigProvider
-     * @param \Swarming\SubscribePro\Gateway\Config\Config $sProConfig
+     * @param SubscribeProConfig $sProConfig
      * @param \Magento\Backend\Model\Session\Quote $quoteSession
      * @param \Psr\Log\LoggerInterface $logger
      * @param array $data

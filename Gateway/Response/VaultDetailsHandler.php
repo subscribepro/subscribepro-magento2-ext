@@ -4,6 +4,7 @@ namespace Swarming\SubscribePro\Gateway\Response;
 
 use Magento\Payment\Gateway\Response\HandlerInterface;
 use Magento\Payment\Model\InfoInterface;
+use Magento\Sales\Model\Order\Payment;
 use Magento\Vault\Model\Ui\VaultConfigProvider;
 use SubscribePro\Service\Transaction\TransactionInterface;
 
@@ -72,7 +73,7 @@ class VaultDetailsHandler implements HandlerInterface
         $paymentDO = $this->subjectReader->readPayment($handlingSubject);
         $transaction = $this->subjectReader->readTransaction($response);
         $payment = $paymentDO->getPayment();
-
+        /** @var Payment $payment */
         if ($payment->getAdditionalInformation(VaultConfigProvider::IS_ACTIVE_CODE)) {
             $paymentToken = $this->getVaultPaymentToken($transaction, $payment->getIsTransactionPending());
             $extensionAttributes = $this->getExtensionAttributes($payment);
@@ -118,6 +119,7 @@ class VaultDetailsHandler implements HandlerInterface
      */
     protected function getExtensionAttributes(InfoInterface $payment)
     {
+        /** @var Payment $payment */
         $extensionAttributes = $payment->getExtensionAttributes();
         if (null === $extensionAttributes) {
             $extensionAttributes = $this->paymentExtensionFactory->create();

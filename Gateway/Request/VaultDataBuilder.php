@@ -2,8 +2,12 @@
 
 namespace Swarming\SubscribePro\Gateway\Request;
 
+use InvalidArgumentException;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Payment\Gateway\Request\BuilderInterface;
+use Magento\Sales\Model\Order\Payment;
 use SubscribePro\Service\Transaction\TransactionInterface;
+use UnexpectedValueException;
 
 class VaultDataBuilder implements BuilderInterface
 {
@@ -27,20 +31,21 @@ class VaultDataBuilder implements BuilderInterface
     /**
      * @param array $buildSubject
      * @return string[]
-     * @throws \UnexpectedValueException
-     * @throws \InvalidArgumentException
+     * @throws UnexpectedValueException
+     * @throws InvalidArgumentException
+     * @throws LocalizedException
      */
     public function build(array $buildSubject)
     {
         $paymentDO = $this->subjectReader->readPayment($buildSubject);
 
-        /** @var \Magento\Sales\Api\Data\OrderPaymentInterface $payment */
+        /** @var Payment $payment */
         $payment = $paymentDO->getPayment();
 
         $extensionAttributes = $payment->getExtensionAttributes();
 
         if (!$extensionAttributes || !$extensionAttributes->getVaultPaymentToken()) {
-            throw new \UnexpectedValueException(__('The vault is not found.'));
+            throw new UnexpectedValueException(__('The vault is not found.'));
         }
 
         $paymentToken = $extensionAttributes->getVaultPaymentToken();

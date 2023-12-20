@@ -2,7 +2,9 @@
 
 namespace Swarming\SubscribePro\Gateway\Response;
 
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Payment\Gateway\Response\HandlerInterface;
+use Magento\Sales\Model\Order\Payment;
 use SubscribePro\Service\Transaction\TransactionInterface;
 
 class PaymentDetailsHandler implements HandlerInterface
@@ -26,13 +28,14 @@ class PaymentDetailsHandler implements HandlerInterface
      * @param array $response
      * @return void
      * @throws \InvalidArgumentException
+     * @throws LocalizedException
      */
     public function handle(array $handlingSubject, array $response)
     {
         $paymentDO = $this->subjectReader->readPayment($handlingSubject);
         $transaction = $this->subjectReader->readTransaction($response);
 
-        /** @var \Magento\Sales\Api\Data\OrderPaymentInterface $payment */
+        /** @var Payment $payment */
         $payment = $paymentDO->getPayment();
 
         $payment->setCcTransId($transaction->getId());

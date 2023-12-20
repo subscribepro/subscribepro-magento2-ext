@@ -4,6 +4,12 @@ declare(strict_types=1);
 
 namespace Swarming\SubscribePro\Service\OrderCallback;
 
+use Magento\Catalog\Model\Product;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Quote\Api\Data\CartInterface;
+use Magento\Quote\Model\Quote;
+
 class PlaceOrder
 {
     /**
@@ -78,6 +84,8 @@ class PlaceOrder
     /**
      * @param array $orderRequest
      * @return array
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
     public function execute(array $orderRequest): array
     {
@@ -95,7 +103,9 @@ class PlaceOrder
         foreach ($orderRequest['items'] as $productData) {
             try {
                 if (!$orderRequest['allowSomeFailedItems']) {
-                    $isSalable = $this->productRepository->get($productData['productSku'])->isSalable();
+                    /** @var Product $product */
+                    $product = $this->productRepository->get($productData['productSku']);
+                    $isSalable = $product->isSalable();
                     if (!$isSalable) {
                         $addedItemCount = 0;
                         $subscriptionData = (array)$this->orderCallbackDataBuilder->getValue($productData, 'subscription', []);
@@ -116,7 +126,7 @@ class PlaceOrder
                     'errorMessage' => $e->getMessage(),
                 ];
             }
-
+            /** @var Quote $quote */
             $quote = $this->quoteRepository->get($quote->getId());
             $quote->setItems($quote->getAllVisibleItems());
         }
@@ -165,12 +175,12 @@ class PlaceOrder
     }
 
     /**
-     * @param \Magento\Quote\Api\Data\CartInterface $quote
+     * @param CartInterface $quote
      * @param array $productData
      * @return void
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws LocalizedException
      */
-    private function addProductToQuote(\Magento\Quote\Api\Data\CartInterface $quote, array $productData): void
+    private function addProductToQuote(CartInterface $quote, array $productData): void
     {
         $quoteItem = $this->orderCallbackDataBuilder->createQuoteItemFromProductData($productData);
 

@@ -3,6 +3,7 @@
 namespace Swarming\SubscribePro\Gateway\Request;
 
 use Magento\Payment\Gateway\Request\BuilderInterface;
+use Magento\Sales\Model\Order\Payment;
 use Magento\Vault\Model\Ui\VaultConfigProvider;
 use SubscribePro\Service\PaymentProfile\PaymentProfileInterface;
 
@@ -32,7 +33,7 @@ class PaymentDataBuilder implements BuilderInterface
     public function build(array $buildSubject)
     {
         $paymentDO = $this->subjectReader->readPayment($buildSubject);
-
+        /** @var Payment $payment */
         $payment = $paymentDO->getPayment();
 
         return [

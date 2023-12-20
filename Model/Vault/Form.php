@@ -53,8 +53,8 @@ class Form
      * @param \Swarming\SubscribePro\Helper\Vault $vaultHelper
      * @param \Swarming\SubscribePro\Platform\Service\PaymentProfile $platformPaymentProfileService
      * @param \Swarming\SubscribePro\Platform\Manager\Customer $platformCustomerManager
-     * @param \Swarming\SubscribePro\Model\Vault\Validator $validator
-     * @param \Psr\Log\LoggerInterface $logger
+     * @param Validator $validator
+     * @param \Swarming\SubscribePro\Helper\DebugLogger $logger
      */
     public function __construct(
         \Magento\Vault\Api\PaymentTokenRepositoryInterface $paymentTokenRepository,

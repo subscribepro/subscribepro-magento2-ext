@@ -159,10 +159,10 @@ class DataBuilder
             $paymentAdditionalData[PaymentTokenInterface::CUSTOMER_ID] = $customerId;
             $paymentAdditionalData[PaymentTokenInterface::PUBLIC_HASH] = $paymentToken->getPublicHash();
         }
-        $quotePayment->unsMethodInstance();
+        $quotePayment->unsMethodInstance(); /* @phpstan-ignore-line */
         if (!isset($paymentData['paymentMethodCode'])) {
 
-            $quotePayment->setPaymentMethod($paymentMethodVault);
+            $quotePayment->setPaymentMethod($paymentMethodVault); /* @phpstan-ignore-line */
             $quotePayment->setMethod($paymentMethodVault);
             $quotePayment->getMethodInstance();
 
@@ -179,7 +179,7 @@ class DataBuilder
                 ]
             );
         } else {
-            $quotePayment->setPaymentMethod($paymentData['paymentMethodCode']);
+            $quotePayment->setPaymentMethod($paymentData['paymentMethodCode']); /* @phpstan-ignore-line */
             $quotePayment->setMethod($paymentData['paymentMethodCode']);
             $quotePayment->importData(
                 [
@@ -193,7 +193,7 @@ class DataBuilder
      * @param string $paymentTokenValue
      * @param int $customerId
      * @param int $storeId
-     * @return \Magento\Vault\Api\Data\PaymentTokenInterface
+     * @return PaymentTokenInterface
      */
     private function getPaymentTokenObject(
         string $paymentTokenValue,
@@ -204,7 +204,7 @@ class DataBuilder
 
         $paymentToken = null;
         foreach ($allowedPaymentCodes as $paymentCode) {
-            /** @var Magento\Vault\Api\Data\PaymentTokenInterface $paymentToken */
+            /** @var PaymentTokenInterface $paymentToken */
             $paymentToken = $this->paymentTokenManagement->getByGatewayToken(
                 $paymentTokenValue,
                 $paymentCode,

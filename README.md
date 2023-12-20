@@ -75,7 +75,7 @@ bin/phpcbf --standard=Magento2 \
 ### Run `phpstan`
 
 ```bash
-bin/analyse app/code/Swarming/SubscribePro --level=1
+bin/analyse app/code/Swarming/SubscribePro --level=1 -c app/code/Swarming/SubscribePro/phpstan.neon
 ```
 
 ### Run PHP Coding Standards Fixer (`php-cs-fixer`)

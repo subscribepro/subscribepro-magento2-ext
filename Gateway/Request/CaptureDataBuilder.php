@@ -45,7 +45,7 @@ class CaptureDataBuilder implements BuilderInterface
         }
 
         try {
-            $amount = $this->formatPrice($this->subjectReader->readAmount($buildSubject))*100;
+            $amount = (float)$this->formatPrice($this->subjectReader->readAmount($buildSubject)) * 100;
             $currency = $order->getCurrencyCode();
         } catch (\InvalidArgumentException $e) {
             $amount = null;

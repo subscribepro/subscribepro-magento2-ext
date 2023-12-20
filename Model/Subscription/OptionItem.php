@@ -6,6 +6,8 @@ use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\Product\Configuration\Item\ItemInterface;
 use Magento\Catalog\Model\Product\Configuration\Item\Option\OptionInterface;
 use Magento\Framework\DataObject;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Quote\Model\Quote\Item\Option;
 
 class OptionItem extends DataObject implements ItemInterface
 {
@@ -64,7 +66,7 @@ class OptionItem extends DataObject implements ItemInterface
 
     /**
      * @return \Magento\Catalog\Api\Data\ProductInterface
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws LocalizedException
      */
     public function getProduct()
     {
@@ -80,8 +82,9 @@ class OptionItem extends DataObject implements ItemInterface
     }
 
     /**
-     * @param \Magento\Catalog\Model\Product\Configuration\Item\Option\OptionInterface[] $options
+     * @param $options
      * @return $this
+     * @throws LocalizedException
      */
     public function setOptions($options)
     {
@@ -94,12 +97,13 @@ class OptionItem extends DataObject implements ItemInterface
     /**
      * @param \Magento\Catalog\Model\Product\Configuration\Item\Option\OptionInterface $option
      * @return $this
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws LocalizedException
      */
     public function addOption(OptionInterface $option)
     {
+        /** @var Option $option */
         $option->setData(self::ITEM, $this);
-
+        /** @var Option $existingOption */
         $existingOption = $this->getOptionByCode($option->getCode());
         if ($existingOption) {
             $existingOption->addData($option->getData());
@@ -113,10 +117,11 @@ class OptionItem extends DataObject implements ItemInterface
     /**
      * @param \Magento\Catalog\Model\Product\Configuration\Item\Option\OptionInterface $option
      * @return $this
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws LocalizedException
      */
     protected function addOptionCode($option)
     {
+        /** @var Option $option */
         $this->optionsByCode[$option->getCode()] = $option;
         return $this;
     }
@@ -127,6 +132,6 @@ class OptionItem extends DataObject implements ItemInterface
      */
     public function getOptionByCode($code)
     {
-        return isset($this->optionsByCode[$code]) ? $this->optionsByCode[$code] : null;
+        return $this->optionsByCode[$code] ?? null;
     }
 }

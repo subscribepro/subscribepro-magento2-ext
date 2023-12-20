@@ -33,7 +33,6 @@ class PaymentAdditionalInformationProvider implements PaymentAdditionalInformati
     public function getAdditionalInformation(PaymentTokenInterface $paymentToken): array
     {
         $paymentProfileId = $paymentToken->getGatewayToken();
-        /** @var SubscribePro\Service\PaymentProfile\PaymentProfileInterface */
         $paymentProfile = $this->paymentProfileService->loadProfile($paymentProfileId);
         $paymentMethodToken = $paymentProfile->getPaymentToken();
 

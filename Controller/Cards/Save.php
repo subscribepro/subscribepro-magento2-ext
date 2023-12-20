@@ -100,7 +100,7 @@ class Save extends \Magento\Customer\Controller\AbstractAccount
         $resultJson = $this->resultFactory->create(ResultFactory::TYPE_JSON);
 
         if (!$this->formKeyValidator->validate($this->getRequest())
-            || !$this->getRequest()->isPost()
+            || !$this->getRequest()->isPost() /* @phpstan-ignore-line */
             || !$this->platformVaultConfig->isActive()
         ) {
             $resultJson->setData(['state' => 'failed']);

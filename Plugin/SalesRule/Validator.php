@@ -109,7 +109,7 @@ class Validator
     {
         return function (QuoteItem $item) use ($appliedRuleIds, $discountDescriptions) {
             $item->setAppliedRuleIds($appliedRuleIds[self::QUOTE_ITEM_RULES]);
-            $item->getAddress()->setAppliedRuleIds($appliedRuleIds[self::ADDRESS_RULES]);
+            $item->getAddress()->setAppliedRuleIds($appliedRuleIds[self::ADDRESS_RULES]); /* @phpstan-ignore-line */
             $item->getQuote()->setAppliedRuleIds($appliedRuleIds[self::QUOTE_RULES]);
 
             $item->getAddress()->setDiscountDescriptionArray($discountDescriptions);

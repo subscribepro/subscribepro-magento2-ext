@@ -5,6 +5,7 @@ namespace Swarming\SubscribePro\Gateway\Request;
 use Magento\Payment\Gateway\Data\AddressAdapterInterface;
 use Magento\Payment\Gateway\Request\BuilderInterface;
 use Magento\Sales\Api\Data\OrderAddressInterface;
+use Magento\Sales\Model\Order\Address;
 use SubscribePro\Service\Address\AddressInterface;
 use SubscribePro\Service\PaymentProfile\PaymentProfileInterface;
 
@@ -73,6 +74,7 @@ class AddressDataBuilder implements BuilderInterface
             $adapterMethod = 'getStreetLine' . $line;
             $streetLine = method_exists($billingAddress, $adapterMethod) ? $billingAddress->$adapterMethod() : null;
         } elseif (is_a($billingAddress, OrderAddressInterface::class)) {
+            /** @var Address $billingAddress */
             $streetLine = $billingAddress->getStreetLine($line);
         }
         return $streetLine;

@@ -113,7 +113,7 @@ class SubscriptionProduct
     }
 
     /**
-     * @param \Magento\Catalog\Api\Data\ProductInterface|\Magento\Catalog\Model\Product $product
+     * @param \Magento\Catalog\Model\Product $product
      * @return string|null
      */
     protected function getProductUrl($product)
@@ -139,19 +139,18 @@ class SubscriptionProduct
     }
 
     /**
-     * @param \Swarming\SubscribePro\Model\Subscription\OptionItem $subscriptionOptionItem
+     * @param $subscriptionOptionItem
      * @return array
      */
     protected function getProductOptionList($subscriptionOptionItem)
     {
         $productType = $subscriptionOptionItem->getProduct()->getTypeId();
         $productConfiguration = $this->productConfigurationPool->getByProductType($productType);
-        $options = $productConfiguration->getOptions($subscriptionOptionItem);
-        return $options;
+        return $productConfiguration->getOptions($subscriptionOptionItem);
     }
 
     /**
-     * @param \Magento\Catalog\Api\Data\ProductInterface|\Magento\Catalog\Model\Product $product
+     * @param \Magento\Catalog\Model\Product $product
      * @param int $qty
      * @return float
      */

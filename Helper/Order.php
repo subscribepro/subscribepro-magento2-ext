@@ -9,7 +9,7 @@ class Order
     /**
      * @var OrderItem
      */
-    protected $orderItemHelper;
+    protected OrderItem $orderItemHelper;
 
     /**
      * @param OrderItem $orderItemHelper
@@ -33,10 +33,10 @@ class Order
      * @param OrderInterface $order
      * @return array
      */
-    public function getSubscriptionItems($order)
+    public function getSubscriptionItems(OrderInterface $order): array
     {
         $subscriptions = [];
-
+        /** @var \Magento\Sales\Model\Order $order */
         $items = $order->getItemsCollection();
         foreach ($items as $item) {
             if ($this->orderItemHelper->hasSubscription($item)) {
@@ -54,8 +54,9 @@ class Order
      * @param OrderInterface $order
      * @return bool
      */
-    public function isNewSubscriptionOrder($order)
+    public function isNewSubscriptionOrder(OrderInterface $order): bool
     {
+        /** @var \Magento\Sales\Model\Order $order */
         $items = $order->getItemsCollection();
         foreach ($items as $item) {
             if ($this->orderItemHelper->hasNewSubscriptionItem($item)) {
@@ -73,8 +74,9 @@ class Order
      * @param OrderInterface $order
      * @return bool
      */
-    public function isRecurringOrder($order)
+    public function isRecurringOrder(OrderInterface $order): bool
     {
+        /** @var \Magento\Sales\Model\Order $order */
         $items = $order->getItemsCollection();
         foreach ($items as $item) {
             if ($this->orderItemHelper->hasRecurringItem($item)) {

@@ -28,9 +28,9 @@ class ToOrderItem
         \Magento\Quote\Model\Quote\Item\ToOrderItem $subject,
         \Closure $proceed,
         \Magento\Quote\Model\Quote\Item\AbstractItem $item,
-        $data = []
+        array $data = []
     ) {
-        /** @var $orderItem \Magento\Sales\Model\Order\Item */
+        /** @var \Magento\Sales\Model\Order\Item $orderItem */
         $orderItem = $proceed($item, $data);
 
         $this->orderItemHelper->updateAdditionalOptions($orderItem);

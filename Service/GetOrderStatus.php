@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Swarming\SubscribePro\Service;
 
 use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Order\Payment;
 use SubscribePro\Service\Transaction\TransactionInterface;
 
 class GetOrderStatus implements \Swarming\SubscribePro\Api\GetOrderStatusInterface
@@ -58,12 +59,13 @@ class GetOrderStatus implements \Swarming\SubscribePro\Api\GetOrderStatusInterfa
 
     /**
      * @param \Magento\Sales\Model\Order $order
-     * @return string
+     * @return string[]
      */
     private function getToken(Order $order)
     {
+        /** @var Payment $payment */
         $payment = $order->getPayment();
-        return (string)$payment->getAdditionalInformation(TransactionInterface::TOKEN);
+        return $payment->getAdditionalInformation(TransactionInterface::TOKEN);
     }
 
     /**
@@ -72,6 +74,7 @@ class GetOrderStatus implements \Swarming\SubscribePro\Api\GetOrderStatusInterfa
      */
     private function getGatewaySpecificFields(Order $order)
     {
+        /** @var Payment $payment */
         $payment = $order->getPayment();
         $gatewaySpecificResponse = $payment->getAdditionalInformation(TransactionInterface::GATEWAY_SPECIFIC_RESPONSE);
         $gatewaySpecificFields = $gatewaySpecificResponse['fields'] ?? null;

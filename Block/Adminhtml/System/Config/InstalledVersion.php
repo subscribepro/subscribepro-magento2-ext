@@ -2,13 +2,16 @@
 
 namespace Swarming\SubscribePro\Block\Adminhtml\System\Config;
 
-class InstalledVersion extends \Magento\Config\Block\System\Config\Form\Field
+use Magento\Config\Block\System\Config\Form\Field;
+use Magento\Framework\Data\Form\Element\AbstractElement;
+
+class InstalledVersion extends Field
 {
     public const INSTALLED_VERSION = '1.7.0';
 
-    protected function _getElementHtml(\Magento\Framework\Data\Form\Element\AbstractElement $element)
+    protected function _getElementHtml(AbstractElement $element): string
     {
-        $element->setValue(self::INSTALLED_VERSION);
+        $element->setData('value', self::INSTALLED_VERSION);
 
         return '<strong>'
             . $element->getEscapedValue()

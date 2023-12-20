@@ -2,6 +2,8 @@
 
 namespace Swarming\SubscribePro\Helper;
 
+use Magento\Quote\Model\Quote\Item;
+use Magento\Quote\Model\Quote\Item\Option;
 use Swarming\SubscribePro\Api\Data\ProductInterface as PlatformProductInterface;
 use Swarming\SubscribePro\Api\Data\SubscriptionOptionInterface;
 use Swarming\SubscribePro\Model\Quote\SubscriptionOption\OptionProcessor;
@@ -158,9 +160,10 @@ class QuoteItem
     }
 
     /**
-     * @param \Magento\Quote\Model\Quote\Item\AbstractItem $item
-     * @param array $params
+     * @param $item
+     * @param $params
      * @return void
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     protected function setSubscriptionParams($item, $params)
     {
@@ -172,7 +175,9 @@ class QuoteItem
 
         $buyRequest[OptionProcessor::KEY_SUBSCRIPTION_OPTION] = $params;
 
+        /** @var Option $buyRequest */
         $buyRequestOption->setValue(json_encode($buyRequest));
+        /** @var Item $item */
         $item->addOption($buyRequestOption);
     }
 
@@ -184,6 +189,7 @@ class QuoteItem
     protected function markQuoteItemAsModified($item)
     {
         if (!$item->isObjectNew()) {
+            /** @var Item $item */
             $item->setUpdatedAt($this->dateTimeFactory->create()->format('Y-m-d H:i:s'));
         }
     }

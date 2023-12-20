@@ -4,6 +4,8 @@ namespace Swarming\SubscribePro\Block\Vault;
 
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Vault\Api\Data\PaymentTokenInterface;
+use Magento\Vault\Api\PaymentTokenManagementInterface;
+use Swarming\SubscribePro\Platform\Service\PaymentProfile;
 
 class Edit extends \Magento\Directory\Block\Data
 {
@@ -18,14 +20,14 @@ class Edit extends \Magento\Directory\Block\Data
     protected $messageManager;
 
     /**
-     * @var \Swarming\SubscribePro\Platform\Service\PaymentProfile
+     * @var PaymentTokenManagementInterface
      */
-    protected $paymentTokenManagement;
+    protected PaymentTokenManagementInterface $paymentTokenManagement;
 
     /**
-     * @var \Swarming\SubscribePro\Platform\Service\Subscription
+     * @var PaymentProfile
      */
-    protected $platformPaymentProfileService;
+    protected PaymentProfile $platformPaymentProfileService;
 
     /**
      * @var \Magento\Vault\Api\Data\PaymentTokenInterface
@@ -46,8 +48,8 @@ class Edit extends \Magento\Directory\Block\Data
      * @param \Magento\Directory\Model\ResourceModel\Country\CollectionFactory $countryCollectionFactory
      * @param \Magento\Customer\Model\Session $session
      * @param \Magento\Framework\Message\ManagerInterface $messageManager
-     * @param \Magento\Vault\Api\PaymentTokenManagementInterface $paymentTokenManagement
-     * @param \Swarming\SubscribePro\Platform\Service\PaymentProfile $platformPaymentProfileService
+     * @param PaymentTokenManagementInterface $paymentTokenManagement
+     * @param PaymentProfile $platformPaymentProfileService
      * @param array $data
      */
     public function __construct(
@@ -59,8 +61,8 @@ class Edit extends \Magento\Directory\Block\Data
         \Magento\Directory\Model\ResourceModel\Country\CollectionFactory $countryCollectionFactory,
         \Magento\Customer\Model\Session $session,
         \Magento\Framework\Message\ManagerInterface $messageManager,
-        \Magento\Vault\Api\PaymentTokenManagementInterface $paymentTokenManagement,
-        \Swarming\SubscribePro\Platform\Service\PaymentProfile $platformPaymentProfileService,
+        PaymentTokenManagementInterface $paymentTokenManagement,
+        PaymentProfile $platformPaymentProfileService,
         array $data = []
     ) {
         $this->session = $session;
@@ -108,8 +110,9 @@ class Edit extends \Magento\Directory\Block\Data
     }
 
     /**
-     * @param string $publicHash
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @param $publicHash
+     * @return void
+     * @throws LocalizedException
      */
     protected function loadToken($publicHash)
     {

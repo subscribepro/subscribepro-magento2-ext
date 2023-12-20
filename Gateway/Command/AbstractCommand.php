@@ -87,8 +87,8 @@ abstract class AbstractCommand implements CommandInterface
 
     /**
      * @param array $commandSubject
-     * @return \Magento\Payment\Gateway\Command\ResultInterface|null
-     * @throws \Magento\Payment\Gateway\Command\CommandException
+     * @return void
+     * @throws CommandException
      */
     public function execute(array $commandSubject)
     {

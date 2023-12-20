@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Swarming\SubscribePro\Service;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Store\Model\ScopeInterface as StoreScopeInterface;
 use Magento\Store\Model\Store;
+use Magento\Store\Model\Website;
 
 class GetCurrentStoreId
 {
@@ -52,6 +54,7 @@ class GetCurrentStoreId
 
     /**
      * @return int
+     * @throws LocalizedException
      */
     private function getStoreForAdminConfiguration(): int
     {
@@ -61,6 +64,7 @@ class GetCurrentStoreId
                 $storeId = (int)$this->scopeDefiner->getScopeValue();
                 break;
             case StoreScopeInterface::SCOPE_WEBSITE:
+                /** @var Website $currentWebsite */
                 $currentWebsite = $this->storeManager->getWebsite($this->scopeDefiner->getScopeValue());
                 $storeId = (int)$currentWebsite->getDefaultStore()->getId();
                 break;

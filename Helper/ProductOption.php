@@ -3,6 +3,7 @@
 namespace Swarming\SubscribePro\Helper;
 
 use Magento\Framework\Api\ExtensibleDataInterface;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Quote\Api\Data\CartItemInterface;
 use Magento\Quote\Api\Data\ProductOptionInterface;
 use Swarming\SubscribePro\Model\Quote\SubscriptionOption\OptionProcessor;
@@ -35,7 +36,7 @@ class ProductOption
     protected $logger;
 
     /**
-     * @var \Magento\Catalog\Mode\CustomOptions\CustomOptionProcessor
+     * @var \Magento\Catalog\Model\CustomOptions\CustomOptionProcessor
      */
     protected $customOptionProcessor;
 
@@ -64,8 +65,9 @@ class ProductOption
     }
 
     /**
-     * @param \Swarming\SubscribePro\Api\Data\SubscriptionInterface $subscription
-     * @return \Magento\Quote\Api\Data\CartItemInterface
+     * @param $subscription
+     * @return CartItemInterface
+     * @throws LocalizedException
      */
     public function getCartItem($subscription)
     {
@@ -102,7 +104,7 @@ class ProductOption
 
     /**
      * @param \Magento\Quote\Api\Data\CartItemInterface $quoteItem
-     * @return null
+     * @return void
      */
     protected function processProductOptions($quoteItem)
     {

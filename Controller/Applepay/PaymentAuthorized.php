@@ -8,6 +8,7 @@ use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\App\CsrfAwareActionInterface;
 use Magento\Framework\App\Request\InvalidRequestException;
 use Magento\Framework\App\RequestInterface;
+use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\Result\JsonFactory as JsonResultFactory;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\LocalizedException;
@@ -111,7 +112,7 @@ class PaymentAuthorized implements HttpPostActionInterface, CsrfAwareActionInter
     }
 
     /**
-     * @return string
+     * @return array
      */
     public function getRequestData(): array
     {
@@ -175,6 +176,7 @@ class PaymentAuthorized implements HttpPostActionInterface, CsrfAwareActionInter
             'redirect' => $redirectUrl,
             'redirectUrl' => $urlToRedirect
         ];
+        /** @var Json $result */
         $result->setData($response);
     }
 }

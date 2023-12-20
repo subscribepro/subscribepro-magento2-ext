@@ -105,17 +105,21 @@ class SubmitAllAfter implements ObserverInterface
 
         try {
             $result = $this->subscriptionCreator->createSubscriptions($quote, $order);
+            /* @phpstan-ignore-next-line */
             $this->checkoutSession->setData(
                 SubscriptionCreator::CREATED_SUBSCRIPTION_IDS,
                 $result[SubscriptionCreator::CREATED_SUBSCRIPTION_IDS]
             );
+            /* @phpstan-ignore-next-line */
             $this->checkoutSession->setData(
                 SubscriptionCreator::FAILED_SUBSCRIPTION_COUNT,
                 $result[SubscriptionCreator::FAILED_SUBSCRIPTION_COUNT]
             );
         } catch (\Exception $e) {
             $this->logger->critical($e);
+            /* @phpstan-ignore-next-line */
             $this->checkoutSession->setData(SubscriptionCreator::CREATED_SUBSCRIPTION_IDS, []);
+            /* @phpstan-ignore-next-line */
             $this->checkoutSession->setData(SubscriptionCreator::FAILED_SUBSCRIPTION_COUNT, 0);
         }
     }

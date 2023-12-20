@@ -2,6 +2,9 @@
 
 namespace Swarming\SubscribePro\Plugin\ShipperHQ;
 
+use ShipperHQ\Shipper\Model\Carrier\Processor\ShipperMapper;
+use Swarming\SubscribePro\Helper\QuoteItem;
+
 class ShipperMapperPlugin
 {
     /**
@@ -27,17 +30,17 @@ class ShipperMapperPlugin
     }
 
     /**
-     * @param \ShipperHQ\Shipper\Model\Carrier\Processor\ShipperMapper $mapper
-     * @param Closure $proceed
+     * @param ShipperMapper $mapper
+     * @param callable $proceed
      * @param array $reqdAttributeNames
-     * @param \Swarming\SubscribePro\Helper\QuoteItem $item
+     * @param QuoteItem $item
      * @return array
      */
     public function aroundPopulateAttributes(
         \ShipperHQ\Shipper\Model\Carrier\Processor\ShipperMapper $mapper, /* @phpstan-ignore-line */
-        callable $proceed,
-        $reqdAttributeNames,
-        $item
+        callable                                                 $proceed,
+        array                                                    $reqdAttributeNames,
+        QuoteItem $item
     ) {
         $attributes = $proceed($reqdAttributeNames, $item);
 

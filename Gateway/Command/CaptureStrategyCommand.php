@@ -2,6 +2,8 @@
 
 namespace Swarming\SubscribePro\Gateway\Command;
 
+use Magento\Framework\Exception\NotFoundException;
+use Magento\Payment\Gateway\Command\CommandException;
 use Magento\Payment\Gateway\CommandInterface;
 use Magento\Payment\Gateway\Helper\ContextHelper;
 use Magento\Sales\Model\Order\Payment;
@@ -34,7 +36,10 @@ class CaptureStrategyCommand implements CommandInterface
     }
 
     /**
-     * @inheritdoc
+     * @param array $commandSubject
+     * @return void
+     * @throws NotFoundException
+     * @throws CommandException
      */
     public function execute(array $commandSubject)
     {

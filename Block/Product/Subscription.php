@@ -236,6 +236,7 @@ class Subscription extends \Magento\Catalog\Block\Product\AbstractProduct
      */
     protected function getMsrpPrice()
     {
+        /* @phpstan-ignore-next-line */
         $msrp = $this->getProduct()->getMsrp();
         return $msrp ? $this->priceCurrency->convertAndRound($msrp) : 0;
     }

@@ -32,6 +32,7 @@ class TestConnection extends PlatformField
      */
     public function render(AbstractElement $element)
     {
+        /* @phpstan-ignore-next-line */
         $element->unsScope()
             ->unsCanUseWebsiteValue()
             ->unsCanUseDefaultValue();

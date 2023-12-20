@@ -31,7 +31,7 @@ class WalletAmountBuilder implements BuilderInterface
      */
     public function build(array $buildSubject)
     {
-        $authorizeAmount = $this->formatPrice($this->gatewayConfig->getWalletAuthorizationAmount())*100;
+        $authorizeAmount = (float)$this->formatPrice($this->gatewayConfig->getWalletAuthorizationAmount())*100;
 
         return [
             TransactionInterface::AMOUNT => $authorizeAmount,

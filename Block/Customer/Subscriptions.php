@@ -264,6 +264,7 @@ class Subscriptions extends \Magento\Framework\View\Element\Template
     protected function getCustomerAddressInline($address)
     {
         $builtOutputAddressData = $this->addressMapper->toFlatArray($address);
+        /** @phpstan-ignore-next-line */
         return $this->addressConfig
             ->getFormatByCode(AddressConfig::DEFAULT_ADDRESS_FORMAT)
             ->getRenderer()
