@@ -29,6 +29,15 @@ class Config extends \Magento\Payment\Gateway\Config\Config
      * @param int|null $storeId
      * @return bool
      */
+    public function isNonSubscriptionTransactionActive($storeId = null)
+    {
+        return (bool)$this->getValue(self::KEY_ACTIVE_NON_SUBSCRIPTION, $storeId);
+    }
+
+    /**
+     * @param int|null $storeId
+     * @return bool
+     */
     public function isThreeDSActive($storeId = null)
     {
         return (bool)$this->getValue(self::KEY_THREE_DS_ACTIVE, $storeId);
