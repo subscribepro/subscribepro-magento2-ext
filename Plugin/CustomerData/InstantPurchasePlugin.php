@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Swarming\SubscribePro\Plugin\CustomerData;
 
 use Magento\Framework\Api\SearchCriteriaInterface;
@@ -60,6 +62,9 @@ class InstantPurchasePlugin
      */
     private Session $customerSession;
 
+    /**
+     * @var PaymentTokenFormatter
+     */
     private PaymentTokenFormatter $paymentTokenFormatter;
 
     /**
@@ -103,15 +108,19 @@ class InstantPurchasePlugin
      */
     public function afterGetSectionData(InstantPurchase $subject, $result): mixed
     {
-        $result['isNonSubscriptionTransactionActive'] = $this->gatewayConfig->isNonSubscriptionTransactionActive();
-        if (!$this->gatewayConfig->isNonSubscriptionTransactionActive()) {
-            $storeId = $this->storeManager->getStore()->getId();
-            $customerId = $this->customerSession->getCustomerId();
-            $spPaymentMethodToken = $this->getPaymentMethodToken($storeId, $customerId, true);
-            $nonSpPaymentMethodToken = $this->getPaymentMethodToken($storeId, $customerId, false);
-            if ($spPaymentMethodToken) {
-                $result = $this->prepareResult('spPaymentToken', array_shift($spPaymentMethodToken), $result);
+        $storeId = (int)$this->storeManager->getStore()->getId();
+        $isNonSpTransactionActive = $this->gatewayConfig->isNonSubscriptionTransactionActive($storeId);
+        $isSpMethodActive = $this->gatewayConfig->isActive($storeId);
+        $result['isNonSubscriptionTransactionActive'] = $isNonSpTransactionActive;
+        if (!$isNonSpTransactionActive) {
+            $customerId = (int)$this->customerSession->getCustomerId();
+            if ($isSpMethodActive) {
+                $spPaymentMethodToken = $this->getPaymentMethodToken($storeId, $customerId, true);
+                if ($spPaymentMethodToken) {
+                    $result = $this->prepareResult('spPaymentToken', array_shift($spPaymentMethodToken), $result);
+                }
             }
+            $nonSpPaymentMethodToken = $this->getPaymentMethodToken($storeId, $customerId, false);
             if ($nonSpPaymentMethodToken) {
                 $result = $this->prepareResult('nonSpPaymentToken', array_shift($nonSpPaymentMethodToken), $result);
             }
@@ -120,12 +129,12 @@ class InstantPurchasePlugin
     }
 
     /**
-     * @param $paymentTokenType
-     * @param $paymentToken
-     * @param $result
+     * @param string $paymentTokenType
+     * @param PaymentTokenInterface $paymentToken
+     * @param array $result
      * @return array[]
      */
-    private function prepareResult($paymentTokenType, $paymentToken, $result): array
+    private function prepareResult(string $paymentTokenType, PaymentTokenInterface $paymentToken, array $result): array
     {
         return $result + [
                 $paymentTokenType => [

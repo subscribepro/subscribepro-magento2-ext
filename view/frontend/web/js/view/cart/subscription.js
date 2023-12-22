@@ -1,6 +1,5 @@
 define(
     [
-        'ko',
         'jquery',
         'mage/translate',
         'uiComponent',
@@ -9,7 +8,7 @@ define(
         'Magento_Customer/js/customer-data',
         'Magento_InstantPurchase/js/view/instant-purchase'
     ],
-    function (ko, $, $t, Component, layout, Messages, customerData) {
+    function ($, $t, Component, layout, Messages, customerData) {
         'use strict';
 
         return Component.extend({
@@ -40,7 +39,10 @@ define(
                     observer.disconnect();
                 }
                 const observer = new MutationObserver(callback);
-                observer.observe(document.getElementById('instant-purchase'), { attributes: true, childList: true, subtree: true, characterData: true});
+                observer.observe(
+                    document.getElementById('instant-purchase'),
+                    { attributes: true, childList: true, subtree: true, characterData: true}
+                );
             },
 
             initObservable: function () {
@@ -129,7 +131,7 @@ define(
                 }
                 this.validateQty(true);
             },
-            
+
             validateQty: function (showMessages) {
                 var qtyField = $(this.qtyFieldSelector);
                 var qty = qtyField.val();
