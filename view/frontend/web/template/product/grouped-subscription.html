@@ -1,0 +1,55 @@
+<!-- ko if: isProductLoaded() -->
+<div class="fieldset">
+    <!-- ko if: isSubscriptionMode(subscriptionOnlyMode)  -->
+    <input type="hidden" name="subscription_option[option]" data-bind="value: subscriptionOption">
+    <!-- ko i18n: productPrice.priceWithDiscountText --><!-- /ko -->
+    <!-- /ko -->
+    <!-- ko if: isSubscriptionMode(subscriptionAndOneTimePurchaseMode) -->
+    <div class="field choice">
+        <input type="radio"
+               class="radio"
+               data-bind="checked: subscriptionOptionValue, value: oneTimePurchaseOption,
+                attr: {
+                    name: 'subscription_option['+$data.product_id+'][option]',
+                    id: 'option_oneTimePurchase_' + $data.product_id,
+                }" />
+        <label class="label" data-bind="attr: {for: 'option_oneTimePurchase_' + $data.product_id }">
+            <!-- ko i18n: 'One Time Delivery' --><!-- /ko -->
+            <!-- ko text: ' - ' --><!-- /ko -->
+            <!-- ko template: oneTimePurchasePriceTemplate --><!-- /ko -->
+        </label>
+    </div>
+    <div class="field choice">
+        <input type="radio"
+               class="radio"
+               data-bind="checked: subscriptionOptionValue, value: subscriptionOption,
+                attr: {
+                    name: 'subscription_option['+$data.product_id+'][option]',
+                    id: 'option_subscription_' + $data.product_id,
+                }" />
+        <label class="label" data-bind="attr: {for: 'option_subscription_' + $data.product_id }">
+            <!-- ko i18n: 'Regular Delivery' --><!-- /ko -->
+            <!-- ko text: ' - ' --><!-- /ko -->
+            <!-- ko template: subscriptionPriceTemplate --><!-- /ko -->
+        </label>
+    </div>
+    <!-- /ko -->
+
+    <div class="field">
+        <label class="label">
+            <!-- ko i18n: 'Delivery every' --><!-- /ko -->
+            <!-- ko text: ':' --><!-- /ko -->
+        </label>
+        <div class="control">
+            <label>
+                <select data-bind="options: product.intervals, checked: intervalValue, value: intervalValue,
+                                    attr: {name: 'subscription_option['+$data.product_id+'][interval]'}"></select>
+            </label>
+        </div>
+    </div>
+</div>
+<!-- /ko -->
+
+<!-- ko foreach: getRegion('messages') -->
+<!-- ko template: getTemplate() --><!-- /ko -->
+<!--/ko-->

@@ -36,6 +36,8 @@
         <plugin name="subscribepro_subscription" type="Swarming\SubscribePro\Plugin\Product\Subscription"/>
     </type>
 
+    <preference for="Magento\GroupedProduct\Model\Product\Type\Grouped" type="Swarming\SubscribePro\Model\Product\Type\Grouped" />
+
     <type name="Swarming\SubscribePro\Platform\Webhook\HandlerPool">
         <arguments>
             <argument name="handlers" xsi:type="array">
