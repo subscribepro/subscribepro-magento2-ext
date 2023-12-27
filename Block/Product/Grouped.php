@@ -4,28 +4,54 @@ declare(strict_types=1);
 
 namespace Swarming\SubscribePro\Block\Product;
 
+use Magento\Catalog\Block\Product\Context;
+use Magento\Checkout\Model\Cart;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Pricing\PriceCurrencyInterface;
+use Magento\Tax\Api\TaxCalculationInterface;
+use Psr\Log\LoggerInterface;
 use SubscribePro\Exception\HttpException;
 use SubscribePro\Exception\InvalidArgumentException;
 use SubscribePro\Service\Product\ProductInterface as ProductInterfaceAlias;
 use Swarming\SubscribePro\Helper\Product;
+use Swarming\SubscribePro\Helper\QuoteItem;
+use Swarming\SubscribePro\Model\Config\SubscriptionDiscount;
+use Swarming\SubscribePro\Ui\ConfigProvider\PriceConfig;
 
 class Grouped extends Subscription
 {
-    private $helper;
+    /**
+     * @var Product
+     */
+    private Product $helper;
+
+    /**
+     * @param Context $context
+     * @param SubscriptionDiscount $subscriptionDiscountConfig
+     * @param \Swarming\SubscribePro\Platform\Manager\Product $platformProductManager
+     * @param TaxCalculationInterface $taxCalculation
+     * @param PriceConfig $priceConfigProvider
+     * @param PriceCurrencyInterface $priceCurrency
+     * @param Product $productHelper
+     * @param Cart $cart
+     * @param QuoteItem $quoteItemHelper
+     * @param LoggerInterface $logger
+     * @param Product $helper
+     * @param array $data
+     */
     public function __construct(
-        \Magento\Catalog\Block\Product\Context $context,
-        \Swarming\SubscribePro\Model\Config\SubscriptionDiscount $subscriptionDiscountConfig,
+        Context                                         $context,
+        SubscriptionDiscount                            $subscriptionDiscountConfig,
         \Swarming\SubscribePro\Platform\Manager\Product $platformProductManager,
-        \Magento\Tax\Api\TaxCalculationInterface $taxCalculation,
-        \Swarming\SubscribePro\Ui\ConfigProvider\PriceConfig $priceConfigProvider,
-        \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency,
-        \Swarming\SubscribePro\Helper\Product $productHelper,
-        \Magento\Checkout\Model\Cart $cart,
-        \Swarming\SubscribePro\Helper\QuoteItem $quoteItemHelper,
-        \Psr\Log\LoggerInterface $logger,
-        Product $helper,
-        array $data = []
+        TaxCalculationInterface                         $taxCalculation,
+        PriceConfig                                     $priceConfigProvider,
+        PriceCurrencyInterface                          $priceCurrency,
+        Product                                         $productHelper,
+        Cart                                            $cart,
+        QuoteItem                                       $quoteItemHelper,
+        LoggerInterface                                 $logger,
+        Product                                         $helper,
+        array                                           $data = []
     ) {
         $this->helper = $helper;
         parent::__construct(
@@ -52,8 +78,8 @@ class Grouped extends Subscription
         try {
             $platformProduct = $this->getPlatformProduct()->toArray();
         } catch (InvalidArgumentException|HttpException $e) {
-            $this->logger->debug('Could not load product from Subscribe Pro platform.');
-            $this->logger->info($e->getMessage());
+            $this->logger->error('Could not load product from Subscribe Pro platform.');
+            $this->logger->error($e->getMessage());
             $platformProduct = [];
         }
 
