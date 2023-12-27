@@ -34,15 +34,18 @@ define(
                 }
                 var self = this;
 
-                function callback() {
-                    self.initInstantPurchaseConfig();
-                    observer.disconnect();
+
+                if ($('#instant-purchase').length ) {
+                    function callback() {
+                        self.initInstantPurchaseConfig();
+                        observer.disconnect();
+                    }
+                    const observer = new MutationObserver(callback);
+                    observer.observe(
+                        document.getElementById('instant-purchase'),
+                        { attributes: true, childList: true, subtree: true, characterData: true}
+                    );
                 }
-                const observer = new MutationObserver(callback);
-                observer.observe(
-                    document.getElementById('instant-purchase'),
-                    { attributes: true, childList: true, subtree: true, characterData: true}
-                );
             },
 
             initObservable: function () {
