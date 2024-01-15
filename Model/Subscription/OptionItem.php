@@ -3,6 +3,7 @@
 namespace Swarming\SubscribePro\Model\Subscription;
 
 use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\Product\Configuration\Item\ItemInterface;
 use Magento\Catalog\Model\Product\Configuration\Item\Option\OptionInterface;
 use Magento\Framework\DataObject;
@@ -65,8 +66,7 @@ class OptionItem extends DataObject implements ItemInterface
     //@codeCoverageIgnoreEnd
 
     /**
-     * @return \Magento\Catalog\Api\Data\ProductInterface
-     * @throws LocalizedException
+     * @return Product|mixed|null
      */
     public function getProduct()
     {

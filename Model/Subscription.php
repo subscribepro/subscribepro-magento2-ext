@@ -34,9 +34,7 @@ class Subscription extends PlatformSubscription implements SubscriptionInterface
     public function getProductOption()
     {
         $platformSpecificFields = $this->getPlatformSpecificFields();
-        return isset($platformSpecificFields[self::PLATFORM_FIELD_KEY][self::PRODUCT_OPTION])
-            ? $platformSpecificFields[self::PLATFORM_FIELD_KEY][self::PRODUCT_OPTION]
-            : [];
+        return $platformSpecificFields[self::PLATFORM_FIELD_KEY][self::PRODUCT_OPTION] ?? [];
     }
 
     /**
@@ -51,7 +49,7 @@ class Subscription extends PlatformSubscription implements SubscriptionInterface
     }
 
     /**
-     * @return string|null
+     * @return false|mixed[]|string
      */
     public function getUserDefinedFields()
     {

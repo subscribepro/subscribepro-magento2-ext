@@ -136,10 +136,9 @@ class Updater
     }
 
     /**
-     * @param \Swarming\SubscribePro\Api\Data\ProductInterface $platformProduct
-     * @param string|null $subscriptionInterval
-     * @return null|string
-     * @throws \Exception
+     * @param $platformProduct
+     * @param $subscriptionInterval
+     * @return bool
      */
     protected function validateInterval($platformProduct, $subscriptionInterval)
     {

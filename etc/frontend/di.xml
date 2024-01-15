@@ -38,6 +38,11 @@
 
     <preference for="Magento\GroupedProduct\Model\Product\Type\Grouped" type="Swarming\SubscribePro\Model\Product\Type\Grouped" />
 
+    <type name="Magento\InstantPurchase\CustomerData\InstantPurchase">
+        <plugin name="subscribepro_product_instant_purchase"
+                type="Swarming\SubscribePro\Plugin\CustomerData\InstantPurchasePlugin" sortOrder="10" />
+    </type>
+
     <type name="Swarming\SubscribePro\Platform\Webhook\HandlerPool">
         <arguments>
             <argument name="handlers" xsi:type="array">

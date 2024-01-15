@@ -76,12 +76,13 @@ class SubscriptionCreator
     }
 
     /**
-     * @param Item $quoteItem
-     * @param int $platformCustomerId
-     * @param int $paymentProfileId
-     * @param Address|null $shippingAddress
-     * @param Address|null $billingAddress
-     * @return int
+     * @param $quoteItem
+     * @param $platformCustomerId
+     * @param $paymentProfileId
+     * @param $shippingAddress
+     * @param $billingAddress
+     * @return false|string|null
+     * @throws \Exception
      */
     public function create($quoteItem, $platformCustomerId, $paymentProfileId, $shippingAddress = null, $billingAddress = null)
     {
@@ -90,6 +91,7 @@ class SubscriptionCreator
         $productSku = $this->getProductSku($quoteItem);
         $storeTimezone = new \DateTimeZone($store->getConfig('general/locale/timezone'));
         try {
+            /** @var \Swarming\SubscribePro\Model\Subscription $subscription */
             $subscription = $this->platformSubscriptionService->createSubscription();
             $subscription->setCustomerId($platformCustomerId);
             $subscription->setPaymentProfileId($paymentProfileId);

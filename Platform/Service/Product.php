@@ -11,8 +11,8 @@ class Product extends AbstractService
 {
     /**
      * @param array $platformProductData
-     * @param int|null $websiteId
-     * @return \Swarming\SubscribePro\Api\Data\ProductInterface
+     * @param $websiteId
+     * @return \SubscribePro\Service\Product\ProductInterface
      */
     public function createProduct(array $platformProductData = [], $websiteId = null)
     {
@@ -20,11 +20,9 @@ class Product extends AbstractService
     }
 
     /**
-     * @param \Swarming\SubscribePro\Api\Data\ProductInterface $platformProduct
-     * @param int|null $websiteId
-     * @return \Swarming\SubscribePro\Api\Data\ProductInterface
-     * @throws \SubscribePro\Exception\EntityInvalidDataException
-     * @throws \SubscribePro\Exception\HttpException
+     * @param ProductInterface $platformProduct
+     * @param $websiteId
+     * @return \SubscribePro\Service\Product\ProductInterface
      */
     public function saveProduct(ProductInterface $platformProduct, $websiteId = null)
     {
@@ -32,10 +30,9 @@ class Product extends AbstractService
     }
 
     /**
-     * @param int $platformProductId
-     * @param int|null $websiteId
-     * @return \Swarming\SubscribePro\Api\Data\ProductInterface
-     * @throws \SubscribePro\Exception\HttpException
+     * @param $platformProductId
+     * @param $websiteId
+     * @return \SubscribePro\Service\Product\ProductInterface
      */
     public function loadProduct($platformProductId, $websiteId = null)
     {
@@ -43,10 +40,9 @@ class Product extends AbstractService
     }
 
     /**
-     * @param string|null $sku
-     * @param int|null $websiteId
-     * @return \Swarming\SubscribePro\Api\Data\ProductInterface[]
-     * @throws \SubscribePro\Exception\HttpException
+     * @param $sku
+     * @param $websiteId
+     * @return \SubscribePro\Service\Product\ProductInterface[]
      */
     public function loadProducts($sku = null, $websiteId = null)
     {

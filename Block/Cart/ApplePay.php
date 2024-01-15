@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Swarming\SubscribePro\Block\Cart;
 
 use Magento\Checkout\Model\Session;
-use Magento\Directory\Helper\Data as DirectoryHelper;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Serialize\Serializer\Json as JsonSerializer;
@@ -21,10 +20,6 @@ class ApplePay extends Template
      * @var Quote
      */
     private $quote;
-    /**
-     * @var DirectoryHelper
-     */
-    private $directoryHelper;
     /**
      * @var PaymentRequestConfig
      */
@@ -58,7 +53,6 @@ class ApplePay extends Template
      *
      * @param Context $context
      * @param Quote $quote
-     * @param DirectoryHelper $directoryHelper
      * @param PaymentRequestConfig $paymentRequestConfig
      * @param ApplePayConfigProvider $applePayConfigProvider
      * @param JsonSerializer $jsonJsonSerializer
@@ -70,7 +64,6 @@ class ApplePay extends Template
     public function __construct(
         Context $context,
         Quote $quote,
-        DirectoryHelper $directoryHelper,
         PaymentRequestConfig $paymentRequestConfig,
         ApplePayConfigProvider $applePayConfigProvider,
         JsonSerializer $jsonJsonSerializer,
@@ -81,7 +74,6 @@ class ApplePay extends Template
     ) {
         parent::__construct($context, $data);
         $this->quote = $quote;
-        $this->directoryHelper = $directoryHelper;
         $this->paymentRequestConfig = $paymentRequestConfig;
         $this->applePayConfigProvider = $applePayConfigProvider;
         $this->jsonJsonSerializer = $jsonJsonSerializer;

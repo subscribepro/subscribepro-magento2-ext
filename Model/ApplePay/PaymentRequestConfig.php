@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Swarming\SubscribePro\Model\ApplePay;
 
-use Magento\Checkout\Helper\Data as CheckoutHelper;
 use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Directory\Helper\Data as DirectoryHelper;
 use Magento\Directory\Model\Currency;
@@ -32,10 +31,6 @@ class PaymentRequestConfig extends DataObject
      */
     private $checkoutSession;
     /**
-     * @var CheckoutHelper
-     */
-    private $checkoutHelper;
-    /**
      * @var Currency
      */
     private $currency;
@@ -56,25 +51,22 @@ class PaymentRequestConfig extends DataObject
      * PaymentRequestConfig constructor.
      *
      * @param SessionManagerInterface $checkoutSession
-     * @param DirectoryHelper         $directoryHelper
-     * @param Currency                $currency
-     * @param CheckoutHelper          $checkoutHelper
-     * @param PlatformOAuth           $platformOAuth
+     * @param DirectoryHelper $directoryHelper
+     * @param Currency $currency
+     * @param PlatformOAuth $platformOAuth
      * @param PlatformManagerCustomer $platformManagerCustomer
-     * @param LoggerInterface         $logger
+     * @param LoggerInterface $logger
      */
     public function __construct(
         SessionManagerInterface $checkoutSession,
         DirectoryHelper $directoryHelper,
         Currency $currency,
-        CheckoutHelper $checkoutHelper,
         PlatformOAuth $platformOAuth,
         PlatformManagerCustomer $platformManagerCustomer,
         LoggerInterface $logger
     ) {
         $this->checkoutSession = $checkoutSession;
         $this->directoryHelper = $directoryHelper;
-        $this->checkoutHelper = $checkoutHelper;
         $this->currency = $currency;
         $this->platformOAuth = $platformOAuth;
         $this->platformManagerCustomer = $platformManagerCustomer;

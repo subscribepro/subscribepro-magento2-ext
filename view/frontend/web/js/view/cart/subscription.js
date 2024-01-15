@@ -4,9 +4,11 @@ define(
         'mage/translate',
         'uiComponent',
         'uiLayout',
-        'Magento_Ui/js/model/messages'
+        'Magento_Ui/js/model/messages',
+        'Magento_Customer/js/customer-data',
+        'Magento_InstantPurchase/js/view/instant-purchase'
     ],
-    function ($, $t, Component, layout, Messages) {
+    function ($, $t, Component, layout, Messages, customerData) {
         'use strict';
 
         return Component.extend({
@@ -30,6 +32,20 @@ define(
                 if (typeof this.product.id !== 'undefined') {
                     this.isProductLoaded(true);
                 }
+                var self = this;
+
+
+                if ($('#instant-purchase').length ) {
+                    function callback() {
+                        self.initInstantPurchaseConfig();
+                        observer.disconnect();
+                    }
+                    const observer = new MutationObserver(callback);
+                    observer.observe(
+                        document.getElementById('instant-purchase'),
+                        { attributes: true, childList: true, subtree: true, characterData: true}
+                    );
+                }
             },
 
             initObservable: function () {
@@ -42,10 +58,34 @@ define(
                     .initProduct();
 
                 $(this.qtyFieldSelector).on('change', this.onQtyFieldChanged.bind(this));
-
                 this.subscriptionOptionValue.subscribe(this.onQtyFieldChanged.bind(this));
 
                 return this;
+            },
+
+            initInstantPurchaseConfig: function () {
+                const instantPurchase = customerData.get('instant-purchase');
+                if (instantPurchase().isNonSubscriptionTransactionActive === false) {
+                    this.setPurchaseData(this.subscriptionOptionValue(), instantPurchase());
+                    this.subscriptionOptionValue.subscribe(function(optionType){
+                        this.setPurchaseData(optionType, instantPurchase())
+                    }.bind(this));
+                }
+            },
+
+            setPurchaseData: function (optionType, data) {
+                const button = $('button.instant-purchase');
+                if (optionType === 'subscription' && typeof data.spPaymentToken !== "undefined") {
+                    data.paymentToken = data.spPaymentToken
+                    button.show();
+                    return;
+                }
+                if (optionType === 'onetime_purchase' && typeof data.nonSpPaymentToken !== "undefined") {
+                    data.paymentToken = data.nonSpPaymentToken
+                    button.show();
+                    return;
+                }
+                button.hide();
             },
 
             initMessageComponent: function () {
@@ -94,7 +134,7 @@ define(
                 }
                 this.validateQty(true);
             },
-            
+
             validateQty: function (showMessages) {
                 var qtyField = $(this.qtyFieldSelector);
                 var qty = qtyField.val();

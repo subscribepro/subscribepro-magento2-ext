@@ -23,8 +23,7 @@ class AuthorizeCommand extends AbstractProfileCreatorCommand implements CommandI
         }
 
         $transaction = $this->platformTransactionService->createTransaction($requestData);
-        if (!empty($requestData[VaultConfigProvider::IS_ACTIVE_CODE])
-            && $requestData[VaultConfigProvider::IS_ACTIVE_CODE]) {
+        if (!empty($requestData[VaultConfigProvider::IS_ACTIVE_CODE])) {
             $profile = $this->createProfile($requestData);
             $this->platformTransactionService->authorizeByProfile([
                 VaultDataBuilder::PAYMENT_PROFILE_ID => $profile->getId()

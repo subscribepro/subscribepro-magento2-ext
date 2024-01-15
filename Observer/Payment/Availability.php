@@ -2,52 +2,53 @@
 
 namespace Swarming\SubscribePro\Observer\Payment;
 
+use Magento\Checkout\Model\Session;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Payment\Model\Method\Free;
+use Psr\Log\LoggerInterface;
 use Swarming\SubscribePro\Gateway\Config\ApplePayConfigProvider;
 use Swarming\SubscribePro\Gateway\Config\Config;
 use Swarming\SubscribePro\Gateway\Config\ConfigProvider;
+use Swarming\SubscribePro\Helper\Quote;
+use Swarming\SubscribePro\Helper\ThirdPartyPayment;
 
 class Availability implements ObserverInterface
 {
     /**
-     * @var \Magento\Checkout\Model\Session
+     * @var Session
      */
     protected $checkoutSession;
 
     /**
-     * @var \Swarming\SubscribePro\Helper\Quote
+     * @var Quote
      */
     protected $quoteHelper;
 
     /**
-     * @var \Swarming\SubscribePro\Model\Config\ThirdPartyPayment
-     */
-    private $thirdPartyPaymentConfig;
-
-    /**
-     * @var \Swarming\SubscribePro\Helper\ThirdPartyPayment
+     * @var ThirdPartyPayment
      */
     private $thirdPartyPayment;
-    private \Psr\Log\LoggerInterface $logger;
 
     /**
-     * @param \Magento\Checkout\Model\Session $checkoutSession
-     * @param \Swarming\SubscribePro\Helper\Quote $quoteHelper
-     * @param \Swarming\SubscribePro\Model\Config\ThirdPartyPayment $thirdPartyPaymentConfig
-     * @param \Swarming\SubscribePro\Helper\ThirdPartyPayment $thirdPartyPayment
+     * @var LoggerInterface
+     */
+    private LoggerInterface $logger;
+
+    /**
+     * @param Session $checkoutSession
+     * @param Quote $quoteHelper
+     * @param ThirdPartyPayment $thirdPartyPayment
+     * @param LoggerInterface $logger
      */
     public function __construct(
-        \Magento\Checkout\Model\Session $checkoutSession,
-        \Swarming\SubscribePro\Helper\Quote $quoteHelper,
-        \Swarming\SubscribePro\Model\Config\ThirdPartyPayment $thirdPartyPaymentConfig,
-        \Swarming\SubscribePro\Helper\ThirdPartyPayment $thirdPartyPayment,
-        \Psr\Log\LoggerInterface $logger
+        Session                  $checkoutSession,
+        Quote                    $quoteHelper,
+        ThirdPartyPayment        $thirdPartyPayment,
+        LoggerInterface $logger
     ) {
         $this->checkoutSession = $checkoutSession;
         $this->quoteHelper = $quoteHelper;
-        $this->thirdPartyPaymentConfig = $thirdPartyPaymentConfig;
         $this->thirdPartyPayment = $thirdPartyPayment;
         $this->logger = $logger;
     }

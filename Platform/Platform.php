@@ -53,7 +53,8 @@ class Platform
     }
 
     /**
-     * @param int $websiteId
+     * @param $websiteId
+     * @return void
      */
     public function setDefaultWebsite($websiteId)
     {

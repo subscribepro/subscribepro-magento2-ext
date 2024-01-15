@@ -290,12 +290,13 @@ class SubscriptionManagement implements SubscriptionManagementInterface
     }
 
     /**
-     * @param int $customerId
-     * @param int $subscriptionId
-     * @param \Magento\Quote\Model\Quote\Address $address
-     * @return \Swarming\SubscribePro\Api\Data\AddressInterface
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Magento\Framework\Exception\AuthorizationException
+     * @param $customerId
+     * @param $subscriptionId
+     * @param $address
+     * @return \SubscribePro\Service\Address\AddressInterface|\Swarming\SubscribePro\Api\Data\AddressInterface
+     * @throws AuthorizationException
+     * @throws LocalizedException
+     *
      */
     public function updateShippingAddress($customerId, $subscriptionId, $address)
     {

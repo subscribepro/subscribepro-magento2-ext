@@ -9,6 +9,7 @@ use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Directory\Model\Currency;
 use Magento\Directory\Model\Region as DirectoryRegion;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Serialize\Serializer\Json as JsonSerializer;
 use Magento\Framework\Session\SessionManagerInterface;
 use Magento\Quote\Api\Data\AddressInterface;
@@ -40,17 +41,13 @@ class PaymentService
      */
     private $applePayVaultHelper;
     /**
-     * @var Session
+     * @var SessionManagerInterface
      */
     private $checkoutSession;
     /**
      * @var CustomerSession
      */
     private $customerSession;
-    /**
-     * @var Currency
-     */
-    private $currency;
     /**
      * @var DirectoryRegion
      */
@@ -68,10 +65,6 @@ class PaymentService
      */
     private $orderService;
     /**
-     * @var QuoteManagement
-     */
-    private $quoteManagement;
-    /**
      * @var QuotePaymentResourceModel
      */
     private $quotePaymentResourceModel;
@@ -83,64 +76,56 @@ class PaymentService
      * @var JsonSerializer
      */
     private $jsonSerializer;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
 
     /**
      * Construct the payment service.
      *
-     * @param SessionManagerInterface        $checkoutSession
-     * @param CustomerSession                $customerSession
-     * @param Currency                       $currency
-     * @param DirectoryRegion                $directoryRegion
-     * @param PlatformCustomer               $platformCustomer
+     * @param SessionManagerInterface $checkoutSession
+     * @param CustomerSession $customerSession
+     * @param DirectoryRegion $directoryRegion
+     * @param PlatformCustomer $platformCustomer
      * @param PlatformApplePayPaymentProfile $platformPaymentProfile
-     * @param OrderService                   $orderService
-     * @param QuoteManagement                $quoteManagement
-     * @param QuotePaymentResourceModel      $quotePaymentResourceModel
-     * @param QuoteResourceModel             $quoteResourceModel
-     * @param JsonSerializer                 $jsonSerializer
-     * @param ApplePayVaultHelper            $vault
-     * @param LoggerInterface                $logger
+     * @param OrderService $orderService
+     * @param QuotePaymentResourceModel $quotePaymentResourceModel
+     * @param QuoteResourceModel $quoteResourceModel
+     * @param JsonSerializer $jsonSerializer
+     * @param ApplePayVaultHelper $vault
      */
     public function __construct(
         SessionManagerInterface $checkoutSession,
         CustomerSession $customerSession,
-        Currency $currency,
         DirectoryRegion $directoryRegion,
         PlatformCustomer $platformCustomer,
         PlatformApplePayPaymentProfile $platformPaymentProfile,
         OrderService $orderService,
-        QuoteManagement $quoteManagement,
         QuotePaymentResourceModel $quotePaymentResourceModel,
         QuoteResourceModel $quoteResourceModel,
         JsonSerializer $jsonSerializer,
-        ApplePayVaultHelper $vault,
-        LoggerInterface $logger
+        ApplePayVaultHelper $vault
     ) {
         $this->checkoutSession = $checkoutSession;
         $this->customerSession = $customerSession;
-        $this->currency = $currency;
         $this->directoryRegion = $directoryRegion;
         $this->platformCustomer = $platformCustomer;
         $this->platformPaymentProfile = $platformPaymentProfile;
         $this->orderService = $orderService;
-        $this->quoteManagement = $quoteManagement;
         $this->quotePaymentResourceModel = $quotePaymentResourceModel;
         $this->quoteResourceModel = $quoteResourceModel;
         $this->jsonSerializer = $jsonSerializer;
         $this->applePayVaultHelper = $vault;
-        $this->logger = $logger;
     }
+
     /**
      * @return Quote
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
     protected function getQuote()
     {
         if (!$this->quote) {
-            $this->quote = $this->checkoutSession->getQuote();
+            /** @var Session $checkoutSession */
+            $checkoutSession = $this->checkoutSession;
+            $this->quote = $checkoutSession->getQuote();
         }
 
         return $this->quote;
