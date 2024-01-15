@@ -2,48 +2,48 @@
 
 namespace Swarming\SubscribePro\Observer\Checkout;
 
+use Magento\Checkout\Model\Session;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
+use Magento\Quote\Model\Quote\Item\CartItemOptionsProcessor;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\Order;
+use Psr\Log\LoggerInterface;
 use Swarming\SubscribePro\Gateway\Config\ApplePayConfigProvider;
 use Swarming\SubscribePro\Gateway\Config\ConfigProvider as GatewayConfigProvider;
+use Swarming\SubscribePro\Helper\ThirdPartyPayment;
+use Swarming\SubscribePro\Model\Config\General;
 use Swarming\SubscribePro\Model\Quote\SubscriptionCreator;
 
 class SubmitAllAfter implements ObserverInterface
 {
     /**
-     * @var \Swarming\SubscribePro\Model\Config\General
+     * @var General
      */
     protected $generalConfig;
 
     /**
-     * @var \Magento\Checkout\Model\Session
+     * @var Session
      */
     protected $checkoutSession;
 
     /**
-     * @var \Swarming\SubscribePro\Model\Quote\SubscriptionCreator
+     * @var SubscriptionCreator
      */
     protected $subscriptionCreator;
 
     /**
-     * @var \Magento\Quote\Model\Quote\Item\CartItemOptionsProcessor
+     * @var CartItemOptionsProcessor
      */
     protected $cartItemOptionProcessor;
 
     /**
-     * @var \Psr\Log\LoggerInterface
+     * @var LoggerInterface
      */
     protected $logger;
 
     /**
-     * @var \Swarming\SubscribePro\Model\Config\ThirdPartyPayment
-     */
-    private $thirdPartyPaymentConfig;
-
-    /**
-     * @var \Swarming\SubscribePro\Helper\ThirdPartyPayment
+     * @var ThirdPartyPayment
      */
     private $thirdPartyPayment;
 
@@ -56,29 +56,26 @@ class SubmitAllAfter implements ObserverInterface
     ];
 
     /**
-     * @param \Swarming\SubscribePro\Model\Config\General $generalConfig
-     * @param \Magento\Checkout\Model\Session $checkoutSession
-     * @param \Swarming\SubscribePro\Model\Quote\SubscriptionCreator $subscriptionCreator
-     * @param \Magento\Quote\Model\Quote\Item\CartItemOptionsProcessor $cartItemOptionProcessor
-     * @param \Psr\Log\LoggerInterface $logger
-     * @param \Swarming\SubscribePro\Model\Config\ThirdPartyPayment $thirdPartyPaymentConfig
-     * @param \Swarming\SubscribePro\Helper\ThirdPartyPayment $thirdPartyPayment
+     * @param General $generalConfig
+     * @param Session $checkoutSession
+     * @param SubscriptionCreator $subscriptionCreator
+     * @param CartItemOptionsProcessor $cartItemOptionProcessor
+     * @param LoggerInterface $logger
+     * @param ThirdPartyPayment $thirdPartyPayment
      */
     public function __construct(
-        \Swarming\SubscribePro\Model\Config\General $generalConfig,
-        \Magento\Checkout\Model\Session $checkoutSession,
-        \Swarming\SubscribePro\Model\Quote\SubscriptionCreator $subscriptionCreator,
-        \Magento\Quote\Model\Quote\Item\CartItemOptionsProcessor $cartItemOptionProcessor,
-        \Psr\Log\LoggerInterface $logger,
-        \Swarming\SubscribePro\Model\Config\ThirdPartyPayment $thirdPartyPaymentConfig,
-        \Swarming\SubscribePro\Helper\ThirdPartyPayment $thirdPartyPayment
+        General                                         $generalConfig,
+        Session                                         $checkoutSession,
+        SubscriptionCreator                             $subscriptionCreator,
+        CartItemOptionsProcessor                        $cartItemOptionProcessor,
+        LoggerInterface                                 $logger,
+        ThirdPartyPayment $thirdPartyPayment
     ) {
         $this->generalConfig = $generalConfig;
         $this->checkoutSession = $checkoutSession;
         $this->subscriptionCreator = $subscriptionCreator;
         $this->cartItemOptionProcessor = $cartItemOptionProcessor;
         $this->logger = $logger;
-        $this->thirdPartyPaymentConfig = $thirdPartyPaymentConfig;
         $this->thirdPartyPayment = $thirdPartyPayment;
     }
 

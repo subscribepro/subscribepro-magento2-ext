@@ -132,7 +132,7 @@ class Edit extends \Magento\Directory\Block\Data
     protected function loadProfile()
     {
         $profile = $this->platformPaymentProfileService->loadProfile($this->token->getGatewayToken());
-        if (!$profile) {
+        if (!$profile->getId()) {
             throw new LocalizedException(__('The saved credit is not found.'));
         }
         $this->profile = $profile;
@@ -148,7 +148,7 @@ class Edit extends \Magento\Directory\Block\Data
     {
         /** @var \Magento\Theme\Block\Html\Title $pageMainTitle */
         $pageMainTitle = $this->getLayout()->getBlock('page.main.title');
-        if ($pageMainTitle) {
+        if ($pageMainTitle !== null) {
             $message = $this->token ? __('Edit Card: ending %1', $this->getNumberLast4Digits()) : __('Add New Card');
             $pageMainTitle->setPageTitle($message);
         }

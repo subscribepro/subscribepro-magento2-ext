@@ -93,7 +93,7 @@ class SubscriptionsDirectoryDataProcessor implements LayoutProcessorInterface
      */
     protected function getCountryOptions()
     {
-        if (!isset($this->countryOptions)) {
+        if (!$this->countryOptions) {
             $this->countryOptions = $this->countryCollectionFactory->create()->loadByStore(
                 $this->storeManager->getStore()->getId()
             )->toOptionArray();
@@ -107,10 +107,11 @@ class SubscriptionsDirectoryDataProcessor implements LayoutProcessorInterface
      * Get region options list.
      *
      * @return array
+     * @throws NoSuchEntityException
      */
     protected function getRegionOptions()
     {
-        if (!isset($this->regionOptions)) {
+        if (!$this->regionOptions) {
             $this->regionOptions = $this->regionCollectionFactory->create()->addAllowedCountriesFilter(
                 $this->storeManager->getStore()->getId()
             )->toOptionArray();

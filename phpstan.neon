@@ -7,3 +7,4 @@ parameters:
     	    - '#Call to an undefined method Magento\\Framework\\App\\RequestInterface\:\:getPostValue\(\)#'
     	    - '#Call to an undefined method Magento\\Framework\\App\\RequestInterface\:\:getHeader\(\)#'
     	    - '#Call to an undefined method Magento\\Framework\\App\\RequestInterface\:\:getContent\(\)#'
+    treatPhpDocTypesAsCertain: false

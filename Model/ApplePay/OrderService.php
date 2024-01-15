@@ -4,17 +4,11 @@ declare(strict_types=1);
 namespace Swarming\SubscribePro\Model\ApplePay;
 
 use Magento\Checkout\Helper\Data as CheckoutHelperData;
-use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Payment\Model\Method\Logger as PaymentLogger;
 use Magento\Quote\Api\CartRepositoryInterface;
-use Magento\Quote\Model\BillingAddressManagement;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\Address as QuoteAddress;
-use Magento\Quote\Model\Quote\AddressFactory;
 use Magento\Quote\Model\QuoteManagement;
-use Magento\Quote\Model\ShippingAddressManagement;
-use Magento\Sales\Model\Order\Email\Sender\OrderSender;
 use Psr\Log\LoggerInterface;
 
 class OrderService
@@ -28,33 +22,9 @@ class OrderService
      */
     private $quoteManagement;
     /**
-     * @var AddressFactory
-     */
-    private $addressFactory;
-    /**
-     * @var ShippingAddressManagement
-     */
-    private $shippingAddressManagement;
-    /**
-     * @var BillingAddressManagement
-     */
-    private $billingAddressManagement;
-    /**
-     * @var PaymentLogger
-     */
-    private $paymentLogger;
-    /**
-     * @var CheckoutSession
-     */
-    private $checkoutSession;
-    /**
      * @var CheckoutHelperData
      */
     private $checkoutHelperData;
-    /**
-     * @var OrderSender
-     */
-    private $orderSender;
     /**
      * @var LoggerInterface
      */
@@ -63,38 +33,20 @@ class OrderService
     /**
      * OrderService constructor.
      *
-     * @param CartRepositoryInterface   $quoteRepository
-     * @param QuoteManagement           $quoteManagement
-     * @param CheckoutSession           $checkoutSession
-     * @param AddressFactory            $addressFactory
-     * @param ShippingAddressManagement $shippingAddressManagement
-     * @param BillingAddressManagement  $billingAddressManagement
-     * @param PaymentLogger             $paymentLogger
-     * @param CheckoutHelperData        $checkoutHelperData
-     * @param OrderSender               $orderSender
-     * @param LoggerInterface           $logger
+     * @param CartRepositoryInterface $quoteRepository
+     * @param QuoteManagement $quoteManagement
+     * @param CheckoutHelperData $checkoutHelperData
+     * @param LoggerInterface $logger
      */
     public function __construct(
         CartRepositoryInterface $quoteRepository,
         QuoteManagement $quoteManagement,
-        CheckoutSession $checkoutSession,
-        AddressFactory $addressFactory,
-        ShippingAddressManagement $shippingAddressManagement,
-        BillingAddressManagement $billingAddressManagement,
-        PaymentLogger $paymentLogger,
         CheckoutHelperData $checkoutHelperData,
-        OrderSender $orderSender,
         LoggerInterface $logger
     ) {
         $this->quoteRepository = $quoteRepository;
         $this->quoteManagement = $quoteManagement;
-        $this->addressFactory = $addressFactory;
-        $this->shippingAddressManagement = $shippingAddressManagement;
-        $this->billingAddressManagement = $billingAddressManagement;
-        $this->paymentLogger = $paymentLogger;
-        $this->checkoutSession = $checkoutSession;
         $this->checkoutHelperData = $checkoutHelperData;
-        $this->orderSender = $orderSender;
         $this->logger = $logger;
     }
 
