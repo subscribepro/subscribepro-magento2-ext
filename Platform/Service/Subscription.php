@@ -2,17 +2,18 @@
 
 namespace Swarming\SubscribePro\Platform\Service;
 
+use SubscribePro\Service\Subscription\SubscriptionService;
 use Swarming\SubscribePro\Api\Data\SubscriptionInterface;
 
 /**
- * @method \SubscribePro\Service\Subscription\SubscriptionService getService($websiteId = null)
+ * @method SubscriptionService getService($websiteId = null)
  */
 class Subscription extends AbstractService
 {
     /**
      * @param array $subscriptionData
-     * @param int|null $websiteId
-     * @return \Swarming\SubscribePro\Api\Data\SubscriptionInterface
+     * @param $websiteId
+     * @return \SubscribePro\Service\Subscription\SubscriptionInterface
      */
     public function createSubscription(array $subscriptionData = [], $websiteId = null)
     {
@@ -22,7 +23,7 @@ class Subscription extends AbstractService
     /**
      * @param \Swarming\SubscribePro\Api\Data\SubscriptionInterface $subscription
      * @param int|null $websiteId
-     * @return \Swarming\SubscribePro\Api\Data\SubscriptionInterface
+     * @return \SubscribePro\Service\Subscription\SubscriptionInterface
      * @throws \SubscribePro\Exception\EntityInvalidDataException
      * @throws \SubscribePro\Exception\HttpException
      */
@@ -34,7 +35,7 @@ class Subscription extends AbstractService
     /**
      * @param int $subscriptionId
      * @param int|null $websiteId
-     * @return \Swarming\SubscribePro\Api\Data\SubscriptionInterface
+     * @return \SubscribePro\Service\Subscription\SubscriptionInterface
      * @throws \SubscribePro\Exception\HttpException
      */
     public function loadSubscription($subscriptionId, $websiteId = null)
@@ -46,7 +47,7 @@ class Subscription extends AbstractService
      * @param int $customerId
      * @param int|null $websiteId
      * @param int $count
-     * @return \Swarming\SubscribePro\Api\Data\SubscriptionInterface[]
+     * @return \SubscribePro\Service\Subscription\SubscriptionInterface[]
      * @throws \SubscribePro\Exception\HttpException
      */
     public function loadSubscriptionsByCustomer($customerId, $websiteId = null, $count = 25)

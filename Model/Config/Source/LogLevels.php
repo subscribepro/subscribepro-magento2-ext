@@ -7,7 +7,7 @@ use Psr\Log\LogLevel;
 class LogLevels implements \Magento\Framework\Option\ArrayInterface
 {
     /**
-     * @return string[]
+     * @return array[]
      */
     public function toOptionArray()
     {

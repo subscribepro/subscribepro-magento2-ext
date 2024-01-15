@@ -2,6 +2,7 @@
 
 namespace Swarming\SubscribePro\Plugin\Product;
 
+use Magento\Catalog\Model\Product\Configuration\Item\ItemInterface;
 use Swarming\SubscribePro\Model\Subscription\OptionItem as SubscriptionOptionItem;
 
 class Configuration
@@ -31,13 +32,13 @@ class Configuration
     /**
      * @param \Magento\Catalog\Helper\Product\Configuration $subject
      * @param \Closure $proceed
-     * @param \Magento\Catalog\Model\Product\Configuration\Item\ItemInterface $item
+     * @param ItemInterface $item
      * @return string[]
      */
     public function aroundGetCustomOptions(
         \Magento\Catalog\Helper\Product\Configuration $subject,
         \Closure $proceed,
-        \Magento\Catalog\Model\Product\Configuration\Item\ItemInterface $item
+        ItemInterface $item
     ) {
         $options = [];
         if ($this->productHelper->isSubscriptionEnabled($item->getProduct())
@@ -50,8 +51,8 @@ class Configuration
     }
 
     /**
-     * @param \Magento\Catalog\Model\Product\Configuration\Item\ItemInterface $item
-     * @return string[]
+     * @param ItemInterface $item
+     * @return array
      */
     protected function getSubscriptionOptions($item)
     {

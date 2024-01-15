@@ -27,8 +27,7 @@ class AddressDataBuilder implements BuilderInterface
 
     /**
      * @param array $buildSubject
-     * @return string[]
-     * @throws \InvalidArgumentException
+     * @return array
      */
     public function build(array $buildSubject)
     {

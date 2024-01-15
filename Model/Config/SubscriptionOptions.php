@@ -63,7 +63,7 @@ class SubscriptionOptions extends General
 
     /**
      * @param string|null $websiteCode
-     * @return string
+     * @return int
      */
     public function getMySubscriptionsLoadCount($websiteCode = null)
     {

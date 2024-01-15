@@ -140,8 +140,8 @@ class SubscriptionOption extends AbstractSimpleObject implements SubscriptionOpt
     }
 
     /**
-     * @param string $nextOrderDate
-     * @return $this
+     * @param $nextOrderDate
+     * @return SubscriptionOption
      */
     public function setNextOrderDate($nextOrderDate)
     {
@@ -157,8 +157,8 @@ class SubscriptionOption extends AbstractSimpleObject implements SubscriptionOpt
     }
 
     /**
-     * @param string $fixedPrice
-     * @return $this
+     * @param $fixedPrice
+     * @return SubscriptionOption
      */
     public function setFixedPrice($fixedPrice)
     {

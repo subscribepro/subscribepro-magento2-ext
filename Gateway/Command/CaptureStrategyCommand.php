@@ -37,9 +37,9 @@ class CaptureStrategyCommand implements CommandInterface
 
     /**
      * @param array $commandSubject
-     * @return void
-     * @throws NotFoundException
+     * @return null
      * @throws CommandException
+     * @throws NotFoundException
      */
     public function execute(array $commandSubject)
     {
@@ -52,6 +52,7 @@ class CaptureStrategyCommand implements CommandInterface
 
         $command = $this->getCommand($paymentInfo);
         $this->commandPool->get($command)->execute($commandSubject);
+        return null;
     }
 
     /**

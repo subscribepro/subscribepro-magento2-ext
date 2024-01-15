@@ -15,7 +15,7 @@ class BillingAddress extends \Magento\Directory\Block\Data
     protected $regionFactory;
 
     /**
-     * @var \SubscribePro\Service\PaymentProfile\PaymentProfileInterface
+     * @var PaymentProfileInterface|null
      */
     protected $profile;
 
@@ -52,7 +52,7 @@ class BillingAddress extends \Magento\Directory\Block\Data
     }
 
     /**
-     * @param \SubscribePro\Service\PaymentProfile\PaymentProfileInterface $profile
+     * @param PaymentProfileInterface $profile
      * @return string
      */
     public function render(PaymentProfileInterface $profile = null)
@@ -153,7 +153,7 @@ class BillingAddress extends \Magento\Directory\Block\Data
     }
 
     /**
-     * @return int
+     * @return int|string
      */
     public function getRegionId()
     {
@@ -162,7 +162,7 @@ class BillingAddress extends \Magento\Directory\Block\Data
             $region = $this->regionFactory->create()->loadByCode($regionCode, $this->getCountryId());
             return $region->getRegionId();
         }
-        return 0;
+        return '';
     }
 
     /**

@@ -2,8 +2,10 @@
 
 namespace Swarming\SubscribePro\Gateway\Command;
 
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Payment\Gateway\Command\CommandException;
 use Magento\Payment\Gateway\CommandInterface;
+use SubscribePro\Service\Transaction\TransactionInterface;
 
 abstract class AbstractCommand implements CommandInterface
 {
@@ -87,7 +89,7 @@ abstract class AbstractCommand implements CommandInterface
 
     /**
      * @param array $commandSubject
-     * @return void
+     * @return TransactionInterface
      * @throws CommandException
      */
     public function execute(array $commandSubject)
@@ -110,11 +112,13 @@ abstract class AbstractCommand implements CommandInterface
         }
 
         $this->handler->handle($commandSubject, $response);
+        return $transaction;
     }
 
     /**
      * @param array $commandSubject
      * @return void
+     * @throws NoSuchEntityException
      */
     protected function setPlatformWebsite(array $commandSubject)
     {
@@ -137,7 +141,7 @@ abstract class AbstractCommand implements CommandInterface
 
     /**
      * @param array $requestData
-     * @return \SubscribePro\Service\Transaction\TransactionInterface
+     * @return TransactionInterface
      */
     abstract protected function processTransaction(array $requestData);
 }
