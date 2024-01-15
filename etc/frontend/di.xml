@@ -36,6 +36,11 @@
         <plugin name="subscribepro_subscription" type="Swarming\SubscribePro\Plugin\Product\Subscription"/>
     </type>
 
+    <type name="Magento\InstantPurchase\CustomerData\InstantPurchase">
+        <plugin name="subscribepro_product_instant_purchase"
+                type="Swarming\SubscribePro\Plugin\CustomerData\InstantPurchasePlugin" sortOrder="10" />
+    </type>
+
     <type name="Swarming\SubscribePro\Platform\Webhook\HandlerPool">
         <arguments>
             <argument name="handlers" xsi:type="array">
