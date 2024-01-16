@@ -1,0 +1,20 @@
+<?php
+/**
+ * @var $block \Swarming\SubscribePro\Block\Product\Grouped
+ */
+
+?>
+
+<div class="subscription-container" data-bind="scope: 'subscription-container-<?= (int)$block->getProduct()->getId() ?>'">
+    <!-- ko template: getTemplate() --><!-- /ko -->
+</div>
+
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "Magento_Ui/js/core/app": <?= $block->getJsLayout() ?>
+    }
+}
+</script>
+
+
