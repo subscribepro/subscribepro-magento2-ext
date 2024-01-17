@@ -18,6 +18,9 @@ class WalletPaymentBuilder implements BuilderInterface
         return [
             PaymentProfileInterface::CREDITCARD_MONTH => $this->getCreditCardMonth($buildSubject),
             PaymentProfileInterface::CREDITCARD_YEAR => $this->getCreditCardYear($buildSubject),
+            PaymentProfileInterface::CREDITCARD_TYPE => $buildSubject['creditcard_type'] ?? null,
+            PaymentProfileInterface::CREDITCARD_LAST_DIGITS => $buildSubject['creditcard_last_digits'] ?? null,
+            PaymentProfileInterface::CREDITCARD_FIRST_DIGITS => $buildSubject['creditcard_first_digits'] ?? null,
             PaymentProfileInterface::BILLING_ADDRESS => $this->getBillingAddress($buildSubject),
 
             PaymentDataBuilder::PAYMENT_METHOD_TOKEN => $this->getPaymentToken($buildSubject),
