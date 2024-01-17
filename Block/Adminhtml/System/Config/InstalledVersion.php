@@ -7,7 +7,7 @@ use Magento\Framework\Data\Form\Element\AbstractElement;
 
 class InstalledVersion extends Field
 {
-    public const INSTALLED_VERSION = '1.7.0';
+    public const INSTALLED_VERSION = '1.7.1';
 
     protected function _getElementHtml(AbstractElement $element): string
     {
