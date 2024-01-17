@@ -81,6 +81,8 @@ class Vault
     {
         $tokenDetails = $this->decodeDetails($token->getTokenDetails());
         $tokenDetails['expirationDate'] = $profile->getCreditcardMonth() . '/' . $profile->getCreditcardYear();
+        $tokenDetails['maskedCC'] = $profile->getCreditcardLastDigits() ?? null;
+        $tokenDetails['paymentToken'] = $profile->getPaymentToken();
 
         unset($tokenDetails['state']);
 
