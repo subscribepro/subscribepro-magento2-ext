@@ -3,7 +3,7 @@
 namespace Swarming\SubscribePro\Plugin\ShipperHQ;
 
 use ShipperHQ\Shipper\Model\Carrier\Processor\ShipperMapper;
-use Swarming\SubscribePro\Helper\QuoteItem;
+use Magento\Quote\Model\Quote\Item;
 
 class ShipperMapperPlugin
 {
@@ -33,14 +33,14 @@ class ShipperMapperPlugin
      * @param ShipperMapper $mapper
      * @param callable $proceed
      * @param array $reqdAttributeNames
-     * @param QuoteItem $item
+     * @param Item $item
      * @return array
      */
     public function aroundPopulateAttributes(
         \ShipperHQ\Shipper\Model\Carrier\Processor\ShipperMapper $mapper, /* @phpstan-ignore-line */
         callable                                                 $proceed,
         array                                                    $reqdAttributeNames,
-        QuoteItem $item
+        Item $item
     ) {
         $attributes = $proceed($reqdAttributeNames, $item);
 
@@ -59,7 +59,7 @@ class ShipperMapperPlugin
                 }
                 if (!$shippingGroupSet) {
                     $attributes[] = ['name' => 'shipperhq_shipping_group', 'value' => $recurringShippingCode];
-                } else{
+                } else {
                     $attributes[$shippingKey] = ['name' => 'shipperhq_shipping_group', 'value' => $shippingGroup];
                 }
             }
