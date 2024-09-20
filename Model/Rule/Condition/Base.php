@@ -28,11 +28,6 @@ class Base extends \Magento\Rule\Model\Condition\AbstractCondition
     protected $discountRuleHelper;
 
     /**
-     * @var array
-     */
-    protected array $attribute_option;
-
-    /**
      * Constructor
      * @param Context $context
      * @param QuoteItemHelper $quoteItemHelper
@@ -159,14 +154,5 @@ class Base extends \Magento\Rule\Model\Condition\AbstractCondition
         return $this->discountRuleHelper->subscriptionOptionsAreFalse(
             $this->quoteItemHelper->getSubscriptionParams($model)
         );
-    }
-
-    /**
-     * @param array $attributes
-     * @return void
-     */
-    protected function setAttributeOption(array $attributes): void
-    {
-        $this->attribute_option = $attributes;
     }
 }
