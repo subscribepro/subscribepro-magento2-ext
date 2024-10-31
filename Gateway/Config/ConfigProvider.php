@@ -11,7 +11,7 @@ class ConfigProvider
 
     public const VAULT_CODE = 'subscribe_pro_vault';
 
-    public const ADMIN_ORDER_AMOUNT_URL = '/admin/subscribepro/order/amount/';
+    public const ADMIN_ORDER_AMOUNT_URL = 'subscribepro/order/amount';
 
     /**
      * @var \Swarming\SubscribePro\Model\Config\General
@@ -49,6 +49,11 @@ class ConfigProvider
     protected $oauth;
 
     /**
+     * @var \Magento\Framework\UrlInterface
+     */
+    protected $urlBuilder;
+
+    /**
      * @param \Swarming\SubscribePro\Model\Config\General $generalConfig
      * @param Config $gatewayConfig
      * @param \Magento\Payment\Model\CcConfig $ccConfig
@@ -64,7 +69,8 @@ class ConfigProvider
         \Magento\Payment\Model\CcConfigProvider     $ccConfigProvider,
         \Swarming\SubscribePro\Platform\Tool\Config $platformConfigTool,
         \Swarming\SubscribePro\Platform\Tool\Oauth  $oauth,
-        \Magento\Store\Model\StoreManagerInterface  $storeManager
+        \Magento\Store\Model\StoreManagerInterface  $storeManager,
+        \Magento\Framework\UrlInterface             $urlBuilder
     ) {
         $this->generalConfig = $generalConfig;
         $this->gatewayConfig = $gatewayConfig;
@@ -73,6 +79,7 @@ class ConfigProvider
         $this->platformConfigTool = $platformConfigTool;
         $this->storeManager = $storeManager;
         $this->oauth = $oauth;
+        $this->urlBuilder = $urlBuilder;
     }
 
     /**
@@ -98,7 +105,7 @@ class ConfigProvider
                 'isActive' => $this->gatewayConfig->isActive($storeId),
                 'isThreeDSActive' => $this->gatewayConfig->isThreeDSActive($storeId),
                 'isWalletAuthorizationActive' => $this->gatewayConfig->isWalletAuthorizationActive($storeId),
-                'adminOrderAmountUrl' => self::ADMIN_ORDER_AMOUNT_URL,
+                'adminOrderAmountUrl' => $this->urlBuilder->getUrl(self::ADMIN_ORDER_AMOUNT_URL),
                 'sessionAccessToken' => $this->oauth->getSessionAccessToken($storeId),
                 'browserSize' => $this->gatewayConfig->getBrowserSize($storeId),
                 'acceptHeader' => $this->gatewayConfig->getAcceptHeader($storeId),
