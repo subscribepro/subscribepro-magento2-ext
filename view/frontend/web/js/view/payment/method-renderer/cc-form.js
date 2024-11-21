@@ -101,10 +101,17 @@ define(
                 });
 
                 PaymentFields.on('challengeShown', (data) => {
+                    $('#sp-payment-fields-three-ds-challenge-iframe').on('load', function() {
+                        $(this).contents().find('#cancel-challenge').on('click', function() {
+                            $('#sp-payment-fields-three-ds-challenge-iframe').remove();
+                        });
+                    });
                     $('body').trigger('processStop');
                 });
 
                 PaymentFields.on('challengeHidden', (data) => {
+
+
                     $('body').trigger('processStop');
                 });
                 let authConfig = config.getConfig().sessionAccessToken;
