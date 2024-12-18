@@ -196,8 +196,14 @@ define(
                 return {};
             },
 
-            onPaymentMethod: function (token) {
+            onPaymentMethod: function (token, paymentMethod) {
                 this.paymentMethodToken(token);
+                this.selectedCardType(paymentMethod.card_type);
+                this.creditCardExpMonth(paymentMethod.month);
+                this.creditCardExpYear(paymentMethod.year);
+                this.creditCardFirstDigits(paymentMethod.first_six_digits);
+                this.creditCardLastDigits(paymentMethod.last_four_digits);
+
                 this.submitPayment();
             },
 

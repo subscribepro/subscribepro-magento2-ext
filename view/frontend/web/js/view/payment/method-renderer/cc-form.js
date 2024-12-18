@@ -63,13 +63,19 @@ define(
                     'method': this.getCode(),
                     'additional_data': {
                         'is_active_payment_token_enabler': customer.isLoggedIn(),
-                        'payment_method_token': this.paymentMethodToken()
+                        'payment_method_token': this.paymentMethodToken(),
+                        'cc_exp_year': this.creditCardExpYear(),
+                        'cc_exp_month': this.creditCardExpMonth(),
+                        'creditcard_first_digits': this.creditCardFirstDigits(),
+                        'creditcard_last_digits': this.creditCardLastDigits(),
+                        'creditcard_type': this.selectedCardType(),
                     }
                 };
 
                 if (config.isThreeDSActive()) {
                     data.additional_data.browser_info = this.getThreeDSBrowserInfo();
                 }
+
                 return data;
             },
 
