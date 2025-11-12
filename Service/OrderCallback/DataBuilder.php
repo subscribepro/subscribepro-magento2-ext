@@ -122,6 +122,8 @@ class DataBuilder
                 'region' => $this->getValue($addressData, 'region'),
                 'postcode' => $this->getValue($addressData, 'postcode'),
                 'telephone' => $this->getValue($addressData, 'phone'),
+                'customer_address_id' => null,
+                'save_in_address_book' => 0,
             ]
         );
     }
