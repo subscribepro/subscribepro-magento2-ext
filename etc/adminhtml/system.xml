@@ -154,6 +154,15 @@
                         <field id="swarming_subscribepro/general/enabled">1</field>
                     </depends>
                 </field>
+
+                <field id="send_billing_address" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                    <label>Send Billing Address on Subscription Creation</label>
+                    <comment>When enabled, the billing address will be sent to Subscribe Pro when creating subscriptions during checkout</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="swarming_subscribepro/general/enabled">1</field>
+                    </depends>
+                </field>
             </group>
             <group id="subscription_discount" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Subscription Discount</label>

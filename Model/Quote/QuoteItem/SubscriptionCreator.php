@@ -113,7 +113,8 @@ class SubscriptionCreator
                 $subscription->setShippingAddress(null);
             }
 
-            if ($billingAddress) {
+            // Only send billing address if configuration allows it
+            if ($billingAddress && $this->subscriptionOptionsConfig->isSendBillingAddressEnabled($store->getWebsite()->getCode())) {
                 $this->importBillingAddress($subscription, $billingAddress);
             } else {
                 $subscription->setBillingAddress(null);

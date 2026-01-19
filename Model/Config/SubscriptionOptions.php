@@ -86,4 +86,17 @@ class SubscriptionOptions extends General
             $websiteCode
         );
     }
+
+    /**
+     * @param string|null $websiteCode
+     * @return bool
+     */
+    public function isSendBillingAddressEnabled($websiteCode = null)
+    {
+        return $this->scopeConfig->isSetFlag(
+            'swarming_subscribepro/subscription_options/send_billing_address',
+            ScopeInterface::SCOPE_WEBSITE,
+            $websiteCode
+        );
+    }
 }
