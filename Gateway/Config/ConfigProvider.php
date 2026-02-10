@@ -11,8 +11,6 @@ class ConfigProvider
 
     public const VAULT_CODE = 'subscribe_pro_vault';
 
-    public const ADMIN_ORDER_AMOUNT_URL = '/admin/subscribepro/order/amount/';
-
     /**
      * @var \Swarming\SubscribePro\Model\Config\General
      */
@@ -49,6 +47,11 @@ class ConfigProvider
     protected $oauth;
 
     /**
+     * @var \Magento\Backend\Model\UrlInterface
+     */
+    protected $backendUrl;
+
+    /**
      * @param \Swarming\SubscribePro\Model\Config\General $generalConfig
      * @param Config $gatewayConfig
      * @param \Magento\Payment\Model\CcConfig $ccConfig
@@ -56,6 +59,7 @@ class ConfigProvider
      * @param \Swarming\SubscribePro\Platform\Tool\Config $platformConfigTool
      * @param \Swarming\SubscribePro\Platform\Tool\Oauth $oauth
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     * @param \Magento\Backend\Model\UrlInterface $backendUrl
      */
     public function __construct(
         \Swarming\SubscribePro\Model\Config\General $generalConfig,
@@ -64,7 +68,8 @@ class ConfigProvider
         \Magento\Payment\Model\CcConfigProvider     $ccConfigProvider,
         \Swarming\SubscribePro\Platform\Tool\Config $platformConfigTool,
         \Swarming\SubscribePro\Platform\Tool\Oauth  $oauth,
-        \Magento\Store\Model\StoreManagerInterface  $storeManager
+        \Magento\Store\Model\StoreManagerInterface  $storeManager,
+        \Magento\Backend\Model\UrlInterface         $backendUrl
     ) {
         $this->generalConfig = $generalConfig;
         $this->gatewayConfig = $gatewayConfig;
@@ -73,6 +78,7 @@ class ConfigProvider
         $this->platformConfigTool = $platformConfigTool;
         $this->storeManager = $storeManager;
         $this->oauth = $oauth;
+        $this->backendUrl = $backendUrl;
     }
 
     /**
@@ -98,7 +104,7 @@ class ConfigProvider
                 'isActive' => $this->gatewayConfig->isActive($storeId),
                 'isThreeDSActive' => $this->gatewayConfig->isThreeDSActive($storeId),
                 'isWalletAuthorizationActive' => $this->gatewayConfig->isWalletAuthorizationActive($storeId),
-                'adminOrderAmountUrl' => self::ADMIN_ORDER_AMOUNT_URL,
+                'adminOrderAmountUrl' => $this->backendUrl->getUrl('subscribepro/order/amount'),
                 'sessionAccessToken' => $this->oauth->getSessionAccessToken($storeId),
                 'browserSize' => $this->gatewayConfig->getBrowserSize($storeId),
                 'acceptHeader' => $this->gatewayConfig->getAcceptHeader($storeId),
