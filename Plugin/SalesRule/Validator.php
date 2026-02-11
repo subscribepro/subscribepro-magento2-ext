@@ -61,6 +61,10 @@ class Validator
      */
     public function aroundProcess(SalesRuleValidator $subject, \Closure $proceed, AbstractItem $item, Rule $rule)
     {
+        if ($rule->getName() !== 'Subscribe Pro Discount') {
+            return $proceed($item, $rule);
+        }
+
         $appliedRuleIds = [
             self::QUOTE_ITEM_RULES => $item->getAppliedRuleIds(),
             self::QUOTE_RULES => $item->getQuote()->getAppliedRuleIds(),
@@ -70,8 +74,11 @@ class Validator
 
         $result = $proceed($item, $rule);
 
-        if ($rule->getName() !== 'Subscribe Pro Discount') {
-            return $result;
+        $subscriptionLabel = null;
+        $descriptionsAfter = (array)$item->getAddress()->getDiscountDescriptionArray();
+        $newDescriptions = array_diff_assoc($descriptionsAfter, $discountDescriptions);
+        if (!empty($newDescriptions)) {
+            $subscriptionLabel = reset($newDescriptions);
         }
 
         $websiteId = $item->getQuote()->getStore()->getWebsiteId();
@@ -93,7 +100,8 @@ class Validator
         $this->itemSubscriptionDiscount->processSubscriptionDiscount(
             $item,
             $subject->getItemBasePrice($item),
-            $this->getRollbackCallback($appliedRuleIds, $discountDescriptions)
+            $this->getRollbackCallback($appliedRuleIds, $discountDescriptions),
+            $subscriptionLabel
         );
 
         return $result;

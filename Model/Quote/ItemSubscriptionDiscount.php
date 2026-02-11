@@ -59,8 +59,9 @@ class ItemSubscriptionDiscount
      * @param \Magento\Quote\Model\Quote\Item\AbstractItem $item
      * @param float $itemBasePrice
      * @param callable $rollbackCallback
+     * @param string|null $subscriptionLabel
      */
-    public function processSubscriptionDiscount(QuoteItem $item, $itemBasePrice, callable $rollbackCallback)
+    public function processSubscriptionDiscount(QuoteItem $item, $itemBasePrice, callable $rollbackCallback, $subscriptionLabel = null)
     {
         $storeId = $item->getQuote()->getStoreId();
         $baseCartDiscount = $item->getBaseDiscountAmount();
@@ -74,10 +75,11 @@ class ItemSubscriptionDiscount
         if ($this->isOnlySubscriptionDiscount($baseSubscriptionDiscount, $baseCartDiscount, $storeId)) {
             $rollbackCallback($item);
             $this->setSubscriptionDiscount($item, $subscriptionDiscount, $baseSubscriptionDiscount);
-            $this->addDiscountDescription($item);
+            $this->setSubscriptionDiscountDescription($item, $subscriptionLabel);
         } elseif ($this->isCombineDiscounts($storeId)) {
             $this->addSubscriptionDiscount($item, $subscriptionDiscount, $baseSubscriptionDiscount);
-            $this->addDiscountDescription($item);
+        } else {
+            $rollbackCallback($item);
         }
     }
 
@@ -133,11 +135,15 @@ class ItemSubscriptionDiscount
 
     /**
      * @param \Magento\Quote\Model\Quote\Item\AbstractItem $item
+     * @param string|null $subscriptionLabel
      */
-    protected function addDiscountDescription(QuoteItem $item)
+    protected function setSubscriptionDiscountDescription(QuoteItem $item, $subscriptionLabel = null)
     {
-        $discountDescriptions = $item->getAddress()->getDiscountDescriptionArray();
-        $item->getAddress()->setDiscountDescriptionArray($discountDescriptions);
+        $label = $subscriptionLabel ?: __("Subscription");
+
+        $item->getAddress()->setDiscountDescriptionArray([
+            self::KEY_DISCOUNT_DESCRIPTION => $label,
+        ]);
     }
 
     /**
