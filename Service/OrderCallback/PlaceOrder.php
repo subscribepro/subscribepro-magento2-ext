@@ -170,7 +170,8 @@ class PlaceOrder
         return $this->responseProcessor->execute(
             $this->orderCallbackDataBuilder->getValue($orderRequest, 'salesOrderToken'),
             $errorMessages,
-            $order
+            $order,
+            $this->orderCallbackDataBuilder->getValue($orderRequest, 'customerId', null)
         );
     }
 

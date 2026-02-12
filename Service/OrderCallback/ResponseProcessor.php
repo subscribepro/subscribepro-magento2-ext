@@ -35,12 +35,13 @@ class ResponseProcessor
      * @param string $salesOrderToken
      * @param array $errorMessages
      * @param \Magento\Sales\Api\Data\OrderInterface|null $order
+     * @param string|null $subscribeProCustomerId
      * @return array
      */
-    public function execute(string $salesOrderToken, array $errorMessages, OrderInterface $order = null): array
+    public function execute(string $salesOrderToken, array $errorMessages, OrderInterface $order = null, ?string $subscribeProCustomerId = null): array
     {
         return $order
-            ? $this->prepareSuccessResponse($salesOrderToken, $order, $errorMessages)
+            ? $this->prepareSuccessResponse($salesOrderToken, $order, $errorMessages, $subscribeProCustomerId)
             : $this->prepareFailureResponse($errorMessages);
     }
 
@@ -48,18 +49,25 @@ class ResponseProcessor
      * @param string $salesOrderToken
      * @param \Magento\Sales\Api\Data\OrderInterface|Order $order
      * @param array $errorMessages
+     * @param string|null $subscribeProCustomerId
      * @return array
      * @throws NoSuchEntityException
      */
-    private function prepareSuccessResponse(string $salesOrderToken, OrderInterface $order, array $errorMessages): array
+    private function prepareSuccessResponse(string $salesOrderToken, OrderInterface $order, array $errorMessages, ?string $subscribeProCustomerId = null): array
     {
         /** @var Order $order */
         $websiteId = (int)$order->getStore()->getWebsiteId();
 
+        // Use Subscribe Pro customer ID from webhook payload if available to avoid redundant API call
+        $customerId = $subscribeProCustomerId;
+        if ($customerId === null) {
+            $customerId = $this->getPlatformCustomerId((int)$order->getCustomerId(), $websiteId);
+        }
+
         $successResponse = [
             'orderNumber' => $order->getIncrementId(),
             'orderDetails' => [
-                'customerId' => $this->getPlatformCustomerId((int)$order->getCustomerId(), $websiteId),
+                'customerId' => $customerId,
                 'customerEmail' => $order->getCustomerEmail(),
                 'platformCustomerId' => $order->getCustomerId(),
                 'platformOrderId' => $order->getEntityId(),
