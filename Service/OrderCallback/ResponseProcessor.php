@@ -37,7 +37,7 @@ class ResponseProcessor
      * @param \Magento\Sales\Api\Data\OrderInterface|null $order
      * @return array
      */
-    public function execute(string $salesOrderToken, array $errorMessages, OrderInterface $order = null): array
+    public function execute(string $salesOrderToken, array $errorMessages, ?OrderInterface $order = null): array
     {
         return $order
             ? $this->prepareSuccessResponse($salesOrderToken, $order, $errorMessages)

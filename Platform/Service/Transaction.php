@@ -104,7 +104,7 @@ class Transaction extends AbstractService
     public function authorizeByToken(
         $token,
         TransactionInterface $transaction,
-        AddressInterface $platformAddress = null,
+        ?AddressInterface $platformAddress = null,
         $websiteId = null
     ) {
         $metadata = $this->metaService->getData();
@@ -123,7 +123,7 @@ class Transaction extends AbstractService
     public function purchaseByToken(
         $token,
         TransactionInterface $transaction,
-        AddressInterface $platformAddress = null,
+        ?AddressInterface $platformAddress = null,
         $websiteId = null
     ) {
         $metadata = $this->metaService->getData();
@@ -136,7 +136,7 @@ class Transaction extends AbstractService
      * @param int|null $websiteId
      * @return \SubscribePro\Service\Transaction\TransactionInterface
      */
-    public function capture($transactionId, TransactionInterface $transaction = null, $websiteId = null)
+    public function capture($transactionId, ?TransactionInterface $transaction = null, $websiteId = null)
     {
         $metadata = $this->metaService->getData();
         return $this->getService($websiteId)->capture($transactionId, $transaction, $metadata);
@@ -150,7 +150,7 @@ class Transaction extends AbstractService
      * @throws \SubscribePro\Exception\EntityInvalidDataException
      * @throws \SubscribePro\Exception\HttpException
      */
-    public function credit($transactionId, TransactionInterface $transaction = null, $websiteId = null)
+    public function credit($transactionId, ?TransactionInterface $transaction = null, $websiteId = null)
     {
         $metadata = $this->metaService->getData();
         return $this->getService($websiteId)->credit($transactionId, $transaction, $metadata);

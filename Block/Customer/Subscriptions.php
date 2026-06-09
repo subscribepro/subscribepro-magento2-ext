@@ -128,7 +128,7 @@ class Subscriptions extends \Magento\Framework\View\Element\Template
         \Swarming\SubscribePro\Ui\ConfigProvider\SubscriptionConfig $subscriptionConfig,
         \Swarming\SubscribePro\Ui\ComponentProvider\AddressAttributes $addressAttributes,
         \Magento\Checkout\Block\Checkout\AttributeMerger $attributeMerger,
-        \Magento\Framework\Serialize\Serializer\Json $serializer = null,
+        ?\Magento\Framework\Serialize\Serializer\Json $serializer = null,
         array $layoutProcessors = [],
         array $data = []
     ) {
