@@ -26,7 +26,7 @@ class ThirdPartyPayment
      * @param int|null $storeId
      * @return bool
      */
-    public function isAllowed(int $storeId = null): bool
+    public function isAllowed(?int $storeId = null): bool
     {
         return $this->scopeConfig->isSetFlag(
             'swarming_subscribepro/third_party_payment/is_allowed',
@@ -39,7 +39,7 @@ class ThirdPartyPayment
      * @param int|null $storeId
      * @return array
      */
-    public function getAllowedMethods(int $storeId = null): array
+    public function getAllowedMethods(?int $storeId = null): array
     {
         $allowedThirdPartyValue = $this->scopeConfig->getValue(
             'swarming_subscribepro/third_party_payment/allowed_method',

@@ -26,7 +26,7 @@ class OrderCallback
      * @param string|null $websiteCode
      * @return string
      */
-    public function getSharedSecret(string $websiteCode = null): string
+    public function getSharedSecret(?string $websiteCode = null): string
     {
         return (string)$this->scopeConfig->getValue(
             'swarming_subscribepro/order_callback/shared_secret',
@@ -39,7 +39,7 @@ class OrderCallback
      * @param string|null $websiteCode
      * @return bool
      */
-    public function isLogEnabled(string $websiteCode = null): bool
+    public function isLogEnabled(?string $websiteCode = null): bool
     {
         return $this->scopeConfig->isSetFlag(
             'swarming_subscribepro/order_callback/log_enabled',

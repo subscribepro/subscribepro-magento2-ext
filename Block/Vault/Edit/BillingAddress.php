@@ -55,7 +55,7 @@ class BillingAddress extends \Magento\Directory\Block\Data
      * @param PaymentProfileInterface $profile
      * @return string
      */
-    public function render(PaymentProfileInterface $profile = null)
+    public function render(?PaymentProfileInterface $profile = null)
     {
         $this->profile = $profile;
         $result = $this->toHtml();
