@@ -27,6 +27,8 @@
             </subscription_discount>
             <advanced>
                 <cache_lifetime>3600</cache_lifetime>
+                <api_request_timeout>5</api_request_timeout>
+                <api_connect_timeout>2</api_connect_timeout>
                 <webhook_secret></webhook_secret>
                 <enable_debugging>0</enable_debugging>
                 <enable_account_expires>1</enable_account_expires>

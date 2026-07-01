@@ -20,6 +20,36 @@ class Advanced extends General
     }
 
     /**
+     * Total API request timeout (seconds) for SP API calls made in a frontend context.
+     *
+     * @param string|null $websiteCode
+     * @return int
+     */
+    public function getApiRequestTimeout($websiteCode = null)
+    {
+        return (int) $this->scopeConfig->getValue(
+            'swarming_subscribepro/advanced/api_request_timeout',
+            ScopeInterface::SCOPE_WEBSITE,
+            $websiteCode
+        );
+    }
+
+    /**
+     * Connect timeout (seconds) for SP API calls. 0 disables the separate connect timeout.
+     *
+     * @param string|null $websiteCode
+     * @return int
+     */
+    public function getApiConnectTimeout($websiteCode = null)
+    {
+        return (int) $this->scopeConfig->getValue(
+            'swarming_subscribepro/advanced/api_connect_timeout',
+            ScopeInterface::SCOPE_WEBSITE,
+            $websiteCode
+        );
+    }
+
+    /**
      * Get the secret key which should be used for authenticating incoming webhook.
      *
      * @param string|null $websiteCode

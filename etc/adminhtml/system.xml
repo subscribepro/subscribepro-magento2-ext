@@ -197,6 +197,24 @@
                     <validate>validate-number validate-zero-or-greater</validate>
                 </field>
 
+                <field id="api_request_timeout" translate="label comment" type="text" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                    <label>API Request Timeout</label>
+                    <comment>Total timeout (in seconds) for Subscribe Pro API calls made in a frontend context (e.g. add-to-cart). Lower values fail fast and avoid tying up web workers when the API is slow. Default 5.</comment>
+                    <depends>
+                        <field id="swarming_subscribepro/general/enabled">1</field>
+                    </depends>
+                    <validate>validate-number validate-greater-than-zero</validate>
+                </field>
+
+                <field id="api_connect_timeout" translate="label comment" type="text" sortOrder="12" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                    <label>API Connect Timeout</label>
+                    <comment>Timeout (in seconds) for establishing the connection to the Subscribe Pro API. 0 disables the separate connect timeout. Default 2.</comment>
+                    <depends>
+                        <field id="swarming_subscribepro/general/enabled">1</field>
+                    </depends>
+                    <validate>validate-number validate-zero-or-greater</validate>
+                </field>
+
                 <field id="webhook_secret" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
                     <label>Webhook Secret Key</label>
                     <comment>This secret key will be used to hash webhook request data and validate the source of incoming webhook requests for security.</comment>
