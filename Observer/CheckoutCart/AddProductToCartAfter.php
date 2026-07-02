@@ -4,6 +4,7 @@ namespace Swarming\SubscribePro\Observer\CheckoutCart;
 
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
+use GuzzleHttp\Exception\TransferException;
 use Magento\Framework\Exception\LocalizedException;
 use SubscribePro\Exception\HttpException;
 use SubscribePro\Exception\InvalidArgumentException;
@@ -77,6 +78,12 @@ class AddProductToCartAfter extends CheckoutCartAbstract implements ObserverInte
             } catch (HttpException $e) {
                 $this->logger->info('Could not add product to cart.');
                 $this->logger->info($e->getMessage());
+            } catch (TransferException $e) {
+                // A Guzzle transfer failure (e.g. connect/request timeout, unreachable API)
+                // is not response-based and is therefore not a SubscribePro HttpException.
+                // Degrade gracefully so a slow/unreachable SP API cannot break add-to-cart.
+                $this->logger->warning('Could not add product to cart: Subscribe Pro API request failed.');
+                $this->logger->warning($e->getMessage());
             }
         }
     }
