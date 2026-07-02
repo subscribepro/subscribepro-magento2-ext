@@ -1,6 +1,6 @@
 .php-cs-fixer.cache
 .idea/
-DS_Store
+.DS_Store
 .swp
 .lock
 __MACOSX
