@@ -41,18 +41,22 @@ class Item
             ? $this->getParam($options2['info_buyRequest'], SubscriptionOptionInterface::OPTION)
             : null;
 
-        // If neither quote item has a subscription flag (non-subscribable product)
-        if (empty($subscriptionOption1) && empty($subscriptionOption2)) {
-            return true;
-        }
+        // Normalize a missing/empty subscription option to a one-time purchase.
+        // An item with no subscription_option (e.g. a freshly reordered item whose
+        // raw buyRequest carries no option yet, or a repeated PLP/PDP one-time add)
+        // is semantically a one-time purchase. Without this, such an item fails to
+        // merge with an otherwise identical item that has already been stamped
+        // option=onetime_purchase (e.g. by ReorderPlugin::afterExecute), producing
+        // duplicate line items. See issue #310.
+        $subscriptionOption1 = empty($subscriptionOption1) ? 'onetime_purchase' : $subscriptionOption1;
+        $subscriptionOption2 = empty($subscriptionOption2) ? 'onetime_purchase' : $subscriptionOption2;
 
         // If one quote item is a subscription and one is a non-subscription
         if ($subscriptionOption1 != $subscriptionOption2) {
             return false;
         }
 
-        // The previous two conditions have identified that both quote items have a
-        // subscription option value and that they are the same.
+        // Both quote items have the same subscription option value.
         // If the quote items are both set as one-time purchases, we don't need to
         // care about the intervals
         if ($subscriptionOption1 == 'onetime_purchase' && $subscriptionOption2 == 'onetime_purchase') {

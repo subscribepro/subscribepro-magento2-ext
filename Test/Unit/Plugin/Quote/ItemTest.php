@@ -94,6 +94,17 @@ class ItemTest extends \PHPUnit\Framework\TestCase
                 ],
                 'result' => false
             ],
+            // Issue #310: a stamped one-time item and an unstamped item (no
+            // subscription_option key, e.g. a freshly reordered item) must merge.
+            'One-time vs missing option merges' => [
+                'buyRequestParams1' => [
+                    OptionProcessor::KEY_SUBSCRIPTION_OPTION => [
+                        SubscriptionOptionInterface::OPTION => 'onetime_purchase'
+                    ]
+                ],
+                'buyRequestParams2' => [],
+                'result' => true
+            ],
             'Subscription options not equal' => [
                 'buyRequestParams1' => [
                     OptionProcessor::KEY_SUBSCRIPTION_OPTION => [
