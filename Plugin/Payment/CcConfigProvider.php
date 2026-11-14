@@ -7,6 +7,10 @@ use Magento\Payment\Model\CcConfig;
 
 class CcConfigProvider
 {
+    private const DEFAULT_ICON_WIDTH = 39;
+
+    private const DEFAULT_ICON_HEIGHT = 25;
+
     /**
      * @var array
      */
@@ -51,7 +55,9 @@ class CcConfigProvider
                 $asset = $this->ccConfig->createAsset('Swarming_SubscribePro::images/cc/' . strtolower($code) . '.svg');
                 $placeholder = $this->assetSource->findSource($asset);
                 if ($placeholder) {
-                    list($width, $height) = getimagesize($asset->getSourceFile());
+                    $size = getimagesize($asset->getSourceFile());
+                    $width = $size[0] ?? self::DEFAULT_ICON_WIDTH;
+                    $height = $size[1] ?? self::DEFAULT_ICON_HEIGHT;
                     $this->icons[$code] = [
                         'url' => $asset->getUrl(),
                         'width' => $width,
